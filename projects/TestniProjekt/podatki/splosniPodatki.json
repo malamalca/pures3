@@ -1,8 +1,8 @@
 {
     "stavba": {
         "naziv": "Testni Projekt",
-        "lokacija": "Volčji Potok 12",
-        "KO": "Volčji Potok",
+        "lokacija": "Mestna cesta 12",
+        "KO": "Ljubljana",
         "parcele": [
             "123/4"
         ],
@@ -16,11 +16,11 @@
     },
     "investitorji": [
         {
-            "naziv": "Miha Nahtigal",
-            "naslov": "Volčji Potok 12, 1235 Radomlje"
+            "naziv": "Janez Novak",
+            "naslov": "Mestna cesta 12, 1000 Ljubljana"
         }
     ],
-    "vodjaProjektiranja": "Miha Nahtigal, udia, ZAPS 1472",
-    "izdelovalec": "Miha Nahtigal, udia, ZAPS 1472",
+    "vodjaProjektiranja": "Franc Pavlin, udia, ZAPS 1122",
+    "izdelovalec": "Franc Pavlin, udia, ZAPS 1122",
     "datum": "april 2023"
 }
