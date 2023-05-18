@@ -5,12 +5,12 @@ namespace App\Core;
 
 class App
 {
-    public static $allowedActions = ['Profiles/resetPassword'];
+    public static array $allowedActions = [];
 
-    private static $instance = null;
-    private $_vars = [];
+    private static ?\App\Core\App $instance = null;
+    private array $_vars = [];
 
-    public $autoRender = true;
+    public bool $autoRender = true;
 
     /**
      * Singleton instance getter
@@ -39,12 +39,6 @@ class App
         if (isset($vars['action'])) {
             unset($vars['action']);
         }
-
-        // redirect to login page when not logged in
-        //if (!self::isLoggedIn() && !in_array($controllerName . '/' . $methodName, self::$allowedActions)) {
-        //    $controllerName = 'Profiles';
-        //    $methodName = 'login';
-        //}
 
         $controllerClass = 'App\Controller\\' . $controllerName . 'Controller';
 
@@ -88,17 +82,12 @@ class App
     /**
      * Build url with specified base
      *
-     * @param string|array $params Url params
+     * @param string $params Url params
      * @return string
      */
     public static function url($params)
     {
-        //$url_base = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['SCRIPT_NAME'], Configure::read('App.baseUrl')) + 1);
         $url_base = Configure::read('App.baseUrl', '/') . '/';
-
-        //if (substr($params, -3) == 'css') {
-        //    dd($url_base);
-        //}
 
         return $url_base . substr($params, 1);
     }

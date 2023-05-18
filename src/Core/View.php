@@ -5,6 +5,9 @@ namespace App\Core;
 
 class View
 {
+    /**
+     * @var array $_vars
+     */
     private $_vars = null;
 
     /**
@@ -12,7 +15,7 @@ class View
      *
      * @param array $vars Passed variables
      */
-    public function __construct($vars = null)
+    public function __construct(array $vars = null)
     {
         $this->_vars = $vars;
     }
@@ -85,17 +88,13 @@ class View
     /**
      * Build url with specified base
      *
-     * @param string|array $params Url params
+     * @param string $params Url params
      * @return string
      */
     public function url($params)
     {
         //$url_base = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['SCRIPT_NAME'], Configure::read('App.baseUrl')) + 1);
-        $url_base = Configure::read('App.baseUrl', '/') . '/';
-
-        //if (substr($params, -3) == 'css') {
-        //    dd($url_base);
-        //}
+        $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
 
         return $url_base . substr($params, 1);
     }

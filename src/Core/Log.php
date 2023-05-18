@@ -7,8 +7,8 @@ use Monolog\Logger;
 
 class Log
 {
-    private static $instance = null;
-    private static $logger = null;
+    private static ?\App\Core\Log $instance = null;
+    private static ?\Monolog\Logger $logger = null;
 
     /**
      * Singleton constructor
@@ -34,8 +34,9 @@ class Log
 
             $params = array_values(array_slice($handler, 1));
 
+            /** @var \Monolog\Handler\HandlerInterface $handlerClass */
             $handlerClass = new $class(...$params);
-            if (isset($formatter)) {
+            if (isset($formatter) && is_callable([$handlerClass, 'setFormatter'])) {
                 $handlerClass->setFormatter($formatter);
             }
 
