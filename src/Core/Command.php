@@ -8,10 +8,9 @@ class Command
     /**
      * Run command
      *
-     * @param array $args Array of arguments
      * @return void
      */
-    public function run($args)
+    public function run()
     {
         $logger = Log::getLogger();
         $logger->pushProcessor(function ($entry) {

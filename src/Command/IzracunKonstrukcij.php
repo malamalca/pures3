@@ -11,14 +11,16 @@ class IzracunKonstrukcij extends Command
     /**
      * Command run routine
      *
-     * @param string $projectId Project id.
+     * @param string|null $projectId Project id.
      * @return void
      */
-    public function run($projectId)
+    public function run($projectId = null)
     {
+        parent::run();
+
         $okoljeFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'okolje.json';
         if (!file_exists($okoljeFile)) {
-            throw \Exception(sprintf('Datoteka "%s" z okoljem podatki ne obstaja.', $okoljeFile));
+            throw new \Exception(sprintf('Datoteka "%s" z okoljem podatki ne obstaja.', $okoljeFile));
         }
         $okolje = json_decode(file_get_contents($okoljeFile));
 
@@ -44,6 +46,7 @@ class IzracunKonstrukcij extends Command
         $tKonsInputFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'konstrukcije' . DS . 'transparentne.json';
         $tKonsIn = json_decode(file_get_contents($tKonsInputFile));
 
+        $tKonsOut = [];
         foreach ($tKonsIn as $konstrukcija) {
             $tKonsOut[] = CalcKonstrukcije::transparentne($konstrukcija, $okolje);
         }

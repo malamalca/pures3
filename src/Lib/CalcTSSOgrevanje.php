@@ -14,7 +14,7 @@ class CalcTSSOgrevanje
      * @param \StdClass $cona Podatki cone
      * @param \StdClass $okolje Podatki okolja
      * @param \StdClass $splosniPodatki Podatki stavbe
-     * @return void
+     * @return \StdClass
      */
     public static function analiza($sistem, $cona, $okolje, $splosniPodatki)
     {
@@ -41,6 +41,8 @@ class CalcTSSOgrevanje
                 self::analizaRazvoda($razvod, $sistem, $cona, $okolje);
             }
         }
+
+        return $sistem;
     }
 
     /**
@@ -166,12 +168,18 @@ class CalcTSSOgrevanje
         switch ($sistem->vrsta) {
             case 'elektricni':
                 // TODO:
+                $deltaT_notranja = 0;
+                Log::warn('Ni implementirano');
                 break;
             case 'sevala':
                 // TODO:
+                $deltaT_notranja = 0;
+                Log::warn('Ni implementirano');
                 break;
             case 'toplozracni':
                 // TODO:
+                $deltaT_notranja = 0;
+                Log::warn('Ni implementirano');
                 break;
             case 'toplovodni':
                 $deltaT_notranja =
@@ -179,7 +187,12 @@ class CalcTSSOgrevanje
                 break;
             case 'biomasa':
                 // TODO:
+                $deltaT_notranja = 0;
+                Log::warn('Ni implementirano');
                 break;
+            default:
+                $deltaT_notranja = 0;
+                Log::warn('Ni implementirano');
         }
 
         Log::info('deltaT_notranja: ' . $deltaT_notranja);

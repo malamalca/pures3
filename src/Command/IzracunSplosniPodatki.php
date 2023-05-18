@@ -12,14 +12,16 @@ class IzracunSplosniPodatki extends Command
     /**
      * Command run routine
      *
-     * @param string $projectId Project id.
+     * @param string|null $projectId Project id.
      * @return void
      */
-    public function run($projectId)
+    public function run($projectId = null)
     {
+        parent::run();
+
         $splosniPodatkiInputFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'splosniPodatki.json';
         if (!file_exists($splosniPodatkiInputFile)) {
-            throw \Exception(sprintf('Datoteka "%s" z vhodnimi podatki ne obstaja.', $splosniPodatkiInputFile));
+            throw new \Exception(sprintf('Datoteka "%s" z vhodnimi podatki ne obstaja.', $splosniPodatkiInputFile));
         }
 
         $splosniPodatkiIn = json_decode(file_get_contents($splosniPodatkiInputFile));
@@ -27,7 +29,7 @@ class IzracunSplosniPodatki extends Command
 
         // find temp regime
         if (empty($splosniPodatkiIn->stavba->koordinate->X) || empty($splosniPodatkiIn->stavba->koordinate->Y)) {
-            throw \Exception('Koordinate stavbe niso vpisane.');
+            throw new \Exception('Koordinate stavbe niso vpisane.');
         }
 
         $YXTemp = json_decode(file_get_contents(CONFIG . 'YXTemp.json'));

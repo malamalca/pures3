@@ -11,16 +11,16 @@ class IzracunCone extends Command
     /**
      * Command run routine
      *
-     * @param string $projectId Project id.
+     * @param string|null $projectId Project id.
      * @return void
      */
-    public function run($projectId)
+    public function run($projectId = null)
     {
-        parent::run($projectId);
+        parent::run();
 
         $okoljeFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'okolje.json';
         if (!file_exists($okoljeFile)) {
-            throw \Exception(sprintf('Datoteka "%s" z okoljskimi podatki ne obstaja.', $okoljeFile));
+            throw new \Exception(sprintf('Datoteka "%s" z okoljskimi podatki ne obstaja.', $okoljeFile));
         }
         $okolje = json_decode(file_get_contents($okoljeFile));
 
@@ -52,7 +52,7 @@ class IzracunCone extends Command
         }
 
         if (count($coneOut) == 0) {
-            throw \Exception('Cone ne obstajajo.');
+            throw new \Exception('Cone ne obstajajo.');
         }
 
         $coneOutputFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'cone.json';

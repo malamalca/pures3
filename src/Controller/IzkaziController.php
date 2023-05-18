@@ -76,11 +76,14 @@ class IzkaziController
     public function graf()
     {
         $compareWithKI = true;
-        //$primerFilename = 'TSG004.php';
+        $primerFilename = 'TSG004.php';
         //$primerFilename = 'ISO13788_C2.php';
-        $primerFilename = 'KondVConi.php';
+        //$primerFilename = 'KondVConi.php';
 
-        include dirname(__FILE__) . DS . 'primeri' . DS . $primerFilename;
+        $konstrukcijaJson = '{}';
+        $okolje = new \StdClass();
+        require dirname(__FILE__) . DS . 'primeri' . DS . $primerFilename;
+
         $konstrukcija = json_decode($konstrukcijaJson);
 
         $kons = \App\Lib\CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);

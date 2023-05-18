@@ -221,7 +221,7 @@ class CalcCone
             $cona->ucinekDobitkov[$mesec] = null;
             if ($gama_ogrevanje > -0.1 && $gama_ogrevanje < 2) {
                 if ($gama_ogrevanje < 0) {
-                    if ($vsotaVirov_ogrevanje > 0) {
+                    if ((float)$vsotaVirov_ogrevanje > 0) {
                         $cona->ucinekDobitkov[$mesec] = 1;
                     } else {
                         $cona->ucinekDobitkov[$mesec] = 1 / $gama_ogrevanje;
@@ -463,11 +463,11 @@ class CalcCone
             $minNotranjaVlaznostOgrevanje = $cona->uravnavanjeVlage->minNotranjaVlaznostOgrevanje ??
                 0.622 * 1000 * $cona->uravnavanjeVlage->vlaznostZrakaNavlazevanje / 100 *
                 $nasicenNotranjiTlakOgrevanje /
-                (101325 - $cona->vlaznostZrakaNavlazevanje / 100 * $nasicenNotranjiTlakOgrevanje);
+                (101325 - $cona->uravnavanjeVlage->vlaznostZrakaNavlazevanje / 100 * $nasicenNotranjiTlakOgrevanje);
             $minNotranjaVlaznostHlajenje = $cona->uravnavanjeVlage->minNotranjaVlaznostHlajenje ??
                 0.622 * 1000 * $cona->uravnavanjeVlage->vlaznostZrakaNavlazevanje / 100 *
                 $nasicenNotranjiTlakHlajenje /
-                (101325 - $cona->vlaznostZrakaNavlazevanje / 100 * $nasicenNotranjiTlakHlajenje);
+                (101325 - $cona->uravnavanjeVlage->vlaznostZrakaNavlazevanje / 100 * $nasicenNotranjiTlakHlajenje);
 
             $cona->skupnaEnergijaNavlazevanje = 0;
             $cona->skupnaEnergijaRazvlazevanje = 0;

@@ -36,8 +36,7 @@ class View
 
         if (
             empty($templateFile) ||
-            strpos($templateFile, $templatePath) !== 0 ||
-            strpos($templateFile, $templatePath) === false
+            strpos($templateFile, $templatePath) !== 0
         ) {
             die(sprintf('Template "%s" does not exist', $templatePath . $methodName . '.php'));
         }

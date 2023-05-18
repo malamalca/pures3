@@ -10,7 +10,8 @@ final class IzracunKonstrukcijeISO13788Test extends TestCase
         $okolje = new \StdClass();
         $okolje->zunanjaT = [-1, 0, 4, 9, 14, 18, 19, 19, 15, 10, 5, 1];
         $okolje->zunanjaVlaga = [85, 84, 78, 72, 68, 69, 73, 75, 79, 83, 88, 88];
-// normal occupamcy
+        
+        // normal occupancy
         $okolje->notranjaT = [20, 20, 20, 20, 22, 24, 24.5, 24.5, 22.5, 20, 20, 20];
         $okolje->notranjaVlaga = [39, 40, 44, 49, 54, 58, 59, 59, 55, 50, 45, 41];
         $konstrukcijaJson = <<<EOT

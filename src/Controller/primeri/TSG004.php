@@ -1,7 +1,7 @@
 <?php
-declare(strict_types=1);
+    declare(strict_types=1);
 
-$inputZunanjaT = ['jan' => -1, 'feb' => 1, 'mar' => 6, 'apr' => 10, 'maj' => 15, 'jun' => 18,
+    $inputZunanjaT = ['jan' => -1, 'feb' => 1, 'mar' => 6, 'apr' => 10, 'maj' => 15, 'jun' => 18,
         'jul' => 20, 'avg' => 19, 'sep' => 15, 'okt' => 10, 'nov' => 4, 'dec' => 1];
 
     $inputZunanjaVlaga = ['jan' => 82 , 'feb' => 77, 'mar' => 72, 'apr' => 71, 'maj' => 73, 'jun' => 72,

@@ -23,7 +23,7 @@ class CalcOvojTransparenten
         if (isset($cona->ovoj->transparentneKonstrukcije)) {
             foreach ($cona->ovoj->transparentneKonstrukcije as $ix => $elementOvoja) {
                 if (!isset($konstrukcije[$elementOvoja->idKonstrukcije])) {
-                    die(sprintf('Konstrukcija "" ne obstaja', $elementOvoja->idKonstrukcije));
+                    throw new \Exception(sprintf('Konstrukcija "%1$s" ne obstaja', $elementOvoja->idKonstrukcije));
                 }
                 $kons = $konstrukcije[$elementOvoja->idKonstrukcije];
 
@@ -36,7 +36,7 @@ class CalcOvojTransparenten
                 $elementOvoja->delezOkvirja = $elementOvoja->delezOkvirja ?? 1;
 
                 // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
-                $elementOvoja->g = $konstrukcija->g ?? 0.5;
+                $elementOvoja->g = $kons->g ?? 0.5;
                 $elementOvoja->faktorSencil = $elementOvoja->faktorSencil ?? 1;
 
                 $elementOvoja->g_sh = $elementOvoja->g * $elementOvoja->faktorSencil;
@@ -60,8 +60,8 @@ class CalcOvojTransparenten
                         break;
                     default:
                         throw new \Exception(sprintf(
-                            'Tip transparentne konstrukcije ne obstaja!',
-                            ['id' => $elementOvoja->idKonstrukcije]
+                            'Tip transparentne konstrukcije %1$s ne obstaja!',
+                            $elementOvoja->idKonstrukcije
                         ));
                 }
 
@@ -76,7 +76,7 @@ class CalcOvojTransparenten
                     }
                 }
                 if (empty($elementOvoja->soncnoObsevanje)) {
-                    Log::warn('Sončno obsevanje za element ne obstaja', ['id' => $element->id]);
+                    Log::warn('Sončno obsevanje za element ne obstaja', ['id' => $elementOvoja->id]);
                 }
 
                 $pomozniFaktorji = Configure::read('lookups.transparentne.pomozniFaktorji');

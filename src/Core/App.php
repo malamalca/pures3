@@ -155,7 +155,7 @@ class App
             unset($_SESSION['flash.message']);
             unset($_SESSION['flash.class']);
 
-            return '<div id="notification" class="' . h($code) . '">' . h($msg) . '</div>';
+            return '<div id="notification" class="' . htmlentities($code) . '">' . htmlentities($msg) . '</div>';
         }
     }
 

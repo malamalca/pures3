@@ -27,10 +27,9 @@ class CalcKonstrukcije
         $totalR = $kons->Rsi + $kons->Rse;
         $totalSd = 0;
         foreach ($kons->materiali as $material) {
-            if (isset($material->lambda)) {
+            $material->R = 0;
+            if (isset($material->lambda) && isset($material->debelina)) {
                 $material->R = $material->debelina / $material->lambda;
-            } else {
-                $material->R = 0;
             }
             $totalR += $material->R;
 
@@ -60,8 +59,8 @@ class CalcKonstrukcije
             // določitev računskih slojev - sloj se razdeli, če je lambda < 0.25 W/mK
             $material->racunskiSloji = [];
             $steviloRacunskihSlojev = 1;
-            if (!empty($material->lambda) && ($material->debelina / $material->lambda) > 0.25) {
-                $steviloRacunskihSlojev = floor($material->debelina / (0.25 * $material->lambda)) + 1;
+            if (!empty($material->lambda) && (($material->debelina ?? 0) / $material->lambda) > 0.25) {
+                $steviloRacunskihSlojev = floor(($material->debelina ?? 0) / (0.25 * $material->lambda)) + 1;
             }
             for ($i = 0; $i < $steviloRacunskihSlojev; $i++) {
                 $sloj = new \stdClass();
@@ -104,7 +103,7 @@ class CalcKonstrukcije
             }
         }
 
-        if (!isset($konstrukcija->TSG->kontrolaKond) || $konstrukcija->TSG->kontrolaKond !== false) {
+        if (!isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false) {
             self::izracunKondenzacije($kons);
 
             // sestej kolicino vlage po materialu
@@ -134,12 +133,10 @@ class CalcKonstrukcije
             $kondRavnineVMesecu = [];
 
             $i = 0;
-            while ($i < 10 && $kondRavnineKorak = self::isciKondRavnine($kons, $mesec)) {
+            while ($i < 10 && ($kondRavnineKorak = self::isciKondRavnine($kons, $mesec))) {
                 // popravimo dejanski tlak
-                if (count($kondRavnineKorak) > 0) {
-                    $kondRavnineVMesecu = array_merge($kondRavnineVMesecu, $kondRavnineKorak);
-                    self::popravekDejanskegaTlaka($kons, $kondRavnineVMesecu, $mesec);
-                }
+                $kondRavnineVMesecu = array_merge($kondRavnineVMesecu, $kondRavnineKorak);
+                self::popravekDejanskegaTlaka($kons, $kondRavnineVMesecu, $mesec);
                 $i++;
             }
 
@@ -268,7 +265,7 @@ class CalcKonstrukcije
      *
      * @param \StdClass $kons Podatki konstrukcije
      * @param int $mesec Številka meseca
-     * @return array|null
+     * @return array<int, \StdClass>|null
      */
     public static function isciKondRavnine($kons, $mesec)
     {

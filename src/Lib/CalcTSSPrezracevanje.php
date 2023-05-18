@@ -29,7 +29,7 @@ class CalcTSSPrezracevanje
             if (in_array($sistem->faktorKrmiljenja, array_keys($faktorjiSistemaKrmiljenja))) {
                 $sistem->faktorKrmiljenja = $faktorjiSistemaKrmiljenja[$sistem->krmiljenje];
             } else {
-                throw \Exception('TSS Prezračevanje: Vpisani sistem krmiljenja ne obstaja.');
+                throw new \Exception('TSS Prezračevanje: Vpisani sistem krmiljenja ne obstaja.');
             }
         }
 

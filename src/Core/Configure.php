@@ -6,7 +6,7 @@ namespace App\Core;
 class Configure
 {
     /**
-     * @var \App\Core\Config
+     * @var \App\Core\Configure|null
      */
     private static $_instance = null;
 
@@ -30,7 +30,7 @@ class Configure
      * Returns the instance.
      *
      * @param array $config Config array
-     * @return \Config
+     * @return \App\Core\Configure
      */
     public static function getInstance($config = null)
     {

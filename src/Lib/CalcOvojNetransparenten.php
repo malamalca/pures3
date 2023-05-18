@@ -23,11 +23,11 @@ class CalcOvojNetransparenten
         if (isset($cona->ovoj->netransparentneKonstrukcije)) {
             foreach ($cona->ovoj->netransparentneKonstrukcije as $elementOvoja) {
                 if (!isset($konstrukcije[$elementOvoja->idKonstrukcije])) {
-                    throw \Expection(sprintf('Konstrukcija "" ne obstaja', $elementOvoja->idKonstrukcije));
+                    throw new \Exception(sprintf('Konstrukcija "%s" ne obstaja', $elementOvoja->idKonstrukcije));
                 }
                 $kons = $konstrukcije[$elementOvoja->idKonstrukcije];
 
-                $elementOvoja->stevilo = $element->stevilo ?? 1;
+                $elementOvoja->stevilo = $elementOvoja->stevilo ?? 1;
                 $elementOvoja->protiZraku = $kons->TSG->tip == 'zunanja';
 
                 $elementOvoja->orientacija = $elementOvoja->orientacija ?? '';
@@ -49,7 +49,7 @@ class CalcOvojNetransparenten
                     }
                 }
                 if (empty($elementOvoja->soncnoObsevanje)) {
-                    Log::warn('Sončno obsevanje za element ne obstaja', ['id' => $element->id]);
+                    Log::warn('Sončno obsevanje za element ne obstaja', ['id' => $elementOvoja->id]);
                 }
 
                 // napolni podatke o vplivu zemljine
@@ -157,6 +157,7 @@ class CalcOvojNetransparenten
                 $U0 = $lambdaTla / (0.457 * $B + $dt);
             }
 
+            $d_ = 0;
             if (!empty($elementOvoja->dodatnaIzolacija)) {
                 $Rn = $elementOvoja->dodatnaIzolacija->debelina / $elementOvoja->dodatnaIzolacija->lambda;
                 $R_ = $Rn - $elementOvoja->dodatnaIzolacija->debelina / $lambdaTla;
@@ -280,6 +281,9 @@ class CalcOvojNetransparenten
     public static function izracunTokaProtiZemljini($mesec, $elementOvoja, $okolje, $temperature)
     {
         extract($temperature);
+        $povprecnaNotranjaT = $povprecnaNotranjaT ?? 20;
+        $notranjaT = $notranjaT ?? 20;
+
         $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
         $urniToplotniTok = $elementOvoja->U *

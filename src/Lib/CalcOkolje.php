@@ -8,9 +8,9 @@ class CalcOkolje
     /**
      * Ocena notranje vlage glede na zunanjo temperaturo
      *
-     * @param array<string, \App\Lib\decimal> $zunanjaT Zunanja temperatura po mesecih.
+     * @param array<int, float> $zunanjaT Zunanja temperatura po mesecih.
      * @param bool $highOccupancy Povečana vlaga zaradi večjega števila uporabnikov.
-     * @return array<string, \App\Lib\decimal>
+     * @return array<int, float>
      */
     public static function mesecnaNotranjaVlaga($zunanjaT, $highOccupancy = false)
     {
@@ -33,8 +33,8 @@ class CalcOkolje
     /**
      * Ocena notranje temperature glede na zunanjo temperaturo
      *
-     * @param array<string, \App\Lib\decimal> $zunanjaT Zunanja temperatura po mesecih.
-     * @return array<string, \App\Lib\decimal>
+     * @param array<int, float> $zunanjaT Zunanja temperatura po mesecih.
+     * @return array<int, float>
      */
     public static function mesecnaNotranjaTemperatura($zunanjaT)
     {
@@ -55,9 +55,9 @@ class CalcOkolje
      * Izračun tlaka glede na temperaturo in vlago.
      * Annex E.1
      *
-     * @param array<string, \App\Lib\decimal> $temperatura Temperatura po mesecih.
-     * @param array<string, \App\Lib\decimal> $vlaga Vlaga po mesecih.
-     * @return array<string, \App\Lib\decimal>
+     * @param array<int, float> $temperatura Temperatura po mesecih.
+     * @param array<int, float> $vlaga Vlaga po mesecih.
+     * @return array<int, float>
      */
     public static function mesecniTlak($temperatura, $vlaga)
     {
@@ -78,8 +78,8 @@ class CalcOkolje
     /**
      * Izračun nasičenega tlaka
      *
-     * @param array<string, \App\Lib\decimal> $tlak Tlak po mesecih
-     * @return array<string, \App\Lib\decimal>
+     * @param array<int, float> $tlak Tlak po mesecih
+     * @return array<int, float>
      */
     public static function mesecniNasicenTlak($tlak)
     {
@@ -94,8 +94,8 @@ class CalcOkolje
     /**
      * Izračun minimalne temperature notranje površine
      *
-     * @param array<string, \App\Lib\decimal> $nasicenTlak Nasičen tlak po mesecih
-     * @return array<string, \App\Lib\decimal>
+     * @param array<int, float> $nasicenTlak Nasičen tlak po mesecih
+     * @return array<int, float>
      */
     public static function mesecnaMinTSi($nasicenTlak)
     {
@@ -114,10 +114,10 @@ class CalcOkolje
     /**
      * Izračun minimalnega faktorja f_Rsi
      *
-     * @param array<string, \App\Lib\decimal> $zunanjaT Zunanja temperatura po mesecih
-     * @param array<string, \App\Lib\decimal> $notranjaT Notranja temperatura po mesecih
-     * @param array<string, \App\Lib\decimal> $minTSi Minimalna temperatura na notranji površini po mesecih
-     * @return array<string, \App\Lib\decimal>
+     * @param array<int, float> $zunanjaT Zunanja temperatura po mesecih
+     * @param array<int, float> $notranjaT Notranja temperatura po mesecih
+     * @param array<int, float> $minTSi Minimalna temperatura na notranji površini po mesecih
+     * @return array<int, float>
      */
     public static function mesecniMinFRSi($zunanjaT, $notranjaT, $minTSi)
     {
@@ -134,7 +134,7 @@ class CalcOkolje
      *
      * @param array<string, array> $params Fiksni parametri. Min zahteva je "zunanjaT" in "zunanjaVlaga"
      * @param array $options Options to set
-     * @return array<string, array>
+     * @return \StdClass
      */
     public static function notranjeOkolje($params, $options = [])
     {

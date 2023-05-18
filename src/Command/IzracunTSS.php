@@ -12,28 +12,28 @@ class IzracunTSS extends Command
     /**
      * Command run routine
      *
-     * @param string $projectId Project id.
+     * @param string|null $projectId Project id.
      * @return void
      */
-    public function run($projectId)
+    public function run($projectId = null)
     {
-        parent::run($projectId);
+        parent::run();
 
         $splosniPodatkiFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'splosniPodatki.json';
         if (!file_exists($splosniPodatkiFile)) {
-            throw \Exception(sprintf('Datoteka "%s" s splošnimi podatki ne obstaja.', $splosniPodatkiFile));
+            throw new \Exception(sprintf('Datoteka "%s" s splošnimi podatki ne obstaja.', $splosniPodatkiFile));
         }
         $splosniPodatki = json_decode(file_get_contents($splosniPodatkiFile));
 
         $okoljeFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'okolje.json';
         if (!file_exists($okoljeFile)) {
-            throw \Exception(sprintf('Datoteka "%s" z okoljskimi podatki ne obstaja.', $okoljeFile));
+            throw new \Exception(sprintf('Datoteka "%s" z okoljskimi podatki ne obstaja.', $okoljeFile));
         }
         $okolje = json_decode(file_get_contents($okoljeFile));
 
         $coneFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'cone.json';
         if (!file_exists($coneFile)) {
-            throw \Exception(sprintf('Datoteka "%s" s conami ne obstaja.', $coneFile));
+            throw new \Exception(sprintf('Datoteka "%s" s conami ne obstaja.', $coneFile));
         }
         $cone = json_decode(file_get_contents($coneFile));
         $cone = array_combine(array_map(fn($k) => $k->id, $cone), $cone);
@@ -46,7 +46,7 @@ class IzracunTSS extends Command
             $TSSSistemiPrezracevanjaOut = [];
             foreach ($TSSSistemiPrezracevanja as $sistem) {
                 if (!isset($cone[$sistem->idCone])) {
-                    throw \Exception('TSS Prezračevanje: Cona ne obstaja.');
+                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
                 $TSSSistemiPrezracevanjaOut[] =
                     CalcTSSPrezracevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
@@ -67,7 +67,7 @@ class IzracunTSS extends Command
             $TSSSistemiOgrevanjeOut = [];
             foreach ($TSSSistemiOgrevanje as $sistem) {
                 if (!isset($cone[$sistem->idCone])) {
-                    throw \Exception('TSS Ogrevanje: Cona ne obstaja.');
+                    throw new \Exception('TSS Ogrevanje: Cona ne obstaja.');
                 }
                 $TSSSistemiOgrevanjeOut[] =
                     CalcTSSOgrevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);

@@ -1,0 +1,8 @@
+parameters:
+    level: 5
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    bootstrapFiles:
+        - config/paths.php
+        - config/funcs.php
+    excludePaths:
