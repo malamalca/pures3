@@ -113,7 +113,16 @@
                         "levoRazdalja": 0,
                         "desnoDolzina": 0.2,
                         "desnoRazdalja": 0
-                    }
+                    },
+
+                    "sencenjeOvir": [
+                        {
+                            "kvadrant": 2,
+                            "visinaNadTerenom": 1,
+                            "visinaOvire": 20,
+                            "oddaljenostOvire": 5
+                        }
+                    ]
                 },
                 {
                     "idKonstrukcije": "O1",

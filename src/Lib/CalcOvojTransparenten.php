@@ -93,8 +93,14 @@ class CalcOvojTransparenten
                 $faktorOrientacije = Configure::read('lookups.transparentne.faktorOrientacije.' .
                     $elementOvoja->orientacija);
 
+                $visineSonca = Configure::read('lookups.transparentne.visinaSonca');
+                $faktorjiSencenjaOvir = Configure::read('lookups.transparentne.faktorjiSencenja');
+
                 foreach (array_keys(Calc::MESECI) as $mesec) {
                     $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+
+                    /** ============================================================================================= */
+                    /** 1. Senčenje nadstreška in stranskih ovir */
 
                     $D_ovh = $elementOvoja->stranskoSencenje->zgorajDolzina ?? 0;
                     $L_ovh = $elementOvoja->stranskoSencenje->zgorajRazdalja ?? 0;
@@ -147,22 +153,49 @@ class CalcOvojTransparenten
 
                     $w_fin = $w_fin_l + $w_fin_d < 0 ? 0 : $w_fin_l + $w_fin_d;
 
-                    $Fsh = $H * $W > 0 ? ($H - $h_ovh) * ($W - $w_fin) / ($H * $W) : 0;
+                    $Fsh_ov = $H * $W > 0 ? ($H - $h_ovh) * ($W - $w_fin) / ($H * $W) : 0;
+
+                    /** ============================================================================================= */
+                    /** 2. Senčenje drugih objektov */
+                    $h_k_skupaj = 0;
+                    if (!empty($elementOvoja->sencenjeOvir)) {
+                        $h_k_skupaj = 0;
+                        foreach ($elementOvoja->sencenjeOvir as $ovira) {
+                            $visinskiKot =
+                                atan(($ovira->visinaOvire - $ovira->visinaNadTerenom) / $ovira->oddaljenostOvire)
+                                * 180 / pi();
+
+                            $visinaSonca = $visineSonca[$elementOvoja->orientacija][$ovira->kvadrant][$mesec];
+
+                            $h_k_obst = $ovira->visinaOvire - $ovira->visinaNadTerenom -
+                                $ovira->oddaljenostOvire * tan(deg2rad($visinaSonca));
+                            if ($h_k_obst < 0) {
+                                $h_k_obst = 0;
+                            }
+                            if ($h_k_obst > $H) {
+                                $h_k_obst = $H;
+                            }
+
+                            $obdobje = $mesec > 4 && $mesec < 9 ? 'hlajenje' : 'ogrevanje';
+                            $h_k_skupaj += $h_k_obst *
+                                $faktorjiSencenjaOvir[$elementOvoja->orientacija][$ovira->kvadrant][$obdobje];
+                        }
+
+                        $Fsh_obst = ($H - $h_k_skupaj) * $W / ($W * $H);
+                    }
+
+                    /** ============================================================================================= */
+                    /** Skupni faktor senčenja */
+                    /** Celice AH27:AS27 */
+                    $h_ovh = $h_ovh + $h_k_skupaj;
+                    if ($h_ovh > $H) {
+                        $h_ovh = $H;
+                    }
+
+                    /* celice AH63:AS63 */
+                    $Fsh = $H * $W > 0 ? ($H - $h_ovh) * ($W - $w_fin) / ($W * $H) : 0;
 
                     $elementOvoja->faktorSencenja[$mesec] = 1 - $delezObsevanja + $Fsh * $delezObsevanja;
-
-                    $elementOvoja->transIzgubeOgrevanje[$mesec] = ($elementOvoja->U + $cona->deltaPsi) *
-                        $elementOvoja->povrsina * $elementOvoja->b * 24 / 1000 *
-                        $cona->deltaTOgrevanje[$mesec] * $stDni;
-
-                    $elementOvoja->transIzgubeHlajenje[$mesec] = ($elementOvoja->U + $cona->deltaPsi) *
-                        $elementOvoja->povrsina * $elementOvoja->b * 24 / 1000 *
-                        $cona->deltaTHlajenje[$mesec] * $stDni;
-
-                    $cona->transIzgubeOgrevanje[$mesec] +=
-                        $elementOvoja->transIzgubeOgrevanje[$mesec] * $elementOvoja->stevilo;
-                    $cona->transIzgubeHlajenje[$mesec] +=
-                        $elementOvoja->transIzgubeHlajenje[$mesec] * $elementOvoja->stevilo;
 
                     // izračun solarnih dobitkov
                     $alphaSr = 0.3;
@@ -195,6 +228,20 @@ class CalcOvojTransparenten
                         $elementOvoja->solarniDobitkiOgrevanje[$mesec] * $elementOvoja->stevilo;
                     $cona->solarniDobitkiHlajenje[$mesec] +=
                         $elementOvoja->solarniDobitkiHlajenje[$mesec] * $elementOvoja->stevilo;
+
+                    // transmisijske izgube
+                    $elementOvoja->transIzgubeOgrevanje[$mesec] = ($elementOvoja->U + $cona->deltaPsi) *
+                        $elementOvoja->povrsina * $elementOvoja->b * 24 / 1000 *
+                        $cona->deltaTOgrevanje[$mesec] * $stDni;
+
+                    $elementOvoja->transIzgubeHlajenje[$mesec] = ($elementOvoja->U + $cona->deltaPsi) *
+                        $elementOvoja->povrsina * $elementOvoja->b * 24 / 1000 *
+                        $cona->deltaTHlajenje[$mesec] * $stDni;
+
+                    $cona->transIzgubeOgrevanje[$mesec] +=
+                        $elementOvoja->transIzgubeOgrevanje[$mesec] * $elementOvoja->stevilo;
+                    $cona->transIzgubeHlajenje[$mesec] +=
+                        $elementOvoja->transIzgubeHlajenje[$mesec] * $elementOvoja->stevilo;
                 }
             }
         }

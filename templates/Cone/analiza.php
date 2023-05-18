@@ -137,7 +137,7 @@
     <tr>
         <td>Površina ovoja</td>
         <td>A</td>
-        <td class="center"><?= $this->numFormat($cona->specVentilacijskeIzgube, 1) ?></td>
+        <td class="center"><?= $this->numFormat($cona->povrsinaOvoja, 1) ?></td>
         <td>m²</td>
     </tr>
     <tr><td colspan="4">&nbsp;</td></tr>

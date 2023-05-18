@@ -115,11 +115,12 @@ class CalcOvojNetransparenten
 
                 if ($kons->TSG->tip != 'zunanja') {
                     $elementOvoja->Hgr_ogrevanje = $elementOvoja->Hgr_ogrevanje /
-                        ($temperature['stMesecevOgrevanja'] * $temperature['povprecnaTOgrevanja'] -
-                        $okolje->povprecnaLetnaTemp) * $elementOvoja->stevilo;
+                        $temperature['stMesecevOgrevanja'] / ($temperature['povprecnaTOgrevanja'] -
+                        $okolje->povprecnaLetnaTemp);
+
                     $elementOvoja->Hgr_hlajenje = $elementOvoja->Hgr_hlajenje /
-                        ((12 - $temperature['stMesecevOgrevanja']) * $temperature['povprecnaTHlajenja'] -
-                        $okolje->povprecnaLetnaTemp) * $elementOvoja->stevilo;
+                        (12 - $temperature['stMesecevOgrevanja']) / ($temperature['povprecnaTHlajenja'] -
+                        $okolje->povprecnaLetnaTemp);
 
                     // toplotni tok proti zemljini
                     $cona->Hgr_ogrevanje = ($cona->Hgr_ogrevanje ?? 0) + $elementOvoja->Hgr_ogrevanje;

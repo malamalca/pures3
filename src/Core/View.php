@@ -15,7 +15,7 @@ class View
      *
      * @param array $vars Passed variables
      */
-    public function __construct(array $vars = null)
+    public function __construct(?array $vars = null)
     {
         $this->_vars = $vars;
     }
