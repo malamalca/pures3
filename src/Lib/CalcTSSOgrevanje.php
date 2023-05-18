@@ -14,7 +14,7 @@ class CalcTSSOgrevanje
      * @param \StdClass $cona Podatki cone
      * @param \StdClass $okolje Podatki okolja
      * @param \StdClass $splosniPodatki Podatki stavbe
-     * @return \StdClass
+     * @return void
      */
     public static function analiza($sistem, $cona, $okolje, $splosniPodatki)
     {
@@ -43,6 +43,15 @@ class CalcTSSOgrevanje
         }
     }
 
+    /**
+     * Analiza končnega prenosnika (radiatorji, kolektorji, ploskovna ogrevala,..)
+     *
+     * @param \StdClass $prenosnik Podatki prenosnika
+     * @param \StdClass $sistem Podatki TSS sistema
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @return void
+     */
     public static function analizaKoncnihPrenosnikov($prenosnik, $sistem, $cona, $okolje)
     {
         $Cm_eff = $cona->ogrevanaPovrsina * $cona->toplotnaKapaciteta;
@@ -103,10 +112,13 @@ class CalcTSSOgrevanje
         $deltaT_emb = 0;
         if ($prenosnik->vrsta == 'ploskovnaOgrevala') {
             if (empty($prenosnik->sistem) || !in_array($prenosnik->sistem, array_keys($sistemFaktorji))) {
-                throw new \Exception(sprintf('TSS Ogrevanje | Prenosniki : Sistem "%s" ne obstaja', $prenosnik->sistem));
+                throw new \Exception(sprintf('TSS Ogrevanje: Sistem prenosnika "%s" ne obstaja', $prenosnik->sistem));
             }
             if (empty($prenosnik->sistem) || !in_array($prenosnik->izolacija, array_keys($izolacijaFaktorji))) {
-                throw new \Exception(sprintf('TSS Ogrevanje | Prenosniki : Izolacija "%s" ne obstaja', $prenosnik->izolacija));
+                throw new \Exception(sprintf(
+                    'TSS Ogrevanje: Izolacija prenosnika "%s" ne obstaja',
+                    $prenosnik->izolacija
+                ));
             }
             $deltaT_emb = $sistemFaktorji[$prenosnik->sistem][0] + $izolacijaFaktorji[$prenosnik->izolacija][1];
         }
@@ -131,16 +143,19 @@ class CalcTSSOgrevanje
         switch ($prenosnik->vrsta) {
             case 'ploskovnaOgrevala':
                 if (empty($prenosnik->sistem) || !in_array($prenosnik->sistem, array_keys($sistemFaktorji))) {
-                    throw new \Exception(sprintf('TSS Ogrevanje | Prenosniki : Sistem "%s" ne obstaja', $prenosnik->sistem));
+                    throw new \Exception(sprintf('TSS Ogrevanje: Sistem "%s" ne obstaja', $prenosnik->sistem));
                 }
                 $deltaT_str = $sistemFaktorji[$prenosnik->sistem][0];
                 break;
             case 'radiatorji':
-                if (empty($prenosnik->namestitev) || !in_array($prenosnik->namestitev, array_keys($namestitevFaktorji))) {
-                    throw new \Exception(sprintf('TSS Ogrevanje | Prenosniki : Namestitev "%s" ne obstaja', $prenosnik->namestitev));
+                if (
+                    empty($prenosnik->namestitev) ||
+                    !in_array($prenosnik->namestitev, array_keys($namestitevFaktorji))
+                ) {
+                    throw new \Exception(sprintf('TSS Ogrevanje: Namestitev "%s" ne obstaja', $prenosnik->namestitev));
                 }
                 if (empty($prenosnik->rezim) || !in_array($prenosnik->rezim, array_keys($rezimFaktorji))) {
-                    throw new \Exception(sprintf('TSS Ogrevanje | Prenosniki : Režim "%s" ne obstaja', $prenosnik->rezim));
+                    throw new \Exception(sprintf('TSS Ogrevanje: Režim "%s" ne obstaja', $prenosnik->rezim));
                 }
                 $deltaT_str = $namestitevFaktorji[$prenosnik->namestitev] + $rezimFaktorji[$prenosnik->rezim][0];
                 break;
@@ -159,7 +174,8 @@ class CalcTSSOgrevanje
                 // TODO:
                 break;
             case 'toplovodni':
-                $deltaT_notranja = $deltaT_str + $deltaT_emb + $deltaT_hidravlicnoUravnotezenje + $deltaT_regulacijaTemperature;
+                $deltaT_notranja =
+                    $deltaT_str + $deltaT_emb + $deltaT_hidravlicnoUravnotezenje + $deltaT_regulacijaTemperature;
                 break;
             case 'biomasa':
                 // TODO:
@@ -205,6 +221,15 @@ class CalcTSSOgrevanje
         }
     }
 
+    /**
+     * Analiza razvodnega sistema
+     *
+     * @param \StdClass $razvod Podatki razvoda
+     * @param \StdClass $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @return void
+     */
     public static function analizaRazvoda($razvod, $sistem, $cona, $okolje)
     {
     }

@@ -48,7 +48,8 @@ class IzracunTSS extends Command
                 if (!isset($cone[$sistem->idCone])) {
                     throw \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
-                $TSSSistemiPrezracevanjaOut[] = CalcTSSPrezracevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
+                $TSSSistemiPrezracevanjaOut[] =
+                    CalcTSSPrezracevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
             }
 
             $TSSPrezracevanjeOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'prezracevanje.json';
@@ -68,7 +69,8 @@ class IzracunTSS extends Command
                 if (!isset($cone[$sistem->idCone])) {
                     throw \Exception('TSS Ogrevanje: Cona ne obstaja.');
                 }
-                $TSSSistemiOgrevanjeOut[] = CalcTSSOgrevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
+                $TSSSistemiOgrevanjeOut[] =
+                    CalcTSSOgrevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
             }
 
             $TSSOgrevanjeOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'ogrevanje.json';
