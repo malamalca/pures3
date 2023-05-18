@@ -3,9 +3,10 @@
 /logs/*
 /tmp/*
 /vendor/*
-/projects/*
 /resources/*
+/projects/*
 !/projects/TestniProjekt/*
+/projects/TestniProjekt/izracuni
 /vendor/*
 /.phpunit.cache/*
 
