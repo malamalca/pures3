@@ -6,3 +6,7 @@
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
 
 Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
+
+Trenutno je implementirana gradbena fizika, sistemi TSS razsvetljava, TSS prezračevanje.
+
+V delu pa je še sistem TSS ogrevanje.
