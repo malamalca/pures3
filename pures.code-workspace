@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+        "runOnSave.statusMessageTimeout": 3000,
+        "runOnSave.commands": [
+            {
+                "match": ".*\\.scss$",
+                "notMatch": "[\\\\\\/]t[^\\\\\\/]*\\.scss$",
+                "command": "D:\\bin\\dart-sass\\sass.bat ${workspaceFolder}\\webroot\\sass\\main.scss ${workspaceFolder}\\webroot\\css\\main.css",
+                "runIn": "terminal",
+                "runningStatusMessage": "Compiling CSS",
+                "finishStatusMessage": "CSS compiled"
+            }
+        ]
+    }
+}

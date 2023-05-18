@@ -1,0 +1,74 @@
+[
+    {
+        "id": 0, "naziv": "Zunanje stene",
+            "Umax": 0.18, "Rsi": 0.13, "Rse": 0.04, "tip": "zunanja", "dobitekSS": true
+    },
+    {
+        "id": 1, "naziv": "Stene proti neogrevanim prostorom",
+            "Umax": 0.28, "Rsi": 0.13, "Rse": 0.04, "tip": "zunanja", "kontrolaKond": false
+    },
+    {
+        "id": 2, "naziv": "Del zunanje stene ali stene proti neogrevanim prostorom (skupno < 10%)",
+            "Umax": 0.6, "Rsi": 0.13, "Rse": 0.04, "tip": "zunanja", "dobitekSS": true
+    },
+    {
+        "id": 3, "naziv": "Stene, ki mejijo na ogrevane sosednje stavbe",
+            "Umax": 0.5, "Rsi": 0.13, "Rse": 0.13, "tip": "zunanja", "kontrolaKond": false, "adiabatno": true
+    },
+    {
+        "id": 4, "naziv": "Stene med stanovanji in stene proti hodnikom in manj ogrevanim prostorom",
+            "Umax": 0.7, "Rsi": 0.13, "Rse": 0.13, "tip": "zunanja", "kontrolaKond": false, "adiabatno": true
+    },
+    {
+        "id": 5, "naziv": "Stropi med stanovanji",
+            "Umax": 0.7, "Rsi": 0.1, "Rse": 0.17, "tip": "zunanja", "kontrolaKond": false, "adiabatno": true
+    },
+    {
+        "id": 6, "naziv": "Zunanje stene ogrevanih prostorov proti terenu",
+            "Umax": 0.35, "Rsi": 0.13, "Rse": 0.04, "tip": "stena-teren"
+    },
+    {
+        "id": 7, "naziv": "Tla na terenu, tla vkopane kleti",
+            "Umax": 0.35, "Rsi": 0.17, "Rse": 0.04, "tip": "tla-teren"
+    },
+    {
+        "id": 8, "naziv": "Tla nad neogrevano kletjo ali neogrevanim prostorom",
+            "Umax": 0.35, "Rsi": 0.17, "Rse": 0.1, "tip": "tla-neogrevano", "kontrolaKond": false
+    },
+    {
+        "id": 9, "naziv": "Tla proti zunanjosti",
+            "Umax": 0.3, "Rsi": 0.17, "Rse": 0.04, "tip": "zunanja"
+    },
+    {
+        "id": 10, "naziv": "Tla s ploskovnim ogrevanjem proti zunanjosti",
+            "Umax": 0.2, "Rsi": 0, "Rse": 0.04, "tip": "zunanja", "talnoGretje": true
+    },
+    {
+        "id": 11, "naziv": "Stene s ploskovnim ogrevanjem proti zunanjosti",
+            "Umax": 0.2, "Rsi": 0, "Rse": 0.04, "tip": "zunanja", "talnoGretje": true, "dobitekSS": true
+    },
+    {
+        "id": 12, "naziv": "Tla na terenu pri ploskovnem gretju",
+            "Umax": 0.3, "Rsi": 0, "Rse": 0.04, "tip": "tla-teren", "talnoGretje": true
+    },
+    {
+        "id": 13, "naziv": "Tla s podnim ogrevanjem proti neogrevani vkopani kleti",
+            "Umax": 0.3, "Rsi": 0, "Rse": 0.1, "tip": "tla-neogrevano", "kontrolaKond": false, "talnoGretje": true
+    },
+    {
+        "id": 14, "naziv": "Ravne in poševne strehe",
+            "Umax": 0.15, "Rsi": 0.1, "Rse": 0.04, "tip": "zunanja", "dobitekSS": true
+    },
+    {
+        "id": 15, "naziv": "Strop proti neogrevanemu prostoru",
+            "Umax": 0.15, "Rsi": 0.1, "Rse": 0.04, "tip": "zunanja", "kontrolaKond": false
+    },
+    {
+        "id": 16, "naziv": "Strop proti terenu",
+            "Umax": 0.35, "Rsi": 0.1, "Rse": 0.1, "tip": "zunanja"
+    },
+    {
+        "id": 17, "naziv": "Del terase, ki ne presega 5 % površine strehe",
+            "Umax": 0.6, "Rsi": 0.1, "Rse": 0.04, "tip": "zunanja", "dobitekSS": true
+    }
+]

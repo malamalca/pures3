@@ -1,0 +1,44 @@
+[
+    {
+        "idCone": "Cona1",
+        "vrsta": "toplovodni",
+
+        "generatorji": [
+            {
+                "energent": "elektrika",
+                "vrsta": "TC_zrakvoda",
+                "nazivnaMoc": 6
+            }
+        ],
+
+        "hranilniki": [
+
+        ],
+
+        "razvod": [
+            {
+                "vrsta": "dvocevniNotranjiZid"
+            }
+        ],
+
+        "prenosniki": [
+            {
+                "vrsta": "ploskovnaOgrevala",
+                "__vrsta": "radiatorji",
+                "_vrsta": "konvektorji",
+
+                "rezim": "40/30",
+                "sistem": "talno_mokri",
+                "izolacija": "100%",
+
+                "namestitev": "notranjeStene",
+
+                "hidravlicnoUravnotezenje": "staticnoDviznihVodov",
+                "regulacijaTemperature": "referencniProstor",
+
+                "mocRegulatorjev": 1,
+                "steviloRegulatorjev": 1
+            }
+        ]
+    }
+]

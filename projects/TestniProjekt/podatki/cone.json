@@ -1,0 +1,196 @@
+[
+    {
+        "id": "Cona1",
+        "naziv": "Ogrevana cona",
+        "klasifikacija": "St-1",
+        "brutoProstornina": 672,
+        "netoProstornina": 400,
+        "ogrevanaPovrsina": 160,
+
+        "notranjaTOgrevanje": 20,
+        "notranjaTHlajenje": 26,
+        "zunanjaT": -13,
+        
+        "infiltracija": {
+            "n50": 0.6,
+            "lega": 2,
+            "zavetrovanost": 2
+        },
+
+        "notranjiViri": {
+            "ogrevanje": 4.1,
+            "hlajenje": 4.1
+        },
+
+        "toplotnaKapaciteta": 165000,
+
+        "TSV": {
+        },
+
+        "razsvetljava": {
+            "faktorDnevneSvetlobe": 0.05,
+            "mocSvetilk": 4
+        },
+
+        "prezracevanje": {
+            "_vrsta": "mehansko",
+            "_regulacija": "brez",
+            "_volumenProjekt": 200,
+            "_volumenDovedenegaZraka": {
+                "ogrevanje": 200,
+                "hlajenje": 200
+            },
+
+            "__vrsta": "naravno",
+            "__izmenjava": {
+                "ogrevanje": 0.5,
+                "hlajenje": 0.5
+            },
+
+            "vrsta": "rekuperacija",
+            "regulacija": "brez",
+            "izkoristek": 0.9,
+            "volumenProjekt": 200,
+            "volumenDovedenegaZraka": {
+                "ogrevanje": 200,
+                "hlajenje": 200
+            }
+        },
+
+        "deltaPsi": 0.04,
+        "ovoj": {
+            "netransparentneKonstrukcije": [
+                {
+                    "idKonstrukcije": "Z1",
+                    "povrsina": 243,
+                    "naklon": 90,
+                    "orientacija": "S"
+                },
+                {
+                    "idKonstrukcije": "Tp1",
+                    "povrsina": 200,
+                    "obseg": 40,
+                    "debelinaStene": 0.46,
+                    "tla": "pesek",
+                    "dodatnaIzolacija": {
+                        "lambda": 0.04,
+                        "tip": "vertikalna",
+                        "debelina": 0.2,
+                        "dolzina": 0.5
+                    }
+                },
+                {
+                    "idKonstrukcije": "Ts1",
+                    "povrsina": 200
+                }
+            ],
+            "transparentneKonstrukcije": [
+                {
+                    "idKonstrukcije": "V1",
+                    "povrsina": 3,
+                    "naklon": 90,
+                    "orientacija": "S",
+                    "delezOkvirja": 1
+                },
+                {
+                    "idKonstrukcije": "O1",
+                    "povrsina": 15,
+                    "naklon": 90,
+                    "orientacija": "V",
+                    
+                    "visinaStekla": 2.3,
+                    "sirinaStekla": 5.8,
+
+                    "delezOkvirja": 0.1,
+                    "dolzinaOkvirja": 16.2,
+
+                    "faktorSencil": 0.05,
+
+                    "stranskoSencenje": {
+                        "zgorajDolzina": 0.2,
+                        "zgorajRazdalja": 0.0,
+                        "levoDolzina": 0.2,
+                        "levoRazdalja": 0,
+                        "desnoDolzina": 0.2,
+                        "desnoRazdalja": 0
+                    }
+                },
+                {
+                    "idKonstrukcije": "O1",
+                    "stevilo": 3,
+
+                    "povrsina": 5,
+                    "naklon": 90,
+                    "orientacija": "J",
+                    
+                    "visinaStekla": 2.3,
+                    "sirinaStekla": 1.8,
+
+                    "delezOkvirja": 0.17,
+                    "dolzinaOkvirja": 8.2,
+
+                    "faktorSencil": 0.3,
+
+                    "stranskoSencenje": {
+                        "zgorajDolzina": 0.2,
+                        "zgorajRazdalja": 0,
+                        "levoDolzina": 0.2,
+                        "levoRazdalja": 0,
+                        "desnoDolzina": 0.2,
+                        "desnoRazdalja": 0
+                    }
+                },
+                {
+                    "idKonstrukcije": "O1",
+                    "stevilo": 2,
+                    
+                    "povrsina": 1,
+                    "naklon": 90,
+                    "orientacija": "V",
+                    
+                    "visinaStekla": 0.9,
+                    "sirinaStekla": 0.9,
+
+                    "delezOkvirja": 0.19,
+                    "dolzinaOkvirja": 3.6,
+
+                    "faktorSencil": 0.3,
+
+                    "stranskoSencenje": {
+                        "zgorajDolzina": 0.2,
+                        "zgorajRazdalja": 0,
+                        "levoDolzina": 0.2,
+                        "levoRazdalja": 0,
+                        "desnoDolzina": 0.2,
+                        "desnoRazdalja": 0
+                    }
+                },
+                {
+                    "idKonstrukcije": "O1",
+                    "stevilo": 2,
+                    
+                    "povrsina": 1,
+                    "naklon": 90,
+                    "orientacija": "S",
+                    
+                    "visinaStekla": 0.9,
+                    "sirinaStekla": 0.9,
+
+                    "delezOkvirja": 0.19,
+                    "dolzinaOkvirja": 3.6,
+
+                    "faktorSencil": 0.3,
+
+                    "stranskoSencenje": {
+                        "zgorajDolzina": 0.2,
+                        "zgorajRazdalja": 0,
+                        "levoDolzina": 0.2,
+                        "levoRazdalja": 0,
+                        "desnoDolzina": 0.2,
+                        "desnoRazdalja": 0
+                    }
+                }
+            ]
+        }
+    }
+]

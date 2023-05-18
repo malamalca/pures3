@@ -1,0 +1,26 @@
+{
+    "stavba": {
+        "naziv": "Testni Projekt",
+        "lokacija": "Volčji Potok 12",
+        "KO": "Volčji Potok",
+        "parcele": [
+            "123/4"
+        ],
+        "koordinate": {
+            "X": 116215,
+            "Y": 469925
+        },
+        "klasifikacija": "11100",
+        "vrsta": "manjzahtevna",
+        "notranjaTemp": 20
+    },
+    "investitorji": [
+        {
+            "naziv": "Miha Nahtigal",
+            "naslov": "Volčji Potok 12, 1235 Radomlje"
+        }
+    ],
+    "vodjaProjektiranja": "Miha Nahtigal, udia, ZAPS 1472",
+    "izdelovalec": "Miha Nahtigal, udia, ZAPS 1472",
+    "datum": "april 2023"
+}

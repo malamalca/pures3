@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1, "naziv": "Okna, vgrajena v zunanji zid", "Umax": 1
+    },
+    {
+        "id": 2, "naziv": "Streša okna, svetlobne kupule in steklene strehe", "Umax": 1.4
+    },
+    {
+        "id": 3, "naziv": "Vhodna vrata v ogrevane prostore, vetrolovi", "Umax": 1.6
+    },
+    {
+        "id": 4, "naziv": "Garažna vrata, vrata v neogrevane prostore", "Umax": 2.0
+    }
+]
