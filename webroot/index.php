@@ -1,17 +1,11 @@
 <?php
-//error_reporting(E_ALL);
-//ini_set('display_errors', true);
-
 require dirname(__DIR__) . '/config/bootstrap.php';
 
 use App\Core\App;
 use App\Core\Configure;
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-    $r->addRoute(['GET', 'POST'], '/izkazi[/{action}[/{param1}]]', 'Izkazi');
-    $r->addRoute(['GET', 'POST'], '/konstrukcije[/{action}[/{param1}[/{param2}]]]', 'Konstrukcije');
-    $r->addRoute(['GET', 'POST'], '/cone[/{action}[/{param1}[/{param2}]]]', 'Cone');
-    $r->addRoute(['GET', 'POST'], '/projekti[/{action}[/{param1}[/{param2}]]]', 'Projekti');
+    $r->addRoute(['GET', 'POST'], '/{controller}[/{action}[/{param1}[/{param2}]]]', 'htaccess');
 });
 
 // Fetch method and URI from somewhere
@@ -43,12 +37,14 @@ switch ($routeInfo[0]) {
         echo "Route Not Allowed.\n";
         break;
     case FastRoute\Dispatcher::FOUND:
-        $controllerName = $routeInfo[1];
+        $handler = $routeInfo[1];
         $vars = $routeInfo[2];
-        if (is_array($controllerName)) {
-            $controllerName = $routeInfo[1][0];
-            $vars['action'] = $routeInfo[1][1];
-        }
+        $controllerName = $vars['controller'];
+        
+        // convert to CamelCase
+        $controllerName = str_replace('-', '', ucwords($controllerName, '-'));
+
+        unset($vars['controller']);
 
         App::dispatch($controllerName, $vars);
 
