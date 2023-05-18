@@ -6,19 +6,17 @@ return [
     'App' => [
         'namespace' => 'App',
         'encoding' => 'UTF-8',
-        'baseUrl' => '/www/pures3',
+        'baseUrl' => '/',
         'defaultName' => 'Pures 3',
     ],
 
     'Log' => [
         'debug' => [
-            'className' => 'StreamHandler',
-            'file' => 'php://stderr', //LOGS . 'debug.log',
-            'level' => \Monolog\Logger::DEBUG,
-        ],
-
-        'info' => [
-            'className' => 'StreamHandler',
+            'className' => \Monolog\Handler\StreamHandler::class,
+            'formatter' => [
+                'className' => \Monolog\Formatter\LineFormatter::class,
+                'format' => "%message%\n",
+            ],
             'file' => 'php://stderr', //LOGS . 'debug.log',
             'level' => \Monolog\Logger::DEBUG,
         ],

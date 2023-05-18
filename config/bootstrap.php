@@ -14,7 +14,10 @@ use App\Core\Log;
 use Monolog\ErrorHandler;
 
 
+$defaultConfig = require(dirname(__FILE__) . DS . 'app_default.php');
 $config = require(dirname(__FILE__) . DS . 'app.php');
+$config = array_replace_recursive($defaultConfig, $config);
+
 $config['lookups'] = $lookups;
 Configure::getInstance($config);
 
