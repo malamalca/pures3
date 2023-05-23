@@ -2,9 +2,11 @@
     {
         "idCone": "Cona1",
         "vrsta": "toplovodni",
+        "energent": "elektrika",
 
         "generatorji": [
             {
+                "id": "TC",
                 "energent": "elektrika",
                 "vrsta": "TC_zrakvoda",
                 "nazivnaMoc": 6
@@ -15,14 +17,9 @@
 
         ],
 
-        "razvod": [
-            {
-                "vrsta": "dvocevniNotranjiZid"
-            }
-        ],
-
         "prenosniki": [
             {
+                "id": "TALNO",
                 "vrsta": "ploskovnaOgrevala",
                 "__vrsta": "radiatorji",
                 "_vrsta": "konvektorji",
@@ -38,6 +35,33 @@
 
                 "mocRegulatorjev": 1,
                 "steviloRegulatorjev": 1
+            }
+        ],
+
+        "razvodi": [
+            {
+                "vrsta": "dvocevniZnotraj",
+                "_vrsta": "enocevni",
+                "__vrsta": "dvocevniZunaj",
+                "idPrenosnika": "TALNO",
+                "ceviHorizontaliVodi": {
+                    "_dolzina": 12,
+                    "_izolacija": "izolirane|neizoliraneZunaj|neizoliraneZnotraj|neizoliraneVZraku|neizoliraneVNotranjiSteni",
+                    "_Ucevi": 0.3,
+                    "delezVOgrevaniConi": 0.8
+                },
+                "ceviDvizniVodi": {
+                    "_dolzina": 12,
+                    "_izolacija": "izolirane|neizoliraneZunaj|neizoliraneZnotraj|neizoliraneVZraku|neizoliraneVNotranjiSteni",
+                    "_Ucevi": 0.3,
+                    "dolzinaEqui": 0,
+                    "delezVOgrevaniConi": 0.8
+                },
+                "ceviPrikljucniVodi": {
+                    "_dolzina": 12,
+                    "_izolacija": "izolirane|neizoliraneZunaj|neizoliraneZnotraj|neizoliraneVZraku|neizoliraneVNotranjiSteni",
+                    "_Ucevi": 0.3
+                }
             }
         ]
     }

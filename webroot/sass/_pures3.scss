@@ -22,6 +22,12 @@
     width: auto;
     float: right;
 }
+.green {
+    color: rgb(0, 198, 0)
+}
+.red {
+    color: red;
+}
 span.checkbox {
     display: inline-block;
     clear: none;
@@ -42,6 +48,12 @@ table {
         }
     }
     tbody {
+        th {
+            text-align: left;
+            font-weight: normal;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
         td, th {
             padding: 5px;
             &.w-5 {

@@ -6,6 +6,10 @@
         "brutoProstornina": 672,
         "netoProstornina": 400,
         "ogrevanaPovrsina": 160,
+        "dolzina": 10,
+        "sirina": 8,
+        "etaznaVisina": 3,
+        "steviloEtaz": 3,
 
         "notranjaTOgrevanje": 20,
         "notranjaTHlajenje": 26,

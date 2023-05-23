@@ -14,7 +14,7 @@ za področje gradbene fizike</h1>
     <tr>
         <td class="" colspan="2"><?= h($cona->naziv) ?></td>
         <td class="w-20 center">U<sub>op</sub>, U<sub>w</sub>, U<sub>d</sub><br />(W/(m<sup>2</sup> K))</td>
-        <td class="w-20 center">Ustreza</td>
+        <td class="w-5 center">Ustreza</td>
     </tr>
     <?php
             $konstrukcije = array_combine(array_map(fn($k) => $k->id, $ntKons), $ntKons);
@@ -25,10 +25,11 @@ za področje gradbene fizike</h1>
         <td class="w-5 center"><?= $i+1 ?></td>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->U, 2) ?></td>
-        <td class="w-20 center">
+        <td class="w-5 center">
             <span title="U < <?= $this->numFormat($konstrukcija->TSG->Umax, 2) ?>">
+            <b class="<?= $elementOvoja->U < $konstrukcija->TSG->Umax ? 'green' : 'red' ?>">
             <?= $elementOvoja->U < $konstrukcija->TSG->Umax ? '&check;' : '&#10006;' ?>
-            </span>
+            </b></span>
         </td>
     </tr>
     <?php
@@ -41,10 +42,11 @@ za področje gradbene fizike</h1>
         <td class="w-5 center"><?= $i+1 ?></td>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->U, 2) ?></td>
-        <td class="w-20 center">
+        <td class="w-5 center">
             <span title="U < <?= $this->numFormat($konstrukcija->TSG->Umax, 2) ?>">
+            <b class="<?= $elementOvoja->U < $konstrukcija->TSG->Umax ? 'green' : 'red' ?>">
             <?= $elementOvoja->U < $konstrukcija->TSG->Umax ? '&check;' : '&#10006;' ?>
-            </span>
+            </b></span>
         </td>
     </tr>
     <?php
@@ -87,7 +89,7 @@ za področje gradbene fizike</h1>
         <td class="w-20 center">Kondenzacija se pojavi</td>
         <td class="w-20 center">Največja količina kondenzata</td>
         <td class="w-10 center">f<sub>Rsi</sub></td>
-        <td class="w-20 center">Ustreza</td>
+        <td class="w-5 center">Ustreza</td>
     </tr>
     <?php
             $konstrukcije = array_combine(array_map(fn($k) => $k->id, $ntKons), $ntKons);
@@ -100,11 +102,18 @@ za področje gradbene fizike</h1>
     <tr>
         <td class="w-5 center"><?= $i+1 ?></td>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
-        <td class="w-20 center"><?= empty($elementOvoja->gm) ? '&#10006;' : '&check;'  ?></td>
+        <td class="w-20 center">
+            <i class="<?= empty($elementOvoja->gm) ? 'green' : 'red' ?>">
+            <?= empty($elementOvoja->gm) ? '&#10006;' : '&check;'  ?>
+                </i>
+        </td>
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->gm ?? 0, 1) ?></td>
         <td class="w-10 center"><?= $this->numFormat($konstrukcija->fRsi[0], 3) ?></td>
-        <td class="w-20 center">
-            <span title="fRsi > <?= $this->numFormat($okolje->limitfRsi, 3) ?>"><?= $konstrukcija->fRsi[0] > $okolje->limitfRsi ? '&check;' : '&#10006;' ?></span>
+        <td class="w-5 center">
+            <span title="fRsi > <?= $this->numFormat($okolje->limitfRsi, 3) ?>">
+            <b class="<?= $elementOvoja->U < $konstrukcija->TSG->Umax ? 'green' : 'red' ?>">
+                <?= $konstrukcija->fRsi[0] > $okolje->limitfRsi ? '&check;' : '&#10006;' ?>
+                </b></span>
         </td>
     </tr>
     <?php
@@ -119,37 +128,50 @@ za področje gradbene fizike</h1>
 <table border="1" width="100%">
     <thead>
     <tr>
-        <th colspan="6">Specifični koeficient transmisijskih toplotnih izgub H'tr (W/(m2 K)):</th>
+        <th colspan="7">Specifični koeficient transmisijskih toplotnih izgub H'tr (W/(m2 K)):</th>
     </tr>
     </thead>
     <tr>
-        <td class="">Energetska cona oziroma stavba</td>
+        <td class="" colspan="2">Energetska cona oziroma stavba</td>
         <td class="w-10 center">XH'tr<br />(-)</td>
         <td class="w-10 center">H'tr<br />(W/(m2 K))</td>
         <td class="w-10 center">H'tr,dov<br />(W/(m2 K))</td>
-        <td class="w-10 center">Ustreza</td>
+        <td class="w-5 center">Ustreza</td>
     </tr>
 
-    <?php
-        foreach ($cone as $cona) {
-    ?>
     <tr>
-        <td class=""><?= h($cona->naziv) ?></td>
-        <td class="w-10 center"><?= $this->numFormat($stavba->X_Htr ?? 0, 1)  ?></td>
-        <td class="w-10 center"><?= $this->numFormat($cona->specKoeficientTransmisijskihIzgub, 3) ?></td>
-        <td class="w-10 center"><?= $this->numFormat($cona->dovoljenSpecKoeficientTransmisijskihIzgub, 3) ?></td>
-        <td class="w-10 center">Ustreza</td>
-    </tr>
-    <?php
-        }
-    ?>
-    <tr>
+        <td class="w-5 center"></td>
         <td class="">STAVBA</td>
         <td class="w-10 center"><?= $this->numFormat($stavba->X_Htr ?? 0, 1)  ?></td>
         <td class="w-10 center"><?= $this->numFormat($stavba->specKoeficientTransmisijskihIzgub, 3) ?></td>
         <td class="w-10 center"><?= $this->numFormat($stavba->dovoljenSpecKoeficientTransmisijskihIzgub, 3) ?></td>
-        <td class="w-10 center">Ustreza</td>
+        <td class="w-5 center">
+            <span>
+            <b class="<?= $stavba->specKoeficientTransmisijskihIzgub < $stavba->dovoljenSpecKoeficientTransmisijskihIzgub ? 'green' : 'red' ?>">
+            <?= $stavba->specKoeficientTransmisijskihIzgub < $stavba->dovoljenSpecKoeficientTransmisijskihIzgub ? '&check;' : '&#10006;' ?>
+            </b></span>
+        </td>
     </tr>
+    <?php
+        foreach ($cone as $i => $cona) {
+    ?>
+    <tr>
+        <td class="w-5 center"><?= $i+1 ?></td>
+        <td class="">→ <?= h($cona->naziv) ?></td>
+        <td class="w-10 center"><?= $this->numFormat($stavba->X_Htr ?? 0, 1)  ?></td>
+        <td class="w-10 center"><?= $this->numFormat($cona->specKoeficientTransmisijskihIzgub, 3) ?></td>
+        <td class="w-10 center"><?= $this->numFormat($cona->dovoljenSpecKoeficientTransmisijskihIzgub, 3) ?></td>
+        <td class="w-5 center">
+            <span>
+            <b class="<?= $cona->specKoeficientTransmisijskihIzgub < $cona->dovoljenSpecKoeficientTransmisijskihIzgub ? 'green' : 'red' ?>">
+            <?= $cona->specKoeficientTransmisijskihIzgub < $cona->dovoljenSpecKoeficientTransmisijskihIzgub ? '&check;' : '&#10006;' ?>
+            </b></span>
+        </td>
+    </tr>
+    <?php
+        }
+    ?>
+    
 </table>
 
 <!-- ---------------------------------------------------------------------------- -->
@@ -164,7 +186,7 @@ za področje gradbene fizike</h1>
         <td class="" colspan="2">element</td>
         <td class="w-20 center">g<sub>tot</sub><br />(-)</td>
         <td class="w-20 center">g<sub>tot,sh</sub><br />(-)</td>
-        <td class="w-20 center">Ustreza</td>
+        <td class="w-5 center">Ustreza</td>
     </tr>
 
     <?php
@@ -186,8 +208,12 @@ za področje gradbene fizike</h1>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($konstrukcija->g ?? 0, 2) ?></td>
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->g_sh, 2) ?></td>
-        <td class="w-20 center">
-            <span title="g_tot,sh < 0,15"><?= $brezZahtev ? 'nz' : ($elementOvoja->g_sh > 0.15 ? '&#10006;' : '&check;') ?></span>
+        <td class="w-5 center">
+            <span title="g_tot,sh < 0,15"><?= $brezZahtev ? 'nz' : (
+                '<b class=" ' . ($elementOvoja->g_sh > 0.15 ? 'red' : 'green') . '">' .
+                ($elementOvoja->g_sh > 0.15 ? '&#10006;' : '&check;') .
+                '</b>'
+            ) ?></span>
         </td>
     </tr>
     <?php
@@ -226,7 +252,7 @@ za področje gradbene fizike</h1>
 <table border="1" width="100%">
     <thead>
     <tr>
-        <th colspan="5">Tesnost ovoja stavbe n50 (h-1), w50 (m3/(h m2)):</th>
+        <th colspan="5">Tesnost ovoja stavbe n<sub>50</sub> (h<sup>-1</sup>), w<sub>50</sub> (m³/(h m²)):</th>
     </tr>
     </thead>
     <tr>
@@ -246,14 +272,14 @@ za področje gradbene fizike</h1>
 <table border="1" width="100%">
     <thead>
     <tr>
-        <th colspan="5">Koeficient transmisijskih toplotnih izgub konstrukcij v stiku z zemljino Hgr,H in Hgr,C (W/K):</th>
+        <th colspan="5">Koeficient transmisijskih toplotnih izgub konstrukcij v stiku z zemljino H<sub>gr,H</sub> in H<sub>gr,C</sub> (W/K):</th>
     </tr>
     </thead>
 
     <tr>
         <td class="" colspan="2">konstrukcija</td>
-        <td class="w-20 center">Hgr,H (W/K)</td>
-        <td class="w-20 center">Hgr,C (W/K)</td>
+        <td class="w-20 center">H<sub>gr,H</sub> (W/K)</td>
+        <td class="w-20 center">H<sub>gr,C</sub> (W/K)</td>
     </tr>
 
     <?php

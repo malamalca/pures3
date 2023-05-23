@@ -15,19 +15,19 @@
         <td>Površina toplotnega ovoja stavbe</td>
         <td>A<sub>ovoj</sub></td>
         <td class="center"><?= $this->numFormat($stavba->povrsinaOvoja, 1) ?></td>
-        <td>m2</td>
+        <td>m²</td>
     </tr>
     <tr>
         <td>Kondicionirana površina stavbe</td>
         <td>A<sub>use</sub></td>
         <td class="center"><?= $this->numFormat($stavba->ogrevanaPovrsina, 1) ?></td>
-        <td>m2</td>
+        <td>m²</td>
     </tr>
     <tr>
         <td>Transp. površina v toplotnem ovoju stavbe</td>
         <td>A<sub>trans</sub></td>
         <td class="center"><?= $this->numFormat($stavba->transparentnaPovrsina, 2) ?></td>
-        <td>m2</td>
+        <td>m²</td>
     </tr>
     <tr>
         <td>Faktor oblike stavbe</td>

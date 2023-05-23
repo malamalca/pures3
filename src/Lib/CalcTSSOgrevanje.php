@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lib;
 
+use App\Core\Configure;
 use App\Core\Log;
 
 class CalcTSSOgrevanje
@@ -30,6 +31,43 @@ class CalcTSSOgrevanje
         $vrsteEnergentov = ['elektrika', 'zemeljskiPlin', 'UNP', 'ELKO', 'drva', 'peleti/sekanci', 'daljinsko'];
         $sistem->energent = $sistem->energent ?? 'elektrika';
 
+        // QN – standardna potrebna toplotna moč za ogrevanje (cone) – moč ogreval, skladno s SIST
+        //  EN 12831 ali z drugimi enakovrednimi, v stroki priznanimi računskimi metodami [kW]
+        $sistem->standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) * 
+            ($cona->notranjaTOgrevanje - $cona->zunanjaT) / 1000;
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // izračuni, ki veljajo za vse podsisteme
+        $Cm_eff = $cona->ogrevanaPovrsina * $cona->toplotnaKapaciteta;
+        $tau_ogrevanje = $Cm_eff / 3600 / ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube);
+        $sistem->a_ogrevanje = 1 + ($tau_ogrevanje / 15);
+        foreach (array_keys(Calc::MESECI) as $mesec) {
+            $vracljiveIzgube = 0;
+
+            $gama = ($cona->solarniDobitkiOgrevanje[$mesec] + $cona->notranjiViriOgrevanje[$mesec] + $vracljiveIzgube) /
+                ($cona->transIzgubeOgrevanje[$mesec] + $cona->prezracevalneIzgubeOgrevanje[$mesec]);
+
+            // TODO: Preveri... v excelu V150 je čuden pogoj za izračun $gama
+            $ucinekDobitkov = null;
+            if ($gama > 0 && $gama < 2) {
+                if ($gama == 1) {
+                    $ucinekDobitkov = $sistem->a_ogrevanje / ($sistem->a_ogrevanje + 1);
+                } else {
+                    $ucinekDobitkov = (1 - pow($gama, $sistem->a_ogrevanje)) / (1 - pow($gama, $sistem->a_ogrevanje + 1));
+                }
+            }
+
+            // QH,nd,m; QH,nd,an
+            $sistem->izgube[$mesec] = empty($ucinekDobitkov) ? 0 :
+                $cona->transIzgubeOgrevanje[$mesec] + $cona->prezracevalneIzgubeOgrevanje[$mesec] -
+                $ucinekDobitkov *
+                ($cona->solarniDobitkiOgrevanje[$mesec] + $cona->notranjiViriOgrevanje[$mesec] + $vracljiveIzgube);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // obračun podsistemov
+        $sistem->izgubePrenosnikov = [];
         if (!empty($sistem->prenosniki)) {
             foreach ($sistem->prenosniki as $prenosnik) {
                 self::analizaKoncnihPrenosnikov($prenosnik, $sistem, $cona, $okolje);
@@ -38,7 +76,7 @@ class CalcTSSOgrevanje
 
         if (!empty($sistem->razvodi)) {
             foreach ($sistem->razvodi as $razvod) {
-                self::analizaRazvoda($razvod, $sistem, $cona, $okolje);
+                CalcTSSOgrevanjeRazvod::analizaRazvoda($razvod, $sistem, $cona, $okolje);
             }
         }
 
@@ -56,10 +94,6 @@ class CalcTSSOgrevanje
      */
     public static function analizaKoncnihPrenosnikov($prenosnik, $sistem, $cona, $okolje)
     {
-        $Cm_eff = $cona->ogrevanaPovrsina * $cona->toplotnaKapaciteta;
-        $tau_ogrevanje = $Cm_eff / 3600 / ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube);
-        $a_ogrevanje = 1 + ($tau_ogrevanje / 15);
-
         $stOgreval = $prenosnik->stOgreval ?? 1;
 
         $vrstePrenosnikov = ['radiatorji', 'konvektorji', 'ploskovnaOgrevala'];
@@ -79,8 +113,6 @@ class CalcTSSOgrevanje
         $indexHidrFaktorji = $stOgreval > 10 ? 1 : 0;
         $deltaT_hidravlicnoUravnotezenje = $hidrFaktorji[$prenosnik->hidravlicnoUravnotezenje][$indexHidrFaktorji];
 
-        Log::info('deltaT_hyd: ' . $deltaT_hidravlicnoUravnotezenje);
-
         // Δθctr - deltaTemp za regulacijo temperature; prvi stolpec sevala, drugi stolpec toplovod, h<4m
         $prenosnik->regulacijaTemperature = $prenosnik->regulacijaTemperature ?? 'centralna';
         $regFaktorji = [
@@ -92,7 +124,6 @@ class CalcTSSOgrevanje
         ];
         $indexRegFaktorji = 0;
         $deltaT_regulacijaTemperature = $regFaktorji[$prenosnik->regulacijaTemperature][$indexRegFaktorji];
-        Log::info('deltaT_ctr: ' . $deltaT_regulacijaTemperature);
 
         // stolpci emb1/str1, niz, nin1, ft_tč
         $sistemFaktorji = [
@@ -124,7 +155,6 @@ class CalcTSSOgrevanje
             }
             $deltaT_emb = $sistemFaktorji[$prenosnik->sistem][0] + $izolacijaFaktorji[$prenosnik->izolacija][1];
         }
-        Log::info('deltaT_emb: ' . $deltaT_emb);
 
         $namestitevFaktorji = [
             'notranjeStene' => 1.3,
@@ -133,7 +163,6 @@ class CalcTSSOgrevanje
             'zasteklitevZZascito' => 1.2,
         ];
 
-        // stolpci str1
         $rezimFaktorji = [
             '35/30' => [0.4],
             '40/30' => [0.5],
@@ -162,7 +191,6 @@ class CalcTSSOgrevanje
                 $deltaT_str = $namestitevFaktorji[$prenosnik->namestitev] + $rezimFaktorji[$prenosnik->rezim][0];
                 break;
         }
-        Log::info('deltaT_str: ' . $deltaT_str);
 
         // celica G244
         switch ($sistem->vrsta) {
@@ -195,55 +223,17 @@ class CalcTSSOgrevanje
                 Log::warn('Ni implementirano');
         }
 
-        Log::info('deltaT_notranja: ' . $deltaT_notranja);
-
         $prenosnik->skupneIzgube = 0;
         $prenosnik->skupneIzgubeEmisij = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $vracljiveIzgube = 0;
-
-            $gama = ($cona->solarniDobitkiOgrevanje[$mesec] + $cona->notranjiViriOgrevanje[$mesec] + $vracljiveIzgube) /
-                ($cona->transIzgubeOgrevanje[$mesec] + $cona->prezracevalneIzgubeOgrevanje[$mesec]);
-
-            // TODO: Preveri... v excelu V150 je čuden pogoj za izračun $gama
-            $ucinekDobitkov = null;
-            if ($gama > 0 && $gama < 2) {
-                if ($gama == 1) {
-                    $ucinekDobitkov = $a_ogrevanje / ($a_ogrevanje + 1);
-                } else {
-                    $ucinekDobitkov = (1 - pow($gama, $a_ogrevanje)) / (1 - pow($gama, $a_ogrevanje + 1));
-                }
-            }
-
-            // QH,nd,m; QH,nd,an
-            $prenosnik->izgube[$mesec] = empty($ucinekDobitkov) ? 0 :
-                $cona->transIzgubeOgrevanje[$mesec] + $cona->prezracevalneIzgubeOgrevanje[$mesec] -
-                $ucinekDobitkov *
-                ($cona->solarniDobitkiOgrevanje[$mesec] + $cona->notranjiViriOgrevanje[$mesec] + $vracljiveIzgube);
-
-            $prenosnik->skupneIzgube += $prenosnik->izgube[$mesec];
-
-            // TODO: izgube zaradi navlaževanja in razvkaževanja ?? v V150 je prazno
-
             // izgube emisij prenosnikov
             // QH,em,ls,m
             $deltaT = $deltaT_notranja / ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
-            $prenosnik->izgubeEmisij[$mesec] = $prenosnik->izgube[$mesec] * $deltaT;
+            $prenosnik->izgubeEmisij[$mesec] = $sistem->izgube[$mesec] * $deltaT;
 
             $prenosnik->skupneIzgubeEmisij += $prenosnik->izgubeEmisij[$mesec];
+            $sistem->izgubePrenosnikov[$mesec] = ($sistem->izgubePrenosnikov[$mesec] ?? 0) + $prenosnik->izgubeEmisij[$mesec];
         }
-    }
-
-    /**
-     * Analiza razvodnega sistema
-     *
-     * @param \StdClass $razvod Podatki razvoda
-     * @param \StdClass $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
-     * @return void
-     */
-    public static function analizaRazvoda($razvod, $sistem, $cona, $okolje)
-    {
+        
     }
 }
