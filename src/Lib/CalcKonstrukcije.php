@@ -20,7 +20,9 @@ class CalcKonstrukcije
         // parametri za posamezno konstrukcijo po TSG
         if (isset($kons->vrsta)) {
             $kons->TSG = Configure::read('lookups.konstrukcije.' . $kons->vrsta);
-            Log::warn('Vrsta konstrukcije po TSG ne obstaja.');
+            if (empty($kons->TSG)) {
+                Log::warn(sprintf('Vrsta konstrukcije "%s" po TSG ne obstaja.', $kons->vrsta));
+            }
         }
 
         // 8.1.1. TSG stran 58

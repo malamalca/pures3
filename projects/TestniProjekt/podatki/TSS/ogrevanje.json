@@ -40,7 +40,8 @@
 
         "razvodi": [
             {
-                "vrsta": "dvocevniZnotraj",
+                "vrsta": "dvocevni",
+                "vOgrevaniConi": true,
                 "_vrsta": "enocevni",
                 "__vrsta": "dvocevniZunaj",
                 "idPrenosnika": "TALNO",

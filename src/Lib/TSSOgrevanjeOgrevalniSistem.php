@@ -1,18 +1,26 @@
 <?php
 
-namespace App\Calc;
+namespace App\Lib;
+
+use App\Lib\TSSOgrevanjeEnergent;
 
 abstract class TSSOgrevanjeOgrevalniSistem {
-    public \App\TSSOgrevanjeEvergent $energent;
+    public TSSOgrevanjeEnergent $energent;
 
-    public function __construct($json = null)
+    protected array $izgube;
+
+    protected array $razvodi;
+
+    public function __construct($config = null)
     {
-        if ($json) {
-            $this->parseJson($json);
+        if ($config) {
+            $this->parseConfig($config);
         }
     }
 
-    abstract protected function parseJson(string $json);
+    abstract protected function parseConfig($config);
+
+    abstract public function analiza($cona, $okolje);
 }
 
 ?>

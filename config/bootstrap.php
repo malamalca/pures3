@@ -16,7 +16,12 @@ use Monolog\ErrorHandler;
 
 
 $defaultConfig = require(dirname(__FILE__) . DS . 'app_default.php');
-$config = require(dirname(__FILE__) . DS . 'app.php');
+
+$config = [];
+$appConfigFile = dirname(__FILE__) . DS . 'app.php';
+if (file_exists($appConfigFile)) {
+    $config = require($appConfigFile);
+}
 $config = array_replace_recursive($defaultConfig, $config);
 
 $config['lookups'] = $lookups;

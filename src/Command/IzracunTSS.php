@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Core\Command;
-use App\Lib\CalcTSSOgrevanje;
+use App\Lib\TSSOgrevanjeSistemOgrevanjaFactory;
 use App\Lib\CalcTSSPrezracevanje;
 
 class IzracunTSS extends Command
@@ -69,8 +69,11 @@ class IzracunTSS extends Command
                 if (!isset($cone[$sistem->idCone])) {
                     throw new \Exception('TSS Ogrevanje: Cona ne obstaja.');
                 }
-                $TSSSistemiOgrevanjeOut[] =
-                    CalcTSSOgrevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
+
+                $sistemOgrevanja = TSSOgrevanjeSistemOgrevanjaFactory::create($sistem->vrsta, $sistem);
+                $TSSSistemiOgrevanjeOut[] = $sistemOgrevanja->analiza($cone[$sistem->idCone], $okolje);
+                //$TSSSistemiOgrevanjeOut[] =
+                //    CalcTSSOgrevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
             }
 
             $TSSOgrevanjeOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'ogrevanje.json';
