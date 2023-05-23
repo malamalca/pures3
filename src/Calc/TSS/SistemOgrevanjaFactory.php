@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Lib;
+namespace App\Calc\TSS;
 
-use App\Lib\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
 
-class TSSOgrevanjeSistemOgrevanjaFactory
+class SistemOgrevanjaFactory
 {
     public static function create($type, $options)
     {

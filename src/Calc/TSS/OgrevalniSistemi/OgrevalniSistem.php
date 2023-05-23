@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Lib;
+namespace App\Calc\TSS\OgrevalniSistemi;
 
-use App\Lib\TSSOgrevanjeEnergent;
+use App\Calc\TSS\Energenti\Energent;
 
-abstract class TSSOgrevanjeOgrevalniSistem {
-    public TSSOgrevanjeEnergent $energent;
+abstract class OgrevalniSistem {
+    public Energent $energent;
 
     protected array $izgube;
 
-    protected array $razvodi;
+    protected array $razvodi = [];
+    protected array $koncniPrenosniki = [];
 
     public function __construct($config = null)
     {
