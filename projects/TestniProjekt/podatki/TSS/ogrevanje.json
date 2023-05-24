@@ -21,8 +21,8 @@
             {
                 "id": "TALNO",
                 "vrsta": "ploskovnaOgrevala",
-                "__vrsta": "radiatorji",
-                "_vrsta": "konvektorji",
+                "_vrsta": "radiatorji",
+                "__vrsta": "konvektorji",
 
                 "rezim": "40/30",
                 "sistem": "talno_mokri",
@@ -33,7 +33,7 @@
                 "hidravlicnoUravnotezenje": "staticnoDviznihVodov",
                 "regulacijaTemperature": "referencniProstor",
 
-                "mocRegulatorjev": 1,
+                "mocRegulatorja": 1,
                 "steviloRegulatorjev": 1
             }
         ],
@@ -41,7 +41,6 @@
         "razvodi": [
             {
                 "vrsta": "dvocevni",
-                "vOgrevaniConi": true,
                 "_vrsta": "enocevni",
                 "__vrsta": "dvocevniZunaj",
                 "idPrenosnika": "TALNO",

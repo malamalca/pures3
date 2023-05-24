@@ -18,6 +18,8 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem {
      */
     public float $standardnaMoc;
 
+    public array $izgubePrenosnikov;
+
     protected function parseConfig($config)
     {
         if (is_string($config)) {
@@ -40,7 +42,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem {
     }
 
     /**
-     * Glavna metoda za analizo ogrevanja
+     * Glavna metoda za analizo ogrevalnega sistema
      *
      * @param \StdClass $cona Podatki cone
      * @param \StdClass $okolje Podatki okolja
@@ -51,13 +53,28 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem {
         $this->standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) * 
             ($cona->notranjaTOgrevanje - $cona->zunanjaT) / 1000;
 
-        //var_dump($cona->energijaOgrevanje);
-
         $izgube = [];
 
         foreach ($this->koncniPrenosniki as $koncniPrenosnik) {
-            $izgubePrenosnika = $koncniPrenosnik->analizaIzgub($cona, $okolje);
+            $izgubePrenosnika = $koncniPrenosnik->toplotneIzgube($cona, $okolje);
+            foreach ($izgubePrenosnika as $k => $v) {
+                $this->izgubePrenosnikov[$k] = ($this->izgubePrenosnikov[$k] ?? 0) + $v;
+            }
         }
+
+        foreach ($this->razvodi as $razvod) {
+            $prenosnik = array_filter($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
+            if (empty($prenosnik)) {
+                throw new \Exception(sprintf('Prenosnik %s na obstaja.', $razvod->idPrenosnika));
+            }
+            $prenosnik = reset($prenosnik);
+
+            $izgubeRazvoda = $razvod->toplotneIzgube($prenosnik, $this, $cona, $okolje);
+            
+            $elektrika = $razvod->potrebnaElektricnaEnergija($prenosnik, $this, $cona);
+        }
+
+        // izgube ogrevala
     }
 }
 

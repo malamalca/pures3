@@ -3,17 +3,18 @@
 namespace App\Calc\TSS\Razvodi;
 
 
-class Dvocevni extends Razvod {
+class DvocevniZunaj extends Razvod
+{
     public function dolzinaCevi(VrstaRazvodnihCevi $vrsta, $cona)
     {
         switch ($vrsta) {
             case VrstaRazvodnihCevi::HorizontalniRazvod:
-                return 2 * $cona->dolzina + 0.0325 * $cona->dolzina * $cona->sirina + 6;
+                return 2 * $cona->dolzina + 0.01625 * $cona->dolzina * pow($cona->sirina, 2);
                 break;
-            case VrstaRazvodnihCevi::DvizniVod:
+            case VrstaRazvodnihCevi::DvizniVodi:
                 return 0.025 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz * $cona->etaznaVisina;
                 break;
-            case VrstaRazvodnihCevi::PrikljucniVod:
+            case VrstaRazvodnihCevi::PrikljucniVodi:
                 return 0.55 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz;
                 break;
         }

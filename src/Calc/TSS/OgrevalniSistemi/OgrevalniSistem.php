@@ -8,7 +8,6 @@ abstract class OgrevalniSistem {
     public Energent $energent;
 
     protected array $izgube;
-
     protected array $razvodi = [];
     protected array $koncniPrenosniki = [];
 
@@ -20,7 +19,6 @@ abstract class OgrevalniSistem {
     }
 
     abstract protected function parseConfig($config);
-
     abstract public function analiza($cona, $okolje);
 }
 
