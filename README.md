@@ -10,7 +10,7 @@ Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
 ## Namestitev aplikacije
 
 1. Prenesite [Composer](https://getcomposer.org/doc/00-intro.md) oz. ga posodobite na zadnjo verzijo `composer self-update`.
-2. V ukazni vrstici se postavite v zeljeno mapo in zaženite `composer create-project --prefer-dist --no-dev malamalca/pures3 [app_name]`.
+2. V ukazni vrstici se postavite v zeljeno mapo in zaženite `composer create-project --prefer-dist --no-dev malamalca/pures3`.
 
 ## Uporaba
 
