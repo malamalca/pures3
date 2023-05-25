@@ -7,6 +7,20 @@
 
 Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
 
-Trenutno je implementirana gradbena fizika, sistemi TSS razsvetljava, TSS prezračevanje.
+## Namestitev aplikacije
 
-V delu pa je še sistem TSS ogrevanje.
+1. Prenesite [Composer](https://getcomposer.org/doc/00-intro.md) oz. ga posodobite na zadnjo verzijo `composer self-update`.
+2. V ukazni vrstici se postavite v zeljeno mapo in zaženite `composer create-project --prefer-dist --no-dev malamalca/pures3 [app_name]`.
+
+## Uporaba
+
+Projekti za izračun gradbene fizike se nahajajo v podmapi `/projects`. Privzeto je v aplikaciji že vključen testni projekt v podmapi `/projects/TestniProjekt`.
+
+Analizo projekta se izvede iz ukazne vrstice s serijo ukazov:
+```
+bin/pures IzracunSplosniPodatki TestniProjekt
+bin/pures IzracunKonstrukcij TestniProjekt
+bin/pures IzracunCone TestniProjekt
+bin/pures IzracunStavbe TestniProjekt
+bin/pures IzracunTSS TestniProjekt
+```
