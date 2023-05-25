@@ -44,6 +44,7 @@
                 "_vrsta": "enocevni",
                 "__vrsta": "dvocevniZunaj",
                 "idPrenosnika": "TALNO",
+                "crpalka": {},
                 "ceviHorizontaliVodi": {
                     "_dolzina": 12,
                     "_izolacija": "izolirane|neizoliraneZunaj|neizoliraneZnotraj|neizoliraneVZraku|neizoliraneVNotranjiSteni",

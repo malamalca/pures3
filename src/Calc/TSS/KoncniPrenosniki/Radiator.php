@@ -1,33 +1,40 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Calc\TSS\KoncniPrenosniki;
 
+use App\Calc\TSS\KoncniPrenosniki\Izbire\VrstaNamestitve;
 use App\Lib\Calc;
 
-enum VrsteNamestitve: string {
-    use \App\Lib\Traits\GetOrdinalTrait;
-
-    case ObNotranjiSteni = 'notranjeStene';
-    case ObZunanjemZidu = 'zunanjeStene';
-    case ObZunanjemZiduZasteklitevBrezSevalneZascite = 'zasteklitevBrezZascite';
-    case ObZunanjemZiduZasteklitevSSevalnoZascite = 'zasteklitevZZascito';
-}
-
-class Radiator extends KoncniPrenosnik {
-    const DELTAT_REZIM = [0.4, 0.5, 0.7];
-    const DELTAT_NAMESTITEV = [1.3, 0.3, 1.7, 1.2];
+class Radiator extends KoncniPrenosnik
+{
+    public const DELTAT_REZIM = [0.4, 0.5, 0.7];
+    public const DELTAT_NAMESTITEV = [1.3, 0.3, 1.7, 1.2];
 
     public $exponentOgrevala = 1.33;
 
-    protected VrsteNamestitve $namestitev;
+    protected VrstaNamestitve $namestitev;
 
+    /**
+     * Loads configuration from json|StdClass
+     *
+     * @param \StdClass|string|null $config Configuration
+     * @return void
+     */
     public function parseConfig($config)
     {
         parent::parseConfig($config);
-        
-        $this->namestitev = VrsteNamestitve::from($config->namestitev);
+
+        $this->namestitev = VrstaNamestitve::from($config->namestitev);
     }
 
+    /**
+     * Izračun toplotnih izgub končnega prenosnika
+     *
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki cone
+     * @return array
+     */
     public function toplotneIzgube($cona, $okolje)
     {
         // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10

@@ -1,30 +1,54 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Calc\TSS\Razvodi;
 
+use App\Calc\TSS\Razvodi\Izbire\RazvodAbstractProperties;
+use App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi;
 
 class DvocevniZunaj extends Razvod
 {
+    /**
+     * Vrne dolžino cevi za podano vrsto razvodnih cevi
+     *
+     * @param \App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi $vrsta Vrsta razvodne cevi
+     * @param \StdClass $cona Podatki cone
+     * @return float
+     */
     public function dolzinaCevi(VrstaRazvodnihCevi $vrsta, $cona)
     {
         switch ($vrsta) {
             case VrstaRazvodnihCevi::HorizontalniRazvod:
                 return 2 * $cona->dolzina + 0.01625 * $cona->dolzina * pow($cona->sirina, 2);
-                break;
-            case VrstaRazvodnihCevi::DvizniVodi:
+            case VrstaRazvodnihCevi::DvizniVod:
                 return 0.025 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz * $cona->etaznaVisina;
-                break;
-            case VrstaRazvodnihCevi::PrikljucniVodi:
+            case VrstaRazvodnihCevi::PrikljucniVod:
                 return 0.55 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz;
-                break;
         }
+
+        return 0;
     }
 
-    public function maksimalnaDolzinaCevi($cona)
+    /**
+     * Vrne zahtevano fiksno vrednost konstante/količine
+     *
+     * @param \App\Calc\TSS\Razvodi\Izbire\RazvodAbstractProperties $property Količina/konstanta
+     * @param array $options Dodatni parametri
+     * @return int|float
+     */
+    public function getProperty(RazvodAbstractProperties $property, $options = [])
     {
-        // lc = 10 za dvocevni sistem 
-        $lc = 10;
+        switch ($property) {
+            case RazvodAbstractProperties::Lmax:
+                $cona = $options['cona'];
+                $lc = 10;
+                $Lmax = 2 * ($cona->dolzina + $cona->sirina / 2 + $cona->etaznaVisina * $cona->steviloEtaz + $lc);
 
-        $Lmax = 2 * ($cona->dolzina + $cona->sirina / 2 + $cona->etaznaVisina * $cona->steviloEtaz + $lc);
+                return $Lmax;
+            case RazvodAbstractProperties::f_sch:
+                return 1;
+        }
+
+        return 0;
     }
 }

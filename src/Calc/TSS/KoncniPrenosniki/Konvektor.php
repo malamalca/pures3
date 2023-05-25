@@ -1,15 +1,32 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Calc\TSS\KoncniPrenosniki;
 
 use App\Lib\Calc;
 
-class Konvektor extends KoncniPrenosnik {
+class Konvektor extends KoncniPrenosnik
+{
+    public $exponentOgrevala = 1.1;
+
+    /**
+     * Loads configuration from json|StdClass
+     *
+     * @param \StdClass|string|null $config Configuration
+     * @return void
+     */
     public function parseConfig($config)
     {
         parent::parseConfig($config);
     }
 
+    /**
+     * Izračun toplotnih izgub končnega prenosnika
+     *
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki cone
+     * @return array
+     */
     public function toplotneIzgube($cona, $okolje)
     {
         // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Core\Command;
 use App\Calc\TSS\SistemOgrevanjaFactory;
+use App\Core\Command;
 use App\Lib\CalcTSSPrezracevanje;
 
 class IzracunTSS extends Command

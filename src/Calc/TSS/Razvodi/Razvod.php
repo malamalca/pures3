@@ -1,38 +1,32 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Calc\TSS\Razvodi;
 
+use App\Calc\TSS\OgrevalniSistemi\LokalniOgrevalniSistemNaBiomaso;
+use App\Calc\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\TSS\Razvodi\Izbire\RazvodAbstractProperties;
+use App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi;
 use App\Core\Configure;
 use App\Lib\Calc;
 
-enum VrstaRazvodnihCevi: string {
-    use \App\Lib\Traits\GetOrdinalTrait;
-
-    case HorizontalniRazvod = 'ceviHorizontaliVodi';
-    case DvizniVod = 'ceviDvizniVodi';
-    case PrikljucniVod = 'ceviPrikljucniVodi';
-}
-
-enum VrstaIzolacijeCevi: string {
-    use \App\Lib\Traits\GetOrdinalTrait;
-
-    case IzoliraneCevi = 'izolirane';
-    case NeizoliraneCeviVIzoliraniZunanjiSteni = 'neizoliraneZunaj';
-    case NeizoliraneCeviVNeizoliraniZunanjiSteni = 'neizoliraneZnotraj';
-    case NeizoliraneCeviVZraku = 'neizoliraneVZraku';
-    case NeizoliraneCeviVNotranjiSteni = 'neizoliraneVNotranjiSteni';
-}
-
-
-abstract class Razvod {
+abstract class Razvod
+{
     public ?ElementRazvoda $horizontalniVod;
     public ?ElementRazvoda $dvizniVod;
     public ?ElementRazvoda $prikljucniVod;
 
     public ?\StdClass $crpalka;
+    public string $navlazevanjeZraka;
 
     public string $idPrenosnika;
 
+    /**
+     * Class Constructor
+     *
+     * @param string|\StdClass $config Configuration
+     * @return void
+     */
     public function __construct($config = null)
     {
         if ($config) {
@@ -40,6 +34,12 @@ abstract class Razvod {
         }
     }
 
+    /**
+     * Loads configuration from json|StdClass
+     *
+     * @param string|\StdClass $config Configuration
+     * @return void
+     */
     public function parseConfig($config)
     {
         if (is_string($config)) {
@@ -48,56 +48,86 @@ abstract class Razvod {
 
         $this->idPrenosnika = $config->idPrenosnika;
 
-        $this->horizontalniVod = new ElementRazvoda(VrstaRazvodnihCevi::HorizontalniRazvod, $config->ceviHorizontaliVodi);
+        $this->horizontalniVod =
+            new ElementRazvoda(VrstaRazvodnihCevi::HorizontalniRazvod, $config->ceviHorizontaliVodi);
         $this->dvizniVod = new ElementRazvoda(VrstaRazvodnihCevi::DvizniVod, $config->ceviDvizniVodi);
         $this->prikljucniVod = new ElementRazvoda(VrstaRazvodnihCevi::PrikljucniVod, $config->ceviPrikljucniVodi);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // OBTOČNA ČRPALKA
-        $this->crpalka = $config->crpalka ?? new \StdClass();
+        if (!empty($config->crpalka)) {
+            $this->crpalka = $config->crpalka;
 
-        $this->crpalka->regulacija = $config->crpalka->regulacija ?? 'brezRegulacije';
-        if (!in_array($this->crpalka->regulacija, array_keys(Configure::read('lookups.crpalke.regulacija')))) {
-            throw new \Exception('Regulacija obtočne črpalke za razvod je neveljavna.');
+            $this->crpalka->regulacija = $config->crpalka->regulacija ?? 'brezRegulacije';
+            if (!in_array($this->crpalka->regulacija, array_keys(Configure::read('lookups.crpalke.regulacija')))) {
+                throw new \Exception('Regulacija obtočne črpalke za razvod je neveljavna.');
+            }
         }
     }
 
-    abstract function dolzinaCevi(VrstaRazvodnihCevi $vrsta, $cona);
-    abstract function maksimalnaDolzinaCevi($cona);
+    /**
+     * Vrne zahtevano fiksno vrednost konstante/količine
+     *
+     * @param \App\Calc\TSS\Razvodi\Izbire\RazvodAbstractProperties $property Količina/konstanta
+     * @param array $options Dodatni parametri
+     * @return int|float
+     */
+    abstract public function getProperty(RazvodAbstractProperties $property, $options = []);
 
-    public function toplotneIzgube($prenosnik, $sistem, $cona, $okolje)
+    /**
+     * Vrne dolžino cevi za podano vrsto razvodnih cevi
+     *
+     * @param \App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi $vrsta Vrsta razvodne cevi
+     * @param \StdClass $cona Podatki cone
+     * @return float
+     */
+    abstract public function dolzinaCevi(VrstaRazvodnihCevi $vrsta, $cona);
+
+    /**
+     * Izračun toplotnih izgub končnega prenosnika
+     *
+     * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @return array
+     */
+    public function toplotneIzgube($prenosnik, $sistem, $cona)
     {
         $toplotneIzgube = [];
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = 24 * $stDni;
 
-            // Izračun povprečnih obremenitev podsistemov 
+            // Izračun povprečnih obremenitev podsistemov
             $betaH = $cona->energijaOgrevanje[$mesec] / ($sistem->standardnaMoc * $stUr);
 
-            // th – mesečne obratovalne ure – čas [h/M] (enačba 43) 
-            $steviloUr = $stUr * (($betaH > 0.05) ? 1 : $betaH / 0.05);
+            // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
+            $steviloUr = $stUr * ($betaH > 0.05 ? 1 : $betaH / 0.05);
 
             // Qh,in,em - potrebna dovedena toplota v ogrevala [kWh] (enačba 60)
             $potrebnaToplotaOgrevala = $cona->energijaOgrevanje[$mesec] + $sistem->izgubePrenosnikov[$mesec];
 
-            // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-] 
+            // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-]
             // enačba (63)
-            $betaI = ($sistem->standardnaMoc * $steviloUr) > 0 ? $potrebnaToplotaOgrevala / ($sistem->standardnaMoc * $steviloUr) : 0;
+            $betaI = $sistem->standardnaMoc * $steviloUr > 0 ?
+                $potrebnaToplotaOgrevala / ($sistem->standardnaMoc * $steviloUr) :
+                0;
 
             // θ m - povprečna temperatura ogrevnega medija [°C]
             // enačba (39)
             $srednjaT = $prenosnik->rezim->srednjaTemperatura($sistem);
-            $temperaturaRazvoda = ($betaI > 0) ? (($srednjaT - $cona->notranjaTOgrevanje) * pow($betaI, 1 / $prenosnik->exponentOgrevala) + $cona->notranjaTOgrevanje) : $cona->notranjaTOgrevanje;
+            $temperaturaRazvoda = $betaI > 0 ? (($srednjaT - $cona->notranjaTOgrevanje) *
+                pow($betaI, 1 / $prenosnik->exponentOgrevala) + $cona->notranjaTOgrevanje) : $cona->notranjaTOgrevanje;
 
             $izgubeZnotrajOvoja = ($this->horizontalniVod->toplotneIzgube($this, $cona, true) +
                 $this->dvizniVod->toplotneIzgube($this, $cona, true) +
-                $this->prikljucniVod->toplotneIzgube($this, $cona, true)) * $steviloUr * ($temperaturaRazvoda - $cona->notranjaTOgrevanje) / 1000;
+                $this->prikljucniVod->toplotneIzgube($this, $cona, true)) *
+                $steviloUr * ($temperaturaRazvoda - $cona->notranjaTOgrevanje) / 1000;
 
             $izgubeZunajOvoja = ($this->horizontalniVod->toplotneIzgube($this, $cona, false) +
                 $this->dvizniVod->toplotneIzgube($this, $cona, false) +
-                $this->prikljucniVod->toplotneIzgube($this, $cona, false)) * $steviloUr * ($temperaturaRazvoda - $cona->zunanjaT) / 1000;
-
+                $this->prikljucniVod->toplotneIzgube($this, $cona, false)) *
+                $steviloUr * ($temperaturaRazvoda - $cona->zunanjaT) / 1000;
 
             $toplotneIzgube[$mesec] = $izgubeZnotrajOvoja + $izgubeZunajOvoja;
         }
@@ -105,89 +135,126 @@ abstract class Razvod {
         return $toplotneIzgube;
     }
 
+    /**
+     * Izračun potrebne električne energije
+     *
+     * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @return array
+     */
     public function potrebnaElektricnaEnergija($prenosnik, $sistem, $cona)
     {
-        
-        $jeZnanaCrpalka = !empty($this->crpalka->moc);
-        $izracunanaMocCrpalke = $this->izracunHidravlicneMoci($this, $prenosnik, $sistem, $cona);
-        $this->crpalka->moc = $this->crpalka->moc ?? $izracunanaMocCrpalke;
+        if (!empty($this->crpalka)) {
+            $jeZnanaCrpalka = !empty($this->crpalka->moc);
+            $izracunanaMocCrpalke = $this->izracunHidravlicneMoci($prenosnik, $sistem, $cona);
 
-        // možnosti sta elektrika in toplota
-        $this->navlazevanjeZraka = $razvod->navlazevanjeZraka ?? 'elektrika';
+            $this->crpalka->moc = $this->crpalka->moc ?? $izracunanaMocCrpalke;
 
-        // korekcijski faktor za hidravlično omrežje [-] 
-        //      za dvocevni sistem: fsch = 1 
-        //      za enocevni sistem: fsch = 8,6⋅m + 0,7 
-        //          m – delež masnega pretoka skozi ogrevalo 
-        $f_sch = ($razvod->vrsta == 'enocevni') ? 2.3 : 1;
+            // možnosti sta elektrika in toplota
+            $this->navlazevanjeZraka = $this->navlazevanjeZraka ?? 'elektrika';
 
-        // korekcijski faktor za hidravlično uravnoteženje [-]
-        //      za hidravlično uravnotežene sisteme: 1 
-        //      za hidravlično neuravnotežene sisteme: 1,1 
-        $f_abgl = empty($razvod->neuravnotezen) ? 1 : 1.1;
+            // f_sch - korekcijski faktor za hidravlično omrežje [-]
+            //      za dvocevni sistem: fsch = 1
+            //      za enocevni sistem: fsch = 8,6⋅m + 0,7
+            //          m – delež masnega pretoka skozi ogrevalo
+            $f_sch = $this->getProperty(RazvodAbstractProperties::f_sch);
 
-        // (enačba 68, spodaj)
-        $faktorNovaObstojeca = 1;
-        $fe_crpalke = $jeZnanaCrpalka ? $razvod->crpalka->moc / $izracunanaMocCrpalke : 1.25 + pow(200 / $izracunanaMocCrpalke, 0.5) * $faktorNovaObstojeca;
+            // korekcijski faktor za hidravlično uravnoteženje [-]
+            //      za hidravlično uravnotežene sisteme: 1
+            //      za hidravlično neuravnotežene sisteme: 1,1
+            // TODO:
+            $f_abgl = 1;
 
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            // (enačba 68, spodaj)
+            $faktorNovaObstojeca = 1;
+            $fe_crpalke = $jeZnanaCrpalka ?
+                $this->crpalka->moc / $izracunanaMocCrpalke :
+                1.25 + pow(200 / $izracunanaMocCrpalke, 0.5) * $faktorNovaObstojeca;
 
-            // Izračun povprečnih obremenitev podsistemov 
-            $betaH = $sistem->izgube[$mesec] / ($sistem->standardnaMoc * 24 * $stDni);
+            foreach (array_keys(Calc::MESECI) as $mesec) {
+                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stUr = 24 * $stDni;
 
-            // th – mesečne obratovalne ure – čas [h/M] (enačba 43) 
-            $steviloUr = ($betaH > 0.05) ? 24 * $stDni : 24 * $stDni * $betaH / 0.05;
+                // Izračun povprečnih obremenitev podsistemov
+                $betaH = $cona->energijaOgrevanje[$mesec] / ($sistem->standardnaMoc * $stUr);
 
-            // Qh,in,em - potrebna dovedena toplota v ogrevala [kWh] (enačba 60)
-            $potrebnaToplotaOgrevala = $sistem->izgube[$mesec] + $sistem->izgubePrenosnikov[$mesec];
+                // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
+                $steviloUr = $stUr * ($betaH > 0.05 ? 1 : $betaH / 0.05);
 
-            // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-] 
-            // enačba (63)
-            $betaI = ($sistem->standardnaMoc * $steviloUr) > 0 ? $potrebnaToplotaOgrevala / ($sistem->standardnaMoc * $steviloUr) : 0;
+                // Qh,in,em - potrebna dovedena toplota v ogrevala [kWh] (enačba 60)
+                $potrebnaToplotaOgrevala = $cona->energijaOgrevanje[$mesec] + $sistem->izgubePrenosnikov[$mesec];
 
-            // Wh,d,aux - Potrebna električna energija za razvodni podsistem 
-            $razvod->potrebnaElektricnaEnergija[$mesec] = 0;
+                // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-]
+                // enačba (63)
+                $betaI = $sistem->standardnaMoc * $steviloUr > 0 ?
+                    $potrebnaToplotaOgrevala / ($sistem->standardnaMoc * $steviloUr) :
+                    0;
 
-            if ($sistem->vrsta == 'toplovodni' || $sistem->vrsta == 'biomasa') {
-                if ($betaI > 0) {
-                    // tabela je del enačbe (68)
-                    $Cp = Configure::read('lookups.crpalke.regulacija.' . $razvod->crpalka->regulacija);
+                // Wh,d,aux - Potrebna električna energija za razvodni podsistem
+                $potrebnaElektricnaEnergija[$mesec] = 0;
 
-                    // eh,d,aux - faktor rabe električne energije črpalke
-                    // enačba (68)
-                    $razvod->faktorRabeEnergije[$mesec] = $fe_crpalke * ($Cp['Cp1'] + $Cp['Cp2'] / $betaI);
+                if (
+                    ($sistem instanceof ToplovodniOgrevalniSistem) ||
+                    ($sistem instanceof LokalniOgrevalniSistemNaBiomaso)
+                ) {
+                    if ($betaI > 0) {
+                        // tabela je del enačbe (68)
+                        $Cp = Configure::read('lookups.crpalke.regulacija.' . $this->crpalka->regulacija);
 
-                    // Wh,d,hydr - potrebna hidravlična energija
-                    // enačba (64)
-                    $razvod->potrebnaHidravlicnaEnergija[$mesec] = $razvod->crpalka->moc / 1000 * $betaI * $steviloUr * $f_sch * $f_abgl;
+                        // eh,d,aux - faktor rabe električne energije črpalke
+                        // enačba (68)
+                        $faktorRabeEnergije = $fe_crpalke * ($Cp['Cp1'] + $Cp['Cp2'] / $betaI);
 
-                    // Wh,d,aux - Potrebna električna energija za razvodni podsistem 
-                    // za sisteme brez prekinitve
-                    // enačba (61)
-                    $razvod->potrebnaElektricnaEnergija[$mesec] = $razvod->potrebnaHidravlicnaEnergija[$mesec] * $razvod->faktorRabeEnergije[$mesec];
-                    
-                    // TODO: kaj pa za sisteme s prekinitvijo
-                    // za prekinitev ogrevanja je korekturni faktor 1
-                    //$korekturniFaktorPriZnizanju = 0.6;
-                    // mesečno število ur ogrevanja
-                    //$steviloUrOgrevanja = $steviloUr;
-                    // enačba (69)
-                    //$razvod->potrebnaElektricnaEnergija2[$mesec] = $razvod->potrebnaElektricnaEnergija[$mesec] *
-                    //    (1.03 * $steviloUr + $korekturniFaktorPriZnizanju * $steviloUrOgrevanja) / $steviloUrOgrevanja;
-                    //$vrnjenaElektricnaEnergija = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
+                        // Wh,d,hydr - potrebna hidravlična energija
+                        // enačba (64)
+                        $potrebnaHidravlicnaEnergija = $this->crpalka->moc / 1000 *
+                            $betaI * $steviloUr * $f_sch * $f_abgl;
+
+                        // Wh,d,aux - Potrebna električna energija za razvodni podsistem
+                        // za sisteme brez prekinitve
+                        // enačba (61)
+                        $potrebnaElektricnaEnergija[$mesec] = $potrebnaHidravlicnaEnergija * $faktorRabeEnergije;
+
+                        // TODO: kaj pa za sisteme s prekinitvijo
+                        // za prekinitev ogrevanja je korekturni faktor 1
+                        //$korekturniFaktorPriZnizanju = 0.6;
+                        // mesečno število ur ogrevanja
+                        //$steviloUrOgrevanja = $steviloUr;
+                        // enačba (69)
+                        //$razvod->potrebnaElektricnaEnergija2[$mesec] = $razvod->potrebnaElektricnaEnergija[$mesec] *
+                        //    (1.03 * $steviloUr + $korekturniFaktorPriZnizanju * $steviloUrOgrevanja) / $steviloUrOgrevanja;
+                        //$vrnjenaElektricnaEnergija = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
+                    } else {
+                        $potrebnaElektricnaEnergija[$mesec] = 0;
+                    }
                 }
-            }
 
-            $razvod->vrnjenaElektricnaEnergijaVOgrevanje[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
-            $razvod->vracljivaElektricnaEnergijaVZrak[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
-            $razvod->vrnjenaToplotaVOkolico[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
+                //$razvod->vrnjenaElektricnaEnergijaVOgrevanje[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
+                //$razvod->vracljivaElektricnaEnergijaVZrak[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
+                //$razvod->vrnjenaToplotaVOkolico[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
+            }
+        } else {
+            // brez črpalke
+            foreach (array_keys(Calc::MESECI) as $mesec) {
+                $potrebnaElektricnaEnergija[$mesec] = 0;
+            }
         }
+
+        return $potrebnaElektricnaEnergija;
     }
 
-    public function izracunHidravlicneMoci($razvod, $prenosnik, $sistem, $cona)
+    /**
+     * Izračun potrebne električne energije
+     *
+     * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @return float
+     */
+    public function izracunHidravlicneMoci($prenosnik, $sistem, $cona)
     {
-        $Lmax = $this->maksimalnaDolzinaCevi($cona);
+        $Lmax = $this->getProperty(RazvodAbstractProperties::Lmax, ['cona' => $cona]);
 
         // ΔpFBH – dodatek pri ploskovnem ogrevanju, če ni proizvajalčevega podatka je 25 kPa vključno z ventili in razvodom (kPa)
         $deltaP_FBH = $prenosnik->deltaP_FBH;
@@ -202,22 +269,14 @@ abstract class Razvod {
         // enačba (67)
         $deltaP = 0.13 * $Lmax + 2 + $deltaP_FBH + $deltaP_WE;
 
-
-
-        $deltaTHKLookup = [
-            '35/30' => [5, 10],
-            '40/30' => [10, 15],
-            '55/45' => [10, 15],
-        ];
-
-        // ΔθHK – temperaturna razlika pri standardnem temperaturnem režimu ogrevalnega sistema [°C] (enačba 38) 
+        // ΔθHK – temperaturna razlika pri standardnem temperaturnem režimu ogrevalnega sistema [°C] (enačba 38)
         // 0 velja za zrak-zrak - oz. če ni definirana vrsta
         $deltaT_HK = 0;
         if (isset($prenosnik->rezim)) {
             $deltaT_HK = $prenosnik->rezim->temperaturnaRazlikaStandardnegaRezima($sistem);
         }
 
-        // V – volumski pretok ogrevnega medija [m3/h] 
+        // V – volumski pretok ogrevnega medija [m3/h]
         // enačba (66)
         $volumskiPretok = 0;
         if ($deltaT_HK > 0) {

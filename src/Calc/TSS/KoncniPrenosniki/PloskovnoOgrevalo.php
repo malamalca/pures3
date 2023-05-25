@@ -1,46 +1,44 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Calc\TSS\KoncniPrenosniki;
 
+use App\Calc\TSS\KoncniPrenosniki\Izbire\VrstaIzolacijePloskovnihOgreval;
+use App\Calc\TSS\KoncniPrenosniki\Izbire\VrstaSistemaPloskovnihOgreval;
 use App\Lib\Calc;
 
-enum VrsteSistemovOgreval: string {
-    use \App\Lib\Traits\GetOrdinalTrait;
-
-    case TalnoOgrevanjeMokriSistem = 'talno_mokri';
-    case TalnoOgrevanjeSuhiSistem = 'talno_suhi';
-    case TalnoOgrevanjeSuhiSistemSTankoOblogo = 'talno_suhiTankaObloga';
-    case StenskoOgrevanje = 'stensko';
-    case StropnoOgrevanje = 'stopno';
-}
-
-enum VrsteIzolacij: string {
-    use \App\Lib\Traits\GetOrdinalTrait;
-
-    case BrezMinimalneIzolacije = 'brez';
-    case MinimalnaIzolacija = 'min';
-    case PovecanaIzolacija100Procentov = '100%';
-}
-
-
-class PloskovnoOgrevalo extends KoncniPrenosnik {
-    const DELTAT_VRSTE_SISTEMOV = [0, 0, 0, 0.4, 0.7];
-    const DELTAT_SPECIFICNIH_IZGUB = [1.4, 0.5, 0.1];
+class PloskovnoOgrevalo extends KoncniPrenosnik
+{
+    public const DELTAT_VRSTE_SISTEMOV = [0, 0, 0, 0.4, 0.7];
+    public const DELTAT_SPECIFICNIH_IZGUB = [1.4, 0.5, 0.1];
 
     public $exponentOgrevala = 1.1;
     public $deltaP_FBH = 25;
 
-    protected VrsteSistemovOgreval $sistemOgreval;
-    protected VrsteIzolacij $izolacija;
+    protected VrstaSistemaPloskovnihOgreval $sistemOgreval;
+    protected VrstaIzolacijePloskovnihOgreval $izolacija;
 
+    /**
+     * Loads configuration from json|StdClass
+     *
+     * @param \StdClass|string|null $config Configuration
+     * @return void
+     */
     public function parseConfig($config)
     {
         parent::parseConfig($config);
 
-        $this->sistemOgreval = VrsteSistemovOgreval::from($config->sistem);
-        $this->izolacija = VrsteIzolacij::from($config->izolacija);
+        $this->sistemOgreval = VrstaSistemaPloskovnihOgreval::from($config->sistem);
+        $this->izolacija = VrstaIzolacijePloskovnihOgreval::from($config->izolacija);
     }
 
+    /**
+     * Izračun toplotnih izgub končnega prenosnika
+     *
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki cone
+     * @return array
+     */
     public function toplotneIzgube($cona, $okolje)
     {
         // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
