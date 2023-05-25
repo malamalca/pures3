@@ -21,6 +21,11 @@ abstract class Razvod
 
     public string $idPrenosnika;
 
+    public array $toplotneIzgube;
+    public array $vracljiveIzgube;
+    public array $vracljiveIzgubeAux;
+    public array $potrebnaElektricnaEnergija;
+
     /**
      * Class Constructor
      *
@@ -86,26 +91,28 @@ abstract class Razvod
     /**
      * Izračun toplotnih izgub končnega prenosnika
      *
-     * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
+     * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    public function toplotneIzgube($prenosnik, $sistem, $cona)
+    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $toplotneIzgube = [];
+        $prenosnik = $params['prenosnik'];
+
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = 24 * $stDni;
 
-            // Izračun povprečnih obremenitev podsistemov
-            $betaH = $cona->energijaOgrevanje[$mesec] / ($sistem->standardnaMoc * $stUr);
-
             // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
-            $steviloUr = $stUr * ($betaH > 0.05 ? 1 : $betaH / 0.05);
+            $steviloUr = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
+                1 :
+                $sistem->povprecnaObremenitev[$mesec] / 0.05);
 
             // Qh,in,em - potrebna dovedena toplota v ogrevala [kWh] (enačba 60)
-            $potrebnaToplotaOgrevala = $cona->energijaOgrevanje[$mesec] + $sistem->izgubePrenosnikov[$mesec];
+            $potrebnaToplotaOgrevala = $vneseneIzgube[$mesec];
 
             // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-]
             // enačba (63)
@@ -115,7 +122,7 @@ abstract class Razvod
 
             // θ m - povprečna temperatura ogrevnega medija [°C]
             // enačba (39)
-            $srednjaT = $prenosnik->rezim->srednjaTemperatura($sistem);
+            $srednjaT = $sistem->rezim->srednjaTemperatura($sistem);
             $temperaturaRazvoda = $betaI > 0 ? (($srednjaT - $cona->notranjaTOgrevanje) *
                 pow($betaI, 1 / $prenosnik->exponentOgrevala) + $cona->notranjaTOgrevanje) : $cona->notranjaTOgrevanje;
 
@@ -124,26 +131,29 @@ abstract class Razvod
                 $this->prikljucniVod->toplotneIzgube($this, $cona, true)) *
                 $steviloUr * ($temperaturaRazvoda - $cona->notranjaTOgrevanje) / 1000;
 
+            $temperaturaIzvenOvoja = 13;
             $izgubeZunajOvoja = ($this->horizontalniVod->toplotneIzgube($this, $cona, false) +
                 $this->dvizniVod->toplotneIzgube($this, $cona, false) +
                 $this->prikljucniVod->toplotneIzgube($this, $cona, false)) *
-                $steviloUr * ($temperaturaRazvoda - $cona->zunanjaT) / 1000;
+                $steviloUr * ($temperaturaRazvoda - $temperaturaIzvenOvoja) / 1000;
 
-            $toplotneIzgube[$mesec] = $izgubeZnotrajOvoja + $izgubeZunajOvoja;
+            $this->toplotneIzgube[$mesec] = $izgubeZnotrajOvoja + $izgubeZunajOvoja;
+            $this->vracljiveIzgube[$mesec] = $izgubeZnotrajOvoja;
         }
 
-        return $toplotneIzgube;
+        return $this->toplotneIzgube;
     }
 
     /**
      * Izračun potrebne električne energije
      *
+     * @param array $vneseneIzgube Vnesene izgube
      * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \StdClass $cona Podatki cone
      * @return array
      */
-    public function potrebnaElektricnaEnergija($prenosnik, $sistem, $cona)
+    public function potrebnaElektricnaEnergija($vneseneIzgube, $prenosnik, $sistem, $cona)
     {
         if (!empty($this->crpalka)) {
             $jeZnanaCrpalka = !empty($this->crpalka->moc);
@@ -176,14 +186,13 @@ abstract class Razvod
                 $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
                 $stUr = 24 * $stDni;
 
-                // Izračun povprečnih obremenitev podsistemov
-                $betaH = $cona->energijaOgrevanje[$mesec] / ($sistem->standardnaMoc * $stUr);
-
                 // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
-                $steviloUr = $stUr * ($betaH > 0.05 ? 1 : $betaH / 0.05);
+                $steviloUr = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
+                    1 :
+                    $sistem->povprecnaObremenitev[$mesec] / 0.05);
 
                 // Qh,in,em - potrebna dovedena toplota v ogrevala [kWh] (enačba 60)
-                $potrebnaToplotaOgrevala = $cona->energijaOgrevanje[$mesec] + $sistem->izgubePrenosnikov[$mesec];
+                $potrebnaToplotaOgrevala = $vneseneIzgube[$mesec];
 
                 // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-]
                 // enačba (63)
@@ -214,7 +223,7 @@ abstract class Razvod
                         // Wh,d,aux - Potrebna električna energija za razvodni podsistem
                         // za sisteme brez prekinitve
                         // enačba (61)
-                        $potrebnaElektricnaEnergija[$mesec] = $potrebnaHidravlicnaEnergija * $faktorRabeEnergije;
+                        $this->potrebnaElektricnaEnergija[$mesec] = $potrebnaHidravlicnaEnergija * $faktorRabeEnergije;
 
                         // TODO: kaj pa za sisteme s prekinitvijo
                         // za prekinitev ogrevanja je korekturni faktor 1
@@ -226,9 +235,11 @@ abstract class Razvod
                         //    (1.03 * $steviloUr + $korekturniFaktorPriZnizanju * $steviloUrOgrevanja) / $steviloUrOgrevanja;
                         //$vrnjenaElektricnaEnergija = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
                     } else {
-                        $potrebnaElektricnaEnergija[$mesec] = 0;
+                        $this->potrebnaElektricnaEnergija[$mesec] = 0;
                     }
                 }
+
+                $this->vracljiveIzgubeAux[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
 
                 //$razvod->vrnjenaElektricnaEnergijaVOgrevanje[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
                 //$razvod->vracljivaElektricnaEnergijaVZrak[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
@@ -237,11 +248,12 @@ abstract class Razvod
         } else {
             // brez črpalke
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $potrebnaElektricnaEnergija[$mesec] = 0;
+                $this->potrebnaElektricnaEnergija[$mesec] = 0;
+                $this->vracljiveIzgubeAux[$mesec] = 0;
             }
         }
 
-        return $potrebnaElektricnaEnergija;
+        return $this->potrebnaElektricnaEnergija;
     }
 
     /**
@@ -272,8 +284,8 @@ abstract class Razvod
         // ΔθHK – temperaturna razlika pri standardnem temperaturnem režimu ogrevalnega sistema [°C] (enačba 38)
         // 0 velja za zrak-zrak - oz. če ni definirana vrsta
         $deltaT_HK = 0;
-        if (isset($prenosnik->rezim)) {
-            $deltaT_HK = $prenosnik->rezim->temperaturnaRazlikaStandardnegaRezima($sistem);
+        if (isset($sistem->rezim)) {
+            $deltaT_HK = $sistem->rezim->temperaturnaRazlikaStandardnegaRezima($sistem);
         }
 
         // V – volumski pretok ogrevnega medija [m3/h]

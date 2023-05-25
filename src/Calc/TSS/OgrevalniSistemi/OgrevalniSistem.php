@@ -4,12 +4,15 @@ declare(strict_types=1);
 namespace App\Calc\TSS\OgrevalniSistemi;
 
 use App\Calc\TSS\Energenti\Energent;
+use App\Calc\TSS\GeneratorFactory;
 use App\Calc\TSS\KoncniPrenosnikFactory;
+use App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\TSS\RazvodFactory;
 
 abstract class OgrevalniSistem
 {
     public Energent $energent;
+    public VrstaRezima $rezim;
 
     /**
      * QN – standardna potrebna toplotna moč za ogrevanje (cone) – moč ogreval, skladno s SIST
@@ -19,9 +22,14 @@ abstract class OgrevalniSistem
      */
     public float $standardnaMoc;
 
-    public array $izgubePrenosnikov;
-    protected array $razvodi = [];
-    protected array $koncniPrenosniki = [];
+    /**
+     * Povprecna obremenitev podsistemov
+     */
+    public array $povprecnaObremenitev;
+
+    public array $koncniPrenosniki = [];
+    public array $razvodi = [];
+    public array $generatorji = [];
 
     /**
      * Class Constructor
@@ -48,6 +56,8 @@ abstract class OgrevalniSistem
             $config = json_decode($config);
         }
 
+        $this->rezim = VrstaRezima::from($config->rezim);
+
         if (!empty($config->razvodi)) {
             foreach ($config->razvodi as $razvod) {
                 $this->razvodi[] = RazvodFactory::create($razvod->vrsta, $razvod);
@@ -57,6 +67,12 @@ abstract class OgrevalniSistem
         if (!empty($config->prenosniki)) {
             foreach ($config->prenosniki as $prenosnik) {
                 $this->koncniPrenosniki[] = KoncniPrenosnikFactory::create($prenosnik->vrsta, $prenosnik);
+            }
+        }
+
+        if (!empty($config->generatorji)) {
+            foreach ($config->generatorji as $generator) {
+                $this->generatorji[] = GeneratorFactory::create($generator->vrsta, $generator);
             }
         }
     }

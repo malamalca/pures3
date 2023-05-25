@@ -7,6 +7,10 @@ abstract class Generator
 {
     public string $id;
 
+    public float $nazivnaMoc;
+
+    public $potrebnaEnergija;
+
     /**
      * Class Constructor
      *
@@ -33,5 +37,18 @@ abstract class Generator
         }
 
         $this->id = $config->id;
+        $this->nazivnaMoc = $config->nazivnaMoc;
     }
+
+    /**
+     * Izračun toplotnih izgub generatorja
+     *
+     * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return array
+     */
+    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 }

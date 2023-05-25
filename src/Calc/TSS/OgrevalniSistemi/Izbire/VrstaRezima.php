@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Calc\TSS\KoncniPrenosniki\Izbire;
+namespace App\Calc\TSS\OgrevalniSistemi\Izbire;
 
 use App\Calc\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
 
@@ -30,6 +30,28 @@ enum VrstaRezima: string
         }
 
         return $srednjeTemperature[$this->getOrdinal()];
+    }
+
+    /**
+     * Vrne temperaturo ponora
+     *
+     * @return float
+     */
+    public function temperaturaPonora()
+    {
+        $temperaturePonora = [35, 40, 55];
+
+        return $temperaturePonora[$this->getOrdinal()];
+    }
+
+    /**
+     * Vrne faktor COP za toplotne črpalke glede na režim
+     *
+     * @return float
+     */
+    public function faktorDeltaTempTC()
+    {
+        return $this->getOrdinal() == 0 ? 1.02 : 1.051;
     }
 
     /**

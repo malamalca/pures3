@@ -34,7 +34,7 @@ if (Configure::read('debug')) {
 
 // Handle php error logs with monolog
 $logger = Log::getInstance()->getLogger();
-ErrorHandler::register($logger);
+//ErrorHandler::register($logger);
 
 /**
  * Set server timezone to UTC. You can change it to another timezone of your

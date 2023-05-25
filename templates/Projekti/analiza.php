@@ -78,7 +78,7 @@
     <tr>
         <td>Potrebna toplota za pripravo TSV</td>
         <td>Q<sub>W,nd,an</sub></td>
-        <td class="center"><?= $this->numFormat($stavba->skupnaEnergijaHlajenje, 0) ?></td>
+        <td class="center"><?= $this->numFormat($stavba->skupnaPotrebaTSV, 0) ?></td>
         <td>kWh/an</td>
     </tr>
     <tr>

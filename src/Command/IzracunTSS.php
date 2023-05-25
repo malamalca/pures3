@@ -6,6 +6,7 @@ namespace App\Command;
 use App\Calc\TSS\SistemOgrevanjaFactory;
 use App\Core\Command;
 use App\Lib\CalcTSSPrezracevanje;
+use App\Lib\CalcTSSRazsvetljava;
 
 class IzracunTSS extends Command
 {
@@ -60,6 +61,27 @@ class IzracunTSS extends Command
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $TSSRazsvetljavaFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'TSS' . DS . 'razsvetljava.json';
+        if (file_exists($TSSRazsvetljavaFile)) {
+            $TSSSistemiRazsvetljava = json_decode(file_get_contents($TSSRazsvetljavaFile));
+
+            $TSSSistemiRazsvetljavaOut = [];
+            foreach ($TSSSistemiRazsvetljava as $sistem) {
+                if (!isset($cone[$sistem->idCone])) {
+                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
+                }
+                $TSSSistemiRazsvetljavaOut[] =
+                    CalcTSSRazsvetljava::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
+            }
+
+            $TSSRazsvetljavaOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'razsvetljava.json';
+            file_put_contents(
+                $TSSRazsvetljavaOutFile,
+                json_encode($TSSSistemiRazsvetljavaOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+            );
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $TSSOgrevanjeFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'TSS' . DS . 'ogrevanje.json';
         if (file_exists($TSSOgrevanjeFile)) {
             $TSSSistemiOgrevanje = json_decode(file_get_contents($TSSOgrevanjeFile));
@@ -71,9 +93,24 @@ class IzracunTSS extends Command
                 }
 
                 $sistemOgrevanja = SistemOgrevanjaFactory::create($sistem->vrsta, $sistem);
-                $TSSSistemiOgrevanjeOut[] = $sistemOgrevanja->analiza($cone[$sistem->idCone], $okolje);
-                //$TSSSistemiOgrevanjeOut[] =
-                //    CalcTSSOgrevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
+                $sistemOgrevanja->analiza($cone[$sistem->idCone], $okolje);
+
+                foreach ($sistem->prenosniki as $k => $prenosnik) {
+                    $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
+                }
+
+                foreach ($sistem->razvodi as $k => $razvod) {
+                    $razvod->toplotneIzgube = $sistemOgrevanja->razvodi[$k]->toplotneIzgube;
+                    $razvod->vracljiveIzgube = $sistemOgrevanja->razvodi[$k]->vracljiveIzgube;
+                    $razvod->potrebnaElektricnaEnergija = $sistemOgrevanja->razvodi[$k]->potrebnaElektricnaEnergija;
+                    $razvod->vracljiveIzgubeAux = $sistemOgrevanja->razvodi[$k]->vracljiveIzgubeAux;
+                }
+
+                foreach ($sistem->generatorji as $k => $generator) {
+                    $generator->potrebnaEnergija = $sistemOgrevanja->generatorji[$k]->potrebnaEnergija;
+                }
+
+                $TSSSistemiOgrevanjeOut[] = $sistem;
             }
 
             $TSSOgrevanjeOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'ogrevanje.json';

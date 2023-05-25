@@ -1,34 +1,30 @@
 [
     {
+        "id": "TC",
         "idCone": "Cona1",
         "vrsta": "toplovodni",
         "energent": "elektrika",
+        "rezim": "40/30",
 
         "generatorji": [
             {
                 "id": "TC",
-                "energent": "elektrika",
                 "vrsta": "TC_zrakvoda",
-                "nazivnaMoc": 6
+                "nazivnaMoc": 6,
+                "nazivniCOP": 3
             }
         ],
 
         "hranilniki": [
-
         ],
 
         "prenosniki": [
             {
                 "id": "TALNO",
                 "vrsta": "ploskovnaOgrevala",
-                "_vrsta": "radiatorji",
-                "__vrsta": "konvektorji",
 
-                "rezim": "40/30",
                 "sistem": "talno_mokri",
                 "izolacija": "100%",
-
-                "namestitev": "notranjeStene",
 
                 "hidravlicnoUravnotezenje": "staticnoDviznihVodov",
                 "regulacijaTemperature": "referencniProstor",
@@ -41,27 +37,15 @@
         "razvodi": [
             {
                 "vrsta": "dvocevni",
-                "_vrsta": "enocevni",
-                "__vrsta": "dvocevniZunaj",
                 "idPrenosnika": "TALNO",
                 "crpalka": {},
                 "ceviHorizontaliVodi": {
-                    "_dolzina": 12,
-                    "_izolacija": "izolirane|neizoliraneZunaj|neizoliraneZnotraj|neizoliraneVZraku|neizoliraneVNotranjiSteni",
-                    "_Ucevi": 0.3,
                     "delezVOgrevaniConi": 0.8
                 },
                 "ceviDvizniVodi": {
-                    "_dolzina": 12,
-                    "_izolacija": "izolirane|neizoliraneZunaj|neizoliraneZnotraj|neizoliraneVZraku|neizoliraneVNotranjiSteni",
-                    "_Ucevi": 0.3,
-                    "dolzinaEqui": 0,
                     "delezVOgrevaniConi": 0.8
                 },
                 "ceviPrikljucniVodi": {
-                    "_dolzina": 12,
-                    "_izolacija": "izolirane|neizoliraneZunaj|neizoliraneZnotraj|neizoliraneVZraku|neizoliraneVNotranjiSteni",
-                    "_Ucevi": 0.3
                 }
             }
         ]

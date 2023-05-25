@@ -5,7 +5,6 @@ namespace App\Calc\TSS\KoncniPrenosniki;
 
 use App\Calc\TSS\KoncniPrenosniki\Izbire\VrstaHidravlicnegaUravnotezenja;
 use App\Calc\TSS\KoncniPrenosniki\Izbire\VrstaRegulacijeTemperature;
-use App\Calc\TSS\KoncniPrenosniki\Izbire\VrstaRezima;
 use App\Lib\Calc;
 
 abstract class KoncniPrenosnik
@@ -38,7 +37,8 @@ abstract class KoncniPrenosnik
 
     public VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
     public VrstaRegulacijeTemperature $regulacijaTemperature;
-    public VrstaRezima $rezim;
+
+    public array $toplotneIzgube;
 
     /**
      * Class Constructor
@@ -74,17 +74,18 @@ abstract class KoncniPrenosnik
         $this->hidravlicnoUravnotezenje =
             VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');
         $this->regulacijaTemperature = VrstaRegulacijeTemperature::from($config->regulacijaTemperature ?? 'centralna');
-        $this->rezim = VrstaRezima::from($config->rezim);
     }
 
     /**
      * Izračun toplotnih izgub
      *
+     * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \StdClass $cona Podatki cone
      * @param \StdClass $okolje Podatki cone
      * @return array
      */
-    abstract public function toplotneIzgube($cona, $okolje);
+    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje);
 
     /**
      * Izračun potrebne električne energije

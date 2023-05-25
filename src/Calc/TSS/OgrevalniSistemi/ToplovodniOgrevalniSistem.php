@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\TSS\OgrevalniSistemi;
 
 use App\Calc\TSS\EnergentFactory;
+use App\Lib\Calc;
 
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
@@ -32,28 +33,48 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         $this->standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
             ($cona->notranjaTOgrevanje - $cona->zunanjaT) / 1000;
 
-        $izgube = [];
+        foreach (array_keys(Calc::MESECI) as $mesec) {
+            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stUr = 24 * $stDni;
 
+            // betaH - Izračun povprečnih obremenitev podsistemov
+            $this->povprecnaObremenitev[$mesec] = $cona->energijaOgrevanje[$mesec] / ($this->standardnaMoc * $stUr);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $vneseneIzgube = $cona->energijaOgrevanje;
         foreach ($this->koncniPrenosniki as $koncniPrenosnik) {
-            $izgubePrenosnika = $koncniPrenosnik->toplotneIzgube($cona, $okolje);
+            $izgubePrenosnika = $koncniPrenosnik->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
+
+            // seštejem vse izgube prenosnikov
             foreach ($izgubePrenosnika as $k => $v) {
-                $this->izgubePrenosnikov[$k] = ($this->izgubePrenosnikov[$k] ?? 0) + $v;
+                $vneseneIzgube[$k] += $v;
             }
         }
 
         foreach ($this->razvodi as $razvod) {
             $prenosnik = array_filter($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
             if (empty($prenosnik)) {
-                throw new \Exception(sprintf('Prenosnik %s na obstaja.', $razvod->idPrenosnika));
+                throw new \Exception(sprintf('Prenosnik %s ne obstaja.', $razvod->idPrenosnika));
             }
             $prenosnik = reset($prenosnik);
 
-            $izgubeRazvoda = $razvod->toplotneIzgube($prenosnik, $this, $cona, $okolje);
+            $izgubeRazvoda =
+                $razvod->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje, ['prenosnik' => $prenosnik]);
 
-            $elektrika = $razvod->potrebnaElektricnaEnergija($prenosnik, $this, $cona);
+            $razvod->potrebnaElektricnaEnergija($vneseneIzgube, $prenosnik, $this, $cona);
+
+            // dodam k vnesenim izgubam
+            foreach ($izgubeRazvoda as $k => $v) {
+                $vneseneIzgube[$k] += $v;
+            }
         }
 
         // izgube ogrevala
+        foreach ($this->generatorji as $generator) {
+            $izgubeGeneratorja = $generator->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
+        }
+
         return [];
     }
 }

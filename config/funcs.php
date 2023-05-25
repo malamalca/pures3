@@ -24,3 +24,13 @@ function h($output)
 {
     return htmlentities($output, ENT_COMPAT, 'UTF-8');
 }
+
+/**
+ * Helper print array
+ *
+ * @param array $a Array data
+ * @return string
+ */
+function pa($a) {
+    return '|' . implode(' | ', array_map(fn($v) => str_pad(number_format(round($v, 2), 2, '.', ''), 8, ' ', STR_PAD_LEFT), $a)) . '|' . PHP_EOL;
+}

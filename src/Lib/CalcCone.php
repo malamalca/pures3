@@ -195,20 +195,20 @@ class CalcCone
             $protiZraku_povrsina += $elementOvoja->povrsina * $elementOvoja->stevilo;
         }
         foreach ($cona->ovoj->netransparentneKonstrukcije as $elementOvoja) {
-            /*if ($elementOvoja->protiZraku) {*/
+            if ($elementOvoja->protiZraku) {
                 $protiZraku_Uab +=
                     $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
                 $protiZraku_povrsina += $elementOvoja->povrsina * $elementOvoja->stevilo;
-            /*}*/
+            }
         }
 
         $cona->Htr_ogrevanje = $protiZraku_Uab + $protiZraku_povrsina * $cona->deltaPsi;
         $cona->Htr_hlajenje = $cona->Htr_ogrevanje;
 
-        $tau_ogrevanje = $Cm_eff / 3600 / ($cona->Htr_ogrevanje + /*$cona->Hgr_ogrevanje + */$cona->Hve_ogrevanje);
+        $tau_ogrevanje = $Cm_eff / 3600 / ($cona->Htr_ogrevanje + $cona->Hgr_ogrevanje + $cona->Hve_ogrevanje);
         $A_ogrevanje = 1 + $tau_ogrevanje / 15;
 
-        $tau_hlajenje = $Cm_eff / 3600 / ($cona->Htr_hlajenje + /*$cona->Hgr_hlajenje + */$cona->Hve_hlajenje);
+        $tau_hlajenje = $Cm_eff / 3600 / ($cona->Htr_hlajenje + $cona->Hgr_hlajenje + $cona->Hve_hlajenje);
         $A_hlajenje = 1 + $tau_hlajenje / 15;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -239,6 +239,7 @@ class CalcCone
             $vsotaVirov_hlajenje = $cona->notranjiViriHlajenje[$mesec] + $cona->solarniDobitkiHlajenje[$mesec];
             $gama_hlajenje = $vsotaVirov_hlajenje /
                 ($cona->prezracevalneIzgubeHlajenje[$mesec] + $cona->transIzgubeHlajenje[$mesec]);
+
             $cona->Hgn[$mesec] = null;
 
             $cona->ucinekPonorov[$mesec] = null;
