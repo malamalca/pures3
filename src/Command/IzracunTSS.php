@@ -113,7 +113,11 @@ class IzracunTSS extends Command
                 $TSSSistemiOgrevanjeOut[] = $sistem;
             }
 
-            $TSSOgrevanjeOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'ogrevanje.json';
+            $TSSOgrevanjeOutDir = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS;
+            if (!is_dir($TSSOgrevanjeOutDir)) {
+                mkdir($TSSOgrevanjeOutDir, 0777, true);
+              }
+            $TSSOgrevanjeOutFile = $TSSOgrevanjeOutDir . 'ogrevanje.json';
             file_put_contents(
                 $TSSOgrevanjeOutFile,
                 json_encode($TSSSistemiOgrevanjeOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
