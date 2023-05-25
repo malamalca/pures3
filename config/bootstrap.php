@@ -14,7 +14,6 @@ use App\Core\Configure;
 use App\Core\Log;
 use Monolog\ErrorHandler;
 
-
 $defaultConfig = require(dirname(__FILE__) . DS . 'app_default.php');
 
 $config = [];
@@ -27,14 +26,22 @@ $config = array_replace_recursive($defaultConfig, $config);
 $config['lookups'] = $lookups;
 Configure::getInstance($config);
 
+
+// Display exceptions
+function echo_exception_handler($e) {
+    echo sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
+}
+
 if (Configure::read('debug')) {
     error_reporting(E_ALL);
     ini_set('display_errors', true);
+    set_exception_handler('echo_exception_handler');
 }
+
 
 // Handle php error logs with monolog
 $logger = Log::getInstance()->getLogger();
-//ErrorHandler::register($logger);
+ErrorHandler::register($logger);
 
 /**
  * Set server timezone to UTC. You can change it to another timezone of your

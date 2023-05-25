@@ -31,6 +31,6 @@ function h($output)
  * @param array $a Array data
  * @return string
  */
-function pa($a) {
+function ar($a) {
     return '|' . implode(' | ', array_map(fn($v) => str_pad(number_format(round($v, 2), 2, '.', ''), 8, ' ', STR_PAD_LEFT), $a)) . '|' . PHP_EOL;
 }

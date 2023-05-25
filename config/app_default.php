@@ -17,7 +17,7 @@ return [
                 'className' => \Monolog\Formatter\LineFormatter::class,
                 'format' => "%message%\n",
             ],
-            'file' => 'php://stderr', //LOGS . 'debug.log',
+            'file' => /*'php://stderr', */LOGS . 'debug.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
     ],
