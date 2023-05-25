@@ -105,7 +105,7 @@ class IzracunSplosniPodatki extends Command
         $okoljeOutputDir = PROJECTS . $projectId . DS . 'izracuni' . DS;
         if (!is_dir($okoljeOutputDir)) {
             mkdir($okoljeOutputDir, 0777, true);
-          }
+        }
         $okoljeOutputFile = $okoljeOutputDir . 'okolje.json';
         file_put_contents($okoljeOutputFile, json_encode($okolje, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
