@@ -99,6 +99,7 @@ class IzracunTSS extends Command
                     $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
                     $prenosnik->potrebnaElektricnaEnergija =
                         $sistemOgrevanja->koncniPrenosniki[$k]->potrebnaElektricnaEnergija;
+                    $prenosnik->vracljiveIzgubeAux = $sistemOgrevanja->koncniPrenosniki[$k]->vracljiveIzgubeAux;
                 }
 
                 foreach ($sistem->razvodi as $k => $razvod) {
@@ -116,6 +117,8 @@ class IzracunTSS extends Command
 
                 $sistem->potrebnaEnergija = $sistemOgrevanja->potrebnaEnergija;
                 $sistem->potrebnaElektricnaEnergija = $sistemOgrevanja->potrebnaElektricnaEnergija;
+                $sistem->obnovljivaEnergija = $sistemOgrevanja->obnovljivaEnergija;
+                $sistem->vracljiveIzgube = $sistemOgrevanja->vracljiveIzgube;
 
                 $TSSSistemiOgrevanjeOut[] = $sistem;
             }

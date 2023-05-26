@@ -158,6 +158,29 @@ class ToplotnaCrpalkaZrakVoda extends Generator
     }
 
     /**
+     * Uporabljena obnovljiva energija iz okolja
+     *
+     * @param array $vneseneIzgube Vnesene izgube
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return array
+     */
+    public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    {
+        if (empty($this->toplotneIzgube)) {
+            $this->toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+        }
+
+        foreach (array_keys(Calc::MESECI) as $mesec) {
+            $this->obnovljivaEnergija[$mesec] = $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$mesec];
+        }
+
+        return $this->obnovljivaEnergija;
+    }
+
+    /**
      * Izračun potrebne električne energije
      *
      * @param array $vneseneIzgube Vnesene izgube

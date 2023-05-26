@@ -33,8 +33,8 @@ abstract class OgrevalniSistem
 
     public $potrebnaEnergija;
     public $potrebnaElektricnaEnergija;
-    public $energijaOkolja;
-    public $vracljivaEnergija;
+    public $obnovljivaEnergija;
+    public $vracljiveIzgube;
 
     /**
      * Class Constructor

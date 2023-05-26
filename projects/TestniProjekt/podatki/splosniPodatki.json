@@ -12,7 +12,8 @@
         },
         "klasifikacija": "11100",
         "vrsta": "manjzahtevna",
-        "notranjaTemp": 20
+        "tip": "nova",
+        "javna": false
     },
     "investitorji": [
         {

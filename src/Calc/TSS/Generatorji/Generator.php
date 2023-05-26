@@ -12,6 +12,7 @@ abstract class Generator
     public $toplotneIzgube;
     public $potrebnaEnergija;
     public $potrebnaElektricnaEnergija;
+    public $obnovljivaEnergija;
 
     /**
      * Class Constructor
@@ -65,4 +66,16 @@ abstract class Generator
      * @return array
      */
     abstract public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+
+    /**
+     * Uporabljena obnovljiva energija iz okolja
+     *
+     * @param array $vneseneIzgube Vnesene izgube
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return array
+     */
+    abstract public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 }

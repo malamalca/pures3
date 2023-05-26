@@ -40,6 +40,7 @@ abstract class KoncniPrenosnik
 
     public array $toplotneIzgube;
     public array $potrebnaElektricnaEnergija;
+    public array $vracljiveIzgubeAux;
 
     /**
      * Class Constructor
@@ -114,5 +115,28 @@ abstract class KoncniPrenosnik
         }
 
         return $this->potrebnaElektricnaEnergija;
+    }
+
+    /**
+     * Uporabljena obnovljiva energija iz okolja
+     *
+     * @param array $vneseneIzgube Vnesene izgube
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return array
+     */
+    public function vracljiveIzgubeAux($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    {
+        if (empty($this->potrebnaElektricnaEnergija)) {
+            $this->potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+        }
+
+        foreach (array_keys(Calc::MESECI) as $mesec) {
+            $this->vracljiveIzgubeAux[$mesec] = $this->potrebnaElektricnaEnergija[$mesec];
+        }
+
+        return $this->vracljiveIzgubeAux;
     }
 }

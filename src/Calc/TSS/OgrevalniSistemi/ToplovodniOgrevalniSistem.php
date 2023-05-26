@@ -52,12 +52,19 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             $elektricnaEnergijaPrenosnika =
                 $koncniPrenosnik->potrebnaElektricnaEnergija($vneseneIzgube, $this, $cona, $okolje);
 
+            $vracljiveIzgubeAux =
+                $koncniPrenosnik->vracljiveIzgubeAux($vneseneIzgube, $this, $cona, $okolje);
+
             // seštejem vse izgube prenosnikov
             foreach ($izgubePrenosnika as $k => $v) {
                 $vneseneIzgube[$k] += $v;
             }
             foreach ($elektricnaEnergijaPrenosnika as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
+            }
+
+            foreach ($vracljiveIzgubeAux as $k => $v) {
+                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
             }
         }
         foreach ($this->razvodi as $razvod) {
@@ -80,6 +87,12 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             foreach ($elektricnaEnergijaRazvoda as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
             }
+            foreach ($razvod->vracljiveIzgube as $k => $v) {
+                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
+            }
+            foreach ($razvod->vracljiveIzgubeAux as $k => $v) {
+                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
+            }
         }
 
         // izgube ogrevala
@@ -87,6 +100,9 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             $izgubeGeneratorja = $generator->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
             $elektricnaEnergijaGeneratorja =
                 $generator->potrebnaElektricnaEnergija($vneseneIzgube, $this, $cona, $okolje);
+
+            $this->obnovljivaEnergija =
+                $generator->obnovljivaEnergija($vneseneIzgube, $this, $cona, $okolje);
 
             // dodam k vnesenim izgubam
             foreach ($izgubeGeneratorja as $k => $v) {
