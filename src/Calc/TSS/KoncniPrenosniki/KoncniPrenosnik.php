@@ -45,7 +45,7 @@ abstract class KoncniPrenosnik
     /**
      * Class Constructor
      *
-     * @param \StdClass|string|null $config Configuration
+     * @param \stdClass|string|null $config Configuration
      * @return void
      */
     public function __construct($config = null)
@@ -56,9 +56,9 @@ abstract class KoncniPrenosnik
     }
 
     /**
-     * Loads configuration from json|StdClass
+     * Loads configuration from json|stdClass
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function parseConfig($config)
@@ -83,8 +83,8 @@ abstract class KoncniPrenosnik
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki cone
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki cone
      * @return array
      */
     abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje);
@@ -94,8 +94,8 @@ abstract class KoncniPrenosnik
      *
      * @param array $vneseneIzgube Vnesene izgube
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return array
      */
@@ -122,8 +122,8 @@ abstract class KoncniPrenosnik
      *
      * @param array $vneseneIzgube Vnesene izgube
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return array
      */

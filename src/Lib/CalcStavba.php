@@ -9,13 +9,13 @@ class CalcStavba
      * Glavna metoda za analizo stavbe
      *
      * @param array $cone Seznam con
-     * @param \StdClass $okolje Parametri okolja
-     * @param \StdClass $splosniPodatki Splošni podatki o stavbi
-     * @return \StdClass
+     * @param \stdClass $okolje Parametri okolja
+     * @param \stdClass $splosniPodatki Splošni podatki o stavbi
+     * @return \stdClass
      */
     public static function analiza($cone, $okolje, $splosniPodatki)
     {
-        $stavba = new \StdClass();
+        $stavba = new \stdClass();
 
         $stavba->brutoProstornina = array_reduce($cone, function ($vsota, $cona) {
             return $vsota += $cona->brutoProstornina;

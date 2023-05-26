@@ -12,7 +12,7 @@ class DvocevniZunaj extends Razvod
      * Vrne dolžino cevi za podano vrsto razvodnih cevi
      *
      * @param \App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi $vrsta Vrsta razvodne cevi
-     * @param \StdClass $cona Podatki cone
+     * @param \stdClass $cona Podatki cone
      * @return float
      */
     public function dolzinaCevi(VrstaRazvodnihCevi $vrsta, $cona)

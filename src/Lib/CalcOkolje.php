@@ -134,11 +134,11 @@ class CalcOkolje
      *
      * @param array<string, array> $params Fiksni parametri. Min zahteva je "zunanjaT" in "zunanjaVlaga"
      * @param array $options Options to set
-     * @return \StdClass
+     * @return \stdClass
      */
     public static function notranjeOkolje($params, $options = [])
     {
-        $ret = new \StdClass();
+        $ret = new \stdClass();
         $ret->zunanjaT = $params['zunanjaT'];
         $ret->zunanjaVlaga = $params['zunanjaVlaga'] ?? null;
 

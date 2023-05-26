@@ -8,7 +8,7 @@ class Elektrika extends Energent
     /**
      * Class Constructor
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function __construct($config = null)
@@ -19,9 +19,9 @@ class Elektrika extends Energent
     }
 
     /**
-     * Loads configuration from json|StdClass
+     * Loads configuration from json|stdClass
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     protected function parseConfig($config)

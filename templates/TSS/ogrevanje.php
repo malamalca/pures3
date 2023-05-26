@@ -159,7 +159,7 @@
     </tr>
 
     <tr>
-        <td>Sum(Q)<sub>H,rhh</sub></td>
+        <td>∑ Q<sub>H,rhh</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->vracljiveIzgube)) ?>
         <th class="right w-6"><?= $this->numFormat(array_sum($sistem->vracljiveIzgube), 0) ?></th>
     </tr>

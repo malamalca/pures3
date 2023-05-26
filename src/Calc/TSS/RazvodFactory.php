@@ -12,7 +12,7 @@ class RazvodFactory
      * Ustvari ustrezen razvod glede na podan tip
      *
      * @param string $type Tip razvoda
-     * @param array|\StdClass|null $options Dodatne nastavitve
+     * @param array|\stdClass|null $options Dodatne nastavitve
      * @return \App\Calc\TSS\Razvodi\Razvod
      */
     public static function create($type, $options = null)

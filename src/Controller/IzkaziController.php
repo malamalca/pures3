@@ -81,7 +81,7 @@ class IzkaziController
         //$primerFilename = 'KondVConi.php';
 
         $konstrukcijaJson = '{}';
-        $okolje = new \StdClass();
+        $okolje = new \stdClass();
         require dirname(__FILE__) . DS . 'primeri' . DS . $primerFilename;
 
         $konstrukcija = json_decode($konstrukcijaJson);

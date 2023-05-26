@@ -19,9 +19,9 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
     protected VrstaIzolacijePloskovnihOgreval $izolacija;
 
     /**
-     * Loads configuration from json|StdClass
+     * Loads configuration from json|stdClass
      *
-     * @param \StdClass|string|null $config Configuration
+     * @param \stdClass|string|null $config Configuration
      * @return void
      */
     public function parseConfig($config)
@@ -37,8 +37,8 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki cone
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki cone
      * @return array
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje)

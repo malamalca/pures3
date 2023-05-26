@@ -11,8 +11,8 @@ class CalcOvojNetransparenten
     /**
      * Glavna funkcija za analizo cone
      *
-     * @param \StdClass $cona Podatki o coni
-     * @param \StdClass $okolje Podatki o okolju
+     * @param \stdClass $cona Podatki o coni
+     * @param \stdClass $okolje Podatki o okolju
      * @param array $konstrukcije Seznam konstrukcij
      * @return void
      */
@@ -133,8 +133,8 @@ class CalcOvojNetransparenten
     /**
      * Doda podatke o zemljini na konstrukcijo
      *
-     * @param \StdClass $elementOvoja Element ovoja
-     * @param \StdClass $kons Konstrukcij
+     * @param \stdClass $elementOvoja Element ovoja
+     * @param \stdClass $kons Konstrukcij
      * @return void
      */
     public static function vplivZemljine($elementOvoja, $kons)
@@ -229,10 +229,10 @@ class CalcOvojNetransparenten
     /**
      * Izračun dodatnih temperaturnih podatkov
      *
-     * @param \StdClass $elementOvoja Element ovoja
-     * @param \StdClass $kons Podatki konstrukcije
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $elementOvoja Element ovoja
+     * @param \stdClass $kons Podatki konstrukcije
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return array
      */
     public static function osnovniTemperaturniPodatki($elementOvoja, $kons, $cona, $okolje)
@@ -274,8 +274,8 @@ class CalcOvojNetransparenten
      * Izračun toka proti zemljini
      *
      * @param int $mesec Št. meseca
-     * @param \StdClass $elementOvoja Podatki elementa ovoja
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $elementOvoja Podatki elementa ovoja
+     * @param \stdClass $okolje Podatki okolja
      * @param array $temperature Dodatne temperature iz osnovniTemperaturniPodatki()
      * @return void
      */

@@ -16,8 +16,8 @@ abstract class Razvod
     public ?ElementRazvoda $dvizniVod;
     public ?ElementRazvoda $prikljucniVod;
 
-    public ?\StdClass $crpalka;
-    public string $navlazevanjeZraka;
+    public ?\stdClass $crpalka;
+    public string $navlazevanjeZraka = 'elektrika';
 
     public string $idPrenosnika;
 
@@ -29,7 +29,7 @@ abstract class Razvod
     /**
      * Class Constructor
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function __construct($config = null)
@@ -40,9 +40,9 @@ abstract class Razvod
     }
 
     /**
-     * Loads configuration from json|StdClass
+     * Loads configuration from json|stdClass
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function parseConfig($config)
@@ -83,7 +83,7 @@ abstract class Razvod
      * Vrne dolžino cevi za podano vrsto razvodnih cevi
      *
      * @param \App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi $vrsta Vrsta razvodne cevi
-     * @param \StdClass $cona Podatki cone
+     * @param \stdClass $cona Podatki cone
      * @return float
      */
     abstract public function dolzinaCevi(VrstaRazvodnihCevi $vrsta, $cona);
@@ -93,8 +93,8 @@ abstract class Razvod
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return array
      */
@@ -149,8 +149,8 @@ abstract class Razvod
      *
      * @param array $vneseneIzgube Vnesene izgube
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return array
      */
@@ -166,7 +166,8 @@ abstract class Razvod
             $this->crpalka->moc = $this->crpalka->moc ?? $izracunanaMocCrpalke;
 
             // možnosti sta elektrika in toplota
-            $this->navlazevanjeZraka = $this->navlazevanjeZraka ?? 'elektrika';
+            // TODO:
+            // $this->navlazevanjeZraka = $this->navlazevanjeZraka ?? 'elektrika';
 
             // f_sch - korekcijski faktor za hidravlično omrežje [-]
             //      za dvocevni sistem: fsch = 1
@@ -265,7 +266,7 @@ abstract class Razvod
      *
      * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
+     * @param \stdClass $cona Podatki cone
      * @return float
      */
     public function izracunHidravlicneMoci($prenosnik, $sistem, $cona)
@@ -288,7 +289,7 @@ abstract class Razvod
         // ΔθHK – temperaturna razlika pri standardnem temperaturnem režimu ogrevalnega sistema [°C] (enačba 38)
         // 0 velja za zrak-zrak - oz. če ni definirana vrsta
         $deltaT_HK = 0;
-        if (isset($sistem->rezim)) {
+        if (!empty($sistem->rezim)) {
             $deltaT_HK = $sistem->rezim->temperaturnaRazlikaStandardnegaRezima($sistem);
         }
 

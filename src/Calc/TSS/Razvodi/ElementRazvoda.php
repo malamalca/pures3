@@ -18,7 +18,7 @@ class ElementRazvoda
      * Class Constructor
      *
      * @param \App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi $vrsta Vrsta razvodnih cevi
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function __construct(VrstaRazvodnihCevi $vrsta, $config = null)
@@ -30,9 +30,9 @@ class ElementRazvoda
     }
 
     /**
-     * Loads configuration from json|StdClass
+     * Loads configuration from json|stdClass
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function parseConfig($config)
@@ -68,7 +68,7 @@ class ElementRazvoda
     /**
      * Poda privzeti delež cevi v ogrevalni coni, kadar ta ni podan
      *
-     * @return float;
+     * @return float
      */
     public function privzetiDelezVOgrevaniConi()
     {
@@ -86,7 +86,7 @@ class ElementRazvoda
      * Izračuna toplotne izgube cevi
      *
      * @param \App\Calc\TSS\Razvodi\Razvod $razvod Podatki razvoda
-     * @param \StdClass $cona Podatki cone
+     * @param \stdClass $cona Podatki cone
      * @param bool $znotrajOvoja Izgube znotraj/zunaj ovoja
      * @return float
      */

@@ -9,9 +9,9 @@ use App\Lib\Calc;
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
     /**
-     * Loads configuration from json|StdClass
+     * Loads configuration from json|stdClass
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     protected function parseConfig($config)
@@ -24,8 +24,8 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
     /**
      * Glavna metoda za analizo ogrevalnega sistema
      *
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return array
      */
     public function analiza($cona, $okolje)

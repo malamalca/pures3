@@ -11,7 +11,7 @@ class SistemOgrevanjaFactory
      * Ustvari ustrezen ogrevalni sistem glede na podan tip
      *
      * @param string $type Tip sistema
-     * @param array|\StdClass|null $options Dodatne nastavitve
+     * @param array|\stdClass|null $options Dodatne nastavitve
      * @return \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem|void
      */
     public static function create($type, $options)

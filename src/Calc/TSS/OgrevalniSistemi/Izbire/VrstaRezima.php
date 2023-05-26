@@ -21,7 +21,10 @@ enum VrstaRezima: string
      */
     public function srednjaTemperatura($sistem)
     {
-        if ($sistem instanceof ToplovodniOgrevalniSistem || $sistem->energent == 'elektrika') {
+        if (
+            $sistem instanceof ToplovodniOgrevalniSistem ||
+            $sistem->energent instanceof \App\Calc\TSS\Energenti\Elektrika
+        ) {
             // za ploskovno | toplovodno+elektrika
             $srednjeTemperature = [32.5, 35, 50];
         } else {
@@ -64,8 +67,10 @@ enum VrstaRezima: string
     {
         $deltaTHKLookup = [[5, 10], [10, 15], [10, 15]];
 
-        // TODO:
-        if ($sistem instanceof ToplovodniOgrevalniSistem/* || $sistem->energent == 'elektrika'*/) {
+        if (
+            $sistem instanceof ToplovodniOgrevalniSistem ||
+            $sistem->energent instanceof \App\Calc\TSS\Energenti\Elektrika
+        ) {
             $deltaT_HK = $deltaTHKLookup[$this->getOrdinal()][0];
         } else {
             $deltaT_HK = $deltaTHKLookup[$this->getOrdinal()][1];

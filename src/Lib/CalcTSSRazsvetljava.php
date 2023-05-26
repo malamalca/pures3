@@ -8,11 +8,11 @@ class CalcTSSRazsvetljava
     /**
      * Glavna metoda za analizo razsvetljave
      *
-     * @param \StdClass $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
-     * @param \StdClass $splosniPodatki Podatki stavbe
-     * @return \StdClass
+     * @param \stdClass $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param \stdClass $splosniPodatki Podatki stavbe
+     * @return \stdClass
      */
     public static function analiza($sistem, $cona, $okolje, $splosniPodatki)
     {
@@ -57,7 +57,7 @@ class CalcTSSRazsvetljava
         $sistem->letnoUrPodnevi = $sistem->letnoUrPodnevi ?? 1820;
         $sistem->letnoUrPonoci = $sistem->letnoUrPonoci ?? 1680;
 
-        $sistem->varnostna = $sistem->varnostna ?? new \StdClass();
+        $sistem->varnostna = $sistem->varnostna ?? new \stdClass();
         $sistem->varnostna->energijaZaPolnjenje = $sistem->varnostna->energijaZaPolnjenje ?? 0;
         $sistem->varnostna->energijaZaDelovanje = $sistem->varnostna->energijaZaDelovanje ?? 0;
 

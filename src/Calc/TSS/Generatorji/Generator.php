@@ -17,7 +17,7 @@ abstract class Generator
     /**
      * Class Constructor
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function __construct($config = null)
@@ -28,9 +28,9 @@ abstract class Generator
     }
 
     /**
-     * Loads configuration from json|StdClass
+     * Loads configuration from json|stdClass
      *
-     * @param string|\StdClass $config Configuration
+     * @param string|\stdClass $config Configuration
      * @return void
      */
     public function parseConfig($config)
@@ -48,8 +48,8 @@ abstract class Generator
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return array
      */
@@ -60,8 +60,8 @@ abstract class Generator
      *
      * @param array $vneseneIzgube Vnesene izgube
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return array
      */
@@ -72,8 +72,8 @@ abstract class Generator
      *
      * @param array $vneseneIzgube Vnesene izgube
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return array
      */

@@ -7,7 +7,7 @@ final class IzracunKonstrukcijeISO13788Test extends TestCase
 {
     public function testValidacijaISO13788_C2(): void
     {
-        $okolje = new \StdClass();
+        $okolje = new \stdClass();
         $okolje->zunanjaT = [-1, 0, 4, 9, 14, 18, 19, 19, 15, 10, 5, 1];
         $okolje->zunanjaVlaga = [85, 84, 78, 72, 68, 69, 73, 75, 79, 83, 88, 88];
         

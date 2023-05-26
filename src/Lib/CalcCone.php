@@ -10,11 +10,11 @@ class CalcCone
     /**
      * Glavna funkcija za analizo cone
      *
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @param array $netransparentneKonstrukcije Seznam netransparentnih konstrukcij
      * @param array $transparentneKonstrukcije Seznam transparentnih konstrukcij
-     * @return \StdClass
+     * @return \stdClass
      */
     public static function analizaCone($cona, $okolje, $netransparentneKonstrukcije, $transparentneKonstrukcije)
     {
@@ -97,8 +97,8 @@ class CalcCone
     /**
      * Izračun ventilacijskih izgub za cono
      *
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return void
      */
     public static function izracunVentilacijskihIzgub($cona, $okolje)
@@ -180,8 +180,8 @@ class CalcCone
     /**
      * Izračun faktorja izkoristka za ogrevanje
      *
-     * @param \StdClass $cona Cona
-     * @param \StdClass $okolje Okolje
+     * @param \stdClass $cona Cona
+     * @param \stdClass $okolje Okolje
      * @return void
      */
     public static function izracunFaktorjaIzkoristka($cona, $okolje)
@@ -261,8 +261,8 @@ class CalcCone
     /**
      * Izračun potrebne energije za ogrevanje in hlajenje
      *
-     * @param \StdClass $cona Cona
-     * @param \StdClass $okolje Okolje
+     * @param \stdClass $cona Cona
+     * @param \stdClass $okolje Okolje
      * @return void
      */
     public static function izracunEnergijeOgrevanjeHlajanje($cona, $okolje)
@@ -294,8 +294,8 @@ class CalcCone
     /**
      * Izračun energije za TSV
      *
-     * @param \StdClass $cona Cona
-     * @param \StdClass $okolje Okolje
+     * @param \stdClass $cona Cona
+     * @param \stdClass $okolje Okolje
      * @return void
      */
     public static function izracunTSV($cona, $okolje)
@@ -347,13 +347,13 @@ class CalcCone
     /**
      * Izračun električne energije za razsvetljavo
      *
-     * @param \StdClass $cona Cona
-     * @param \StdClass $okolje Okolje
+     * @param \stdClass $cona Cona
+     * @param \stdClass $okolje Okolje
      * @return void
      */
     public static function izracunRazsvetljave($cona, $okolje)
     {
-        $cona->razsvetljava = $cona->razsvetljava ?? new \StdClass();
+        $cona->razsvetljava = $cona->razsvetljava ?? new \stdClass();
 
         // fluo     1-brez zatemnjevanja        0.9-z zatemnjevanjem
         // LED      1-brez zatemnjevanja        0.85-z zatemnjevanjem
@@ -396,7 +396,7 @@ class CalcCone
         $cona->razsvetljava->letnoUrPodnevi = $cona->razsvetljava->letnoUrPodnevi ?? 1820;
         $cona->razsvetljava->letnoUrPonoci = $cona->razsvetljava->letnoUrPonoci ?? 1680;
 
-        $cona->razsvetljava->varnostna = $cona->razsvetljava->varnostna ?? new \StdClass();
+        $cona->razsvetljava->varnostna = $cona->razsvetljava->varnostna ?? new \stdClass();
         $cona->razsvetljava->varnostna->energijaZaPolnjenje = $cona->razsvetljava->varnostna->energijaZaPolnjenje ?? 0;
         $cona->razsvetljava->varnostna->energijaZaDelovanje = $cona->razsvetljava->varnostna->energijaZaDelovanje ?? 0;
 
@@ -423,8 +423,8 @@ class CalcCone
     /**
      * Izračun navlaževanje
      *
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolj
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolj
      * @param array $options Opcije za izračun
      * @return void
      */

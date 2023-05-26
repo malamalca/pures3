@@ -61,7 +61,7 @@ class Log
     /**
      * Get instance's logger
      *
-     * @return \Monolog\Logger
+     * @return null|\Monolog\Logger
      */
     public static function getLogger()
     {

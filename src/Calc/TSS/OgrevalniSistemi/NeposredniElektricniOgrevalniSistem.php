@@ -8,8 +8,8 @@ class NeposredniElektricniOgrevalniSistem extends OgrevalniSistem
     /**
      * Analiza ogrevalnega sistem
      *
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return array
      */
     public function analiza($cona, $okolje)

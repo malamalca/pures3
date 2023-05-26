@@ -8,11 +8,11 @@ class CalcTSSPrezracevanje
     /**
      * Glavna metoda za analizo prezracevalne naoprave
      *
-     * @param \StdClass $sistem Podatki sistema
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki okolja
-     * @param \StdClass $splosniPodatki Podatki stavbe
-     * @return \StdClass
+     * @param \stdClass $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param \stdClass $splosniPodatki Podatki stavbe
+     * @return \stdClass
      */
     public static function analiza($sistem, $cona, $okolje, $splosniPodatki)
     {
@@ -36,10 +36,10 @@ class CalcTSSPrezracevanje
         $sistem->mocSenzorjev = $sistem->mocSenzorjev ?? 0;
 
         if (!isset($sistem->dovod)) {
-            $sistem->dovod = new \StdClass();
+            $sistem->dovod = new \stdClass();
         }
         if (!isset($sistem->odvod)) {
-            $sistem->odvod = new \StdClass();
+            $sistem->odvod = new \stdClass();
         }
 
         // filter je lahko 'brez', 'hepa', 'F'
@@ -71,7 +71,7 @@ class CalcTSSPrezracevanje
      * Izračun moči ventilatorja, kadar moč ni vpisana neposredno (ni znana)
      *
      * @param string $smer Odvod/dovod
-     * @param \StdClass $sistem Podatki sistema
+     * @param \stdClass $sistem Podatki sistema
      * @return float
      */
     public static function izracunMociVentilatorja($smer, $sistem)

@@ -9,22 +9,22 @@ final class IzracunNavlazevanjaTest extends TestCase
     {
         $konstrukcija = null;
 
-        $cona = new \StdClass();
+        $cona = new \stdClass();
         $cona->ogrevanaPovrsina = 1632;
         $cona->notranjaTOgrevanje = 22;
         $cona->notranjaTHlajenje = 26;
-        $cona->prezracevanje = new \StdClass();
-        $cona->prezracevanje->volumenDovedenegaZraka = new \StdClass();
+        $cona->prezracevanje = new \stdClass();
+        $cona->prezracevanje->volumenDovedenegaZraka = new \stdClass();
         $cona->prezracevanje->volumenDovedenegaZraka->ogrevanje = 3345;
         $cona->prezracevanje->volumenDovedenegaZraka->hlajenje = 3345;
 
-        $cona->uravnavanjeVlage = new \StdClass();
+        $cona->uravnavanjeVlage = new \stdClass();
         $cona->uravnavanjeVlage->faktorUporabe = 0.3;
         $cona->uravnavanjeVlage->vlaznostZrakaNavlazevanje = 30;
         $cona->uravnavanjeVlage->viriVodnePare = 3.6;
         $cona->uravnavanjeVlage->minNotranjaVlaznost = 4.960;
 
-        $okolje = new \StdClass();
+        $okolje = new \stdClass();
         $okolje->zunanjaT = [-1, 1, 6, 10, 15, 18, 20, 19, 15, 10, 4, 1];
         $okolje->zunanjaVlaga = [82, 77, 72, 71, 73, 72, 75, 76, 80, 82, 84, 85];
         $okolje->absVlaznost = [3.98, 4.16, 5.96, 7.65, 11.86, 14.83, 15.24, 14.79, 10.47, 8.14, 5.85, 4.55];

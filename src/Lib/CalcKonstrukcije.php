@@ -11,9 +11,9 @@ class CalcKonstrukcije
     /**
      * Izračun konstrukcije
      *
-     * @param \StdClass $kons Podatki konstrukcije
-     * @param \StdClass $okolje Podatki okolja
-     * @return \StdClass
+     * @param \stdClass $kons Podatki konstrukcije
+     * @param \stdClass $okolje Podatki okolja
+     * @return \stdClass
      */
     public static function konstrukcija($kons, $okolje)
     {
@@ -124,7 +124,7 @@ class CalcKonstrukcije
     /**
      * Funkcija izračuna kondenzacijo v konstrukciji
      *
-     * @param \StdClass $kons Konstrukcija
+     * @param \stdClass $kons Konstrukcija
      * @return void
      */
     private static function izracunKondenzacije($kons)
@@ -212,6 +212,7 @@ class CalcKonstrukcije
                             $gm += $sloj->gc[$mesec];
 
                             // največja količina kondenzata v materialu
+                            /** @var \stdClass $sloj->material */
                             $sloj->material->gm = ($sloj->material->gm ?? 0) + $sloj->gc[$mesec];
                         } else {
                             if ($gm > 0) {
@@ -253,6 +254,7 @@ class CalcKonstrukcije
                         }
 
                         if (isset($sloj->gc[$mesec])) {
+                            /** @var \stdClass $sloj */
                             $sloj->gm[$mesec] = $gm < 0 ? 0 : $gm;
                             $kons->gm[$mesec] = ($kons->gm[$mesec] ?? 0) + ($gm < 0 ? 0 : $gm);
                         }
@@ -265,14 +267,16 @@ class CalcKonstrukcije
     /**
      * Funkcija išče kondenzacijske ravnine v konstrukciji
      *
-     * @param \StdClass $kons Podatki konstrukcije
+     * @param \stdClass $kons Podatki konstrukcije
      * @param int $mesec Številka meseca
-     * @return array<int, \StdClass>|null
+     * @return array<int, mixed>|null
      */
     public static function isciKondRavnine($kons, $mesec)
     {
         // 0-ni kondenzacije, 1-iscemo največjo razliko, 2-zmanjsevanje
         $kondIskanje = 0;
+
+        /** @var array<int, mixed> $kondRavnine */
         $kondRavnine = [];
         $zadnjaKondenzacija = null;
 
@@ -314,7 +318,7 @@ class CalcKonstrukcije
      * Funkcija popravi potek tlaka vodne pare v konstrukciji tako,
      * da ni linearen ampak da poteka po liniji kondenzacijskih ravnin.
      *
-     * @param \StdClass $kons Podatki konstrukcije
+     * @param \stdClass $kons Podatki konstrukcije
      * @param array $kondRavnine Kondenzacijske ravnine
      * @param int $mesec Številka meseca 0..11
      * @return void
@@ -365,9 +369,9 @@ class CalcKonstrukcije
     /**
      * Preračun za transparentne konstrukcije
      *
-     * @param \StdClass $kons Podatki konstrukcije
-     * @param \StdClass $okolje Podatki okolja
-     * @return \StdClass
+     * @param \stdClass $kons Podatki konstrukcije
+     * @param \stdClass $okolje Podatki okolja
+     * @return \stdClass
      */
     public static function transparentne($kons, $okolje)
     {

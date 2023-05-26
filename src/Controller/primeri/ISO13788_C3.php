@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$okolje = new \StdClass();
+$okolje = new \stdClass();
     $okolje->zunanjaT = ['jan' => -1, 'feb' => 0, 'mar' => 4, 'apr' => 9, 'maj' => 14, 'jun' => 18,
         'jul' => 19, 'avg' => 19, 'sep' => 15, 'okt' => 10, 'nov' => 5, 'dec' => 1];
 
