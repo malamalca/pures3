@@ -11,7 +11,9 @@
                 "id": "TC",
                 "vrsta": "TC_zrakvoda",
                 "nazivnaMoc": 6,
-                "nazivniCOP": 3
+                "nazivniCOP": 3,
+                "elektricnaMocNaPrimarnemKrogu": 6,
+                "elektricnaMocNaSekundarnemKrogu": 3
             }
         ],
 

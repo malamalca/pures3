@@ -148,13 +148,17 @@ abstract class Razvod
      * Izračun potrebne električne energije
      *
      * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    public function potrebnaElektricnaEnergija($vneseneIzgube, $prenosnik, $sistem, $cona)
+    public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        /** @var \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
+        $prenosnik = $params['prenosnik'];
+
         if (!empty($this->crpalka)) {
             $jeZnanaCrpalka = !empty($this->crpalka->moc);
             $izracunanaMocCrpalke = $this->izracunHidravlicneMoci($prenosnik, $sistem, $cona);

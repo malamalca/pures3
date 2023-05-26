@@ -64,7 +64,10 @@ class ToplotnaCrpalkaZrakVoda extends Generator
     // TODO: temperatura ponora je vezana na režim
     public int $temperaturaPonora = 40;
 
-    protected $nazivniCOP;
+    public $nazivniCOP;
+
+    public $elektricnaMocNaPrimarnemKrogu;
+    public $elektricnaMocNaSekundarnemKrogu;
 
     /**
      * Loads configuration from json|StdClass
@@ -79,6 +82,9 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         if (!empty($config->nazivniCOP)) {
             $this->nazivniCOP = $config->nazivniCOP;
         }
+
+        $this->elektricnaMocNaPrimarnemKrogu = $config->elektricnaMocNaPrimarnemKrogu ?? 0;
+        $this->elektricnaMocNaSekundarnemKrogu = $config->elektricnaMocNaSekundarnemKrogu ?? 0;
     }
 
     /**
@@ -144,8 +150,49 @@ class ToplotnaCrpalkaZrakVoda extends Generator
 
                 $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
             }
+
+            $this->toplotneIzgube[$mesec] = 0;
         }
 
-        return $this->potrebnaEnergija;
+        return $this->toplotneIzgube;
+    }
+
+    /**
+     * Izračun potrebne električne energije
+     *
+     * @param array $vneseneIzgube Vnesene izgube
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \StdClass $cona Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return array
+     */
+    public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    {
+        $dejanskaMoc = [];
+        $cop = [];
+        foreach (self::REZIMI as $ix => $rezim) {
+            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$this->temperaturaPonora][$ix] * $this->nazivnaMoc;
+        }
+
+        foreach (array_keys(Calc::MESECI) as $mesec) {
+            $sumUr = 0;
+            foreach (self::REZIMI as $rezim) {
+                $sumUr += self::TRAJANJE[$this->podnebje][$rezim][$mesec];
+            }
+
+            // razdelitev mesečnih vnešenih izgub na posamezne režime
+            $delovanjeUr = 0;
+            foreach (self::REZIMI as $rezim) {
+                $trajanjeUr = self::TRAJANJE[$this->podnebje][$rezim][$mesec];
+                $toplotneIzgube[$mesec][$rezim] = $vneseneIzgube[$mesec] * $trajanjeUr / $sumUr;
+                $delovanjeUr += $toplotneIzgube[$mesec][$rezim] / $dejanskaMoc[$rezim];
+            }
+
+            $this->potrebnaElektricnaEnergija[$mesec] =
+                ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) * $delovanjeUr / 1000;
+        }
+
+        return $this->potrebnaElektricnaEnergija;
     }
 }

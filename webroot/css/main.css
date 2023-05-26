@@ -566,6 +566,12 @@ table tbody td, table tbody th {
 table tbody td.w-5, table tbody th.w-5 {
   width: 5%;
 }
+table tbody td.w-6, table tbody th.w-6 {
+  width: 6%;
+}
+table tbody td.w-7, table tbody th.w-7 {
+  width: 7%;
+}
 table tbody td.w-10, table tbody th.w-10 {
   width: 10%;
 }

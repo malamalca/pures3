@@ -39,6 +39,7 @@ abstract class KoncniPrenosnik
     public VrstaRegulacijeTemperature $regulacijaTemperature;
 
     public array $toplotneIzgube;
+    public array $potrebnaElektricnaEnergija;
 
     /**
      * Class Constructor
@@ -90,32 +91,28 @@ abstract class KoncniPrenosnik
     /**
      * Izračun potrebne električne energije
      *
+     * @param array $vneseneIzgube Vnesene izgube
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki cone
+     * @param \StdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    public function potrebnaElektricnaEnergija($cona, $okolje)
+    public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $elektricneIzgube = [];
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = $stDni * 24;
 
-            $elektricneIzgube[$mesec] = $stUr * $this->steviloRegulatorjev * $this->mocRegulatorja;
+            // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
+            $steviloUr = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
+                1 :
+                $sistem->povprecnaObremenitev[$mesec] / 0.05);
+
+            $this->potrebnaElektricnaEnergija[$mesec] =
+                $steviloUr * $this->steviloRegulatorjev * $this->mocRegulatorja / 1000;
         }
 
-        return $elektricneIzgube;
-    }
-
-    /**
-     * Izračun v sistem vrnjene toplote
-     *
-     * @param \StdClass $cona Podatki cone
-     * @param \StdClass $okolje Podatki cone
-     * @return array
-     */
-    public function vrnjenaToplota($cona, $okolje)
-    {
-        return $this->potrebnaElektricnaEnergija($cona, $okolje);
+        return $this->potrebnaElektricnaEnergija;
     }
 }

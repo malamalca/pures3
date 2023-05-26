@@ -31,6 +31,11 @@ abstract class OgrevalniSistem
     public array $razvodi = [];
     public array $generatorji = [];
 
+    public $potrebnaEnergija;
+    public $potrebnaElektricnaEnergija;
+    public $energijaOkolja;
+    public $vracljivaEnergija;
+
     /**
      * Class Constructor
      *
