@@ -19,7 +19,7 @@ abstract class Razvod
     public ?\stdClass $crpalka;
     public string $navlazevanjeZraka = 'elektrika';
 
-    public string $idPrenosnika;
+    public ?string $idPrenosnika;
 
     public array $toplotneIzgube;
     public array $vracljiveIzgube;
@@ -51,7 +51,7 @@ abstract class Razvod
             $config = json_decode($config);
         }
 
-        $this->idPrenosnika = $config->idPrenosnika;
+        $this->idPrenosnika = $config->idPrenosnika ?? null;
 
         $this->horizontalniVod =
             new ElementRazvoda(VrstaRazvodnihCevi::HorizontalniRazvod, $config->ceviHorizontaliVodi);
@@ -123,8 +123,9 @@ abstract class Razvod
             // θ m - povprečna temperatura ogrevnega medija [°C]
             // enačba (39)
             $srednjaT = $sistem->rezim->srednjaTemperatura($sistem);
+            $exponentOgrevala = $prenosnik->exponentOgrevala ?? 1;
             $temperaturaRazvoda = $betaI > 0 ? (($srednjaT - $cona->notranjaTOgrevanje) *
-                pow($betaI, 1 / $prenosnik->exponentOgrevala) + $cona->notranjaTOgrevanje) : $cona->notranjaTOgrevanje;
+                pow($betaI, 1 / $exponentOgrevala) + $cona->notranjaTOgrevanje) : $cona->notranjaTOgrevanje;
 
             $izgubeZnotrajOvoja = ($this->horizontalniVod->toplotneIzgube($this, $cona, true) +
                 $this->dvizniVod->toplotneIzgube($this, $cona, true) +
@@ -157,7 +158,7 @@ abstract class Razvod
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         /** @var \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
-        $prenosnik = $params['prenosnik'];
+        $prenosnik = $params['prenosnik'] ?? null;
 
         if (!empty($this->crpalka)) {
             $jeZnanaCrpalka = !empty($this->crpalka->moc);
@@ -274,7 +275,7 @@ abstract class Razvod
         $Lmax = $this->getProperty(RazvodAbstractProperties::Lmax, ['cona' => $cona]);
 
         // ΔpFBH – dodatek pri ploskovnem ogrevanju, če ni proizvajalčevega podatka je 25 kPa vključno z ventili in razvodom (kPa)
-        $deltaP_FBH = $prenosnik->deltaP_FBH;
+        $deltaP_FBH = $prenosnik->deltaP_FBH ?? 0;
 
         // ΔpWE – tlačni padec generatorja toplote:
         //      standardni kotel: 1 kPa

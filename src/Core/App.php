@@ -157,4 +157,19 @@ class App
     {
         return !empty($_SESSION['user']);
     }
+
+    /**
+     * Vrne projektno mapo
+     *
+     * @param string $projectId Id projekta
+     * @return string
+     */
+    public function getProjectFolder($projectId)
+    {
+        if (defined('CLI')) {
+            return '';
+        } else {
+            return '';
+        }
+    }
 }

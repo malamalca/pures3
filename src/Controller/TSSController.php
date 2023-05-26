@@ -63,10 +63,10 @@ class TSSController
      * Prikaz podatkov o sistemu ogrevanja
      *
      * @param string $buildingName Building name
-     * @param string $sistemId Id
+     * @param string|null $sistemId Id
      * @return void
      */
-    public function ogrevanje($buildingName, $sistemId)
+    public function ogrevanje($buildingName, $sistemId = null)
     {
         $ogrevanjeFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'TSS' . DS . 'ogrevanje.json';
         $sistemi = json_decode(file_get_contents($ogrevanjeFile));

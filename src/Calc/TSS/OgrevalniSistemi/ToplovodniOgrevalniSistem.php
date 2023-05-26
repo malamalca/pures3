@@ -69,10 +69,9 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         }
         foreach ($this->razvodi as $razvod) {
             $prenosnik = array_filter($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
-            if (empty($prenosnik)) {
-                throw new \Exception(sprintf('Prenosnik %s ne obstaja.', $razvod->idPrenosnika));
+            if (!empty($prenosnik)) {
+                $prenosnik = reset($prenosnik);
             }
-            $prenosnik = reset($prenosnik);
 
             $izgubeRazvoda =
                 $razvod->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje, ['prenosnik' => $prenosnik]);

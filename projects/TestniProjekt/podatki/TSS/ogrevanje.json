@@ -49,6 +49,16 @@
                 },
                 "ceviPrikljucniVodi": {
                 }
+            },
+            {
+                "vrsta": "dvocevni",
+                "crpalka": {},
+                "ceviHorizontaliVodi": {
+                },
+                "ceviDvizniVodi": {
+                },
+                "ceviPrikljucniVodi": {
+                }
             }
         ]
     }

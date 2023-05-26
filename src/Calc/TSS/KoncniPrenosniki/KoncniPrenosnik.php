@@ -18,7 +18,7 @@ abstract class KoncniPrenosnik
     public $exponentOgrevala;
 
     // ΔpFBH – dodatek pri ploskovnem ogrevanju, če ni proizvajalčevega podatka je 25 kPa vključno z ventili in razvodom (kPa)
-    public $deltaP_FBH = 25;
+    public $deltaP_FBH = 1;
 
     /**
      * @var int $steviloOgreval

@@ -26,7 +26,6 @@ $config = array_replace_recursive($defaultConfig, $config);
 $config['lookups'] = $lookups;
 Configure::getInstance($config);
 
-
 // Display exceptions
 function echo_exception_handler($e) {
     echo sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
@@ -59,5 +58,13 @@ date_default_timezone_set('UTC');
  * formatted and sets the default language to use for translations.
  */
 ini_set('intl.default_locale', 'sl_SI');
+
+/*
+ * Include the CLI bootstrap overrides.
+ */
+if (PHP_SAPI === 'cli') {
+    require CONFIG . 'bootstrap_cli.php';
+}
+
 
 session_start();
