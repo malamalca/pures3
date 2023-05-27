@@ -10,39 +10,31 @@ class ProjektiController
     /**
      * Prikaz splosnih podatkov projekta
      *
-     * @param string $buildingName Building name
+     * @param string|null $projectName Building name
      * @return void
      */
-    public function view($buildingName)
+    public function view($projectName = null)
     {
-        $splosniPodatkiFile = PROJECTS . $buildingName . DS . 'podatki' . DS . 'splosniPodatki.json';
-        $splosniPodatki = json_decode(file_get_contents($splosniPodatkiFile));
+        if (empty($projectName)) {
+            App::redirect(App::url('/projects/index'));
+        }
 
-        App::set('splosniPodatki', $splosniPodatki);
-
-        $stavbaFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'stavba.json';
-        $stavba = json_decode(file_get_contents($stavbaFile));
-
-        App::set('stavba', $stavba);
+        App::set('projectName', $projectName);
+        App::set('splosniPodatki', App::loadProjectData($projectName, 'splosniPodatki'));
+        App::set('stavba', App::loadProjectCalculation($projectName, 'stavba'));
+        App::set('cone', App::loadProjectCalculation($projectName, 'cone'));
     }
 
     /**
      * Prikaz analize projekta s področja gradbene fizike
      *
-     * @param string $buildingName Building name
+     * @param string $projectName Building name
      * @return void
      */
-    public function analiza($buildingName)
+    public function analiza($projectName)
     {
-        $splosniPodatkiFile = PROJECTS . $buildingName . DS . 'podatki' . DS . 'splosniPodatki.json';
-        $splosniPodatki = json_decode(file_get_contents($splosniPodatkiFile));
-
-        App::set('splosniPodatki', $splosniPodatki);
-
-        $stavbaFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'stavba.json';
-        $stavba = json_decode(file_get_contents($stavbaFile));
-
-        App::set('stavba', $stavba);
+        App::set('splosniPodatki', App::loadProjectData($projectName, 'splosniPodatki'));
+        App::set('stavba', App::loadProjectCalculation($projectName, 'stavba'));
     }
 
     /**

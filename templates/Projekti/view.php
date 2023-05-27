@@ -1,9 +1,23 @@
 <?php
+    use App\Core\App;
     use App\Lib\Calc;
 ?>
 <h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 
-
+<p>
+<a class="button" href="<?= App::url('/projekti/analiza/' . $projectName) ?>">Analiza GF</a>
+<a class="button" href="<?= App::url('/izkazi/podrocjeGf/' . $projectName) ?>">Izkaz GF</a>
+<a class="button" href="<?= App::url('/projekti/analizaSNES/' . $projectName) ?>">Analiza SNES</a>
+<a class="button" href="<?= App::url('/izkazi/podrocjeSNES/' . $projectName) ?>">Izkaz sNES</a>
+<br />
+<?php
+    foreach ($cone as $cona) {
+?>
+<a class="button" href="<?= App::url('/cone/analiza/' . $projectName . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
+<?php
+    }
+?>
+</p>
 <table border="1">
     <tr>
         <td colspan="2">Naziv projekta</td>

@@ -159,17 +159,49 @@ class App
     }
 
     /**
-     * Vrne projektno mapo
+     * Vrne datoteko z izvodnimi podatki za izračun.
      *
      * @param string $projectId Id projekta
+     * @param string $projectFile Datoteka json
+     * @param string $subfolder Podmapa s podaki ali z izračuni
      * @return string
      */
-    public function getProjectFolder($projectId)
+    public static function loadProjectData($projectId, $projectFile, $subfolder = 'podatki')
     {
         if (defined('CLI')) {
             return '';
         } else {
-            return '';
+            $sourceFolder = PROJECTS . $projectId . DS . $subfolder . DS;
         }
+
+        if (!is_dir($sourceFolder)) {
+            throw new \Exception(sprintf('Projekt "%s" ne obstaja.', $projectId));
+        }
+
+        $dataFilename = $sourceFolder . $projectFile . '.json';
+
+        if (!file_exists($dataFilename)) {
+            throw new \Exception(sprintf('Datoteka "%s" ne obstaja.', $dataFilename));
+        }
+
+        $result = json_decode(file_get_contents($dataFilename));
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Vrne datoteko z izračunom
+     *
+     * @param string $projectId Id projekta
+     * @param string $projectFile Datoteka json
+     * @return string
+     */
+    public static function loadProjectCalculation($projectId, $projectFile)
+    {
+        return self::loadProjectData($projectId, $projectFile, 'izracuni');
     }
 }
