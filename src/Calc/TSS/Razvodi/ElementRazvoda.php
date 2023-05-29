@@ -4,26 +4,30 @@ declare(strict_types=1);
 namespace App\Calc\TSS\Razvodi;
 
 use App\Calc\TSS\Razvodi\Izbire\VrstaIzolacijeCevi;
+use App\Calc\TSS\Razvodi\Izbire\VrstaNamenaCevi;
 use App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi;
 
 class ElementRazvoda
 {
     public VrstaRazvodnihCevi $vrsta;
     public VrstaIzolacijeCevi $izolacija;
+    public VrstaNamenaCevi $namen;
 
-    private ?float $toplotnaPrevodnost = null;
-    private ?float $delezVOgrevaniConi = null;
+    public ?float $toplotnaPrevodnost = null;
+    public ?float $delezVOgrevaniConi = null;
 
     /**
      * Class Constructor
      *
      * @param \App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi $vrsta Vrsta razvodnih cevi
+     * @param \App\Calc\TSS\Razvodi\Izbire\VrstaNamenaCevi $namen Namen cevi - ogrevanje, TSV, hlajenje
      * @param string|\stdClass $config Configuration
      * @return void
      */
-    public function __construct(VrstaRazvodnihCevi $vrsta, $config = null)
+    public function __construct(VrstaRazvodnihCevi $vrsta, VrstaNamenaCevi $namen, $config = null)
     {
         $this->vrsta = $vrsta;
+        $this->namen = $namen;
         if ($config) {
             $this->parseConfig($config);
         }
@@ -56,11 +60,29 @@ class ElementRazvoda
     {
         $zaPovrsino = $povrsinaCone <= 200 ? 1 : ($povrsinaCone > 500 ? 3 : 2);
 
-        $vrednostiU = [
-            VrstaRazvodnihCevi::HorizontalniRazvod->value => [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
-            VrstaRazvodnihCevi::DvizniVod->value => [0.3, 0.75, 1.35, $zaPovrsino, $zaPovrsino],
-            VrstaRazvodnihCevi::PrikljucniVod->value => [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
-        ];
+        switch ($this->namen) {
+            case VrstaNamenaCevi::Ogrevanje:
+            case VrstaNamenaCevi::ToplaSanitarnaVoda:
+            case VrstaNamenaCevi::Hlajenje:
+                $vrednostiU = [
+                    VrstaRazvodnihCevi::HorizontalniRazvod->value =>
+                        [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
+                    VrstaRazvodnihCevi::DvizniVod->value =>
+                        [0.3, 0.75, 1.35, $zaPovrsino, $zaPovrsino],
+                    VrstaRazvodnihCevi::PrikljucniVod->value =>
+                        [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
+                ];
+                break;
+            default:
+                $vrednostiU = [
+                    VrstaRazvodnihCevi::HorizontalniRazvod->value =>
+                        [$zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
+                    VrstaRazvodnihCevi::DvizniVod->value =>
+                        [$zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
+                    VrstaRazvodnihCevi::PrikljucniVod->value =>
+                        [$zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
+                ];
+        }
 
         return $vrednostiU[$this->vrsta->value][$this->izolacija->getOrdinal()];
     }
@@ -72,14 +94,21 @@ class ElementRazvoda
      */
     public function privzetiDelezVOgrevaniConi()
     {
-        switch ($this->vrsta) {
-            case VrstaRazvodnihCevi::DvizniVod:
-                $deleziPoVrstiIzolacije = [1, 0.73, 0.59, 1, 1];
+        switch ($this->namen) {
+            case VrstaNamenaCevi::Ogrevanje:
+            case VrstaNamenaCevi::ToplaSanitarnaVoda:
+            case VrstaNamenaCevi::Hlajenje:
+                switch ($this->vrsta) {
+                    case VrstaRazvodnihCevi::DvizniVod:
+                        $deleziPoVrstiIzolacije = [1, 0.73, 0.59, 1, 1];
 
-                return $deleziPoVrstiIzolacije[$this->izolacija->getOrdinal()];
-            default:
-                return 1;
+                        return $deleziPoVrstiIzolacije[$this->izolacija->getOrdinal()];
+                    default:
+                        return 1;
+                }
         }
+
+        return 1;
     }
 
     /**
@@ -87,14 +116,14 @@ class ElementRazvoda
      *
      * @param \App\Calc\TSS\Razvodi\Razvod $razvod Podatki razvoda
      * @param \stdClass $cona Podatki cone
-     * @param bool $znotrajOvoja Izgube znotraj/zunaj ovoja
+     * @param float $delez Delez cevovoda - v ogrevani coni/neogrevani/total
      * @return float
      */
-    public function toplotneIzgube($razvod, $cona, $znotrajOvoja)
+    public function toplotneIzgube($razvod, $cona, $delez = 1)
     {
         $U = $this->toplotnaPrevodnost ?? $this->racunskaToplotnaPrevodnost($cona->sirina * $cona->dolzina);
         $dolzina = $razvod->dolzinaCevi($this->vrsta, $cona);
 
-        return $U * $dolzina * ($znotrajOvoja ? $this->delezVOgrevaniConi : 1 - $this->delezVOgrevaniConi);
+        return $U * $dolzina * $delez;
     }
 }

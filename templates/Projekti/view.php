@@ -9,7 +9,8 @@
 <a class="button" href="<?= App::url('/izkazi/podrocjeGf/' . $projectName) ?>">Izkaz GF</a>
 <a class="button" href="<?= App::url('/projekti/analizaSNES/' . $projectName) ?>">Analiza SNES</a>
 <a class="button" href="<?= App::url('/izkazi/podrocjeSNES/' . $projectName) ?>">Izkaz sNES</a>
-<br />
+</p>
+<p>
 <?php
     foreach ($cone as $cona) {
 ?>

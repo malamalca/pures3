@@ -6,7 +6,7 @@ namespace App\Calc\TSS\Razvodi;
 use App\Calc\TSS\Razvodi\Izbire\RazvodAbstractProperties;
 use App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi;
 
-class Enocevni extends Razvod
+class Enocevni extends RazvodOgrevanje
 {
     /**
      * Vrne dolžino cevi za podano vrsto razvodnih cevi
