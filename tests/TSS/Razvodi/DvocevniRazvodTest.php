@@ -209,37 +209,72 @@ final class DvocevniRazvodTest extends TestCase
         $this->assertEquals($expected, $roundedResult);
     }
 
-    /*public function testPotrebnaElektricnaEnergija(): void
+    public function testPotrebnaElektricnaEnergija(): void
     {
-        $sistem = new \stdClass();
-
         $cona = new \stdClass();
         $cona->dolzina = 10;
         $cona->sirina = 8;
         $cona->steviloEtaz = 3;
         $cona->etaznaVisina = 3;
         $cona->notranjaTOgrevanje = 20;
+        $cona->zunanjaT = -13;
+        $cona->energijaOgrevanje = [1206.707, 746.368, 390.117, 135.734, 19.220, 0.000, 0.000, 0.000, 17.903, 179.496, 761.644, 1208.785];
+        $cona->specTransmisijskeIzgube = 143.8765034039049;
+        $cona->specVentilacijskeIzgube = 8.184;
+
+
+        $configSistem = <<<EOT
+        {
+            "vrsta": "toplovodni",
+            "energent": "elektrika",
+            "rezim": "40/30"
+        }
+        EOT;
+        $sistem = new ToplovodniOgrevalniSistem($configSistem);
+        $sistem->init($cona);
+
+        $configPrenosnika = <<<EOT
+        {
+            "id": "TALNO",
+            "vrsta": "ploskovnaOgrevala",
+
+            "sistem": "talno_mokri",
+            "izolacija": "100%",
+
+            "hidravlicnoUravnotezenje": "staticnoDviznihVodov",
+            "regulacijaTemperature": "referencniProstor",
+
+            "mocRegulatorja": 1,
+            "steviloRegulatorjev": 1
+        }
+        EOT;
+        $prenosnik = new PloskovnoOgrevalo($configPrenosnika);
 
         $config = <<<EOT
         {
-            "vrsta": "toplavoda",
+            "vrsta": "dvocevni",
+            "idPrenosnika": "TALNO",
             "crpalka": {},
             "ceviHorizontaliVodi": {
+                "delezVOgrevaniConi": 0.8
             },
             "ceviDvizniVodi": {
+                "delezVOgrevaniConi": 0.8
             },
             "ceviPrikljucniVodi": {
             }
         }
         EOT;
+        $razvod = new DvocevniRazvod($config);
 
-        $razvodTSV = new RazvodTSV($config);
+        $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
-        $izgube = $razvodTSV->potrebnaElektricnaEnergija(null, null, $cona, null);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $potrebnaElektrika = $razvod->potrebnaElektricnaEnergija($preneseneIzgube, $sistem, $cona, null, ['prenosnik' => $prenosnik]);
 
-        $expected = [6.99, 6.31, 6.99, 6.76, 6.99, 6.76, 6.99, 6.99, 6.76, 6.99, 6.76, 6.99];
+        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektrika);
+
+        $expected = [28.14, 24.59, 26.17, 18.67, 2.65, 0.00, 0.00, 0.00, 2.47, 24.69, 26.29, 28.16];
 
         $this->assertEquals($expected, $roundedResult);
-    }*/
+    }
 }

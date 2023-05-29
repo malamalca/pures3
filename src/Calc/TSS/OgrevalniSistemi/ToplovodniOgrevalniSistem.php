@@ -16,13 +16,13 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      */
     protected function parseConfig($config)
     {
+        parent::parseConfig($config);
+
         if (is_string($config)) {
             $config = json_decode($config);
         }
 
         $this->energent = EnergentFactory::create($config->energent ?? 'default');
-
-        parent::parseConfig($config);
     }
 
     /**
