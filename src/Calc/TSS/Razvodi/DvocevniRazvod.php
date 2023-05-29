@@ -6,7 +6,7 @@ namespace App\Calc\TSS\Razvodi;
 use App\Calc\TSS\Razvodi\Izbire\RazvodAbstractProperties;
 use App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi;
 
-class DvocevniZunaj extends RazvodOgrevanje
+class DvocevniRazvod extends RazvodOgrevanje
 {
     /**
      * Vrne dolžino cevi za podano vrsto razvodnih cevi
@@ -19,7 +19,7 @@ class DvocevniZunaj extends RazvodOgrevanje
     {
         switch ($vrsta) {
             case VrstaRazvodnihCevi::HorizontalniRazvod:
-                return 2 * $cona->dolzina + 0.01625 * $cona->dolzina * pow($cona->sirina, 2);
+                return 2 * $cona->dolzina + 0.0325 * $cona->dolzina * $cona->sirina + 6;
             case VrstaRazvodnihCevi::DvizniVod:
                 return 0.025 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz * $cona->etaznaVisina;
             case VrstaRazvodnihCevi::PrikljucniVod:

@@ -28,6 +28,10 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
     {
         parent::parseConfig($config);
 
+        if (is_string($config)) {
+            $config = json_decode($config);
+        }
+
         $this->sistemOgreval = VrstaSistemaPloskovnihOgreval::from($config->sistem);
         $this->izolacija = VrstaIzolacijePloskovnihOgreval::from($config->izolacija);
     }

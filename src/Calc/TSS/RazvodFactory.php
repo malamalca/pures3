@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS;
 
-use App\Calc\TSS\Razvodi\Dvocevni;
-use App\Calc\TSS\Razvodi\Enocevni;
+use App\Calc\TSS\Razvodi\DvocevniRazvod;
+use App\Calc\TSS\Razvodi\EnocevniRazvod;
 
 class RazvodFactory
 {
@@ -19,9 +19,9 @@ class RazvodFactory
     {
         switch ($type) {
             case 'dvocevni':
-                return new Dvocevni($options);
+                return new DvocevniRazvod($options);
             case 'enocevni':
-                return new Enocevni($options);
+                return new EnocevniRazvod($options);
             default:
                 throw new \Exception(sprintf('Razvod : Vrsta "%s" ne obstaja', $type));
         }

@@ -138,10 +138,9 @@ abstract class RazvodOgrevanje extends Razvod
         $prenosnik = $params['prenosnik'] ?? null;
 
         if (!empty($this->crpalka)) {
-            $jeZnanaCrpalka = !empty($this->crpalka->moc);
-            $izracunanaMocCrpalke = $this->izracunHidravlicneMoci($prenosnik, $sistem, $cona);
-
-            $this->crpalka->moc = $this->crpalka->moc ?? $izracunanaMocCrpalke;
+            $hidravlicnaMoc = $this->izracunHidravlicneMoci($prenosnik, $sistem, $cona);
+            $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc);
+            $this->crpalka->moc = $this->crpalka->moc ?? $hidravlicnaMoc;
 
             // možnosti sta elektrika in toplota
             // TODO:
@@ -158,12 +157,6 @@ abstract class RazvodOgrevanje extends Razvod
             //      za hidravlično neuravnotežene sisteme: 1,1
             // TODO:
             $f_abgl = 1;
-
-            // (enačba 68, spodaj)
-            $faktorNovaObstojeca = 1;
-            $fe_crpalke = $jeZnanaCrpalka ?
-                $this->crpalka->moc / $izracunanaMocCrpalke :
-                1.25 + pow(200 / $izracunanaMocCrpalke, 0.5) * $faktorNovaObstojeca;
 
             foreach (array_keys(Calc::MESECI) as $mesec) {
                 $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
@@ -240,7 +233,26 @@ abstract class RazvodOgrevanje extends Razvod
     }
 
     /**
-     * Izračun potrebne električne energije
+     * Izračun faktorja rabe energije črpalke e_h,d
+     * (enačba 68, spodaj)
+     *
+     * @param float $hidravlicnaMoc Hidravlična moč
+     * @return float
+     */
+    public function izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc)
+    {
+        // (enačba 68, spodaj)
+        $faktorCrpalkaPoProjektu = 1;
+
+        $fe_crpalke = !empty($this->crpalka->moc) ?
+            $this->crpalka->moc / $hidravlicnaMoc :
+            1.25 + pow(200 / $hidravlicnaMoc, 0.5) * $faktorCrpalkaPoProjektu;
+
+        return $fe_crpalke;
+    }
+
+    /**
+     * Izračun hidravlične moči črpalke
      *
      * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema

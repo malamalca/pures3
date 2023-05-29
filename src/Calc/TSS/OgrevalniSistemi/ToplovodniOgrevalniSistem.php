@@ -16,19 +16,22 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      */
     protected function parseConfig($config)
     {
+        if (is_string($config)) {
+            $config = json_decode($config);
+        }
+
         $this->energent = EnergentFactory::create($config->energent ?? 'default');
 
         parent::parseConfig($config);
     }
 
     /**
-     * Glavna metoda za analizo ogrevalnega sistema
+     * Inicializacija parametrov sistema
      *
      * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
-     * @return array
+     * @return void
      */
-    public function analiza($cona, $okolje)
+    public function init($cona)
     {
         $this->standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
             ($cona->notranjaTOgrevanje - $cona->zunanjaT) / 1000;
@@ -40,6 +43,18 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             // betaH - Izračun povprečnih obremenitev podsistemov
             $this->povprecnaObremenitev[$mesec] = $cona->energijaOgrevanje[$mesec] / ($this->standardnaMoc * $stUr);
         }
+    }
+
+    /**
+     * Glavna metoda za analizo ogrevalnega sistema
+     *
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @return array
+     */
+    public function analiza($cona, $okolje)
+    {
+        $this->init($cona);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $vneseneIzgube = $cona->energijaOgrevanje;

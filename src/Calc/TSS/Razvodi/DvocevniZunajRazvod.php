@@ -6,7 +6,7 @@ namespace App\Calc\TSS\Razvodi;
 use App\Calc\TSS\Razvodi\Izbire\RazvodAbstractProperties;
 use App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi;
 
-class Enocevni extends RazvodOgrevanje
+class DvocevniZunajRazvod extends RazvodOgrevanje
 {
     /**
      * Vrne dolžino cevi za podano vrsto razvodnih cevi
@@ -21,10 +21,9 @@ class Enocevni extends RazvodOgrevanje
             case VrstaRazvodnihCevi::HorizontalniRazvod:
                 return 2 * $cona->dolzina + 0.01625 * $cona->dolzina * pow($cona->sirina, 2);
             case VrstaRazvodnihCevi::DvizniVod:
-                return 0.025 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz * $cona->etaznaVisina +
-                    2 * ($cona->dolzina + $cona->sirina) * $cona->steviloEtaz;
+                return 0.025 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz * $cona->etaznaVisina;
             case VrstaRazvodnihCevi::PrikljucniVod:
-                return 0.1 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz;
+                return 0.55 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz;
         }
 
         return 0;
@@ -42,13 +41,12 @@ class Enocevni extends RazvodOgrevanje
         switch ($property) {
             case RazvodAbstractProperties::Lmax:
                 $cona = $options['cona'];
-                $lc = $cona->dolzina + $cona->sirina;
-
+                $lc = 10;
                 $Lmax = 2 * ($cona->dolzina + $cona->sirina / 2 + $cona->etaznaVisina * $cona->steviloEtaz + $lc);
 
                 return $Lmax;
             case RazvodAbstractProperties::f_sch:
-                return 2.3;
+                return 1;
         }
 
         return 0;

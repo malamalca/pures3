@@ -216,12 +216,7 @@ class RazvodTSV extends Razvod
      */
     public function izracunFaktorjaRabeEnergijeCrpalke($cona)
     {
-        // korekcijski faktor za hidravlično uravnoteženje [-]
-        //      za hidravlično uravnotežene sisteme: 1
-        //      za hidravlično neuravnotežene sisteme: 1,1
-        // TODO:
-        $f_abgl = 1;
-
+        // (enačba 68, spodaj)
         // (enačba 147, spodaj)
         $faktorCrpalkaPoProjektu = 1;
 
