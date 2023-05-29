@@ -11,6 +11,7 @@ abstract class Hranilnik
 
     public $toplotneIzgube;
     public $potrebnaElektricnaEnergija;
+    public $vracljiveIzgube;
     public $vracljiveIzgubeAux;
 
     /**

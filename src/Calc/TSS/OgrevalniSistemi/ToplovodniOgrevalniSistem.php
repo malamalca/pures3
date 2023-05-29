@@ -109,6 +109,20 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             }
         }
 
+        foreach ($this->hranilniki as $hranilnik) {
+            $izgubeHranilnika = $hranilnik->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
+
+            // dodam k vnesenim izgubam
+            foreach ($izgubeHranilnika as $k => $v) {
+                //$vneseneIzgube[$k] += $v;
+            }
+
+            foreach ($hranilnik->vracljiveIzgube as $k => $v) {
+                //$this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // izgube ogrevala
         foreach ($this->generatorji as $generator) {
             $izgubeGeneratorja = $generator->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);

@@ -18,6 +18,12 @@
         ],
 
         "hranilniki": [
+            {
+                "vrsta": "posrednoOgrevan",
+                "volumen": 250,
+                "istiProstorKotGrelnik": true,
+                "vOgrevanemProstoru": true
+            }
         ],
 
         "prenosniki": [
@@ -39,6 +45,7 @@
         "razvodi": [
             {
                 "vrsta": "dvocevni",
+                "id": "ogrevanje",
                 "idPrenosnika": "TALNO",
                 "crpalka": {},
                 "ceviHorizontaliVodi": {
@@ -51,7 +58,8 @@
                 }
             },
             {
-                "vrsta": "dvocevni",
+                "vrsta": "toplavoda",
+                "id": "TSV",
                 "crpalka": {},
                 "ceviHorizontaliVodi": {
                 },

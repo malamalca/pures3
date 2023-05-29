@@ -99,6 +99,31 @@
     ?>
 </table>
 
+<h2>Analiza hranilnikov</h2>
+<table border="1">
+    <thead>
+        <tr>
+            <td></td>
+            <td></td>
+            <?= implode(PHP_EOL, array_map(fn($mes) => '<td class="center w-6">' . $mes . '</td>', Calc::MESECI)) ?>
+            <td class="center">kWh/an</td>
+        </tr>
+    </thead>
+
+    <?php
+            foreach ($sistem->hranilniki as $hranilnik) {
+    ?>
+    <tr>
+        <td rowspan="4"><?= h($hranilnik->id ?? '') ?></td>
+        <td>Q<sub>W,dis,ls</sub></td>
+        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $hranilnik->toplotneIzgube)) ?>
+        <th class="right w-6"><?= $this->numFormat(array_sum($hranilnik->toplotneIzgube), 0) ?></th>
+    </tr>
+    <?php
+            }
+    ?>
+</table>
+
 <h2>Analiza generatorja</h2>
 <table border="1">
     <thead>

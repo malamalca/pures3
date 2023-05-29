@@ -74,6 +74,8 @@ class PosrednoOgrevanHranilnik extends Hranilnik
             $this->toplotneIzgube[$mesec] = $f_povezava * (50 - $temperaturaOkolice) / 45 * $stDni * $dnevneIzgube;
         }
 
+        $this->vracljiveIzgube = $this->toplotneIzgube;
+
         return $this->toplotneIzgube;
     }
 }

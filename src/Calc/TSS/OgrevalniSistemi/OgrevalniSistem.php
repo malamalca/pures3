@@ -5,6 +5,7 @@ namespace App\Calc\TSS\OgrevalniSistemi;
 
 use App\Calc\TSS\Energenti\Energent;
 use App\Calc\TSS\GeneratorFactory;
+use App\Calc\TSS\HranilnikFactory;
 use App\Calc\TSS\KoncniPrenosnikFactory;
 use App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\TSS\RazvodFactory;
@@ -29,6 +30,7 @@ abstract class OgrevalniSistem
 
     public array $koncniPrenosniki = [];
     public array $razvodi = [];
+    public array $hranilniki = [];
     public array $generatorji = [];
 
     public $potrebnaEnergija;
@@ -72,6 +74,12 @@ abstract class OgrevalniSistem
         if (!empty($config->prenosniki)) {
             foreach ($config->prenosniki as $prenosnik) {
                 $this->koncniPrenosniki[] = KoncniPrenosnikFactory::create($prenosnik->vrsta, $prenosnik);
+            }
+        }
+
+        if (!empty($config->hranilniki)) {
+            foreach ($config->hranilniki as $hranilnik) {
+                $this->hranilniki[] = HranilnikFactory::create($hranilnik->vrsta, $hranilnik);
             }
         }
 
