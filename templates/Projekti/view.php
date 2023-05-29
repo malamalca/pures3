@@ -15,6 +15,8 @@
     foreach ($cone as $cona) {
 ?>
 <a class="button" href="<?= App::url('/cone/analiza/' . $projectName . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
+<a class="button" href="<?= App::url('/cone/ovoj/' . $projectName . '/' . $cona->id) ?>">Analiza ovoja cone "<?= $cona->id ?>"</a>
+
 <?php
     }
 ?>
