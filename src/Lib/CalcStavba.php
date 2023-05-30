@@ -62,9 +62,14 @@ class CalcStavba
             $stavba->skupnaEnergijaRazvlazevanje += $cona->skupnaEnergijaRazvlazevanje;
             $stavba->skupnaPotrebaRazsvetljava += $cona->skupnaPotrebaRazsvetljava;
         }
+
         $stavba->specKoeficientTransmisijskihIzgub = $stavba->specTransmisijskeIzgube / $stavba->povrsinaOvoja;
         $stavba->specLetnaToplota = $stavba->skupnaEnergijaOgrevanje / $stavba->ogrevanaPovrsina;
         $stavba->specLetniHlad = $stavba->skupnaEnergijaHlajenje / $stavba->ogrevanaPovrsina;
+        $stavba->specPotrebaTSV = $stavba->skupnaPotrebaTSV / $stavba->ogrevanaPovrsina;
+
+        $stavba->specEnergijaNavlazevanje = $stavba->skupnaEnergijaNavlazevanje / $stavba->ogrevanaPovrsina;
+        $stavba->specEnergijaRazvlazevanje = $stavba->skupnaEnergijaRazvlazevanje / $stavba->ogrevanaPovrsina;
 
         $stavba->dovoljenaSpecLetnaToplota = 25 * $stavba->X_Htr;
 

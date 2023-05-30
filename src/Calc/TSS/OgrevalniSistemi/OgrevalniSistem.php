@@ -38,6 +38,8 @@ abstract class OgrevalniSistem
     public array $obnovljivaEnergija;
     public array $vracljiveIzgube;
 
+    public array $energijaPoEnergentih;
+
     /**
      * Class Constructor
      *
@@ -46,6 +48,7 @@ abstract class OgrevalniSistem
      */
     public function __construct($config = null)
     {
+        $energijaPoEnergentih = [];
         if ($config) {
             $this->parseConfig($config);
         }

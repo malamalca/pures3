@@ -57,6 +57,8 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         $this->init($cona);
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $this->energijaPoEnergentih = [];
+
         $vneseneIzgube = $cona->energijaOgrevanje;
 
         $potrebnaElektricnaEnergija = [];
@@ -132,12 +134,17 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             $this->obnovljivaEnergija =
                 $generator->obnovljivaEnergija($vneseneIzgube, $this, $cona, $okolje);
 
+            // obračun energije po energentihž
             // dodam k vnesenim izgubam
             foreach ($izgubeGeneratorja as $k => $v) {
                 $vneseneIzgube[$k] += $v;
             }
             foreach ($elektricnaEnergijaGeneratorja as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
+                $this->energijaPoEnergentih['elektrika'] = ($this->energijaPoEnergentih['elektrika'] ?? 0) + $v;
+            }
+            foreach ($this->obnovljivaEnergija as $k => $v) {
+                $this->energijaPoEnergentih['okolje'] = ($this->energijaPoEnergentih['okolje'] ?? 0) + $v;
             }
         }
 

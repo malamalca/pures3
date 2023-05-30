@@ -10,16 +10,30 @@ class IzkaziController
     /**
      * Prvi del izkaza - splošni podatki
      *
-     * @param string $projectName Building name
+     * @param string $projectId Building name
      * @return void
      */
-    public function podrocjeGf($projectName)
+    public function podrocjeGf($projectId)
     {
-        App::set('stavba', App::loadProjectCalculation($projectName, 'stavba'));
-        App::set('tKons', App::loadProjectCalculation($projectName, 'konstrukcije' . DS . 'transparentne'));
-        App::set('ntKons', App::loadProjectCalculation($projectName, 'konstrukcije' . DS . 'netransparentne'));
-        App::set('cone', App::loadProjectCalculation($projectName, 'cone'));
-        App::set('okolje', App::loadProjectCalculation($projectName, 'okolje'));
+        App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
+        App::set('tKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne'));
+        App::set('ntKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne'));
+        App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
+        App::set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
+    }
+
+    /**
+     * Drugi del izkaza - sNes
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
+    public function podrocjeSNES($projectId)
+    {
+        App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
+        App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
+
+        App::set('sistemiOgrevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
     }
 
     /**

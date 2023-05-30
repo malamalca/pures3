@@ -103,6 +103,8 @@ class IzracunTSS extends Command
                     $sistem->obnovljivaEnergija = $sistemOgrevanja->obnovljivaEnergija;
                     $sistem->vracljiveIzgube = $sistemOgrevanja->vracljiveIzgube;
 
+                    $sistem->energijaPoEnergentih = $sistemOgrevanja->energijaPoEnergentih;
+
                     $TSSSistemiOgrevanjeOut[] = $sistem;
                 }
             }
