@@ -16,11 +16,7 @@ Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
 
 Projekti za izračun gradbene fizike se nahajajo v podmapi `/projects`. Privzeto je v aplikaciji že vključen testni projekt v podmapi `/projects/TestniProjekt`.
 
-Analizo projekta se izvede iz ukazne vrstice s serijo ukazov:
+Analizo projekta se izvede iz ukazne vrstice z ukazom:
 ```
-bin/pures IzracunSplosniPodatki TestniProjekt
-bin/pures IzracunKonstrukcij TestniProjekt
-bin/pures IzracunCone TestniProjekt
-bin/pures IzracunStavbe TestniProjekt
-bin/pures IzracunTSS TestniProjekt
+bin/pures IzracunProjekta TestniProjekt
 ```
