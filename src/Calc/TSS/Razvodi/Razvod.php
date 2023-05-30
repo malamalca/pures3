@@ -8,11 +8,11 @@ use App\Calc\TSS\Razvodi\Izbire\VrstaRazvodnihCevi;
 
 abstract class Razvod
 {
-    public $horizontalniVod;
-    public $dvizniVod;
-    public $prikljucniVod;
+    public ElementRazvoda $horizontalniVod;
+    public ElementRazvoda $dvizniVod;
+    public ElementRazvoda $prikljucniVod;
 
-    public $idPrenosnika;
+    public ?string $idPrenosnika;
 
     public array $toplotneIzgube;
     public array $vracljiveIzgube;

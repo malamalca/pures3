@@ -11,13 +11,15 @@ class SistemOgrevanjaFactory
      * Ustvari ustrezen ogrevalni sistem glede na podan tip
      *
      * @param string $type Tip sistema
-     * @param array|\stdClass|null $options Dodatne nastavitve
-     * @return \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem|void
+     * @param \stdClass|null $options Dodatne nastavitve
+     * @return \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem|null
      */
     public static function create($type, $options)
     {
         if ($type == 'toplovodni') {
             return new ToplovodniOgrevalniSistem($options);
         }
+
+        return null;
     }
 }

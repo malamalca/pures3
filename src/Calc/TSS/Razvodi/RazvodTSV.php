@@ -12,7 +12,7 @@ class RazvodTSV extends Razvod
 {
     public ?\stdClass $crpalka;
 
-    public $prikljucniVodNaInstalacijskiSteni = false;
+    public bool $prikljucniVodNaInstalacijskiSteni = false;
 
     /**
      * Loads configuration from json|stdClass

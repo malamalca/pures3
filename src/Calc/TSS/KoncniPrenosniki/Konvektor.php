@@ -7,12 +7,12 @@ use App\Lib\Calc;
 
 class Konvektor extends KoncniPrenosnik
 {
-    public $exponentOgrevala = 1.1;
+    public float $exponentOgrevala = 1.1;
 
     /**
      * Loads configuration from json|stdClass
      *
-     * @param \stdClass|string|null $config Configuration
+     * @param \stdClass|null $config Configuration
      * @return void
      */
     public function parseConfig($config)

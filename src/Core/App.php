@@ -51,7 +51,10 @@ class App
 
         $controller = new $controllerClass();
 
-        $ret = call_user_func_array([$controller, $methodName], array_values($vars));
+        $func = [$controller, $methodName];
+        if (is_callable($func)) {
+            $ret = call_user_func_array($func, array_values($vars));
+        }
 
         if (empty($ret)) {
             $view = new View(self::getInstance()->_vars);
@@ -184,7 +187,12 @@ class App
             //throw new \Exception(sprintf('Datoteka "%s" ne obstaja.', $dataFilename));
             return null;
         } else {
-            $result = json_decode(file_get_contents($dataFilename));
+            $data = file_get_contents($dataFilename);
+            if (!$data) {
+                throw new \Exception(sprintf('Datoteke "%s" ni mogoče prebrati.', $dataFilename));
+            }
+
+            $result = json_decode($data);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
@@ -199,7 +207,7 @@ class App
      *
      * @param string $projectId Id projekta
      * @param string $projectFile Datoteka json
-     * @return string
+     * @return mixed|null
      */
     public static function loadProjectCalculation($projectId, $projectFile)
     {
@@ -213,7 +221,7 @@ class App
      * @param string $projectFile Datoteka json
      * @param string|mixed $data Datoteka json
      * @param string $subfolder Podmapa s podaki ali z izračuni
-     * @return int
+     * @return int<0, max>|false
      */
     public static function saveProjectCalculation($projectId, $projectFile, $data, $subfolder = 'izracuni')
     {

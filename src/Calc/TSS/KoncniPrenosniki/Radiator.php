@@ -11,14 +11,14 @@ class Radiator extends KoncniPrenosnik
     public const DELTAT_REZIM = [0.4, 0.5, 0.7];
     public const DELTAT_NAMESTITEV = [1.3, 0.3, 1.7, 1.2];
 
-    public $exponentOgrevala = 1.33;
+    public float $exponentOgrevala = 1.33;
 
     protected VrstaNamestitve $namestitev;
 
     /**
      * Loads configuration from json|stdClass
      *
-     * @param \stdClass|string|null $config Configuration
+     * @param \stdClass|null $config Configuration
      * @return void
      */
     public function parseConfig($config)

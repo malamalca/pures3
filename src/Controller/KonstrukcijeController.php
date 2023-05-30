@@ -10,30 +10,21 @@ class KonstrukcijeController
     /**
      * Prikaz podatkov o konstrukciji
      *
-     * @param string $buildingName Building name
+     * @param string $projectName Building name
      * @param string $konsId Konstruction id
      * @return void
      */
-    public function view($buildingName, $konsId)
+    public function view($projectName, $konsId)
     {
-        $ntKonsFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'netransparentne.json';
-        $ntKonsArray = json_decode(file_get_contents($ntKonsFile));
+        App::set('okolje', App::loadProjectCalculation($projectName, 'okolje'));
 
-        $okoljeFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'okolje.json';
-        $okolje = json_decode(file_get_contents($okoljeFile));
-
-        $kons = null;
-        foreach ($ntKonsArray as $aKons) {
-            if ($aKons->id == $konsId) {
-                $kons = $aKons;
-            }
-        }
+        $ntKonsArray = App::loadProjectCalculation($projectName, 'konstrukcije' . DS . 'netransparentne');
+        $kons = array_first($ntKonsArray, fn($item) => $item->id = $konsId);
 
         if (empty($kons)) {
-            die('Konstrukcija ne obstaja');
+            throw new \Exception('Konstrukcija ne obstaja');
         }
 
         App::set('kons', $kons);
-        App::set('okolje', $okolje);
     }
 }

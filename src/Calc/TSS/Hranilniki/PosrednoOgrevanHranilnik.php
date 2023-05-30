@@ -7,8 +7,8 @@ use App\Lib\Calc;
 
 class PosrednoOgrevanHranilnik extends Hranilnik
 {
-    public $istiProstorKotGrelnik;
-    public $vOgrevanemProstoru;
+    public bool $istiProstorKotGrelnik;
+    public bool $vOgrevanemProstoru;
 
     /**
      * Class Constructor

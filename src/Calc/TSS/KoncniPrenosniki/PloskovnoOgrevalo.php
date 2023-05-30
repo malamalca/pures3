@@ -12,8 +12,8 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
     public const DELTAT_VRSTE_SISTEMOV = [0, 0, 0, 0.4, 0.7];
     public const DELTAT_SPECIFICNIH_IZGUB = [1.4, 0.5, 0.1];
 
-    public $exponentOgrevala = 1.1;
-    public $deltaP_FBH = 25;
+    public float $exponentOgrevala = 1.1;
+    public float $deltaP_FBH = 25;
 
     protected VrstaSistemaPloskovnihOgreval $sistemOgreval;
     protected VrstaIzolacijePloskovnihOgreval $izolacija;
@@ -21,16 +21,12 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
     /**
      * Loads configuration from json|stdClass
      *
-     * @param \stdClass|string|null $config Configuration
+     * @param \stdClass|null $config Configuration
      * @return void
      */
     public function parseConfig($config)
     {
         parent::parseConfig($config);
-
-        if (is_string($config)) {
-            $config = json_decode($config);
-        }
 
         $this->sistemOgreval = VrstaSistemaPloskovnihOgreval::from($config->sistem);
         $this->izolacija = VrstaIzolacijePloskovnihOgreval::from($config->izolacija);

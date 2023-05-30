@@ -5,22 +5,6 @@ namespace App\Calc\TSS\Generatorji;
 
 use App\Lib\Calc;
 
-/*
-zrak-zrak, , , ,
-zrak-voda, , , ,
-cop, w-7, w2, w7, w10
-20, 3.4, 3.9, 4.6, 4.8
-35, 2.7, 3.1, 3.7, 3.9
-40, 2.5, 2.8, 3.4, 3.6
-55, 1.8, 2.0, 2.5, 2.7
-rel.moč, , , ,
-20, 0.76, 0.92, 1.08, 1.15
-35, 0.72, 0.88, 1.04, 1.12
-40, 0.71, 0.87, 1.03, 1.11
-55, 0.67, 0.83, 0.99, 1.07
-
- */
-
 class ToplotnaCrpalkaZrakVoda extends Generator
 {
     public const REZIMI = ['w-7', 'w2', 'w7', 'w10'];
@@ -59,15 +43,15 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         60 => 0.848, 70 => 0.891, 80 => 0.922, 90 => 0.955, 100 => 0.955,
     ];
 
-    public $podnebje = 'alpsko';
+    public string $podnebje = 'alpsko';
 
     // TODO: temperatura ponora je vezana na režim
     public int $temperaturaPonora = 40;
 
-    public $nazivniCOP;
+    public float $nazivniCOP;
 
-    public $elektricnaMocNaPrimarnemKrogu;
-    public $elektricnaMocNaSekundarnemKrogu;
+    public float $elektricnaMocNaPrimarnemKrogu;
+    public float $elektricnaMocNaSekundarnemKrogu;
 
     /**
      * Loads configuration from json|stdClass

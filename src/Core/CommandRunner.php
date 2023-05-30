@@ -21,6 +21,11 @@ class CommandRunner
 
         $commandClass = new $className();
 
-        call_user_func_array([$commandClass, 'run'], array_slice($args, 2));
+        $func = [$commandClass, 'run'];
+        if (is_callable($func)) {
+            call_user_func_array($func, array_slice($args, 2));
+        } else {
+            throw new \Exception('Invalid Command.');
+        }
     }
 }

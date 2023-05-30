@@ -6,7 +6,7 @@ return [
     'App' => [
         'namespace' => 'App',
         'encoding' => 'UTF-8',
-        'baseUrl' => '/',
+        'baseUrl' => '',
         'defaultName' => 'Pures 3',
     ],
 

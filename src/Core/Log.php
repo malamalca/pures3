@@ -79,7 +79,10 @@ class Log
      */
     public static function d()
     {
-        call_user_func_array([self::getLogger(), 'debug'], func_get_args());
+        $func = [self::getLogger(), 'debug'];
+        if (is_callable($func)) {
+            call_user_func_array($func, func_get_args());
+        }
     }
 
     /**
@@ -89,7 +92,10 @@ class Log
      */
     public static function info()
     {
-        call_user_func_array([self::getLogger(), 'info'], func_get_args());
+        $func = [self::getLogger(), 'info'];
+        if (is_callable($func)) {
+            call_user_func_array($func, func_get_args());
+        }
     }
 
     /**
@@ -99,7 +105,10 @@ class Log
      */
     public static function warn()
     {
-        call_user_func_array([self::getLogger(), 'warning'], func_get_args());
+        $func = [self::getLogger(), 'warning'];
+        if (is_callable($func)) {
+            call_user_func_array($func, func_get_args());
+        }
     }
 
     /**
@@ -109,7 +118,10 @@ class Log
      */
     public static function error()
     {
-        call_user_func_array([self::getLogger(), 'error'], func_get_args());
+        $func = [self::getLogger(), 'error'];
+        if (is_callable($func)) {
+            call_user_func_array($func, func_get_args());
+        }
     }
 
     /**
@@ -119,6 +131,9 @@ class Log
      */
     public static function critical()
     {
-        call_user_func_array([self::getLogger(), 'critical'], func_get_args());
+        $func = [self::getLogger(), 'critical'];
+        if (is_callable($func)) {
+            call_user_func_array($func, func_get_args());
+        }
     }
 }

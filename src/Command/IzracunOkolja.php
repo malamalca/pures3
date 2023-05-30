@@ -28,7 +28,7 @@ class IzracunOkolja extends Command
             throw new \Exception('Koordinate stavbe niso vpisane.');
         }
 
-        $YXTemp = json_decode(file_get_contents(CONFIG . 'YXTemp.json'));
+        $YXTemp = json_decode((string)file_get_contents(CONFIG . 'YXTemp.json'));
         $YXTempNearest = null;
         $nearestDistance = null;
         foreach ($YXTemp as $line) {
@@ -43,7 +43,7 @@ class IzracunOkolja extends Command
         }
         $splosniPodatkiOut->YXTemp = $YXTempNearest;
 
-        $YXVlaga = json_decode(file_get_contents(CONFIG . 'YXVlaga.json'));
+        $YXVlaga = json_decode((string)file_get_contents(CONFIG . 'YXVlaga.json'));
         $YXVlagaNearest = null;
         $nearestDistance = null;
         foreach ($YXVlaga as $line) {
@@ -76,7 +76,7 @@ class IzracunOkolja extends Command
         // izračun sončnega obsevanja
         // ARSO in Pures3 naredita to zelo čudno - ne na podlagi koordinat ampak primerja letno sevanje
         // iz podatkov za temperaturo in letno sevanje na horizontalno površino
-        $YXObsevanje = json_decode(file_get_contents(CONFIG . 'YXObsevanje.json'));
+        $YXObsevanje = json_decode((string)file_get_contents(CONFIG . 'YXObsevanje.json'));
         $YXObsevanjeNearest = null;
         //$nearestDistance = null;
         foreach ($YXObsevanje as $lineIndex => $line) {

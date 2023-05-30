@@ -13,7 +13,7 @@ class KoncniPrenosnikFactory
      * Ustvari ustrezen končni prenosnik glede na podan tip
      *
      * @param string $type Tip razvoda
-     * @param \stdClass|string|null $options Dodatne nastavitve
+     * @param \stdClass|null $options Dodatne nastavitve
      * @return \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik
      */
     public static function create($type, $options)

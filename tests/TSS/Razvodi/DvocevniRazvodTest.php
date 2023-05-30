@@ -74,7 +74,7 @@ final class DvocevniRazvodTest extends TestCase
             "steviloRegulatorjev": 1
         }
         EOT;
-        $prenosnik = new PloskovnoOgrevalo($configPrenosnika);
+        $prenosnik = new PloskovnoOgrevalo(json_decode($configPrenosnika));
 
         $cona = new \stdClass();
         $cona->dolzina = 10;
@@ -98,7 +98,7 @@ final class DvocevniRazvodTest extends TestCase
             }
         }
         EOT;
-        $razvod = new DvocevniRazvod($config);
+        $razvod = new DvocevniRazvod(json_decode($config));
 
         $hidravlicnaMoc = $razvod->izracunHidravlicneMoci($prenosnik, $sistem, $cona);
 
@@ -132,7 +132,7 @@ final class DvocevniRazvodTest extends TestCase
         }
         EOT;
 
-        $razvod = new DvocevniRazvod($config);
+        $razvod = new DvocevniRazvod(json_decode($config));
 
         $hidravlicnaMoc = 6.737259993559786;
         $faktor_fe = $razvod->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc);
@@ -180,7 +180,7 @@ final class DvocevniRazvodTest extends TestCase
             "steviloRegulatorjev": 1
         }
         EOT;
-        $prenosnik = new PloskovnoOgrevalo($configPrenosnika);
+        $prenosnik = new PloskovnoOgrevalo(json_decode($configPrenosnika));
 
         $config = <<<EOT
         {
@@ -197,7 +197,7 @@ final class DvocevniRazvodTest extends TestCase
             }
         }
         EOT;
-        $razvod = new DvocevniRazvod($config);
+        $razvod = new DvocevniRazvod(json_decode($config));
 
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
@@ -248,7 +248,7 @@ final class DvocevniRazvodTest extends TestCase
             "steviloRegulatorjev": 1
         }
         EOT;
-        $prenosnik = new PloskovnoOgrevalo($configPrenosnika);
+        $prenosnik = new PloskovnoOgrevalo(json_decode($configPrenosnika));
 
         $config = <<<EOT
         {
@@ -265,7 +265,7 @@ final class DvocevniRazvodTest extends TestCase
             }
         }
         EOT;
-        $razvod = new DvocevniRazvod($config);
+        $razvod = new DvocevniRazvod(json_decode($config));
 
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 

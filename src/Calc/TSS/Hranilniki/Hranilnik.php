@@ -7,12 +7,12 @@ abstract class Hranilnik
 {
     public string $id;
 
-    public $volumen;
+    public float $volumen;
 
-    public $toplotneIzgube;
-    public $potrebnaElektricnaEnergija;
-    public $vracljiveIzgube;
-    public $vracljiveIzgubeAux;
+    public array $toplotneIzgube;
+    public array $potrebnaElektricnaEnergija;
+    public array $vracljiveIzgube;
+    public array $vracljiveIzgubeAux;
 
     /**
      * Class Constructor

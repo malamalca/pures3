@@ -264,7 +264,7 @@ abstract class RazvodOgrevanje extends Razvod
         $Lmax = $this->getProperty(RazvodAbstractProperties::Lmax, ['cona' => $cona]);
 
         // ΔpFBH – dodatek pri ploskovnem ogrevanju, če ni proizvajalčevega podatka je 25 kPa vključno z ventili in razvodom (kPa)
-        $deltaP_FBH = $prenosnik->deltaP_FBH ?? 0;
+        $deltaP_FBH = $prenosnik->deltaP_FBH;
 
         // ΔpWE – tlačni padec generatorja toplote:
         //      standardni kotel: 1 kPa

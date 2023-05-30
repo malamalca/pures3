@@ -19,11 +19,15 @@ if (Configure::read('App.baseUrl') == '') {
     );
 }
 
+// Add slash
+if (substr($uri, 0, 1) !== '/') {
+    $uri = '/' . $uri;
+}
+
 // Strip query string (?foo=bar) and decode URI
 if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
-$uri = rawurldecode($uri);
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 switch ($routeInfo[0]) {

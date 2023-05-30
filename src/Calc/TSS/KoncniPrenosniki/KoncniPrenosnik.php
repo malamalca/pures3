@@ -15,10 +15,10 @@ abstract class KoncniPrenosnik
 
     public string $id;
 
-    public $exponentOgrevala;
+    public float $exponentOgrevala;
 
     // ΔpFBH – dodatek pri ploskovnem ogrevanju, če ni proizvajalčevega podatka je 25 kPa vključno z ventili in razvodom (kPa)
-    public $deltaP_FBH = 1;
+    public float $deltaP_FBH = 1;
 
     /**
      * @var int $steviloOgreval
@@ -45,7 +45,7 @@ abstract class KoncniPrenosnik
     /**
      * Class Constructor
      *
-     * @param \stdClass|string|null $config Configuration
+     * @param \stdClass|null $config Configuration
      * @return void
      */
     public function __construct($config = null)
@@ -58,15 +58,11 @@ abstract class KoncniPrenosnik
     /**
      * Loads configuration from json|stdClass
      *
-     * @param string|\stdClass $config Configuration
+     * @param null|\stdClass $config Configuration
      * @return void
      */
     public function parseConfig($config)
     {
-        if (is_string($config)) {
-            $config = json_decode($config);
-        }
-
         $this->id = $config->id;
 
         $this->steviloOgreval = $config->steviloOgreval ?? 1;

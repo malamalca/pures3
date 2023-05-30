@@ -11,7 +11,7 @@ class GeneratorFactory
      * Ustvari ustrezen generator glede na podan tip
      *
      * @param string $type Tip razvoda
-     * @param array|\stdClass|null $options Dodatne nastavitve
+     * @param \stdClass|null $options Dodatne nastavitve
      * @return \App\Calc\TSS\Generatorji\Generator
      */
     public static function create($type, $options = null)

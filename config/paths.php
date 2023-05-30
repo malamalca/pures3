@@ -47,11 +47,6 @@ define('TEMPLATES', ROOT . DS . 'templates' . DS);
 define('TMP', ROOT . DS . 'tmp' . DS);
 
 /**
- * Path to the resources directory.
- */
-define('RESOURCES', ROOT . DS . 'resources' . DS);
-
-/**
  * Path to the projects directory.
  */
 define('PROJECTS', ROOT . DS . 'projects' . DS);

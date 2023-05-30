@@ -71,38 +71,40 @@ class IzracunTSS extends Command
                 }
 
                 $sistemOgrevanja = SistemOgrevanjaFactory::create($sistem->vrsta, $sistem);
-                $sistemOgrevanja->analiza($cona, $okolje);
+                if ($sistemOgrevanja) {
+                    $sistemOgrevanja->analiza($cona, $okolje);
 
-                foreach ($sistem->prenosniki as $k => $prenosnik) {
-                    $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
-                    $prenosnik->potrebnaElektricnaEnergija =
-                        $sistemOgrevanja->koncniPrenosniki[$k]->potrebnaElektricnaEnergija;
-                    $prenosnik->vracljiveIzgubeAux = $sistemOgrevanja->koncniPrenosniki[$k]->vracljiveIzgubeAux;
+                    foreach ($sistem->prenosniki as $k => $prenosnik) {
+                        $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
+                        $prenosnik->potrebnaElektricnaEnergija =
+                            $sistemOgrevanja->koncniPrenosniki[$k]->potrebnaElektricnaEnergija;
+                        $prenosnik->vracljiveIzgubeAux = $sistemOgrevanja->koncniPrenosniki[$k]->vracljiveIzgubeAux;
+                    }
+
+                    foreach ($sistem->razvodi as $k => $razvod) {
+                        $razvod->toplotneIzgube = $sistemOgrevanja->razvodi[$k]->toplotneIzgube;
+                        $razvod->vracljiveIzgube = $sistemOgrevanja->razvodi[$k]->vracljiveIzgube;
+                        $razvod->potrebnaElektricnaEnergija = $sistemOgrevanja->razvodi[$k]->potrebnaElektricnaEnergija;
+                        $razvod->vracljiveIzgubeAux = $sistemOgrevanja->razvodi[$k]->vracljiveIzgubeAux;
+                    }
+
+                    foreach ($sistem->hranilniki as $k => $hranilnik) {
+                        $hranilnik->toplotneIzgube = $sistemOgrevanja->hranilniki[$k]->toplotneIzgube;
+                    }
+
+                    foreach ($sistem->generatorji as $k => $generator) {
+                        $generator->potrebnaEnergija = $sistemOgrevanja->generatorji[$k]->potrebnaEnergija;
+                        $generator->potrebnaElektricnaEnergija =
+                            $sistemOgrevanja->generatorji[$k]->potrebnaElektricnaEnergija;
+                    }
+
+                    $sistem->potrebnaEnergija = $sistemOgrevanja->potrebnaEnergija;
+                    $sistem->potrebnaElektricnaEnergija = $sistemOgrevanja->potrebnaElektricnaEnergija;
+                    $sistem->obnovljivaEnergija = $sistemOgrevanja->obnovljivaEnergija;
+                    $sistem->vracljiveIzgube = $sistemOgrevanja->vracljiveIzgube;
+
+                    $TSSSistemiOgrevanjeOut[] = $sistem;
                 }
-
-                foreach ($sistem->razvodi as $k => $razvod) {
-                    $razvod->toplotneIzgube = $sistemOgrevanja->razvodi[$k]->toplotneIzgube;
-                    $razvod->vracljiveIzgube = $sistemOgrevanja->razvodi[$k]->vracljiveIzgube;
-                    $razvod->potrebnaElektricnaEnergija = $sistemOgrevanja->razvodi[$k]->potrebnaElektricnaEnergija;
-                    $razvod->vracljiveIzgubeAux = $sistemOgrevanja->razvodi[$k]->vracljiveIzgubeAux;
-                }
-
-                foreach ($sistem->hranilniki as $k => $hranilnik) {
-                    $hranilnik->toplotneIzgube = $sistemOgrevanja->hranilniki[$k]->toplotneIzgube;
-                }
-
-                foreach ($sistem->generatorji as $k => $generator) {
-                    $generator->potrebnaEnergija = $sistemOgrevanja->generatorji[$k]->potrebnaEnergija;
-                    $generator->potrebnaElektricnaEnergija =
-                        $sistemOgrevanja->generatorji[$k]->potrebnaElektricnaEnergija;
-                }
-
-                $sistem->potrebnaEnergija = $sistemOgrevanja->potrebnaEnergija;
-                $sistem->potrebnaElektricnaEnergija = $sistemOgrevanja->potrebnaElektricnaEnergija;
-                $sistem->obnovljivaEnergija = $sistemOgrevanja->obnovljivaEnergija;
-                $sistem->vracljiveIzgube = $sistemOgrevanja->vracljiveIzgube;
-
-                $TSSSistemiOgrevanjeOut[] = $sistem;
             }
 
             App::saveProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje', $TSSSistemiOgrevanjeOut);

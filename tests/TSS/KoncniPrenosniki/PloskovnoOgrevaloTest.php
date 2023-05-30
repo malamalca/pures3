@@ -30,7 +30,7 @@ final class PloskovnoOgrevaloTest extends TestCase
         }
         EOT;
 
-        $sistem = new PloskovnoOgrevalo($config);
+        $sistem = new PloskovnoOgrevalo(json_decode($config));
 
         $preneseneIzgube = [1206.707, 746.368, 390.117, 135.734, 19.220, 0.000, 0.000, 0.000, 17.903, 179.496, 761.644, 1208.785];
 

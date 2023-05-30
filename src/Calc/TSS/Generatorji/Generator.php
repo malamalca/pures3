@@ -9,10 +9,10 @@ abstract class Generator
 
     public float $nazivnaMoc;
 
-    public $toplotneIzgube;
-    public $potrebnaEnergija;
-    public $potrebnaElektricnaEnergija;
-    public $obnovljivaEnergija;
+    public array $toplotneIzgube;
+    public array $potrebnaEnergija;
+    public array $potrebnaElektricnaEnergija;
+    public array $obnovljivaEnergija;
 
     /**
      * Class Constructor
