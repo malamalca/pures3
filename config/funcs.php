@@ -34,3 +34,31 @@ function h($output)
 function ar($a) {
     return '|' . implode(' | ', array_map(fn($v) => str_pad(number_format(round($v, 2), 2, '.', ''), 8, ' ', STR_PAD_LEFT), $a)) . '|' . PHP_EOL;
 }
+
+/**
+ * Return the first element in an array passing a given truth test.
+ *
+ * @param  iterable  $array
+ * @param  callable|null  $callback
+ * @param  mixed  $default
+ * @return mixed
+ */
+function array_first($haystack, callable $callback = null, $default = null) {
+    if (is_null($callback)) {
+        if (empty($haystack)) {
+            return $default;
+        }
+
+        foreach ($haystack as $item) {
+            return $item;
+        }
+    }
+
+    foreach ($haystack as $key => $value) {
+        if ($callback($value, $key)) {
+            return $value;
+        }
+    }
+
+    return $default;
+}

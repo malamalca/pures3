@@ -1,5 +1,6 @@
 <?php
     use App\Lib\Calc;
+    use App\Core\App;
 
     $elementiOvoja = array_merge($cona->ovoj->netransparentneKonstrukcije, $cona->ovoj->transparentneKonstrukcije);
     $stElementov = count($elementiOvoja);
@@ -11,7 +12,11 @@
 <table border="1">
     <tr>
         <th colspan="4">Zaporedna št. konstrukcije</th>
-        <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<th class="center">' . $elementOvoja->idKonstrukcije . '</th>', $elementiOvoja)) ?>
+        <?= implode(PHP_EOL, array_map(fn($elementOvoja) =>
+            '<th class="center">' . 
+            '<a class="button" href="' .
+            App::url('/konstrukcije/view/' . $projectName . '/' . $elementOvoja->idKonstrukcije) .
+            '">' . $elementOvoja->idKonstrukcije . '</a>' . '</th>', $elementiOvoja)) ?>
     </tr>
     <tr>
         <td colspan="4">Št. enakih</td>

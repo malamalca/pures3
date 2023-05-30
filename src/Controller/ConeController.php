@@ -10,66 +10,30 @@ class ConeController
     /**
      * Prikaz podatkov o ovoju cone
      *
-     * @param string $buildingName Building name
+     * @param string $projectName Building name
      * @param string $conaId Id cone
      * @return void
      */
-    public function ovoj($buildingName, $conaId)
+    public function ovoj($projectName, $conaId)
     {
-        $ntKonsFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'netransparentne.json';
-        $ntKonsArray = json_decode(file_get_contents($ntKonsFile));
+        $cone = App::loadProjectCalculation($projectName, 'cone');
 
-        $tKonsFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'transparentne.json';
-        $tKonsArray = json_decode(file_get_contents($tKonsFile));
-
-        $okoljeFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'okolje.json';
-        $okolje = json_decode(file_get_contents($okoljeFile));
-
-        $coneFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'cone.json';
-        $cone = json_decode(file_get_contents($coneFile));
-
-        $cona = null;
-        foreach ($cone as $aCona) {
-            if (strtolower($aCona->id) == strtolower($conaId)) {
-                $cona = $aCona;
-            }
-        }
-
-        if (empty($cona)) {
-            die('Cona ne obstaja');
-        }
-
-        App::set('cona', $cona);
-        App::set('okolje', $okolje);
+        App::set('projectName', $projectName);
+        App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
     }
 
     /**
      * Prikaz analize cone
      *
-     * @param string $buildingName Building name
+     * @param string $projectName Building name
      * @param string $conaId Id cone
      * @return void
      */
-    public function analiza($buildingName, $conaId)
+    public function analiza($projectName, $conaId)
     {
-        $okoljeFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'okolje.json';
-        $okolje = json_decode(file_get_contents($okoljeFile));
+        $cone = App::loadProjectCalculation($projectName, 'cone');
 
-        $coneFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'cone.json';
-        $cone = json_decode(file_get_contents($coneFile));
-
-        $cona = null;
-        foreach ($cone as $aCona) {
-            if (strtolower($aCona->id) == strtolower($conaId)) {
-                $cona = $aCona;
-            }
-        }
-
-        if (empty($cona)) {
-            die('Cona ne obstaja');
-        }
-
-        App::set('cona', $cona);
-        App::set('okolje', $okolje);
+        App::set('projectName', $projectName);
+        App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
     }
 }

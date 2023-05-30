@@ -10,78 +10,45 @@ class TSSController
     /**
      * Prikaz podatkov o ovoju cone
      *
-     * @param string $buildingName Building name
+     * @param string $projectName Building name
      * @param string $sistemId Id
      * @return void
      */
-    public function prezracevanje($buildingName, $sistemId)
+    public function prezracevanje($projectName, $sistemId)
     {
-        $prezracevanjeFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'TSS' . DS . 'prezracevanje.json';
-        $sistemi = json_decode(file_get_contents($prezracevanjeFile));
+        App::set('projectName', $projectName);
 
-        $sistem = null;
-        foreach ($sistemi as $aSistem) {
-            if (strtolower($aSistem->id) == strtolower($sistemId)) {
-                $sistem = $aSistem;
-            }
-        }
-
-        if (empty($sistem)) {
-            die('Sistem ne obstaja');
-        }
-
-        App::set('sistem', $sistem);
+        $sistemi = App::loadProjectCalculation($projectName, 'TSS' . DS . 'prezracevanje');
+        App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 
     /**
      * Prikaz podatkov o razsvetljavi cone
      *
-     * @param string $buildingName Building name
+     * @param string $projectName Building name
      * @param string $sistemId Id
      * @return void
      */
-    public function razsvetljava($buildingName, $sistemId)
+    public function razsvetljava($projectName, $sistemId)
     {
-        $razsvetljavaFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'TSS' . DS . 'razsvetljava.json';
-        $sistemi = json_decode(file_get_contents($razsvetljavaFile));
+        App::set('projectName', $projectName);
 
-        $sistem = null;
-        foreach ($sistemi as $aSistem) {
-            if (strtolower($aSistem->id) == strtolower($sistemId)) {
-                $sistem = $aSistem;
-            }
-        }
-
-        if (empty($sistem)) {
-            die('Sistem ne obstaja');
-        }
-
-        App::set('sistem', $sistem);
+        $sistemi = App::loadProjectCalculation($projectName, 'TSS' . DS . 'razsvetljava');
+        App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 
     /**
      * Prikaz podatkov o sistemu ogrevanja
      *
-     * @param string $buildingName Building name
-     * @param string|null $sistemId Id
+     * @param string $projectName Building name
+     * @param string $sistemId Id
      * @return void
      */
-    public function ogrevanje($buildingName, $sistemId = null)
+    public function ogrevanje($projectName, $sistemId)
     {
-        $ogrevanjeFile = PROJECTS . $buildingName . DS . 'izracuni' . DS . 'TSS' . DS . 'ogrevanje.json';
-        $sistemi = json_decode(file_get_contents($ogrevanjeFile));
+        App::set('projectName', $projectName);
 
-        $sistem = null;
-        foreach ($sistemi as $aSistem) {
-            if (strtolower($aSistem->id) == strtolower($sistemId)) {
-                $sistem = $aSistem;
-            }
-        }
-
-        if (empty($sistem)) {
-            die('Sistem ne obstaja');
-        }
-
-        App::set('sistem', $sistem);
+        $sistemi = App::loadProjectCalculation($projectName, 'TSS' . DS . 'ogrevanje');
+        App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 }
