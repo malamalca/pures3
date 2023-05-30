@@ -62,6 +62,9 @@ class CalcTSSPrezracevanje
             $sistem->dovedenaEnergija[$mesec] = $stUr *
                 (($sistem->dovod->mocVentilatorja + $sistem->odvod->mocVentilatorja) * $sistem->faktorKrmiljenja +
                 $sistem->mocSenzorjev / 1000) * $sistem->stevilo;
+
+            $sistem->energijaPoEnergentih['elektrika'] = ($sistem->energijaPoEnergentih['elektrika'] ?? 0) +
+                $sistem->dovedenaEnergija[$mesec];
         }
 
         return $sistem;

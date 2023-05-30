@@ -75,6 +75,9 @@ class CalcTSSRazsvetljava
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
             $sistem->dovedenaEnergija[$mesec] = $letnaDovedenaEnergija * $stDni / 365 * $mesecniUtezniFaktor[$mesec];
+
+            $sistem->energijaPoEnergentih['elektrika'] = ($sistem->energijaPoEnergentih['elektrika'] ?? 0) +
+                $sistem->dovedenaEnergija[$mesec];
         }
 
         return $sistem;

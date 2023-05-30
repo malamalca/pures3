@@ -16,16 +16,7 @@
                 "elektricnaMocNaSekundarnemKrogu": 3
             }
         ],
-
-        "hranilniki": [
-            {
-                "vrsta": "posrednoOgrevan",
-                "volumen": 250,
-                "istiProstorKotGrelnik": true,
-                "vOgrevanemProstoru": true
-            }
-        ],
-
+        
         "prenosniki": [
             {
                 "id": "TALNO",
@@ -53,17 +44,6 @@
                 },
                 "ceviDvizniVodi": {
                     "delezVOgrevaniConi": 0.8
-                },
-                "ceviPrikljucniVodi": {
-                }
-            },
-            {
-                "vrsta": "toplavoda",
-                "id": "TSV",
-                "crpalka": {},
-                "ceviHorizontaliVodi": {
-                },
-                "ceviDvizniVodi": {
                 },
                 "ceviPrikljucniVodi": {
                 }

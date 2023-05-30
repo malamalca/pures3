@@ -84,6 +84,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
             }
         }
+
         foreach ($this->razvodi as $razvod) {
             $prenosnik = array_filter($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
             if (!empty($prenosnik)) {
@@ -128,6 +129,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         // izgube ogrevala
         foreach ($this->generatorji as $generator) {
             $izgubeGeneratorja = $generator->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
+
             $elektricnaEnergijaGeneratorja =
                 $generator->potrebnaElektricnaEnergija($vneseneIzgube, $this, $cona, $okolje);
 
@@ -141,7 +143,6 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             }
             foreach ($elektricnaEnergijaGeneratorja as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
-                $this->energijaPoEnergentih['elektrika'] = ($this->energijaPoEnergentih['elektrika'] ?? 0) + $v;
             }
             foreach ($this->obnovljivaEnergija as $k => $v) {
                 $this->energijaPoEnergentih['okolje'] = ($this->energijaPoEnergentih['okolje'] ?? 0) + $v;
@@ -149,13 +150,14 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         }
 
         $this->potrebnaEnergija = $vneseneIzgube;
+        foreach ($this->obnovljivaEnergija as $k => $v) {
+            $this->energijaPoEnergentih['elektrika'] = ($this->energijaPoEnergentih['elektrika'] ?? 0) + $v;
+        }
+
         $this->potrebnaElektricnaEnergija = $potrebnaElektricnaEnergija;
-
-        //public $potrebnaToplota;
-        //public $potrebnaElektricnaEnergija;
-        //public $energijaOkolja;
-        //public $vracljivaToplota;
-
+        foreach ($this->potrebnaElektricnaEnergija as $k => $v) {
+            $this->energijaPoEnergentih['elektrika'] = ($this->energijaPoEnergentih['elektrika'] ?? 0) + $v;
+        }
 
         return [];
     }

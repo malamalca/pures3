@@ -88,8 +88,10 @@ class IzracunTSS extends Command
                         $razvod->vracljiveIzgubeAux = $sistemOgrevanja->razvodi[$k]->vracljiveIzgubeAux;
                     }
 
-                    foreach ($sistem->hranilniki as $k => $hranilnik) {
-                        $hranilnik->toplotneIzgube = $sistemOgrevanja->hranilniki[$k]->toplotneIzgube;
+                    if (!empty($sistem->hranilniki)) {
+                        foreach ($sistem->hranilniki as $k => $hranilnik) {
+                            $hranilnik->toplotneIzgube = $sistemOgrevanja->hranilniki[$k]->toplotneIzgube;
+                        }
                     }
 
                     foreach ($sistem->generatorji as $k => $generator) {

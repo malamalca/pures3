@@ -99,6 +99,9 @@
     ?>
 </table>
 
+<?php
+    if (!empty($sistem->hranilniki)) {
+?>
 <h2>Analiza hranilnikov</h2>
 <table border="1">
     <thead>
@@ -123,6 +126,9 @@
             }
     ?>
 </table>
+<?php
+    }
+?>
 
 <h2>Analiza generatorja</h2>
 <table border="1">

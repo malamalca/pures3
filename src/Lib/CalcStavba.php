@@ -88,4 +88,13 @@ class CalcStavba
 
         return $stavba;
     }
+
+    /**
+     * Glavna metoda za analizo TSS
+     *
+     * @return void
+     */
+    public static function analizaTSS()
+    {
+    }
 }
