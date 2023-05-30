@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Core\App;
 use App\Core\Command;
 use App\Lib\CalcKonstrukcije;
 
@@ -18,47 +19,24 @@ class IzracunKonstrukcij extends Command
     {
         parent::run();
 
-        $okoljeFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'okolje.json';
-        if (!file_exists($okoljeFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" z okoljem podatki ne obstaja.', $okoljeFile));
+        /** @var \stdClass $okolje */
+        $okolje = App::loadProjectCalculation($projectId, 'okolje');
+
+        /** @var array $netransparentneKonstrukcije */
+        $netransparentneKonstrukcije = App::loadProjectData($projectId, 'konstrukcije' . DS . 'netransparentne');
+        $netransparentneKonsOut = [];
+        foreach ($netransparentneKonstrukcije as $konstrukcija) {
+            $netransparentneKonsOut[] = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
         }
-        $okolje = json_decode(file_get_contents($okoljeFile));
+        App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne', $netransparentneKonsOut);
 
-        $ntKonsInputFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'konstrukcije' . DS . 'netransparentne.json';
-        $ntKonsIn = json_decode(file_get_contents($ntKonsInputFile));
-
-        $ntKonsOut = [];
-        foreach ($ntKonsIn as $konstrukcija) {
-            $ntKonsOut[] = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
-        }
-
-        $ntKonsOutputFolder = PROJECTS . $projectId . DS . 'izracuni' . DS . 'konstrukcije' . DS;
-        $ntKonsOutputFile = 'netransparentne.json';
-        if (!is_dir($ntKonsOutputFolder)) {
-            mkdir($ntKonsOutputFolder, 0777, true);
-        }
-        file_put_contents(
-            $ntKonsOutputFolder . $ntKonsOutputFile,
-            json_encode($ntKonsOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-        );
-
-        // transparentne konstrukcije
-        $tKonsInputFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'konstrukcije' . DS . 'transparentne.json';
-        $tKonsIn = json_decode(file_get_contents($tKonsInputFile));
-
-        $tKonsOut = [];
-        foreach ($tKonsIn as $konstrukcija) {
-            $tKonsOut[] = CalcKonstrukcije::transparentne($konstrukcija, $okolje);
+        /** @var array $transparentneKonstrukcije */
+        $transparentneKonstrukcije = App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne');
+        $transparentneKonsOut = [];
+        foreach ($transparentneKonstrukcije as $konstrukcija) {
+            $transparentneKonsOut[] = CalcKonstrukcije::transparentne($konstrukcija, $okolje);
         }
 
-        $tKonsOutputFolder = PROJECTS . $projectId . DS . 'izracuni' . DS . 'konstrukcije' . DS;
-        $tKonsOutputFile = 'transparentne.json';
-        if (!is_dir($tKonsOutputFolder)) {
-            mkdir($tKonsOutputFolder, 0777, true);
-        }
-        file_put_contents(
-            $tKonsOutputFolder . $tKonsOutputFile,
-            json_encode($tKonsOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-        );
+        App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne', $transparentneKonsOut);
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Core\App;
 use App\Core\Command;
 use App\Lib\CalcCone;
 
@@ -18,31 +19,21 @@ class IzracunCone extends Command
     {
         parent::run();
 
-        $okoljeFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'okolje.json';
-        if (!file_exists($okoljeFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" z okoljskimi podatki ne obstaja.', $okoljeFile));
-        }
-        $okolje = json_decode(file_get_contents($okoljeFile));
+        /** @var \stdClass $okolje */
+        $okolje = App::loadProjectCalculation($projectId, 'okolje');
 
-        $netransparentneKonstrukcije = [];
-        $netransparentneFile = PROJECTS . $projectId . DS . 'izracuni' . DS .
-            'konstrukcije' . DS . 'netransparentne.json';
-        if (file_exists($netransparentneFile)) {
-            $netransparentneKonstrukcije = json_decode(file_get_contents($netransparentneFile));
-        }
+        /** @var array $netransparentneKonstrukcije */
+        $netransparentneKonstrukcije = App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne');
 
-        $transparentneKonstrukcije = [];
-        $transparentneFile = PROJECTS . $projectId . DS . 'izracuni' . DS .
-            'konstrukcije' . DS . 'transparentne.json';
-        if (file_exists($transparentneFile)) {
-            $transparentneKonstrukcije = json_decode(file_get_contents($transparentneFile));
-        }
+        /** @var array $transparentneKonstrukcije */
+        $transparentneKonstrukcije = App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne');
 
-        $coneInputFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'cone.json';
-        $coneIn = json_decode(file_get_contents($coneInputFile));
+        /** @var array $coneIn */
+        $coneIn = App::loadProjectData($projectId, 'cone');
 
         $coneOut = [];
         foreach ($coneIn as $cona) {
+            /** @var \stdClass $cona */
             $coneOut[] = CalcCone::analizaCone(
                 $cona,
                 $okolje,
@@ -55,7 +46,6 @@ class IzracunCone extends Command
             throw new \Exception('Cone ne obstajajo.');
         }
 
-        $coneOutputFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'cone.json';
-        file_put_contents($coneOutputFile, json_encode($coneOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        App::saveProjectCalculation($projectId, 'cone', $coneOut);
     }
 }

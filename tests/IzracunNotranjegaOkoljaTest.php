@@ -11,9 +11,6 @@ class IzracunNotranjegaOkoljaTest extends TestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->_convertNoticesToExceptions = false;
-        $this->_convertWarningsToExceptions = false;
-        $this->_convertErrorsToExceptions = true;
     }
 
     public function testValidacijaTSG(): void

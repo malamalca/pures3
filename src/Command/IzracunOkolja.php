@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Core\App;
 use App\Core\Command;
 use App\Lib\Calc;
 use App\Lib\CalcOkolje;
 
-class IzracunSplosniPodatki extends Command
+class IzracunOkolja extends Command
 {
     /**
      * Command run routine
@@ -19,12 +20,7 @@ class IzracunSplosniPodatki extends Command
     {
         parent::run();
 
-        $splosniPodatkiInputFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'splosniPodatki.json';
-        if (!file_exists($splosniPodatkiInputFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" z vhodnimi podatki ne obstaja.', $splosniPodatkiInputFile));
-        }
-
-        $splosniPodatkiIn = json_decode(file_get_contents($splosniPodatkiInputFile));
+        $splosniPodatkiIn = App::loadProjectData($projectId, 'splosniPodatki');
         $splosniPodatkiOut = $splosniPodatkiIn;
 
         // find temp regime
@@ -102,11 +98,6 @@ class IzracunSplosniPodatki extends Command
 
         $okolje->obsevanje = $YXObsevanjeNearest->podatki;
 
-        $okoljeOutputDir = PROJECTS . $projectId . DS . 'izracuni' . DS;
-        if (!is_dir($okoljeOutputDir)) {
-            mkdir($okoljeOutputDir, 0777, true);
-        }
-        $okoljeOutputFile = $okoljeOutputDir . 'okolje.json';
-        file_put_contents($okoljeOutputFile, json_encode($okolje, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        App::saveProjectCalculation($projectId, 'okolje', $okolje);
     }
 }

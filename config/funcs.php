@@ -6,7 +6,7 @@
  */
 function dd()
 {
-    if (Configure::read('debug')) {
+    if (\App\Core\Configure::read('debug')) {
         echo '<pre>';
         var_dump(func_get_args());
         echo '</pre>';

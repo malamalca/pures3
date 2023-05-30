@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Calc\TSS\SistemOgrevanjaFactory;
+use App\Core\App;
 use App\Core\Command;
 use App\Lib\CalcTSSPrezracevanje;
 use App\Lib\CalcTSSRazsvetljava;
@@ -20,80 +21,57 @@ class IzracunTSS extends Command
     {
         parent::run();
 
-        $splosniPodatkiFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'splosniPodatki.json';
-        if (!file_exists($splosniPodatkiFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" s splošnimi podatki ne obstaja.', $splosniPodatkiFile));
-        }
-        $splosniPodatki = json_decode(file_get_contents($splosniPodatkiFile));
+        /** @var \stdClass $splosniPodatki */
+        $splosniPodatki = App::loadProjectData($projectId, 'splosniPodatki');
 
-        $okoljeFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'okolje.json';
-        if (!file_exists($okoljeFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" z okoljskimi podatki ne obstaja.', $okoljeFile));
-        }
-        $okolje = json_decode(file_get_contents($okoljeFile));
+        /** @var \stdClass $okolje */
+        $okolje = App::loadProjectCalculation($projectId, 'okolje');
 
-        $coneFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'cone.json';
-        if (!file_exists($coneFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" s conami ne obstaja.', $coneFile));
-        }
-        $cone = json_decode(file_get_contents($coneFile));
-        $cone = array_combine(array_map(fn($k) => $k->id, $cone), $cone);
+        /** @var array $cone */
+        $cone = App::loadProjectCalculation($projectId, 'cone');
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        $TSSPrezracevanjeFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'TSS' . DS . 'prezracevanje.json';
-        if (file_exists($TSSPrezracevanjeFile)) {
-            $TSSSistemiPrezracevanja = json_decode(file_get_contents($TSSPrezracevanjeFile));
-
+        $TSSSistemiPrezracevanja = App::loadProjectData($projectId, 'TSS' . DS . 'prezracevanje') ?? [];
+        if (count($TSSSistemiPrezracevanja) > 0) {
             $TSSSistemiPrezracevanjaOut = [];
             foreach ($TSSSistemiPrezracevanja as $sistem) {
-                if (!isset($cone[$sistem->idCone])) {
+                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
+                if (!$cona) {
                     throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
                 $TSSSistemiPrezracevanjaOut[] =
-                    CalcTSSPrezracevanje::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
+                    CalcTSSPrezracevanje::analiza($sistem, $cona, $okolje, $splosniPodatki);
             }
-
-            $TSSPrezracevanjeOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'prezracevanje.json';
-            file_put_contents(
-                $TSSPrezracevanjeOutFile,
-                json_encode($TSSSistemiPrezracevanjaOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-            );
+            App::saveProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje', $TSSSistemiPrezracevanjaOut);
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        $TSSRazsvetljavaFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'TSS' . DS . 'razsvetljava.json';
-        if (file_exists($TSSRazsvetljavaFile)) {
-            $TSSSistemiRazsvetljava = json_decode(file_get_contents($TSSRazsvetljavaFile));
-
+        $TSSSistemiRazsvetljava = App::loadProjectData($projectId, 'TSS' . DS . 'razsvetljava') ?? [];
+        if (count($TSSSistemiRazsvetljava) > 0) {
             $TSSSistemiRazsvetljavaOut = [];
             foreach ($TSSSistemiRazsvetljava as $sistem) {
-                if (!isset($cone[$sistem->idCone])) {
+                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
+                if (!$cona) {
                     throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
                 $TSSSistemiRazsvetljavaOut[] =
-                    CalcTSSRazsvetljava::analiza($sistem, $cone[$sistem->idCone], $okolje, $splosniPodatki);
+                    CalcTSSRazsvetljava::analiza($sistem, $cona, $okolje, $splosniPodatki);
             }
-
-            $TSSRazsvetljavaOutFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS . 'razsvetljava.json';
-            file_put_contents(
-                $TSSRazsvetljavaOutFile,
-                json_encode($TSSSistemiRazsvetljavaOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-            );
+            App::saveProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava', $TSSSistemiRazsvetljavaOut);
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        $TSSOgrevanjeFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'TSS' . DS . 'ogrevanje.json';
-        if (file_exists($TSSOgrevanjeFile)) {
-            $TSSSistemiOgrevanje = json_decode(file_get_contents($TSSOgrevanjeFile));
-
+        $TSSSistemiOgrevanje = App::loadProjectData($projectId, 'TSS' . DS . 'ogrevanje') ?? [];
+        if (count($TSSSistemiOgrevanje) > 0) {
             $TSSSistemiOgrevanjeOut = [];
             foreach ($TSSSistemiOgrevanje as $sistem) {
-                if (!isset($cone[$sistem->idCone])) {
-                    throw new \Exception('TSS Ogrevanje: Cona ne obstaja.');
+                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
+                if (!$cona) {
+                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
 
                 $sistemOgrevanja = SistemOgrevanjaFactory::create($sistem->vrsta, $sistem);
-                $sistemOgrevanja->analiza($cone[$sistem->idCone], $okolje);
+                $sistemOgrevanja->analiza($cona, $okolje);
 
                 foreach ($sistem->prenosniki as $k => $prenosnik) {
                     $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
@@ -127,15 +105,7 @@ class IzracunTSS extends Command
                 $TSSSistemiOgrevanjeOut[] = $sistem;
             }
 
-            $TSSOgrevanjeOutDir = PROJECTS . $projectId . DS . 'izracuni' . DS . 'TSS' . DS;
-            if (!is_dir($TSSOgrevanjeOutDir)) {
-                mkdir($TSSOgrevanjeOutDir, 0777, true);
-            }
-            $TSSOgrevanjeOutFile = $TSSOgrevanjeOutDir . 'ogrevanje.json';
-            file_put_contents(
-                $TSSOgrevanjeOutFile,
-                json_encode($TSSSistemiOgrevanjeOut, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-            );
+            App::saveProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje', $TSSSistemiOgrevanjeOut);
         }
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Core\App;
 use App\Core\Command;
 use App\Lib\CalcStavba;
 
@@ -18,27 +19,17 @@ class IzracunStavbe extends Command
     {
         parent::run();
 
-        $splosniPodatkiFile = PROJECTS . $projectId . DS . 'podatki' . DS . 'splosniPodatki.json';
-        if (!file_exists($splosniPodatkiFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" s splošnimi podatki ne obstaja.', $splosniPodatkiFile));
-        }
-        $splosniPodatki = json_decode(file_get_contents($splosniPodatkiFile));
+        /** @var \stdClass $splosniPodatki */
+        $splosniPodatki = App::loadProjectData($projectId, 'splosniPodatki');
 
-        $okoljeFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'okolje.json';
-        if (!file_exists($okoljeFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" z okoljskimi podatki ne obstaja.', $okoljeFile));
-        }
-        $okolje = json_decode(file_get_contents($okoljeFile));
+        /** @var \stdClass $okolje */
+        $okolje = App::loadProjectCalculation($projectId, 'okolje');
 
-        $coneFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'cone.json';
-        if (!file_exists($coneFile)) {
-            throw new \Exception(sprintf('Datoteka "%s" s conami ne obstaja.', $coneFile));
-        }
-        $cone = json_decode(file_get_contents($coneFile));
+        /** @var array $cone */
+        $cone = App::loadProjectCalculation($projectId, 'cone');
 
         $stavba = CalcStavba::analiza($cone, $okolje, $splosniPodatki);
 
-        $stavbaOutputFile = PROJECTS . $projectId . DS . 'izracuni' . DS . 'stavba.json';
-        file_put_contents($stavbaOutputFile, json_encode($stavba, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        App::saveProjectCalculation($projectId, 'stavba', $stavba);
     }
 }

@@ -164,7 +164,7 @@ class App
      * @param string $projectId Id projekta
      * @param string $projectFile Datoteka json
      * @param string $subfolder Podmapa s podaki ali z izračuni
-     * @return string
+     * @return mixed|null
      */
     public static function loadProjectData($projectId, $projectFile, $subfolder = 'podatki')
     {
@@ -181,16 +181,17 @@ class App
         $dataFilename = $sourceFolder . $projectFile . '.json';
 
         if (!file_exists($dataFilename)) {
-            throw new \Exception(sprintf('Datoteka "%s" ne obstaja.', $dataFilename));
+            //throw new \Exception(sprintf('Datoteka "%s" ne obstaja.', $dataFilename));
+            return null;
+        } else {
+            $result = json_decode(file_get_contents($dataFilename));
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
+            }
+
+            return $result;
         }
-
-        $result = json_decode(file_get_contents($dataFilename));
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
-        }
-
-        return $result;
     }
 
     /**
@@ -203,5 +204,36 @@ class App
     public static function loadProjectCalculation($projectId, $projectFile)
     {
         return self::loadProjectData($projectId, $projectFile, 'izracuni');
+    }
+
+    /**
+     * Shrani datoteko z izračunanimi podatki
+     *
+     * @param string $projectId Id projekta
+     * @param string $projectFile Datoteka json
+     * @param string|mixed $data Datoteka json
+     * @param string $subfolder Podmapa s podaki ali z izračuni
+     * @return int
+     */
+    public static function saveProjectCalculation($projectId, $projectFile, $data, $subfolder = 'izracuni')
+    {
+        if (defined('CLI')) {
+            $destFolder = PROJECTS . $projectId . DS . $subfolder . DS;
+        } else {
+            $destFolder = PROJECTS . $projectId . DS . $subfolder . DS;
+        }
+
+        $destFilename = $destFolder . $projectFile . '.json';
+
+        if (!is_dir(dirname($destFilename))) {
+            mkdir(dirname($destFolder), 0777, true);
+        }
+
+        if (!is_string($data)) {
+            $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }
+        $result = file_put_contents($destFilename, $data);
+
+        return $result;
     }
 }
