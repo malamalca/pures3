@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Lib;
 
+use App\Calc\TSS\TSSVrstaEnergenta;
+
 class CalcTSSPrezracevanje
 {
     /**
@@ -55,6 +57,7 @@ class CalcTSSPrezracevanje
         $sistem->odvod->mocVentilatorja =
             $sistem->odvod->mocVentilatorja ?? self::izracunMociVentilatorja('odvod', $sistem);
 
+        $sistem->skupnaDovodenaEnergija = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = $stDni * 24;
@@ -63,7 +66,10 @@ class CalcTSSPrezracevanje
                 (($sistem->dovod->mocVentilatorja + $sistem->odvod->mocVentilatorja) * $sistem->faktorKrmiljenja +
                 $sistem->mocSenzorjev / 1000) * $sistem->stevilo;
 
-            $sistem->energijaPoEnergentih['elektrika'] = ($sistem->energijaPoEnergentih['elektrika'] ?? 0) +
+            $sistem->skupnaDovodenaEnergija += $sistem->dovedenaEnergija[$mesec];
+
+            $sistem->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
+                ($sistem->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) +
                 $sistem->dovedenaEnergija[$mesec];
         }
 

@@ -32,8 +32,9 @@ class IzkaziController
     {
         App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
         App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
-
         App::set('sistemiOgrevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
+        App::set('sistemiRazsvetljave', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
+        App::set('sistemiPrezracevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
     }
 
     /**

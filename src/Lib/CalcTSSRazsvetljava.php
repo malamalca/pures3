@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Lib;
 
+use App\Calc\TSS\TSSVrstaEnergenta;
+
 class CalcTSSRazsvetljava
 {
     /**
@@ -71,12 +73,16 @@ class CalcTSSRazsvetljava
 
         $mesecniUtezniFaktor = [1.25, 1.1, 0.94, 0.86, 0.83, 0.73, 0.79, 0.87, 0.94, 1.09, 1.21, 1.35];
 
+        $sistem->skupnaDovodenaEnergija = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
             $sistem->dovedenaEnergija[$mesec] = $letnaDovedenaEnergija * $stDni / 365 * $mesecniUtezniFaktor[$mesec];
 
-            $sistem->energijaPoEnergentih['elektrika'] = ($sistem->energijaPoEnergentih['elektrika'] ?? 0) +
+            $sistem->skupnaDovodenaEnergija += $sistem->dovedenaEnergija[$mesec];
+
+            $sistem->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
+                ($sistem->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) +
                 $sistem->dovedenaEnergija[$mesec];
         }
 

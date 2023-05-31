@@ -30,6 +30,9 @@ class IzracunStavbe extends Command
 
         $stavba = CalcStavba::analiza($cone, $okolje, $splosniPodatki);
 
+        $sistemi = App::loadProjectCalculation($projectId, 'TSS' . DS);
+        $stavba = CalcStavba::analizaTSS($stavba, $sistemi);
+
         App::saveProjectCalculation($projectId, 'stavba', $stavba);
     }
 }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Lib;
 
+use App\Calc\TSS\TSSVrstaEnergenta;
+
 class CalcStavba
 {
     /**
@@ -37,9 +39,22 @@ class CalcStavba
             }
         }
 
+        // tabela 4:
+        // 1. korekcijski faktor specifičnega koeficienta transmisijskih toplotnih izgub
         $stavba->X_Htr = 1;
+        // 2. korekcijski faktor potrebne toplote za ogrevanje stavbe
         $stavba->X_Hnd = 1;
+        // 3. korekcijski faktor dovoljene potrebne primarne energije za delovanje TSS glede na vrsto stavbe
+        $stavba->X_s = 1;
+        // 4. kompenzacijski faktor primarne energije, potrebne za ogrevanje stavbe
         $stavba->Y_Hnd = 1;
+        // 5. kompenzacijski faktor primarne energije
+        $stavba->Y_ROVE = 1;
+
+        // 20. člen pravilnika
+        // mejne vrednosti učinkovite rabe energije v prihodnjem obdobju
+        $stavba->X_OVE = 1;
+        $stavba->X_p = 1;
 
         $stavba->faktorOblike = round($stavba->povrsinaOvoja / $stavba->brutoProstornina, 3);
         $stavba->razmerjeTranspCelota = $stavba->transparentnaPovrsina / $stavba->povrsinaOvoja;
@@ -92,9 +107,46 @@ class CalcStavba
     /**
      * Glavna metoda za analizo TSS
      *
-     * @return void
+     * @param \stdClass $stavba Podatki stavbe
+     * @param array $sistemi Podatki sistemov
+     * @return \stdClass
      */
-    public static function analizaTSS()
+    public static function analizaTSS($stavba, $sistemi)
     {
+        $stavba->energijaPoEnergentih = [];
+        $stavba->neutezenaDovedenaEnergija = 0;
+        $stavba->utezenaDovedenaEnergija = 0;
+        $stavba->neobnovljivaPrimarnaEnergija = 0;
+        $stavba->obnovljivaPrimarnaEnergija = 0;
+        $stavba->izpustCO2 = 0;
+
+        foreach ($sistemi as $sistem) {
+            $stavba->energijaPoEnergentih += (array)$sistem->energijaPoEnergentih;
+            foreach ((array)$sistem->energijaPoEnergentih as $energent => $energija) {
+                $stavba->neutezenaDovedenaEnergija += $energija;
+                $stavba->utezenaDovedenaEnergija +=
+                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+
+                $stavba->neobnovljivaPrimarnaEnergija +=
+                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
+
+                $stavba->obnovljivaPrimarnaEnergija +=
+                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('ren');
+
+                $stavba->izpustCO2 +=
+                    $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
+            }
+        }
+
+        $stavba->specificnaPrimarnaEnergija = $stavba->utezenaDovedenaEnergija / $stavba->ogrevanaPovrsina;
+        $stavba->korigiranaSpecificnaPrimarnaEnergija =
+            $stavba->specificnaPrimarnaEnergija * $stavba->Y_Hnd * $stavba->Y_ROVE;
+
+        $stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija = 75 * $stavba->X_p * $stavba->X_s;
+
+        $stavba->ROVE = $stavba->obnovljivaPrimarnaEnergija / $stavba->utezenaDovedenaEnergija * 100;
+        $stavba->minROVE = 50 * $stavba->X_OVE;
+
+        return $stavba;
     }
 }

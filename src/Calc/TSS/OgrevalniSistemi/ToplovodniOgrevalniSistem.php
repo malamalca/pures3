@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\TSS\OgrevalniSistemi;
 
 use App\Calc\TSS\EnergentFactory;
+use App\Calc\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
 
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
@@ -144,19 +145,29 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             foreach ($elektricnaEnergijaGeneratorja as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
             }
-            foreach ($this->obnovljivaEnergija as $k => $v) {
-                $this->energijaPoEnergentih['okolje'] = ($this->energijaPoEnergentih['okolje'] ?? 0) + $v;
-            }
         }
 
         $this->potrebnaEnergija = $vneseneIzgube;
-        foreach ($this->obnovljivaEnergija as $k => $v) {
-            $this->energijaPoEnergentih['elektrika'] = ($this->energijaPoEnergentih['elektrika'] ?? 0) + $v;
+        $this->potrebnaElektricnaEnergija = $potrebnaElektricnaEnergija;
+
+        foreach ($this->potrebnaEnergija as $k => $v) {
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
+                ($this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) + $v;
         }
 
-        $this->potrebnaElektricnaEnergija = $potrebnaElektricnaEnergija;
+        foreach ($this->obnovljivaEnergija as $k => $v) {
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] =
+                ($this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] ?? 0) + $v;
+        }
+
+        // od skupne energije odštejemo energijo okolja
+        $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
+            ($this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) -
+            ($this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] ?? 0);
+
         foreach ($this->potrebnaElektricnaEnergija as $k => $v) {
-            $this->energijaPoEnergentih['elektrika'] = ($this->energijaPoEnergentih['elektrika'] ?? 0) + $v;
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
+                $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] + $v;
         }
 
         return [];
