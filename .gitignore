@@ -5,7 +5,7 @@
 /vendor/*
 /resources/*
 /projects/*
-!/projects/TestniProjekt/*
+!/projects/TestniProjekt/podatki
 /projects/TestniProjekt/izracuni
 /vendor/*
 /.phpunit.cache/*
