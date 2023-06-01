@@ -34,13 +34,13 @@
     <thead>
         <tr>
             <th></th>
-            <th class="right">d<br />[m]</th>
-            <th class="right w-10">&lambda;<br />[W/mK]</th>
-            <th class="right w-10">&rho;<br />[kg/m<sup>3</sup>]</th>
-            <th class="right w-10">c<sub>p</sub><br />[J/kg K]</th>
-            <th class="right w-10">&mu;<br />[-]</th>
-            <th class="right w-10">R<br />[m<sup>2</sup>K/W]</th>
-            <th class="right w-10">s<sub>d</sub><br />[m]</th>
+            <th class="center">d<br />[m]</th>
+            <th class="center w-10">&lambda;<br />[W/mK]</th>
+            <th class="center w-10">&rho;<br />[kg/m<sup>3</sup>]</th>
+            <th class="center w-10">c<sub>p</sub><br />[J/kg K]</th>
+            <th class="center w-10">&mu;<br />[-]</th>
+            <th class="center w-10">R<br />[m<sup>2</sup>K/W]</th>
+            <th class="center w-10">s<sub>d</sub><br />[m]</th>
         </tr>
     </thead>
 <?php
@@ -237,7 +237,7 @@
             foreach (array_keys(Calc::MESECI) as $mes) {
     ?>
 
-            <td colspan="2"><?= Calc::MESECI[$mes] ?></td>
+            <td colspan="2" class="center w-6"><?= Calc::MESECI[$mes] ?></td>
     <?php
             }
     ?>
@@ -247,8 +247,8 @@
             <?php
             foreach (array_keys(Calc::MESECI) as $mes) {
     ?>
-            <td>M<sub>a</sub></td>
-            <td>g<sub>c</sub></td>
+            <td class="right w-4">M<sub>a</sub></td>
+            <td class="right w-4">g<sub>c</sub></td>
     <?php
             }
     ?>
@@ -265,8 +265,8 @@
             foreach (array_keys(Calc::MESECI) as $mes) {
     ?>
 
-            <td class="right w-10" style="background-color:#f0f0f0"><?= isset($sloj->gm[$mes]) ? round($sloj->gm[$mes]/1000, 4) : '' ?></td>
-            <td class="right w-10" style="border-right: solid 2px black;"><?= isset($sloj->gc[$mes]) ? round($sloj->gc[$mes]/1000, 4) : '' ?></td>
+            <td class="right w-4" style="background-color:#f0f0f0;"><?= isset($sloj->gm[$mes]) ? round($sloj->gm[$mes]/1000, 4) : '&nbsp;' ?></td>
+            <td class="right w-4" style="border-right: solid 2px black;"><?= isset($sloj->gc[$mes]) ? round($sloj->gc[$mes]/1000, 4) : '&nbsp;' ?></td>
             
     <?php
             }

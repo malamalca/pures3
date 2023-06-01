@@ -583,6 +583,15 @@ table tbody th {
 table tbody td, table tbody th {
   padding: 5px;
 }
+table tbody td.w-2, table tbody th.w-2 {
+  width: 2%;
+}
+table tbody td.w-3, table tbody th.w-3 {
+  width: 3%;
+}
+table tbody td.w-4, table tbody th.w-4 {
+  width: 4%;
+}
 table tbody td.w-5, table tbody th.w-5 {
   width: 5%;
 }

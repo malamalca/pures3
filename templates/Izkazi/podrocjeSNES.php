@@ -32,7 +32,7 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td class="w-60" colspan="2">specifična potrebna toplota za ogrevanje stavbe</td>
-        <td class="w-20 right">Q'<sub>H,nd,an</sub> (kWh/m2 an)</td>
+        <td class="w-20 right">Q'<sub>H,nd,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->specLetnaToplota, 2) ?></td>
     </tr>
 
@@ -66,7 +66,7 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td class="w-60" colspan="2">specifična potrebna toplota za hlajenje stavbe</td>
-        <td class="w-20 right">Q'<sub>C,nd,an</sub> (kWh/m2 an)</td>
+        <td class="w-20 right">Q'<sub>C,nd,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->specLetniHlad, 2) ?></td>
     </tr>
 
@@ -100,7 +100,7 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td class="w-60" colspan="2">specifična potrebna toplota za pripravo TSV</td>
-        <td class="w-20 right">Q'<sub>W,nd,an</sub> (kWh/m2 an)</td>
+        <td class="w-20 right">Q'<sub>W,nd,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->specPotrebaTSV, 2) ?></td>
     </tr>
 
@@ -134,7 +134,7 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td class="w-60" colspan="2">specifična potrebna energija za vlaženje zraka</td>
-        <td class="w-20 right">Q'<sub>HU,nd,an</sub> (kWh/m2 an)</td>
+        <td class="w-20 right">Q'<sub>HU,nd,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->specEnergijaNavlazevanje, 2) ?></td>
     </tr>
 
@@ -169,7 +169,7 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td class="w-60" colspan="2">specifična potrebna energija za razvlaženje zraka</td>
-        <td class="w-20 right">Q'<sub>DHU,nd,an</sub> (kWh/m2 an)</td>
+        <td class="w-20 right">Q'<sub>DHU,nd,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->specEnergijaRazvlazevanje, 2) ?></td>
     </tr>
 </table>
@@ -368,7 +368,7 @@ za področje TSS</h1>
     </tr>
 
     <tr>
-        <td colspan="3">specifična potrebna skupna primarna energija za delovanje TSS E'<sub>Ptot,an</sub> (kWh/m2 an)</td>
+        <td colspan="3">specifična potrebna skupna primarna energija za delovanje TSS E'<sub>Ptot,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->specificnaPrimarnaEnergija, 1) ?></td>
     </tr>
 
@@ -380,7 +380,7 @@ za področje TSS</h1>
     </tr>
 
     <tr>
-        <td colspan="3">korigirana specifična potrebna skupna primarna energija za delovanje TSS E'<sub>Ptot,kor,an</sub> (kWh/m2 an)</td>
+        <td colspan="3">korigirana specifična potrebna skupna primarna energija za delovanje TSS E'<sub>Ptot,kor,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->korigiranaSpecificnaPrimarnaEnergija, 1) ?></td>
     </tr>
 
@@ -392,7 +392,7 @@ za področje TSS</h1>
     </tr>
 
     <tr>
-        <td colspan="3">dovoljena korigirana specifična potrebna skupna primarna energija za delovanje stavbe E'<sub>Ptot,kor,dov,an</sub> (kWh/m2 an)</td>
+        <td colspan="3">dovoljena korigirana specifična potrebna skupna primarna energija za delovanje stavbe E'<sub>Ptot,kor,dov,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija, 1) ?></td>
     </tr>
 

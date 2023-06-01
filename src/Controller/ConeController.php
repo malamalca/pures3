@@ -10,30 +10,30 @@ class ConeController
     /**
      * Prikaz podatkov o ovoju cone
      *
-     * @param string $projectName Building name
+     * @param string $projectId Building name
      * @param string $conaId Id cone
      * @return void
      */
-    public function ovoj($projectName, $conaId)
+    public function ovoj($projectId, $conaId)
     {
-        $cone = App::loadProjectCalculation($projectName, 'cone');
+        $cone = App::loadProjectCalculation($projectId, 'cone');
 
-        App::set('projectName', $projectName);
+        App::set('projectId', $projectId);
         App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
     }
 
     /**
      * Prikaz analize cone
      *
-     * @param string $projectName Building name
+     * @param string $projectId Building name
      * @param string $conaId Id cone
      * @return void
      */
-    public function analiza($projectName, $conaId)
+    public function analiza($projectId, $conaId)
     {
-        $cone = App::loadProjectCalculation($projectName, 'cone');
+        $cone = App::loadProjectCalculation($projectId, 'cone');
 
-        App::set('projectName', $projectName);
+        App::set('projectId', $projectId);
         App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
     }
 }

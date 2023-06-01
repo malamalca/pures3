@@ -13,40 +13,43 @@ class ProjektiController
      * @param string|null $projectName Building name
      * @return void
      */
-    public function view($projectName = null)
+    public function view($projectId = null)
     {
-        if (empty($projectName)) {
+        if (empty($projectId)) {
             App::redirect(App::url('/projects/index'));
         }
 
-        App::set('projectName', $projectName);
-        App::set('splosniPodatki', App::loadProjectData($projectName, 'splosniPodatki'));
-        App::set('stavba', App::loadProjectCalculation($projectName, 'stavba'));
-        App::set('cone', App::loadProjectCalculation($projectName, 'cone'));
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
+        App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
+        App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
     }
 
     /**
      * Prikaz analize projekta s področja gradbene fizike
      *
-     * @param string $projectName Building name
+     * @param string $projectId Building name
      * @return void
      */
-    public function analiza($projectName)
+    public function analiza($projectId)
     {
-        App::set('splosniPodatki', App::loadProjectData($projectName, 'splosniPodatki'));
-        App::set('stavba', App::loadProjectCalculation($projectName, 'stavba'));
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
+        App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
+        App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
     }
 
     /**
      * Prikaz analize projekta s področja TSS
      *
-     * @param string $projectName Building name
+     * @param string $projectId Building name
      * @return void
      */
-    public function snes($projectName)
+    public function snes($projectId)
     {
-        App::set('splosniPodatki', App::loadProjectData($projectName, 'splosniPodatki'));
-        App::set('stavba', App::loadProjectCalculation($projectName, 'stavba'));
-        App::set('sistemi', App::loadProjectCalculation($projectName, 'TSS' . DS . 'ogrevanje.json'));
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
+        App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
+        App::set('sistemi', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje.json'));
     }
 }

@@ -7,6 +7,9 @@
 
 ?>
 <h1>Ovoj cone "<?= h($cona->naziv) ?>"</h1>
+<p>
+<a class="button" href="<?= App::url('/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+</p>
 
 
 <table border="1">
@@ -15,7 +18,7 @@
         <?= implode(PHP_EOL, array_map(fn($elementOvoja) =>
             '<th class="center">' . 
             '<a class="button" href="' .
-            App::url('/konstrukcije/view/' . $projectName . '/' . $elementOvoja->idKonstrukcije) .
+            App::url('/konstrukcije/view/' . $projectId . '/' . $elementOvoja->idKonstrukcije) .
             '">' . $elementOvoja->idKonstrukcije . '</a>' . '</th>', $elementiOvoja)) ?>
     </tr>
     <tr>

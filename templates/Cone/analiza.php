@@ -1,8 +1,11 @@
 <?php
+    use App\Core\App;
     use App\Lib\Calc;
 ?>
 <h1>Analiza cone "<?= h($cona->naziv) ?>"</h1>
-
+<p>
+<a class="button" href="<?= App::url('/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+</p>
 
 <table border="1">
 <thead>
