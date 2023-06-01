@@ -21,6 +21,18 @@
     }
 ?>
 </p>
+<p>
+<?php
+    $vrsteTSS = ['ogrevanje' => $ogrevanje, 'prezracevanje' => $prezracevanje, 'razsvetljava' => $razsvetljava];
+    foreach ($vrsteTSS as $vrstaTSS => $sistemi) {
+        foreach ($sistemi as $sistem) {
+?>
+<a class="button" href="<?= App::url('/TSS/' . $vrstaTSS . '/' . $projectId . '/' . $sistem->id) ?>">TSS "<?= $sistem->id ?>"</a>
+<?php
+        }
+    }
+?>
+</p>
 <table border="1">
     <tr>
         <td colspan="2">Naziv projekta</td>

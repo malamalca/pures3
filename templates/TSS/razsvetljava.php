@@ -1,9 +1,12 @@
 <?php
+    use App\Core\App;
     use App\Lib\Calc;
 ?>
 <h1>Analiza TSS Razsvetljava "<?= h($sistem->id) ?>"</h1>
 
-
+<p>
+<a class="button" href="<?= App::url('/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+</p>
 <table border="1">
     <tr>
         <td colspan="1">Toplotna Cona:</td>

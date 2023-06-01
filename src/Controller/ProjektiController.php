@@ -23,6 +23,10 @@ class ProjektiController
         App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
         App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
         App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
+
+        App::set('ogrevanje', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
+        App::set('prezracevanje', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
+        App::set('razsvetljava', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
     }
 
     /**

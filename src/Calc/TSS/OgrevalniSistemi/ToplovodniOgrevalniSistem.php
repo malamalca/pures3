@@ -121,7 +121,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
 
                 // TODO: eno so vračljive izgube v okolico, druge v sistem
-                $vneseneIzgube[$k] -= $v;
+                //$vneseneIzgube[$k] -= $v;
             }
         }
 
