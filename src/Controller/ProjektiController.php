@@ -10,7 +10,7 @@ class ProjektiController
     /**
      * Prikaz splosnih podatkov projekta
      *
-     * @param string|null $projectName Building name
+     * @param string|null $projectId Building name
      * @return void
      */
     public function view($projectId = null)
