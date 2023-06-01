@@ -9,6 +9,8 @@ use App\Lib\Calc;
 
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
+    public string $namen;
+
     /**
      * Loads configuration from json|stdClass
      *
@@ -24,6 +26,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         }
 
         $this->energent = EnergentFactory::create($config->energent ?? 'default');
+        $this->namen = $config->namen ?? 'ogrevanje';
     }
 
     /**
@@ -61,6 +64,12 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         $this->energijaPoEnergentih = [];
 
         $vneseneIzgube = $cona->energijaOgrevanje;
+        if ($this->namen == 'ogrevanje') {
+            $vneseneIzgube = $cona->energijaOgrevanje;
+        }
+        if ($this->namen == 'TSV') {
+            $vneseneIzgube = $cona->potrebaTSV;
+        }
 
         $potrebnaElektricnaEnergija = [];
 
@@ -110,6 +119,9 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             }
             foreach ($razvod->vracljiveIzgubeAux as $k => $v) {
                 $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
+
+                // TODO: eno so vračljive izgube v okolico, druge v sistem
+                $vneseneIzgube[$k] -= $v;
             }
         }
 
@@ -118,7 +130,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
             // dodam k vnesenim izgubam
             foreach ($izgubeHranilnika as $k => $v) {
-                //$vneseneIzgube[$k] += $v;
+                $vneseneIzgube[$k] += $v;
             }
 
             foreach ($hranilnik->vracljiveIzgube as $k => $v) {

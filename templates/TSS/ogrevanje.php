@@ -23,7 +23,9 @@
     </tr>
 </table>
 
-
+<?php
+    if (!empty($sistem->prenosniki)) {
+?>
 <h2>Analiza končnih prenosnikov</h2>
 <table border="1">
     <thead>
@@ -36,7 +38,7 @@
     </thead>
 
     <?php
-            foreach ($sistem->prenosniki as $prenosnik) {
+        foreach ($sistem->prenosniki as $prenosnik) {
     ?>
     <tr>
         <td rowspan="3"><?= h($prenosnik->id) ?></td>
@@ -55,9 +57,12 @@
         <th class="right w-6"><?= $this->numFormat(array_sum($prenosnik->vracljiveIzgubeAux), 0) ?></th>
     </tr>
     <?php
-            }
+        }
     ?>
 </table>
+<?php
+    }
+?>
 
 <h2>Analiza razvoda</h2>
 <table border="1">

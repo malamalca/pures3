@@ -74,18 +74,23 @@ class IzracunTSS extends Command
                 if ($sistemOgrevanja) {
                     $sistemOgrevanja->analiza($cona, $okolje);
 
-                    foreach ($sistem->prenosniki as $k => $prenosnik) {
-                        $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
-                        $prenosnik->potrebnaElektricnaEnergija =
-                            $sistemOgrevanja->koncniPrenosniki[$k]->potrebnaElektricnaEnergija;
-                        $prenosnik->vracljiveIzgubeAux = $sistemOgrevanja->koncniPrenosniki[$k]->vracljiveIzgubeAux;
+                    if (!empty($sistem->prenosniki)) {
+                        foreach ($sistem->prenosniki as $k => $prenosnik) {
+                            $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
+                            $prenosnik->potrebnaElektricnaEnergija =
+                                $sistemOgrevanja->koncniPrenosniki[$k]->potrebnaElektricnaEnergija;
+                            $prenosnik->vracljiveIzgubeAux = $sistemOgrevanja->koncniPrenosniki[$k]->vracljiveIzgubeAux;
+                        }
                     }
 
-                    foreach ($sistem->razvodi as $k => $razvod) {
-                        $razvod->toplotneIzgube = $sistemOgrevanja->razvodi[$k]->toplotneIzgube;
-                        $razvod->vracljiveIzgube = $sistemOgrevanja->razvodi[$k]->vracljiveIzgube;
-                        $razvod->potrebnaElektricnaEnergija = $sistemOgrevanja->razvodi[$k]->potrebnaElektricnaEnergija;
-                        $razvod->vracljiveIzgubeAux = $sistemOgrevanja->razvodi[$k]->vracljiveIzgubeAux;
+                    if (!empty($sistem->razvodi)) {
+                        foreach ($sistem->razvodi as $k => $razvod) {
+                            $razvod->toplotneIzgube = $sistemOgrevanja->razvodi[$k]->toplotneIzgube;
+                            $razvod->vracljiveIzgube = $sistemOgrevanja->razvodi[$k]->vracljiveIzgube;
+                            $razvod->potrebnaElektricnaEnergija =
+                                $sistemOgrevanja->razvodi[$k]->potrebnaElektricnaEnergija;
+                            $razvod->vracljiveIzgubeAux = $sistemOgrevanja->razvodi[$k]->vracljiveIzgubeAux;
+                        }
                     }
 
                     if (!empty($sistem->hranilniki)) {

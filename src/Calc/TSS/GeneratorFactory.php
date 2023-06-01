@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\TSS;
 
 use App\Calc\TSS\Generatorji\ToplotnaCrpalkaZrakVoda;
+use App\Calc\TSS\Generatorji\ToplotnaCrpalkaZrakVodaSTV;
 
 class GeneratorFactory
 {
@@ -19,6 +20,8 @@ class GeneratorFactory
         switch ($type) {
             case 'TC_zrakvoda':
                 return new ToplotnaCrpalkaZrakVoda($options);
+            case 'TC_zrakvodaSTV':
+                return new ToplotnaCrpalkaZrakVodaSTV($options);
             default:
                 throw new \Exception(sprintf('Generator : Vrsta "%s" ne obstaja', $type));
         }

@@ -5,9 +5,9 @@ namespace App\Calc\TSS\Generatorji;
 
 use App\Lib\Calc;
 
-class ToplotnaCrpalkaZrakVoda extends Generator
+class ToplotnaCrpalkaZrakVodaSTV extends Generator
 {
-    public const REZIMI = ['w-7', 'w2', 'w7', 'w10'];
+    public const REZIMI = ['w-7', 'w2', 'w7', 'w10', 'w20'];
     public const REZIMI_TEMPERATURE = [-7, 2, 7, 10, 20];
 
     public const TRAJANJE = [
@@ -92,14 +92,17 @@ class ToplotnaCrpalkaZrakVoda extends Generator
 
             $temperaturaEvaporacije = 2;
             $temperaturaKondenzacije = 35;
+            $temperaturaPonora = $sistem->rezim->temperaturaPonora();
 
             $cop[$rezim] = $this->cop[$rezim] ?? $this->nazivniCOP *
-                ($sistem->rezim->temperaturaPonora() + 273.15) / ($temperaturaKondenzacije + 273.15) *
+                ($temperaturaPonora + 273.15) / ($temperaturaKondenzacije + 273.15) *
                 ($temperaturaKondenzacije - $temperaturaEvaporacije) /
-                ($sistem->rezim->temperaturaPonora() - self::REZIMI_TEMPERATURE[$ix]);
+                ($temperaturaPonora - self::REZIMI_TEMPERATURE[$ix]);
 
             // prilagoditveni faktor glede na režuim
-            $cop[$rezim] = $cop[$rezim] * $sistem->rezim->faktorDeltaTempTC();
+            // $faktorRezima = $sistem->rezim->faktorDeltaTempTC();
+            $faktorRezima = 1;
+            $cop[$rezim] = $cop[$rezim] * $faktorRezima;
         }
 
         $En = [];
@@ -126,7 +129,7 @@ class ToplotnaCrpalkaZrakVoda extends Generator
                 //  - radiatorji lookup glede na % ($FC_i_round+2) * 10
                 //  - ploskovna mokri = 0.985 ostali = 0.975
                 //  - za zrak ni korekcije = 1
-                $faktroCOPzaOgrevala = 0.985;
+                $faktroCOPzaOgrevala = 1;
 
                 $COP_t = $cop[$rezim] * $faktroCOPzaOgrevala;
 
