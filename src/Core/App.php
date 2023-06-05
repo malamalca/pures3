@@ -57,9 +57,11 @@ class App
         }
 
         if (empty($ret)) {
-            $view = new View(self::getInstance()->_vars);
+            $view = new View(self::getInstance()->_vars, $controller->viewOptions ?? []);
 
-            $view->render($controllerName, $methodName);
+            $contents = $view->render($controllerName, $methodName);
+
+            echo $contents;
         }
     }
 

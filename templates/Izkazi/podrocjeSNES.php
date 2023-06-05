@@ -2,14 +2,12 @@
 za področje TSS</h1>
 
 <h3>Potrebna energija za zagotavljanje pogojev notranjega okolja:</h3>
-<table border="1" width="100%">
-    <thead>
+<table border="1" cellpadding="3" width="100%">
     <tr>
         <th colspan="4">Potrebna toplota za ogrevanje Q<sub>H,nd,an</sub> (kWh/an):</th>
     </tr>
-    </thead>
     <tr>
-        <td class="" colspan="3">sistem za ogrevanje – energetska cona ali stavba</td>
+        <td class="w-80" colspan="3">sistem za ogrevanje – energetska cona ali stavba</td>
         <td class="w-20 center">QH,nd,an<br />(kWh/an)</td>
     </tr>
     <?php
@@ -18,7 +16,7 @@ za področje TSS</h1>
     ?>
     <tr>
         <td class="w-5 center"><?= $i ?></td>
-        <td class="w-55" colspan="2"><?= h($cona->naziv) ?></td>
+        <td class="w-75" colspan="2"><?= h($cona->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($cona->skupnaEnergijaOgrevanje, 2) ?></td>
     </tr>
     <?php
@@ -37,11 +35,9 @@ za področje TSS</h1>
     </tr>
 
 
-    <thead>
     <tr>
         <th colspan="4">Potrebna toplota za hlajenje Q<sub>C,nd,an</sub> (kWh/an):</th>
     </tr>
-    </thead>
     <tr>
         <td class="" colspan="3">sistem za hlajenje – energetska cona ali stavba</td>
         <td class="w-20 center">Q<sub>C,nd,an</sub><br />(kWh/an)</td>
@@ -52,7 +48,7 @@ za področje TSS</h1>
     ?>
     <tr>
         <td class="w-5 center"><?= $i ?></td>
-        <td class="w-55" colspan="2"><?= h($cona->naziv) ?></td>
+        <td class="w-75" colspan="2"><?= h($cona->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($cona->skupnaEnergijaHlajenje, 2) ?></td>
     </tr>
     <?php
@@ -71,11 +67,9 @@ za področje TSS</h1>
     </tr>
 
 
-    <thead>
     <tr>
         <th colspan="4">Potrebna toplota za TSV Q<sub>W,nd,an</sub> (kWh/an):</th>
     </tr>
-    </thead>
     <tr>
         <td class="" colspan="3">sistem za pripravo TSV – energetska cona ali stavba</td>
         <td class="w-20 center">Q<sub>W,nd,an</sub><br />(kWh/an)</td>
@@ -86,7 +80,7 @@ za področje TSS</h1>
     ?>
     <tr>
         <td class="w-5 center"><?= $i ?></td>
-        <td class="w-55" colspan="2"><?= h($cona->naziv) ?></td>
+        <td class="w-75" colspan="2"><?= h($cona->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($cona->skupnaPotrebaTSV, 2) ?></td>
     </tr>
     <?php
@@ -105,11 +99,9 @@ za področje TSS</h1>
     </tr>
 
 
-    <thead>
     <tr>
         <th colspan="4">Potrebna energija za navlaževanje zraka Q<sub>HU,nd,an</sub> (kWh/an):</th>
     </tr>
-    </thead>
     <tr>
         <td class="" colspan="3">energetska cona ali stavba</td>
         <td class="w-20 center">Q<sub>HU,nd,an</sub><br />(kWh/an)</td>
@@ -120,7 +112,7 @@ za področje TSS</h1>
     ?>
     <tr>
         <td class="w-5 center"><?= $i ?></td>
-        <td class="w-55" colspan="2"><?= h($cona->naziv) ?></td>
+        <td class="w-75" colspan="2"><?= h($cona->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($cona->skupnaEnergijaNavlazevanje, 2) ?></td>
     </tr>
     <?php
@@ -138,13 +130,9 @@ za področje TSS</h1>
         <td class="w-20 center"><?= $this->numFormat($stavba->specEnergijaNavlazevanje, 2) ?></td>
     </tr>
 
-
-
-    <thead>
     <tr>
         <th colspan="4">Potrebna energija za razvlaževanje zraka Q<sub>DHU,nd,an</sub> (kWh/an):</th>
     </tr>
-    </thead>
     <tr>
         <td class="" colspan="3">energetska cona ali stavba</td>
         <td class="w-20 center">Q<sub>DHU,nd,an</sub><br />(kWh/an)</td>
@@ -155,7 +143,7 @@ za področje TSS</h1>
     ?>
     <tr>
         <td class="w-5 center"><?= $i ?></td>
-        <td class="w-55" colspan="2"><?= h($cona->naziv) ?></td>
+        <td class="w-75" colspan="2"><?= h($cona->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($cona->skupnaEnergijaRazvlazevanje, 2) ?></td>
     </tr>
     <?php
@@ -177,29 +165,26 @@ za področje TSS</h1>
 
 <!-- ---------------------------------------------------------------------------------------------------------------- -->
 <h3>Dovedena energija za delovanje TSS:</h3>
-<table border="1" width="100%">
-    <thead>
+<table border="1" cellpadding="3" width="100%">
     <?php
-        
         $maxEnergentov = 0;
         foreach ($sistemiOgrevanja as $sistem) {
             if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
                 $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
             }
         }
+        $cellWidth = round(50/$maxEnergentov, 1);
     ?>
-
     <tr>
         <th colspan="<?= (3 + $maxEnergentov) ?>">Dovedena energija za ogrevanje E<sub>H,del,an</sub> (kWh/an):</th>
     </tr>
-    </thead>
 
     <tr>
-        <td colspan="3"></td>
+        <td class="w-50" colspan="3"></td>
         <?php
             for ($i = 0; $i < $maxEnergentov; $i++) {
         ?>
-        <td class="w-10 center">energent <?= ($i+1) ?></td>
+        <td class="center" style="width: <?= $cellWidth ?>%;">energent <?= ($i+1) ?></td>
         <?php 
             }
         ?>
@@ -212,12 +197,12 @@ za področje TSS</h1>
 
     <tr>
         <td class="w-5 center" rowspan="2"><?= $i ?></td>
-        <td class="w-55" rowspan="2"><?= h($sistem->id) ?></td>
+        <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
         <td class="w-10 center">vrsta</td>
         <?php
             foreach ($sistem->energijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
         ?>
-            <td class="w-10 center"><?= h($vrstaEnergenta) ?></td>
+            <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
         <?php
             }
         ?>
@@ -228,7 +213,7 @@ za področje TSS</h1>
         <?php
             foreach ($sistem->energijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
         ?>
-            <td class="w-10 center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
+            <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
         <?php
             }
         ?>
@@ -245,14 +230,10 @@ za področje TSS</h1>
 
 
 
-
-
-<table border="1" width="100%">
-    <thead>
+<table border="1" cellpadding="3" width="100%">
     <tr>
         <th colspan="4">Dovedena energija za mehansko prezračevanje E<sub>V,del,an</sub></th>
     </tr>
-    </thead>
     <?php
         $i = 1;
         foreach ($sistemiPrezracevanja as $sistem) {
@@ -269,11 +250,9 @@ za področje TSS</h1>
     ?>
 
 
-    <thead>
     <tr>
         <th colspan="4">Dovedena energija za razsvetljavo E<sub>L,an</sub></th>
     </tr>
-    </thead>
     <?php
         $i = 1;
         foreach ($sistemiRazsvetljave as $sistem) {
@@ -291,31 +270,23 @@ za področje TSS</h1>
 
 
 
-    <thead>
     <tr>
         <th colspan="4">Dovedena energija za navlaževanje E<sub>HU,an</sub></th>
     </tr>
-    </thead>
 
-    <thead>
     <tr>
         <th colspan="4">Dovedena energija za navlaževanje E<sub>DHU,an</sub></th>
     </tr>
-    </thead>
 
-    <thead>
     <tr>
         <th colspan="3">Prilagojenost stavbe na pametne sisteme SRI (-):</th>
         <th class="w-20 center"></th>
     </tr>
-    </thead>
 
 
-    <thead>
     <tr>
         <th colspan="4">Oddani energent, proizveden v, na ob stavbi ali njeni neposredni bližini toplote Q<sub>exp</sub>, E<sub>exp,el</sub> (kWh/an)</th>
     </tr>
-    </thead>
     <tr>
         <td colspan="3">oddana toplota, proizvedena v, na, ob stavbi ali njeni neposredni bližini Q<sub>exp,an</sub> (kWh/an)</td>
         <td></td>
@@ -337,9 +308,9 @@ za področje TSS</h1>
 
 
 <h3>Kazalniki energijske učinkovitosti stavbe</h3>
-<table border="1" width="100%">
+<table border="1" cellpadding="3" width="100%">
     <tr>
-        <td colspan="3">neutežena dovedena energija E<sub>del,an</sub> (kWh/an)</td>
+        <td class="w-80" colspan="3">neutežena dovedena energija E<sub>del,an</sub> (kWh/an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->neutezenaDovedenaEnergija, 0) ?></td>
     </tr>
     <tr>
@@ -373,7 +344,7 @@ za področje TSS</h1>
     </tr>
 
     <tr>
-        <td>YH,nd (-)</td>
+        <td class="w-30">YH,nd (-)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->Y_Hnd, 1) ?></td>
         <td class="w-30">Yove (-)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->Y_ROVE, 1) ?></td>

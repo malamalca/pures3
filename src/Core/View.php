@@ -11,13 +11,20 @@ class View
     private $_vars = null;
 
     /**
+     * @var array $_options
+     */
+    private $_options = null;
+
+    /**
      * Constructor
      *
      * @param array $vars Passed variables
+     * @param array $options Passed options
      */
-    public function __construct(?array $vars = null)
+    public function __construct(?array $vars = null, ?array $options = null)
     {
         $this->_vars = $vars;
+        $this->_options = $options;
     }
 
     /**
@@ -25,17 +32,19 @@ class View
      *
      * @param string $controllerName Controller name
      * @param string $methodName Method name
-     * @return void
+     * @return string|false
      */
     public function render($controllerName, $methodName)
     {
         $App = App::getInstance();
 
         $templatePath = TEMPLATES . $controllerName . DS;
-        if ($App::isAjax()) {
-            $templatePath .= 'ajax' . DS;
+
+        $templateName = $methodName;
+        if (isset($this->_options['template'])) {
+            $templateFile = $this->_options['template'];
         }
-        $templateFile = realpath($templatePath . $methodName . '.php');
+        $templateFile = realpath($templatePath . $templateName . '.php');
 
         if (
             empty($templateFile) ||
@@ -60,11 +69,18 @@ class View
         }
 
         // output render data
-        if ($App::isAjax()) {
-            require TEMPLATES . 'layouts' . DS . 'ajax.php';
-        } else {
-            require TEMPLATES . 'layouts' . DS . 'default.php';
+        $layoutName = 'default';
+        if (isset($this->_options['layout'])) {
+            $layoutName = $this->_options['layout'];
         }
+        $layoutFile = realpath(TEMPLATES . 'layouts' . DS . $layoutName . '.php');
+
+        ob_start();
+        require $layoutFile;
+        $contents = ob_get_contents();
+        ob_end_clean();
+
+        return $contents;
     }
 
     /**

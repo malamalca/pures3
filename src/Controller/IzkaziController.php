@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Core\App;
+use App\Core\Configure;
 
 class IzkaziController
 {
@@ -35,6 +36,34 @@ class IzkaziController
         App::set('sistemiOgrevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
         App::set('sistemiRazsvetljave', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
         App::set('sistemiPrezracevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
+    }
+
+    /**
+     * Dfg
+     *
+     * @param string $projectId Building name
+     * @return mixed
+     */
+    public function pdf($projectId)
+    {
+        $view = new \App\Core\View([], ['layout' => 'pdf']);
+        $view->set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
+        $view->set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
+        $view->set('cone', App::loadProjectCalculation($projectId, 'cone'));
+        $view->set('tKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne'));
+        $view->set('ntKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne'));
+        $view->set('sistemiOgrevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
+        $view->set('sistemiRazsvetljave', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
+        $view->set('sistemiPrezracevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
+
+        $podrocjeGf = $view->render('Izkazi', 'podrocjeGf');
+        $podrocjeSnes = $view->render('Izkazi', 'podrocjeSNES');
+
+        $pdf = new \App\Core\TCPDFEngine(Configure::read('Pdf', []));
+        $pdf->newPage((string)$podrocjeGf);
+        $pdf->newPage((string)$podrocjeSnes);
+
+        return $pdf->render();
     }
 
     /**

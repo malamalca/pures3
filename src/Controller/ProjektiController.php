@@ -8,6 +8,17 @@ use App\Core\App;
 class ProjektiController
 {
     /**
+     * Prikaz seznama projektov
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $dirs = array_filter((array)scandir(PROJECTS), fn($d) => is_dir(PROJECTS . $d) && !in_array($d, ['.', '..']));
+        App::set('dirs', $dirs);
+    }
+
+    /**
      * Prikaz splosnih podatkov projekta
      *
      * @param string|null $projectId Building name

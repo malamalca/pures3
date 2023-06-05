@@ -63,28 +63,28 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $this->energijaPoEnergentih = [];
 
-        $vneseneIzgube = $cona->energijaOgrevanje;
+        $potrebnaEnergija = $cona->energijaOgrevanje;
         if ($this->namen == 'ogrevanje') {
-            $vneseneIzgube = $cona->energijaOgrevanje;
+            $potrebnaEnergija = $cona->energijaOgrevanje;
         }
         if ($this->namen == 'TSV') {
-            $vneseneIzgube = $cona->potrebaTSV;
+            $potrebnaEnergija = $cona->potrebaTSV;
         }
 
         $potrebnaElektricnaEnergija = [];
 
         foreach ($this->koncniPrenosniki as $koncniPrenosnik) {
-            $izgubePrenosnika = $koncniPrenosnik->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
+            $izgubePrenosnika = $koncniPrenosnik->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje);
 
             $elektricnaEnergijaPrenosnika =
-                $koncniPrenosnik->potrebnaElektricnaEnergija($vneseneIzgube, $this, $cona, $okolje);
+                $koncniPrenosnik->potrebnaElektricnaEnergija($potrebnaEnergija, $this, $cona, $okolje);
 
             $vracljiveIzgubeAux =
-                $koncniPrenosnik->vracljiveIzgubeAux($vneseneIzgube, $this, $cona, $okolje);
+                $koncniPrenosnik->vracljiveIzgubeAux($potrebnaEnergija, $this, $cona, $okolje);
 
             // seštejem vse izgube prenosnikov
             foreach ($izgubePrenosnika as $k => $v) {
-                $vneseneIzgube[$k] += $v;
+                $potrebnaEnergija[$k] += $v;
             }
             foreach ($elektricnaEnergijaPrenosnika as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
@@ -102,14 +102,19 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             }
 
             $izgubeRazvoda =
-                $razvod->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje, ['prenosnik' => $prenosnik]);
+                $razvod->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje, ['prenosnik' => $prenosnik]);
 
-            $elektricnaEnergijaRazvoda =
-                $razvod->potrebnaElektricnaEnergija($vneseneIzgube, $this, $cona, $okolje, ['prenosnik' => $prenosnik]);
+            $elektricnaEnergijaRazvoda = $razvod->potrebnaElektricnaEnergija(
+                $potrebnaEnergija,
+                $this,
+                $cona,
+                $okolje,
+                ['prenosnik' => $prenosnik]
+            );
 
             // dodam k vnesenim izgubam
             foreach ($izgubeRazvoda as $k => $v) {
-                $vneseneIzgube[$k] += $v;
+                $potrebnaEnergija[$k] += $v;
             }
             foreach ($elektricnaEnergijaRazvoda as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
@@ -121,45 +126,46 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
 
                 // TODO: eno so vračljive izgube v okolico, druge v sistem
-                //$vneseneIzgube[$k] -= $v;
+                // za sistem TSV je potrebno izgubam odšteti energijo črpalke
+                //$potrebnaEnergija[$k] -= $v;
             }
         }
 
         foreach ($this->hranilniki as $hranilnik) {
-            $izgubeHranilnika = $hranilnik->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
+            $izgubeHranilnika = $hranilnik->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje);
 
             // dodam k vnesenim izgubam
             foreach ($izgubeHranilnika as $k => $v) {
-                $vneseneIzgube[$k] += $v;
+                $potrebnaEnergija[$k] += $v;
             }
 
             foreach ($hranilnik->vracljiveIzgube as $k => $v) {
-                //$this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
+                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
             }
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // izgube ogrevala
         foreach ($this->generatorji as $generator) {
-            $izgubeGeneratorja = $generator->toplotneIzgube($vneseneIzgube, $this, $cona, $okolje);
+            $izgubeGeneratorja = $generator->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje);
 
             $elektricnaEnergijaGeneratorja =
-                $generator->potrebnaElektricnaEnergija($vneseneIzgube, $this, $cona, $okolje);
+                $generator->potrebnaElektricnaEnergija($potrebnaEnergija, $this, $cona, $okolje);
 
             $this->obnovljivaEnergija =
-                $generator->obnovljivaEnergija($vneseneIzgube, $this, $cona, $okolje);
+                $generator->obnovljivaEnergija($potrebnaEnergija, $this, $cona, $okolje);
 
-            // obračun energije po energentihž
+            // obračun energije po energentih
             // dodam k vnesenim izgubam
             foreach ($izgubeGeneratorja as $k => $v) {
-                $vneseneIzgube[$k] += $v;
+                $potrebnaEnergija[$k] += $v;
             }
             foreach ($elektricnaEnergijaGeneratorja as $k => $v) {
                 $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
             }
         }
 
-        $this->potrebnaEnergija = $vneseneIzgube;
+        $this->potrebnaEnergija = $potrebnaEnergija;
         $this->potrebnaElektricnaEnergija = $potrebnaElektricnaEnergija;
 
         foreach ($this->potrebnaEnergija as $k => $v) {
