@@ -173,7 +173,11 @@ class App
     public static function getProjectFolder($projectId, $subfolder = null)
     {
         if (defined('CLI')) {
-            $destFolder = getcwd() . DS;
+            if (empty($projectId)) {
+                $destFolder = getcwd() . DS;
+            } else {
+                $destFolder = PROJECTS . $projectId . DS;
+            }
         } else {
             $destFolder = PROJECTS . $projectId . DS;
         }
