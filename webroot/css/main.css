@@ -519,6 +519,10 @@ template {
   font-size: 120% !important;
 }
 
+.strong {
+  font-weight: bold;
+}
+
 .noborder {
   border: none !important;
 }

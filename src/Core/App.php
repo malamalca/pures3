@@ -164,6 +164,28 @@ class App
     }
 
     /**
+     * Vrne lokacijo projekta
+     *
+     * @param string $projectId Id projekta
+     * @param string|null $subfolder Podmapa s podaki ali z izračuni
+     * @return string
+     */
+    public static function getProjectFolder($projectId, $subfolder = null)
+    {
+        if (defined('CLI')) {
+            $destFolder = PROJECTS . $projectId . DS;
+        } else {
+            $destFolder = PROJECTS . $projectId . DS;
+        }
+
+        if ($subfolder) {
+            $destFolder .= $subfolder . DS;
+        }
+
+        return $destFolder;
+    }
+
+    /**
      * Vrne datoteko z izvodnimi podatki za izračun.
      *
      * @param string $projectId Id projekta

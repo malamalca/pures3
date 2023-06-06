@@ -1,7 +1,7 @@
 <h1>Energijska učinkovitost energetsko manj stavbe –
 za področje gradbene fizike</h1>
 
-<h2>Kazalniki</h2>
+<h3>Kazalniki</h3>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
@@ -310,14 +310,14 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="4">Koeficient transmisijskih H'tr (W/K) in ventilacijskih H've (W/K) toplotnih izgub:</th>
+        <th colspan="4">Koeficient transmisijskih H'<sub>tr</sub> (W/K) in ventilacijskih H'<sub>ve</sub> (W/K) toplotnih izgub:</th>
     </tr>
     </thead>
 
     <tr>
         <td class="w-60" colspan="2">energetske cone oziroma stavba</td>
-        <td class="w-20 center">H'tr</td>
-        <td class="w-20 center">H've</td>
+        <td class="w-20 center">H'<sub>tr</sub></td>
+        <td class="w-20 center">H'<sub>ve</sub></td>
     </tr>
     <tr>
         <td class="w-5 center"></td>
@@ -347,14 +347,14 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="4">Potrebna toplota za ogrevanje QH,nd,an (kWh/an) in potrebna odvedena toplota za hlajenje QC,nd,an (kWh/an):</th>
+        <th colspan="4">Potrebna toplota za ogrevanje Q<sub>H,nd,an</sub> (kWh/an) in potrebna odvedena toplota za hlajenje Q<sub>C,nd,an</sub> (kWh/an):</th>
     </tr>
     </thead>
 
     <tr>
         <td class="w-60" colspan="2">energetske cone oziroma stavba</td>
-        <td class="w-20 center">QH,nd,an<br />(kWh/an)</td>
-        <td class="w-20 center">QC,nd,an<br />(kWh/an)</td>
+        <td class="w-20 center">Q<sub>H,nd,an</sub><br />(kWh/an)</td>
+        <td class="w-20 center">Q<sub>C,nd,an</sub><br />(kWh/an)</td>
     </tr>
     <tr>
         <td class="w-5 center"></td>
@@ -384,14 +384,14 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="4">Specifična potrebna toplota za ogrevanje Q'H,nd,an (kWh/(m2an)) in specifična potrebna odvedena toplota za hlajenje Q'C,nd,an (kWh/(m2an)):</th>
+        <th colspan="4">Specifična potrebna toplota za ogrevanje Q'<sub>H,nd,an</sub> (kWh/(m2an)) in specifična potrebna odvedena toplota za hlajenje Q'<sub>C,nd,an</sub> (kWh/(m2an)):</th>
     </tr>
     </thead>
 
     <tr>
         <td class="w-60" colspan="2">energetske cone oziroma stavba</td>
-        <td class="w-20 center">Q'H,nd,an<br />(kWh/m2an)</td>
-        <td class="w-20 center">Q'C,nd,an<br />(kWh/m2an)</td>
+        <td class="w-20 center">Q'<sub>H,nd,an</sub><br />(kWh/m2an)</td>
+        <td class="w-20 center">Q'<sub>C,nd,an</sub><br />(kWh/m2an)</td>
     </tr>
     <tr>
         <td class="w-5 center"></td>

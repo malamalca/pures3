@@ -14,6 +14,23 @@ class IzkaziController
      * @param string $projectId Building name
      * @return void
      */
+    public function splosniPodatki($projectId)
+    {
+        App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
+        App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
+        App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
+        App::set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
+
+        $tssFolder = App::getProjectFolder($projectId, 'izracuni') . 'TSS' . DS;
+        App::set('sistemi', array_filter((array)scandir($tssFolder), fn($d) => is_file($tssFolder . $d)));
+    }
+
+    /**
+     * Prvi del izkaza - splošni podatki
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
     public function podrocjeGf($projectId)
     {
         App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
@@ -47,6 +64,7 @@ class IzkaziController
     public function pdf($projectId)
     {
         $view = new \App\Core\View([], ['layout' => 'pdf']);
+        $view->set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
         $view->set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
         $view->set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
         $view->set('cone', App::loadProjectCalculation($projectId, 'cone'));
@@ -56,10 +74,15 @@ class IzkaziController
         $view->set('sistemiRazsvetljave', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
         $view->set('sistemiPrezracevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
 
+        $tssFolder = App::getProjectFolder($projectId, 'izracuni') . 'TSS' . DS;
+        $view->set('sistemi', array_filter((array)scandir($tssFolder), fn($d) => is_file($tssFolder . $d)));
+
+        $splosniPodatki = $view->render('Izkazi', 'splosniPodatki');
         $podrocjeGf = $view->render('Izkazi', 'podrocjeGf');
         $podrocjeSnes = $view->render('Izkazi', 'podrocjeSNES');
 
         $pdf = new \App\Core\TCPDFEngine(Configure::read('Pdf', []));
+        $pdf->newPage((string)$splosniPodatki);
         $pdf->newPage((string)$podrocjeGf);
         $pdf->newPage((string)$podrocjeSnes);
 

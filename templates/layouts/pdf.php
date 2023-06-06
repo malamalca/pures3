@@ -8,6 +8,9 @@
         .green {
             color: #00ff00;
         }
+        .checkbox {
+            text-align: center;
+        }
         th {
             background-color: #c0c0c0;
             padding: 3;
