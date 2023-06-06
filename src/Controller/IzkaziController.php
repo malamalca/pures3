@@ -5,6 +5,8 @@ namespace App\Controller;
 
 use App\Core\App;
 use App\Core\Configure;
+use App\Core\Pdf;
+use App\Core\View;
 
 class IzkaziController
 {
@@ -63,7 +65,7 @@ class IzkaziController
      */
     public function pdf($projectId)
     {
-        $view = new \App\Core\View([], ['layout' => 'pdf']);
+        $view = new View([], ['layout' => 'pdf']);
         $view->set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
         $view->set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
         $view->set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
@@ -81,7 +83,7 @@ class IzkaziController
         $podrocjeGf = $view->render('Izkazi', 'podrocjeGf');
         $podrocjeSnes = $view->render('Izkazi', 'podrocjeSNES');
 
-        $pdf = new \App\Core\TCPDFEngine(Configure::read('Pdf', []));
+        $pdf = new Pdf(Configure::read('Pdf', []));
         $pdf->newPage((string)$splosniPodatki);
         $pdf->newPage((string)$podrocjeGf);
         $pdf->newPage((string)$podrocjeSnes);

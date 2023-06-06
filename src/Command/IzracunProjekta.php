@@ -22,5 +22,6 @@ class IzracunProjekta extends Command
         (new IzracunCone())->run($projectId);
         (new IzracunStavbe())->run($projectId);
         (new IzracunTSS())->run($projectId);
+        (new PdfIzkaz())->run($projectId);
     }
 }

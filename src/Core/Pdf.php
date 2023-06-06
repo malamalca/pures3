@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-class TCPDFEngine extends \TCPDF
+class Pdf extends \TCPDF
 {
     private array $_options = [];
 
