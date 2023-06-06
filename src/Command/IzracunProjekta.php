@@ -20,8 +20,8 @@ class IzracunProjekta extends Command
         (new IzracunOkolja())->run($projectId);
         (new IzracunKonstrukcij())->run($projectId);
         (new IzracunCone())->run($projectId);
-        (new IzracunStavbe())->run($projectId);
         (new IzracunTSS())->run($projectId);
+        (new IzracunStavbe())->run($projectId);
         (new PdfIzkaz())->run($projectId);
     }
 }

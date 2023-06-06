@@ -31,7 +31,7 @@ class IzracunKonstrukcij extends Command
         App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne', $netransparentneKonsOut);
 
         /** @var array $transparentneKonstrukcije */
-        $transparentneKonstrukcije = App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne');
+        $transparentneKonstrukcije = App::loadProjectData($projectId, 'konstrukcije' . DS . 'transparentne');
         $transparentneKonsOut = [];
         foreach ($transparentneKonstrukcije as $konstrukcija) {
             $transparentneKonsOut[] = CalcKonstrukcije::transparentne($konstrukcija, $okolje);

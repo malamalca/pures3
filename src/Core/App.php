@@ -173,7 +173,7 @@ class App
     public static function getProjectFolder($projectId, $subfolder = null)
     {
         if (defined('CLI')) {
-            $destFolder = PROJECTS . $projectId . DS;
+            $destFolder = getcwd() . DS;
         } else {
             $destFolder = PROJECTS . $projectId . DS;
         }
@@ -195,12 +195,7 @@ class App
      */
     public static function loadProjectData($projectId, $projectFile, $subfolder = 'podatki')
     {
-        if (defined('CLI')) {
-            return '';
-        } else {
-            $sourceFolder = PROJECTS . $projectId . DS . $subfolder . DS;
-        }
-
+        $sourceFolder = self::getProjectFolder($projectId, $subfolder);
         if (!is_dir($sourceFolder)) {
             throw new \Exception(sprintf('Projekt "%s" ne obstaja.', $projectId));
         }
@@ -236,7 +231,7 @@ class App
     public static function loadProjectCalculation($projectId, $projectFile)
     {
         if (substr($projectFile, -1, 1) == DS) {
-            $sourceFolder = PROJECTS . $projectId . DS . 'izracuni' . DS . $projectFile;
+            $sourceFolder = self::getProjectFolder($projectId, 'izracuni') . $projectFile;
             $sistemi = [];
             $iterator = new \DirectoryIterator($sourceFolder);
             foreach ($iterator as $info) {
@@ -275,16 +270,11 @@ class App
      */
     public static function saveProjectCalculation($projectId, $projectFile, $data, $subfolder = 'izracuni')
     {
-        if (defined('CLI')) {
-            $destFolder = PROJECTS . $projectId . DS . $subfolder . DS;
-        } else {
-            $destFolder = PROJECTS . $projectId . DS . $subfolder . DS;
-        }
-
+        $destFolder = self::getProjectFolder($projectId, $subfolder);
         $destFilename = $destFolder . $projectFile . '.json';
 
         if (!is_dir(dirname($destFilename))) {
-            mkdir(dirname($destFolder), 0777, true);
+            mkdir(dirname($destFilename), 0777, true);
         }
 
         if (!is_string($data)) {
