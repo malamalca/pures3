@@ -7,10 +7,14 @@
 
 Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
 
-## Namestitev aplikacije
+## Namestitev aplikacije v sistemu Windows
 
-1. Prenesite [Composer](https://getcomposer.org/doc/00-intro.md) oz. ga posodobite na zadnjo verzijo `composer self-update`.
-2. V ukazni vrstici se postavite v zeljeno mapo in zaženite `composer create-project --prefer-dist --no-dev malamalca/pures3`.
+1. Prenesite [PHP](https://windows.php.net/downloads/releases/php-8.2.6-nts-Win32-vs16-x64.zip)
+2. Zip datoteko razširite na trdi disk računalnika, v mapo C:\php
+3. Zaženite ukazno vrstico (tipka "Win"+R, vpišete `cmd` in "Enter")
+4. PHP dodajte v seznam privzetih poti z ukazom `setx path "%path%;C:\php\"`
+5. Prenesite in namestite [Composer](https://getcomposer.org/Composer-Setup.exe).
+6. Namestite Pures 3 z ukazom `composer create-project --no-dev malamalca/pures3`.
 
 ## Uporaba
 
@@ -20,3 +24,5 @@ Analizo projekta se izvede iz ukazne vrstice z ukazom:
 ```
 bin/pures IzracunProjekta TestniProjekt
 ```
+
+Po preračunu se izkaz gradbene fizike shrani v podmapo /projects/TestniProjekt/pdf/izkaz.pdf
