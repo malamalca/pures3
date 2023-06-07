@@ -25,10 +25,12 @@
 <?php
     $vrsteTSS = ['ogrevanje' => $ogrevanje, 'prezracevanje' => $prezracevanje, 'razsvetljava' => $razsvetljava];
     foreach ($vrsteTSS as $vrstaTSS => $sistemi) {
-        foreach ($sistemi as $sistem) {
+        if ($sistemi) {
+            foreach ($sistemi as $sistem) {
 ?>
 <a class="button" href="<?= App::url('/TSS/' . $vrstaTSS . '/' . $projectId . '/' . $sistem->id) ?>">TSS "<?= $sistem->id ?>"</a>
 <?php
+            }
         }
     }
 ?>
