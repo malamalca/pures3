@@ -73,6 +73,22 @@ abstract class KoncniPrenosnik
             VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');
         $this->regulacijaTemperature = VrstaRegulacijeTemperature::from($config->regulacijaTemperature ?? 'centralna');
     }
+    
+    /**
+     * Analiza podsistema
+     *
+     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return void
+     */
+    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    {
+        $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+    }
 
     /**
      * Izračun toplotnih izgub

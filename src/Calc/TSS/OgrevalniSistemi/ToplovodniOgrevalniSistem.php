@@ -27,10 +27,15 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         }
 
         $this->energent = EnergentFactory::create($config->energent ?? 'default');
-        $this->namen = $config->namen ?? 'ogrevanje';
+        
         $this->tsv = $config->tsv ?? null;
         if ($this->tsv && !empty($config->tsv->rezim)) {
             $this->tsv->rezim = VrstaRezima::from($config->tsv->rezim);
+        }
+
+        $this->ogrevanje = $config->ogrevanje ?? null;
+        if ($this->ogrevanje && !empty($config->ogrevanje->rezim)) {
+            $this->ogrevanje->rezim = VrstaRezima::from($config->ogrevanje->rezim);
         }
     }
 
@@ -68,36 +73,38 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         $this->tsv->obnovljivaEnergija = [];
         $this->tsv->vracljiveIzgubeVOgrevanje = [];
 
-        $vracljiveIzgube = [];
+        if (isset($this->tsv->razvodi)) {
+            foreach ($this->tsv->razvodi as $razvodId) {
+                $razvod = array_first($this->razvodi, fn($r) => $r->id == $razvodId);
+                if (!$razvod) {
+                    throw new \Exception(sprintf('Razvod TSV "%s" ne obstaja', $razvodId));
+                }
 
-        foreach ($this->tsv->razvodi as $razvodId) {
-            $razvod = array_first($this->razvodi, fn($r) => $r->id == $razvodId);
-            if (!$razvod) {
-                throw new \Exception(sprintf('Razvod TSV "%s" ne obstaja', $razvodId));
+                $razvod->analiza([], $this, $cona, $okolje);
+
+                $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $razvod->toplotneIzgube);
+                $this->tsv->potrebnaElektricnaEnergija = array_sum_values($this->tsv->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+
+                $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
+                $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
+
+                // TODO: vračljive izgube v sistem morajo imeti svoj property v classu
+                $this->tsv->potrebnaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
             }
-
-            $razvod->analiza([], $this, $cona, $okolje);
-
-            $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $razvod->toplotneIzgube);
-            $this->tsv->potrebnaElektricnaEnergija = array_sum_values($this->tsv->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
-
-            $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
-            $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
-
-            // TODO: vračljive izgube v sistem morajo imeti svoj property v classu
-            $this->tsv->potrebnaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
         }
 
-        foreach ($this->tsv->hranilniki as $hranilnikId) {
-            $hranilnik = array_first($this->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
-            if (!$hranilnik) {
-                throw new \Exception(sprintf('Hranilnik TSV "%s" ne obstaja', $hranilnikId));
+        if (isset($this->tsv->hranilniki)) {
+            foreach ($this->tsv->hranilniki as $hranilnikId) {
+                $hranilnik = array_first($this->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
+                if (!$hranilnik) {
+                    throw new \Exception(sprintf('Hranilnik TSV "%s" ne obstaja', $hranilnikId));
+                }
+
+                $hranilnik->analiza([], $this, $cona, $okolje);
+
+                $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $hranilnik->toplotneIzgube);
+                $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
             }
-
-            $hranilnik->analiza([], $this, $cona, $okolje);
-
-            $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $hranilnik->toplotneIzgube);
-            $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
         }
 
         foreach ($this->tsv->generatorji as $generatorId) {
@@ -110,6 +117,81 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
             $this->tsv->obnovljivaEnergija = array_sum_values($this->tsv->obnovljivaEnergija, $generator->obnovljivaEnergija);
             $this->tsv->potrebnaElektricnaEnergija = array_sum_values($this->tsv->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
+        }
+    }
+
+    /**
+     * Glavna metoda za analizo ogrevanja
+     *
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @return array
+     */
+    public function analizaOgrevanja($cona, $okolje)
+    {
+        $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
+        if (!empty($this->tsv->vracljiveIzgubeVOgrevanje)) {
+            $this->ogrevanje->potrebnaEnergija = array_subtract_values($this->ogrevanje->potrebnaEnergija, $this->tsv->vracljiveIzgubeVOgrevanje);
+        }
+
+        $this->ogrevanje->potrebnaElektricnaEnergija = [];
+        $this->ogrevanje->obnovljivaEnergija = [];
+
+        if (isset($this->ogrevanje->prenosniki)) {
+            foreach ($this->ogrevanje->prenosniki as $prenosnikId) {
+                $prenosnik = array_first($this->koncniPrenosniki, fn($p) => $p->id == $prenosnikId);
+                if (!$prenosnik) {
+                    throw new \Exception(sprintf('Prenosnik ogrevanja "%s" ne obstaja', $prenosnikId));
+                }
+
+                $prenosnik->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje);
+
+                $this->ogrevanje->potrebnaEnergija = array_sum_values($this->ogrevanje->potrebnaEnergija, $prenosnik->toplotneIzgube);
+                $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $prenosnik->potrebnaElektricnaEnergija);
+            }
+        }
+
+        if (isset($this->ogrevanje->razvodi)) {
+            foreach ($this->ogrevanje->razvodi as $razvodId) {
+                $razvod = array_first($this->razvodi, fn($r) => $r->id == $razvodId);
+                if (!$razvod) {
+                    throw new \Exception(sprintf('Razvod ogrevanja "%s" ne obstaja', $razvodId));
+                }
+
+                $prenosnik = array_first($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
+
+                $razvod->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje, ['prenosnik' => $prenosnik, 'rezim' => $this->ogrevanje->rezim]);
+
+                $this->ogrevanje->potrebnaEnergija = array_sum_values($this->ogrevanje->potrebnaEnergija, $razvod->toplotneIzgube);
+                $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+
+                // TODO: vračljive izgube v sistem morajo imeti svoj property v classu
+                $this->ogrevanje->potrebnaEnergija = array_subtract_values($this->ogrevanje->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
+            }
+        }
+
+        if (isset($this->ogrevanje->hranilniki)) {
+            foreach ($this->ogrevanje->hranilniki as $hranilnikId) {
+                $hranilnik = array_first($this->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
+                if (!$hranilnik) {
+                    throw new \Exception(sprintf('Hranilnik ogrevanja "%s" ne obstaja', $hranilnikId));
+                }
+
+                $hranilnik->analiza([], $this, $cona, $okolje);
+                $this->ogrevanje->potrebnaEnergija = array_sum_values($this->ogrevanje->potrebnaEnergija, $hranilnik->toplotneIzgube);
+            }
+        }
+
+        foreach ($this->ogrevanje->generatorji as $generatorId) {
+            $generator = array_first($this->generatorji, fn($g) => $g->id == $generatorId);
+            if (!$generator) {
+                throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
+            }
+
+            $generator->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje, ['rezim' => $this->ogrevanje->rezim]);
+
+            $this->ogrevanje->obnovljivaEnergija = array_sum_values($this->ogrevanje->obnovljivaEnergija, $generator->obnovljivaEnergija);
+            $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
         }
     }
 
@@ -127,6 +209,11 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         // najprej analiziram toplo vodo
         if (!empty($this->tsv)) {
             $this->analizaTSV($cona, $okolje);
+        }
+
+        // potem ogrevanje
+        if (!empty($this->ogrevanje)) {
+            $this->analizaOgrevanja($cona, $okolje);
         }
 
         return;

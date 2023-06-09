@@ -62,6 +62,22 @@ abstract class RazvodOgrevanje extends Razvod
     }
 
     /**
+     * Analiza podsistema
+     *
+     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return void
+     */
+    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    {
+        $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+    }
+
+    /**
      * Izračun toplotnih izgub končnega prenosnika
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
@@ -74,6 +90,7 @@ abstract class RazvodOgrevanje extends Razvod
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         $prenosnik = $params['prenosnik'];
+        $rezim = $params['rezim'];
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
@@ -95,7 +112,7 @@ abstract class RazvodOgrevanje extends Razvod
 
             // θ m - povprečna temperatura ogrevnega medija [°C]
             // enačba (39)
-            $srednjaT = $sistem->rezim->srednjaTemperatura($sistem);
+            $srednjaT = $rezim->srednjaTemperatura($sistem);
             $exponentOgrevala = $prenosnik->exponentOgrevala ?? 1;
             $temperaturaRazvoda = $betaI > 0 ? (($srednjaT - $cona->notranjaTOgrevanje) *
                 pow($betaI, 1 / $exponentOgrevala) + $cona->notranjaTOgrevanje) : $cona->notranjaTOgrevanje;
@@ -136,9 +153,10 @@ abstract class RazvodOgrevanje extends Razvod
     {
         /** @var \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
         $prenosnik = $params['prenosnik'] ?? null;
+        $rezim = $params['rezim'] ?? null;
 
         if (!empty($this->crpalka)) {
-            $hidravlicnaMoc = $this->izracunHidravlicneMoci($prenosnik, $sistem, $cona);
+            $hidravlicnaMoc = $this->izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona);
             $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc);
             $this->crpalka->moc = $this->crpalka->moc ?? $hidravlicnaMoc;
 
@@ -259,7 +277,7 @@ abstract class RazvodOgrevanje extends Razvod
      * @param \stdClass $cona Podatki cone
      * @return float
      */
-    public function izracunHidravlicneMoci($prenosnik, $sistem, $cona)
+    public function izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona)
     {
         $Lmax = $this->getProperty(RazvodAbstractProperties::Lmax, ['cona' => $cona]);
 
@@ -279,8 +297,8 @@ abstract class RazvodOgrevanje extends Razvod
         // ΔθHK – temperaturna razlika pri standardnem temperaturnem režimu ogrevalnega sistema [°C] (enačba 38)
         // 0 velja za zrak-zrak - oz. če ni definirana vrsta
         $deltaT_HK = 0;
-        if (!empty($sistem->rezim)) {
-            $deltaT_HK = $sistem->rezim->temperaturnaRazlikaStandardnegaRezima($sistem);
+        if (!empty($rezim)) {
+            $deltaT_HK = $rezim->temperaturnaRazlikaStandardnegaRezima($sistem);
         }
 
         // V – volumski pretok ogrevnega medija [m3/h]
