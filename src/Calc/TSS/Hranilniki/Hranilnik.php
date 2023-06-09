@@ -40,6 +40,7 @@ abstract class Hranilnik
         }
 
         $this->volumen = $config->volumen ?? 0;
+        $this->id = $config->id ?? null;
     }
 
     /**

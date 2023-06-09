@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\TSS\OgrevalniSistemi;
 
 use App\Calc\TSS\EnergentFactory;
+use App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
 
@@ -27,6 +28,10 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
         $this->energent = EnergentFactory::create($config->energent ?? 'default');
         $this->namen = $config->namen ?? 'ogrevanje';
+        $this->tsv = $config->tsv ?? null;
+        if ($this->tsv && !empty($config->tsv->rezim)) {
+            $this->tsv->rezim = VrstaRezima::from($config->tsv->rezim);
+        }
     }
 
     /**
@@ -50,6 +55,65 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
     }
 
     /**
+     * Glavna metoda za analizo TSV
+     *
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @return array
+     */
+    public function analizaTSV($cona, $okolje)
+    {
+        $this->tsv->potrebnaEnergija = $cona->potrebaTSV;
+        $this->tsv->potrebnaElektricnaEnergija = [];
+        $this->tsv->obnovljivaEnergija = [];
+        $this->tsv->vracljiveIzgubeVOgrevanje = [];
+
+        $vracljiveIzgube = [];
+
+        foreach ($this->tsv->razvodi as $razvodId) {
+            $razvod = array_first($this->razvodi, fn($r) => $r->id == $razvodId);
+            if (!$razvod) {
+                throw new \Exception(sprintf('Razvod TSV "%s" ne obstaja', $razvodId));
+            }
+
+            $razvod->analiza([], $this, $cona, $okolje);
+
+            $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $razvod->toplotneIzgube);
+            $this->tsv->potrebnaElektricnaEnergija = array_sum_values($this->tsv->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+
+            $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
+            $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
+
+            // TODO: vračljive izgube v sistem morajo imeti svoj property v classu
+            $this->tsv->potrebnaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
+        }
+
+        foreach ($this->tsv->hranilniki as $hranilnikId) {
+            $hranilnik = array_first($this->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
+            if (!$hranilnik) {
+                throw new \Exception(sprintf('Hranilnik TSV "%s" ne obstaja', $hranilnikId));
+            }
+
+            $hranilnik->analiza([], $this, $cona, $okolje);
+
+            $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $hranilnik->toplotneIzgube);
+            $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
+        }
+
+        foreach ($this->tsv->generatorji as $generatorId) {
+            $generator = array_first($this->generatorji, fn($g) => $g->id == $generatorId);
+            if (!$generator) {
+                throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
+            }
+
+            $generator->analiza($this->tsv->potrebnaEnergija, $this, $cona, $okolje, ['rezim' => $this->tsv->rezim]);
+
+            $this->tsv->obnovljivaEnergija = array_sum_values($this->tsv->obnovljivaEnergija, $generator->obnovljivaEnergija);
+            $this->tsv->potrebnaElektricnaEnergija = array_sum_values($this->tsv->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
+        }
+    }
+
+    /**
      * Glavna metoda za analizo ogrevalnega sistema
      *
      * @param \stdClass $cona Podatki cone
@@ -59,6 +123,13 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
     public function analiza($cona, $okolje)
     {
         $this->init($cona);
+
+        // najprej analiziram toplo vodo
+        if (!empty($this->tsv)) {
+            $this->analizaTSV($cona, $okolje);
+        }
+
+        return;
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $this->energijaPoEnergentih = [];

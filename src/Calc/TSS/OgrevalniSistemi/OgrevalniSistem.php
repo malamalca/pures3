@@ -7,13 +7,11 @@ use App\Calc\TSS\Energenti\Energent;
 use App\Calc\TSS\GeneratorFactory;
 use App\Calc\TSS\HranilnikFactory;
 use App\Calc\TSS\KoncniPrenosnikFactory;
-use App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\TSS\RazvodFactory;
 
 abstract class OgrevalniSistem
 {
     public Energent $energent;
-    public VrstaRezima $rezim;
 
     /**
      * QN – standardna potrebna toplotna moč za ogrevanje (cone) – moč ogreval, skladno s SIST
@@ -65,8 +63,6 @@ abstract class OgrevalniSistem
         if (is_string($config)) {
             $config = json_decode($config);
         }
-
-        $this->rezim = VrstaRezima::from($config->rezim);
 
         if (!empty($config->razvodi)) {
             foreach ($config->razvodi as $razvod) {

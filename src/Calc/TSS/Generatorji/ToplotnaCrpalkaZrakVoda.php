@@ -86,20 +86,22 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         $relativnaMoc = [];
         $dejanskaMoc = [];
         $cop = [];
+        $rezimRazvoda = $params['rezim'];
+
         foreach (self::REZIMI as $ix => $rezim) {
-            $relativnaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix];
-            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix] * $this->nazivnaMoc;
+            $relativnaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix];
+            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix] * $this->nazivnaMoc;
 
             $temperaturaEvaporacije = 2;
             $temperaturaKondenzacije = 35;
 
             $cop[$rezim] = $this->cop[$rezim] ?? $this->nazivniCOP *
-                ($sistem->rezim->temperaturaPonora() + 273.15) / ($temperaturaKondenzacije + 273.15) *
+                ($rezimRazvoda->temperaturaPonora() + 273.15) / ($temperaturaKondenzacije + 273.15) *
                 ($temperaturaKondenzacije - $temperaturaEvaporacije) /
-                ($sistem->rezim->temperaturaPonora() - self::REZIMI_TEMPERATURE[$ix]);
+                ($rezimRazvoda->temperaturaPonora() - self::REZIMI_TEMPERATURE[$ix]);
 
             // prilagoditveni faktor glede na režuim
-            $cop[$rezim] = $cop[$rezim] * $sistem->rezim->faktorDeltaTempTC();
+            $cop[$rezim] = $cop[$rezim] * $rezimRazvoda->faktorDeltaTempTC();
         }
 
         $En = [];
@@ -178,8 +180,10 @@ class ToplotnaCrpalkaZrakVoda extends Generator
     {
         $dejanskaMoc = [];
         $cop = [];
+        $rezimRazvoda = $params['rezim'];
+
         foreach (self::REZIMI as $ix => $rezim) {
-            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix] * $this->nazivnaMoc;
+            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix] * $this->nazivnaMoc;
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {

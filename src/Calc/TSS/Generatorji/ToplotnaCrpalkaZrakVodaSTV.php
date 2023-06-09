@@ -86,13 +86,16 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
         $relativnaMoc = [];
         $dejanskaMoc = [];
         $cop = [];
+
+        $rezimRazvoda = $params['rezim'];
+
         foreach (self::REZIMI as $ix => $rezim) {
-            $relativnaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix];
-            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix] * $this->nazivnaMoc;
+            $relativnaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix];
+            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix] * $this->nazivnaMoc;
 
             $temperaturaEvaporacije = 2;
             $temperaturaKondenzacije = 35;
-            $temperaturaPonora = $sistem->rezim->temperaturaPonora();
+            $temperaturaPonora = $rezimRazvoda->temperaturaPonora();
 
             $cop[$rezim] = $this->cop[$rezim] ?? $this->nazivniCOP *
                 ($temperaturaPonora + 273.15) / ($temperaturaKondenzacije + 273.15) *
@@ -100,7 +103,7 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
                 ($temperaturaPonora - self::REZIMI_TEMPERATURE[$ix]);
 
             // prilagoditveni faktor glede na režuim
-            // $faktorRezima = $sistem->rezim->faktorDeltaTempTC();
+            // $faktorRezima = $rezimRazvoda->faktorDeltaTempTC();
             $faktorRezima = 1;
             $cop[$rezim] = $cop[$rezim] * $faktorRezima;
         }
@@ -181,8 +184,10 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
     {
         $dejanskaMoc = [];
         $cop = [];
+        $rezimRazvoda = $params['rezim'];
+
         foreach (self::REZIMI as $ix => $rezim) {
-            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix] * $this->nazivnaMoc;
+            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix] * $this->nazivnaMoc;
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -193,6 +198,7 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
 
             // razdelitev mesečnih vnešenih izgub na posamezne režime
             $delovanjeUr = 0;
+
             foreach (self::REZIMI as $rezim) {
                 $trajanjeUr = self::TRAJANJE[$this->podnebje][$rezim][$mesec];
                 $toplotneIzgube[$mesec][$rezim] = $vneseneIzgube[$mesec] * $trajanjeUr / $sumUr;

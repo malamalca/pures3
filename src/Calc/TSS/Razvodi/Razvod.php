@@ -44,6 +44,7 @@ abstract class Razvod
             $config = json_decode($config);
         }
 
+        $this->id = $config->id ?? null;
         $this->idPrenosnika = $config->idPrenosnika ?? null;
     }
 
