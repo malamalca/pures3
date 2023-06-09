@@ -12,6 +12,9 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
     public string $namen;
 
+    public ?\stdClass $tsv;
+    public ?\stdClass $ogrevanje;
+
     /**
      * Loads configuration from json|stdClass
      *
@@ -27,7 +30,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         }
 
         $this->energent = EnergentFactory::create($config->energent ?? 'default');
-        
+
         $this->tsv = $config->tsv ?? null;
         if ($this->tsv && !empty($config->tsv->rezim)) {
             $this->tsv->rezim = VrstaRezima::from($config->tsv->rezim);
@@ -64,7 +67,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      *
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
-     * @return array
+     * @return void
      */
     public function analizaTSV($cona, $okolje)
     {
@@ -83,13 +86,17 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 $razvod->analiza([], $this, $cona, $okolje);
 
                 $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $razvod->toplotneIzgube);
-                $this->tsv->potrebnaElektricnaEnergija = array_sum_values($this->tsv->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+                $this->tsv->potrebnaElektricnaEnergija =
+                    array_sum_values($this->tsv->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
 
-                $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
-                $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
+                $this->tsv->vracljiveIzgubeVOgrevanje =
+                    array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
+                $this->tsv->vracljiveIzgubeVOgrevanje =
+                    array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
 
                 // TODO: vračljive izgube v sistem morajo imeti svoj property v classu
-                $this->tsv->potrebnaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
+                $this->tsv->potrebnaEnergija =
+                    array_subtract_values($this->tsv->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
             }
         }
 
@@ -102,8 +109,10 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
                 $hranilnik->analiza([], $this, $cona, $okolje);
 
-                $this->tsv->potrebnaEnergija = array_sum_values($this->tsv->potrebnaEnergija, $hranilnik->toplotneIzgube);
-                $this->tsv->vracljiveIzgubeVOgrevanje = array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
+                $this->tsv->potrebnaEnergija =
+                    array_sum_values($this->tsv->potrebnaEnergija, $hranilnik->toplotneIzgube);
+                $this->tsv->vracljiveIzgubeVOgrevanje =
+                    array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
             }
         }
 
@@ -115,8 +124,10 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
             $generator->analiza($this->tsv->potrebnaEnergija, $this, $cona, $okolje, ['rezim' => $this->tsv->rezim]);
 
-            $this->tsv->obnovljivaEnergija = array_sum_values($this->tsv->obnovljivaEnergija, $generator->obnovljivaEnergija);
-            $this->tsv->potrebnaElektricnaEnergija = array_sum_values($this->tsv->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
+            $this->tsv->obnovljivaEnergija =
+                array_sum_values($this->tsv->obnovljivaEnergija, $generator->obnovljivaEnergija);
+            $this->tsv->potrebnaElektricnaEnergija =
+                array_sum_values($this->tsv->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
         }
     }
 
@@ -125,13 +136,14 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      *
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
-     * @return array
+     * @return void
      */
     public function analizaOgrevanja($cona, $okolje)
     {
         $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
         if (!empty($this->tsv->vracljiveIzgubeVOgrevanje)) {
-            $this->ogrevanje->potrebnaEnergija = array_subtract_values($this->ogrevanje->potrebnaEnergija, $this->tsv->vracljiveIzgubeVOgrevanje);
+            $this->ogrevanje->potrebnaEnergija =
+                array_subtract_values($this->ogrevanje->potrebnaEnergija, $this->tsv->vracljiveIzgubeVOgrevanje);
         }
 
         $this->ogrevanje->potrebnaElektricnaEnergija = [];
@@ -146,8 +158,12 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
                 $prenosnik->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje);
 
-                $this->ogrevanje->potrebnaEnergija = array_sum_values($this->ogrevanje->potrebnaEnergija, $prenosnik->toplotneIzgube);
-                $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $prenosnik->potrebnaElektricnaEnergija);
+                $this->ogrevanje->potrebnaEnergija =
+                    array_sum_values($this->ogrevanje->potrebnaEnergija, $prenosnik->toplotneIzgube);
+                $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values(
+                    $this->ogrevanje->potrebnaElektricnaEnergija,
+                    $prenosnik->potrebnaElektricnaEnergija
+                );
             }
         }
 
@@ -160,13 +176,22 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
                 $prenosnik = array_first($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
 
-                $razvod->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje, ['prenosnik' => $prenosnik, 'rezim' => $this->ogrevanje->rezim]);
+                $razvod->analiza(
+                    $this->ogrevanje->potrebnaEnergija,
+                    $this,
+                    $cona,
+                    $okolje,
+                    ['prenosnik' => $prenosnik, 'rezim' => $this->ogrevanje->rezim]
+                );
 
-                $this->ogrevanje->potrebnaEnergija = array_sum_values($this->ogrevanje->potrebnaEnergija, $razvod->toplotneIzgube);
-                $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+                $this->ogrevanje->potrebnaEnergija =
+                    array_sum_values($this->ogrevanje->potrebnaEnergija, $razvod->toplotneIzgube);
+                $this->ogrevanje->potrebnaElektricnaEnergija =
+                    array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
 
                 // TODO: vračljive izgube v sistem morajo imeti svoj property v classu
-                $this->ogrevanje->potrebnaEnergija = array_subtract_values($this->ogrevanje->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
+                // $this->ogrevanje->potrebnaEnergija = array_subtract_values($this->ogrevanje->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
+                // Se res ne upošteva energija Aux kot vrnjena???
             }
         }
 
@@ -178,7 +203,8 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 }
 
                 $hranilnik->analiza([], $this, $cona, $okolje);
-                $this->ogrevanje->potrebnaEnergija = array_sum_values($this->ogrevanje->potrebnaEnergija, $hranilnik->toplotneIzgube);
+                $this->ogrevanje->potrebnaEnergija =
+                    array_sum_values($this->ogrevanje->potrebnaEnergija, $hranilnik->toplotneIzgube);
             }
         }
 
@@ -188,10 +214,18 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
             }
 
-            $generator->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje, ['rezim' => $this->ogrevanje->rezim]);
+            $generator->analiza(
+                $this->ogrevanje->potrebnaEnergija,
+                $this,
+                $cona,
+                $okolje,
+                ['rezim' => $this->ogrevanje->rezim]
+            );
 
-            $this->ogrevanje->obnovljivaEnergija = array_sum_values($this->ogrevanje->obnovljivaEnergija, $generator->obnovljivaEnergija);
-            $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
+            $this->ogrevanje->obnovljivaEnergija =
+                array_sum_values($this->ogrevanje->obnovljivaEnergija, $generator->obnovljivaEnergija);
+            $this->ogrevanje->potrebnaElektricnaEnergija =
+                array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
         }
     }
 
@@ -206,144 +240,37 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
     {
         $this->init($cona);
 
+        $this->energijaPoEnergentih = [];
+
         // najprej analiziram toplo vodo
         if (!empty($this->tsv)) {
             $this->analizaTSV($cona, $okolje);
+
+            $dejanskaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $this->tsv->obnovljivaEnergija);
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = array_sum($dejanskaEnergija);
+
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
+                array_sum($this->tsv->potrebnaElektricnaEnergija);
+
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] = array_sum($this->tsv->obnovljivaEnergija);
         }
 
         // potem ogrevanje
         if (!empty($this->ogrevanje)) {
             $this->analizaOgrevanja($cona, $okolje);
-        }
 
-        return;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        $this->energijaPoEnergentih = [];
-
-        $potrebnaEnergija = $cona->energijaOgrevanje;
-        if ($this->namen == 'ogrevanje') {
-            $potrebnaEnergija = $cona->energijaOgrevanje;
-        }
-        if ($this->namen == 'TSV') {
-            $potrebnaEnergija = $cona->potrebaTSV;
-        }
-
-        $potrebnaElektricnaEnergija = [];
-
-        foreach ($this->koncniPrenosniki as $koncniPrenosnik) {
-            $izgubePrenosnika = $koncniPrenosnik->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje);
-
-            $elektricnaEnergijaPrenosnika =
-                $koncniPrenosnik->potrebnaElektricnaEnergija($potrebnaEnergija, $this, $cona, $okolje);
-
-            $vracljiveIzgubeAux =
-                $koncniPrenosnik->vracljiveIzgubeAux($potrebnaEnergija, $this, $cona, $okolje);
-
-            // seštejem vse izgube prenosnikov
-            foreach ($izgubePrenosnika as $k => $v) {
-                $potrebnaEnergija[$k] += $v;
-            }
-            foreach ($elektricnaEnergijaPrenosnika as $k => $v) {
-                $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
-            }
-
-            foreach ($vracljiveIzgubeAux as $k => $v) {
-                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
-            }
-        }
-
-        foreach ($this->razvodi as $razvod) {
-            $prenosnik = array_filter($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
-            if (!empty($prenosnik)) {
-                $prenosnik = reset($prenosnik);
-            }
-
-            $izgubeRazvoda =
-                $razvod->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje, ['prenosnik' => $prenosnik]);
-
-            $elektricnaEnergijaRazvoda = $razvod->potrebnaElektricnaEnergija(
-                $potrebnaEnergija,
-                $this,
-                $cona,
-                $okolje,
-                ['prenosnik' => $prenosnik]
+            $dejanskaEnergija = array_subtract_values(
+                $this->ogrevanje->potrebnaEnergija,
+                $this->ogrevanje->obnovljivaEnergija
             );
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = array_sum($dejanskaEnergija);
 
-            // dodam k vnesenim izgubam
-            foreach ($izgubeRazvoda as $k => $v) {
-                $potrebnaEnergija[$k] += $v;
-            }
-            foreach ($elektricnaEnergijaRazvoda as $k => $v) {
-                $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
-            }
-            foreach ($razvod->vracljiveIzgube as $k => $v) {
-                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
-            }
-            foreach ($razvod->vracljiveIzgubeAux as $k => $v) {
-                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
+                array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
 
-                // TODO: eno so vračljive izgube v okolico, druge v sistem
-                // za sistem TSV je potrebno izgubam odšteti energijo črpalke
-                //$potrebnaEnergija[$k] -= $v;
-            }
-        }
-
-        foreach ($this->hranilniki as $hranilnik) {
-            $izgubeHranilnika = $hranilnik->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje);
-
-            // dodam k vnesenim izgubam
-            foreach ($izgubeHranilnika as $k => $v) {
-                $potrebnaEnergija[$k] += $v;
-            }
-
-            foreach ($hranilnik->vracljiveIzgube as $k => $v) {
-                $this->vracljiveIzgube[$k] = ($this->vracljiveIzgube[$k] ?? 0) + $v;
-            }
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // izgube ogrevala
-        foreach ($this->generatorji as $generator) {
-            $izgubeGeneratorja = $generator->toplotneIzgube($potrebnaEnergija, $this, $cona, $okolje);
-
-            $elektricnaEnergijaGeneratorja =
-                $generator->potrebnaElektricnaEnergija($potrebnaEnergija, $this, $cona, $okolje);
-
-            $this->obnovljivaEnergija =
-                $generator->obnovljivaEnergija($potrebnaEnergija, $this, $cona, $okolje);
-
-            // obračun energije po energentih
-            // dodam k vnesenim izgubam
-            foreach ($izgubeGeneratorja as $k => $v) {
-                $potrebnaEnergija[$k] += $v;
-            }
-            foreach ($elektricnaEnergijaGeneratorja as $k => $v) {
-                $potrebnaElektricnaEnergija[$k] = ($potrebnaElektricnaEnergija[$k] ?? 0) + $v;
-            }
-        }
-
-        $this->potrebnaEnergija = $potrebnaEnergija;
-        $this->potrebnaElektricnaEnergija = $potrebnaElektricnaEnergija;
-
-        foreach ($this->potrebnaEnergija as $k => $v) {
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
-                ($this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) + $v;
-        }
-
-        foreach ($this->obnovljivaEnergija as $k => $v) {
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] =
-                ($this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] ?? 0) + $v;
-        }
-
-        // od skupne energije odštejemo energijo okolja
-        $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
-            ($this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) -
-            ($this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] ?? 0);
-
-        foreach ($this->potrebnaElektricnaEnergija as $k => $v) {
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
-                $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] + $v;
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] = array_sum(
+                $this->ogrevanje->obnovljivaEnergija
+            );
         }
 
         return [];

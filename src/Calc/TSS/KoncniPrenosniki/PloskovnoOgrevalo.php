@@ -38,10 +38,11 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki cone
+     * @param \stdClass $okolje Podatki
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje)
+    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
         $deltaT_hydr = parent::DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_DO_10[$this->hidravlicnoUravnotezenje->getOrdinal()];
@@ -60,6 +61,7 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $faktorDeltaT = $deltaT / ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
+
             $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
         }
 

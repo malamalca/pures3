@@ -12,6 +12,7 @@ abstract class Razvod
     public ElementRazvoda $dvizniVod;
     public ElementRazvoda $prikljucniVod;
 
+    public ?string $id;
     public ?string $idPrenosnika;
 
     public array $toplotneIzgube;

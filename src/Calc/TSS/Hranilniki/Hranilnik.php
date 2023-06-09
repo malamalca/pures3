@@ -50,7 +50,8 @@ abstract class Hranilnik
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki cone
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje);
+    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 }

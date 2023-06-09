@@ -273,6 +273,7 @@ abstract class RazvodOgrevanje extends Razvod
      * Izračun hidravlične moči črpalke
      *
      * @param \App\Calc\TSS\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
+     * @param \App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima|null $rezim Podatki režima
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @return float

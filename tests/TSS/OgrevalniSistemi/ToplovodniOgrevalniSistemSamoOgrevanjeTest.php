@@ -13,7 +13,7 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
         $cona->notranjaTOgrevanje = 20;
         $cona->zunanjaT = -13;
         $cona->potrebaTSV = [114.253972, 103.197136, 114.253972, 110.56836, 114.253972, 110.56836,114.253972, 114.253972, 110.56836, 114.253972, 110.56836, 114.25392];
-        $cona->energijaOgrevanje = [1206.6498424364968, 746.3227400063487, 390.0830744323009, 135.71842830225137, 19.217650278634665, 0, 0, 0, 17.900038879386443, 179.47284892375217, 761.5928197350089, 1208.7268259786833];
+        $cona->energijaOgrevanje = [1206.7067763529, 746.3679541588, 390.1171250327, 135.7338005150, 19.2204599611, 0, 0, 0, 17.9030263837, 179.4962090259, 761.6441705740, 1208.7845887780];
         $cona->specVentilacijskeIzgube = 8.184;
         $cona->specTransmisijskeIzgube = 143.8765034039049;
         $cona->sirina = 8;
@@ -41,7 +41,7 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
             "generatorji": [
                 {
                     "id": "TC",
-                    "vrsta": "TC_zrakvodaSTV",
+                    "vrsta": "TC_zrakvoda",
                     "nazivnaMoc": 6,
                     "nazivniCOP": 3,
                     "elektricnaMocNaPrimarnemKrogu": 6,
@@ -88,49 +88,44 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
 
         $sistem->analiza($cona, $okolje);
 
+        $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube;
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov);
+        $expected = [109.18, 74.64, 49.41, 23.44, 6.09, 0.00, 0.00, 0.00, 6.80, 34.10, 90.45, 114.83];
+        $this->assertEquals($expected, $roundedResult);
+
         $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube;
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubeRazvoda);
-        $expected = [457.26, 413.00, 457.26, 442.51, 457.26, 442.51, 457.26, 457.26, 442.51, 457.26, 442.51, 457.26];
+        $expected = [246.28, 162.67, 100.07, 43.58, 6.69, 0.00, 0.00, 0.00, 6.44, 58.22, 169.72, 247.51];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
-        $expected = [6.99, 6.31, 6.99, 6.76, 6.99, 6.76, 6.99, 6.99, 6.76, 6.99, 6.76, 6.99];
-        $this->assertEquals($expected, $roundedResult);
-
-        $izgubeHranilnika = $sistem->hranilniki[0]->toplotneIzgube;
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgubeHranilnika);
-        $expected = [54.67, 49.38, 54.67, 52.90, 54.67, 52.90, 54.67, 54.67, 52.90, 54.67, 52.90, 54.67];
+        $expected = [28.14, 24.59, 26.17, 18.67, 2.65, 0.00, 0.00, 0.00, 2.47, 24.69, 26.29, 28.16];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaEnergija = $sistem->generatorji[0]->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaEnergija);
-        $expected = [331.35, 276.60, 299.86, 263.28, 246.00, 217.19, 216.30, 220.20, 231.14, 271.48, 291.78, 327.07];
+        $expected = [614.11, 346.66, 188.46, 63.69, 9.50, 0.00, 0.00, 0.00, 9.17, 84.92, 355.36, 606.75];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergija = $sistem->generatorji[0]->potrebnaElektricnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
-        $expected = [1.62, 1.30, 1.40, 1.19, 1.11, 1.00, 1.01, 1.02, 1.05, 1.23, 1.36, 1.59];
+        $expected = [3.85, 2.17, 1.17, 0.40, 0.06, 0.00, 0.00, 0.00, 0.06, 0.53, 2.22, 3.80];
         $this->assertEquals($expected, $roundedResult); 
 
-        $potrebnaToplotaZaGenerator = $sistem->tsv->potrebnaEnergija;
+        $potrebnaToplotaZaGenerator = $sistem->ogrevanje->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaToplotaZaGenerator);
-        $expected = [624.43, 564.00, 624.43, 604.28, 624.43, 604.28, 624.43, 624.43, 604.28, 624.43, 604.28, 624.43];
+        $expected = [1562.16, 983.67, 539.60, 202.76, 32.00, 0.00, 0.00, 0.00, 31.15, 271.82, 1021.81, 1571.13];
         $this->assertEquals($expected, $roundedResult);
 
-        $potrebnaElektricnaEnergijaSistema = $sistem->tsv->potrebnaElektricnaEnergija;
+        $potrebnaElektricnaEnergijaSistema = $sistem->ogrevanje->potrebnaElektricnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergijaSistema);
-        $expected = [8.61, 7.61, 8.39, 7.95, 8.10, 7.77, 8.00, 8.01, 7.81, 8.21, 8.13, 8.58];
+        $expected = [32.73, 27.43, 28.09, 19.61, 2.79, 0.00, 0.00, 0.00, 2.60, 25.94, 29.22, 32.70];
         $this->assertEquals($expected, $roundedResult);
 
-        $obnovljivaEnergija = $sistem->tsv->obnovljivaEnergija;
+        $obnovljivaEnergija = $sistem->ogrevanje->obnovljivaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $obnovljivaEnergija);
-        $expected = [293.08, 287.40, 324.56, 341.00, 378.43, 387.09, 408.13, 404.23, 373.15, 352.95, 312.50, 297.35];
-        $this->assertEquals($expected, $roundedResult);
-
-        $vracljiveIzgubeVOgrevanje = $sistem->tsv->vracljiveIzgubeVOgrevanje;
-        $roundedResult = array_map(fn($el) => round($el, 2), $vracljiveIzgubeVOgrevanje);
-        $expected = [513.67, 463.96, 513.67, 497.10, 513.67, 497.10, 513.67, 513.67, 497.10, 513.67, 497.10, 513.67];
+        $expected = [948.05, 637.02, 351.14, 139.07, 22.50, 0.00, 0.00, 0.00, 21.98, 186.90, 666.45, 964.38];
         $this->assertEquals($expected, $roundedResult);
     }
 }

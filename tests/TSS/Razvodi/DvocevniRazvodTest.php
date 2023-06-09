@@ -100,7 +100,9 @@ final class DvocevniRazvodTest extends TestCase
         EOT;
         $razvod = new DvocevniRazvod(json_decode($config));
 
-        $hidravlicnaMoc = $razvod->izracunHidravlicneMoci($prenosnik, $sistem, $cona);
+        $rezim = VrstaRezima::from('40/30');
+
+        $hidravlicnaMoc = $razvod->izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona);
 
         $this->assertEquals(6.737, round($hidravlicnaMoc, 3));
     }
@@ -158,8 +160,7 @@ final class DvocevniRazvodTest extends TestCase
         $configSistem = <<<EOT
         {
             "vrsta": "toplovodni",
-            "energent": "elektrika",
-            "rezim": "40/30"
+            "energent": "elektrika"
         }
         EOT;
         $sistem = new ToplovodniOgrevalniSistem($configSistem);
@@ -199,9 +200,11 @@ final class DvocevniRazvodTest extends TestCase
         EOT;
         $razvod = new DvocevniRazvod(json_decode($config));
 
+        $rezim = VrstaRezima::from('40/30');
+
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
-        $izgube = $razvod->toplotneIzgube($preneseneIzgube, $sistem, $cona, null, ['prenosnik' => $prenosnik]);
+        $izgube = $razvod->toplotneIzgube($preneseneIzgube, $sistem, $cona, null, ['prenosnik' => $prenosnik, 'rezim' => $rezim]);
         $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
 
         $expected = [246.28, 162.67, 100.07, 43.58, 6.69, 0.00, 0.00, 0.00, 6.44, 58.22, 169.72, 247.51];
@@ -267,9 +270,11 @@ final class DvocevniRazvodTest extends TestCase
         EOT;
         $razvod = new DvocevniRazvod(json_decode($config));
 
+        $rezim = VrstaRezima::from('40/30');
+
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
-        $potrebnaElektrika = $razvod->potrebnaElektricnaEnergija($preneseneIzgube, $sistem, $cona, null, ['prenosnik' => $prenosnik]);
+        $potrebnaElektrika = $razvod->potrebnaElektricnaEnergija($preneseneIzgube, $sistem, $cona, null, ['prenosnik' => $prenosnik, 'rezim' => $rezim]);
 
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektrika);
 

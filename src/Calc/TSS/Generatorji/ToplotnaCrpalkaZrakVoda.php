@@ -136,7 +136,6 @@ class ToplotnaCrpalkaZrakVoda extends Generator
 
                 $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
             }
-
             $this->toplotneIzgube[$mesec] = 0;
         }
 
