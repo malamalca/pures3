@@ -146,7 +146,6 @@ class CalcStavba
             foreach ($podsistemi as $podsistem) {
                 $stavba->energijaPoEnergentih += (array)$sistemEnergijaPoEnergentih[$podsistem];
                 foreach ((array)$sistemEnergijaPoEnergentih[$podsistem] as $energent => $energija) {
-                
                     $stavba->neutezenaDovedenaEnergija += $energija;
                     $stavba->utezenaDovedenaEnergija +=
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');

@@ -229,7 +229,6 @@ za področje TSS</h1>
 </table>
 
 
-
 <table border="1" cellpadding="3" width="100%">
     <?php
         $maxEnergentov = 0;
@@ -293,10 +292,104 @@ za področje TSS</h1>
     ?>
 </table>
 
+<table border="1" cellpadding="3" width="100%">
+    <tr>
+        <th colspan="4">Letna učinkovitost sistema za proizvodnjo in oskrbo s toploto &#951;<sub>H/W/C,an</sub> (%):</th>
+    </tr>
+    <tr>
+        <td class="w-60" colspan="2"></td>
+        <td class="w-20 center">energetska cona oz. stavba</td>
+        <td class="w-20 center">E<sub>V,del,an</sub><br />(kWh/an)</td>
+    </tr>
+</table>
+<table border="1" cellpadding="3" width="100%">
+    <tr>
+        <th colspan="4">Delež ogrevanja s solarnim sistemom ali OVE brez izpustov PM<sub>10</sub> &#949;<sub>sol</sub> (%):</th>
+    </tr>
+    <tr>
+        <td class="w-60" colspan="2"></td>
+        <td class="w-20 center">energetska cona oz. stavba</td>
+        <td class="w-20 center">E<sub>V,del,an</sub><br />(kWh/an)</td>
+    </tr>
+</table>
+
+<!-- HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE -->
+<table border="1" cellpadding="3" width="100%">
+    <?php
+        $maxEnergentov = 0;
+        foreach ($sistemiOgrevanja as $sistem) {
+            if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
+                $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
+            }
+        }
+        $cellWidth = round(50/$maxEnergentov, 1);
+    ?>
+    <tr>
+        <th colspan="<?= (3 + $maxEnergentov) ?>">Dovedena energija za hlajenje E<sub>C,del,an</sub> (kWh/an):</th>
+    </tr>
+
+    <tr>
+        <td class="w-50" colspan="3"></td>
+        <?php
+            for ($i = 0; $i < $maxEnergentov; $i++) {
+        ?>
+        <td class="center" style="width: <?= $cellWidth ?>%;">energent <?= ($i+1) ?></td>
+        <?php 
+            }
+        ?>
+    </tr>
+
+    <?php
+        $i = 1;
+        foreach ($sistemiOgrevanja as $sistem) {
+            if (isset($sistem->energijaPoEnergentih->hlajenje)) {
+                $sistemEnergijaPoEnergentih = $sistem->energijaPoEnergentih->hlajenje;
+    ?>
+
+    <tr>
+        <td class="w-5 center" rowspan="2"><?= $i ?></td>
+        <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
+        <td class="w-10 center">vrsta</td>
+        <?php
+            foreach ($sistemEnergijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
+        ?>
+            <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
+        <?php
+            }
+        ?>
+    </tr>
+
+    <tr>
+        <td class="w-10 center">količina</td>
+        <?php
+            foreach ($sistemEnergijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
+        ?>
+            <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
+        <?php
+            }
+        ?>
+    </tr>
+      
+    <?php
+                $i++;
+            }
+        }
+    ?>
+</table>
+
+
+
+
+
 
 <table border="1" cellpadding="3" width="100%">
     <tr>
         <th colspan="4">Dovedena energija za mehansko prezračevanje E<sub>V,del,an</sub></th>
+    </tr>
+    <tr>
+        <td class="w-60" colspan="2"></td>
+        <td class="w-20 center">energetska cona oz. stavba</td>
+        <td class="w-20 center">E<sub>V,del,an</sub><br />(kWh/an)</td>
     </tr>
     <?php
         $i = 1;
@@ -316,6 +409,11 @@ za področje TSS</h1>
 
     <tr>
         <th colspan="4">Dovedena energija za razsvetljavo E<sub>L,an</sub></th>
+    </tr>
+    <tr>
+        <td class="w-60" colspan="2"></td>
+        <td class="w-20 center">energetska cona oz. stavba</td>
+        <td class="w-20 center">E<sub>L,an</sub><br />(kWh/an)</td>
     </tr>
     <?php
         $i = 1;
@@ -337,9 +435,19 @@ za področje TSS</h1>
     <tr>
         <th colspan="4">Dovedena energija za navlaževanje E<sub>HU,an</sub></th>
     </tr>
+    <tr>
+        <td class="w-60" colspan="2"></td>
+        <td class="w-20 center">energetska cona oz. stavba</td>
+        <td class="w-20 center">E<sub>HU,an</sub><br />(kWh/an)</td>
+    </tr>
 
     <tr>
         <th colspan="4">Dovedena energija za navlaževanje E<sub>DHU,an</sub></th>
+    </tr>
+    <tr>
+        <td class="w-60" colspan="2"></td>
+        <td class="w-20 center">energetska cona oz. stavba</td>
+        <td class="w-20 center">E<sub>DHU,an</sub><br />(kWh/an)</td>
     </tr>
 
     <tr>

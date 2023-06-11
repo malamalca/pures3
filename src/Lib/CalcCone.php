@@ -237,7 +237,7 @@ class CalcCone
                         $cona->ucinekDobitkov[$mesec] =
                             (1 - pow($gama_ogrevanje, $A_ogrevanje)) / (1 - pow($gama_ogrevanje, $A_ogrevanje + 1));
                     }
-                }   
+                }
             }
 
             $vsotaVirov_hlajenje = $cona->notranjiViriHlajenje[$mesec] + $cona->solarniDobitkiHlajenje[$mesec];
@@ -281,7 +281,7 @@ class CalcCone
                     $cona->transIzgubeOgrevanje[$mesec] + $cona->prezracevalneIzgubeOgrevanje[$mesec] -
                     $cona->ucinekDobitkov[$mesec] * ($cona->notranjiViriOgrevanje[$mesec] +
                     $cona->solarniDobitkiOgrevanje[$mesec] + ($cona->vracljiveIzgube[$mesec] ?? 0));
-                
+
                 if ($cona->energijaOgrevanje[$mesec] < 0) {
                     $cona->energijaOgrevanje[$mesec] = 0;
                 }

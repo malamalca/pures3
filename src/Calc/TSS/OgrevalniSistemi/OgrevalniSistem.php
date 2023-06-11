@@ -26,6 +26,8 @@ abstract class OgrevalniSistem
      */
     public array $povprecnaObremenitev;
 
+    public array $podsistemi = [];
+
     public array $koncniPrenosniki = [];
     public array $razvodi = [];
     public array $hranilniki = [];
@@ -94,7 +96,7 @@ abstract class OgrevalniSistem
      *
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
-     * @return array
+     * @return void
      */
     abstract public function analiza($cona, $okolje);
 }

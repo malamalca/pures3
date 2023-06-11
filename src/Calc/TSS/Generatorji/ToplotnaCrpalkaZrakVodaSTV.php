@@ -79,9 +79,9 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
-    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         $relativnaMoc = [];
         $dejanskaMoc = [];
@@ -141,10 +141,8 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
                 $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
             }
 
-            $this->toplotneIzgube[$mesec] = 0;
+            $this->potrebnaEnergija[$mesec] = 0;
         }
-
-        return $this->toplotneIzgube;
     }
 
     /**
@@ -155,19 +153,17 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        if (empty($this->toplotneIzgube)) {
-            $this->toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+        if (empty($this->potrebnaEnergija)) {
+            $this->potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $this->obnovljivaEnergija[$mesec] = $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$mesec];
         }
-
-        return $this->obnovljivaEnergija;
     }
 
     /**
@@ -178,7 +174,7 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
@@ -208,7 +204,5 @@ class ToplotnaCrpalkaZrakVodaSTV extends Generator
             $this->potrebnaElektricnaEnergija[$mesec] =
                 ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) * $delovanjeUr / 1000;
         }
-
-        return $this->potrebnaElektricnaEnergija;
     }
 }
