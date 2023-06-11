@@ -38,9 +38,9 @@ abstract class KoncniPrenosnik
     public VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
     public VrstaRegulacijeTemperature $regulacijaTemperature;
 
-    public array $toplotneIzgube;
-    public array $potrebnaElektricnaEnergija;
-    public array $vracljiveIzgubeAux;
+    public array $toplotneIzgube = [];
+    public array $potrebnaElektricnaEnergija = [];
+    public array $vracljiveIzgubeAux = [];
 
     /**
      * Class Constructor
@@ -88,6 +88,7 @@ abstract class KoncniPrenosnik
     {
         $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
         $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->vracljiveIzgubeAux($potrebnaEnergija, $sistem, $cona, $okolje, $params);
     }
 
     /**

@@ -193,6 +193,8 @@ za področje TSS</h1>
     <?php
         $i = 1;
         foreach ($sistemiOgrevanja as $sistem) {
+            if (isset($sistem->energijaPoEnergentih->ogrevanje)) {
+                $sistemEnergijaPoEnergentih = $sistem->energijaPoEnergentih->ogrevanje;
     ?>
 
     <tr>
@@ -200,7 +202,7 @@ za področje TSS</h1>
         <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
         <td class="w-10 center">vrsta</td>
         <?php
-            foreach ($sistem->energijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistemEnergijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
         <?php
@@ -211,7 +213,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-10 center">količina</td>
         <?php
-            foreach ($sistem->energijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistemEnergijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
         <?php
@@ -220,14 +222,76 @@ za področje TSS</h1>
     </tr>
       
     <?php
-            $i++;
+                $i++;
+            }
         }
     ?>
 </table>
 
 
 
+<table border="1" cellpadding="3" width="100%">
+    <?php
+        $maxEnergentov = 0;
+        foreach ($sistemiOgrevanja as $sistem) {
+            if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
+                $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
+            }
+        }
+        $cellWidth = round(50/$maxEnergentov, 1);
+    ?>
+    <tr>
+        <th colspan="<?= (3 + $maxEnergentov) ?>">Dovedena energija za TSV E<sub>W,del,an</sub> (kWh/an):</th>
+    </tr>
 
+    <tr>
+        <td class="w-50" colspan="3"></td>
+        <?php
+            for ($i = 0; $i < $maxEnergentov; $i++) {
+        ?>
+        <td class="center" style="width: <?= $cellWidth ?>%;">energent <?= ($i+1) ?></td>
+        <?php 
+            }
+        ?>
+    </tr>
+
+    <?php
+        $i = 1;
+        foreach ($sistemiOgrevanja as $sistem) {
+            if (isset($sistem->energijaPoEnergentih->tsv)) {
+                $sistemEnergijaPoEnergentih = $sistem->energijaPoEnergentih->tsv;
+    ?>
+
+    <tr>
+        <td class="w-5 center" rowspan="2"><?= $i ?></td>
+        <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
+        <td class="w-10 center">vrsta</td>
+        <?php
+            foreach ($sistemEnergijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
+        ?>
+            <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
+        <?php
+            }
+        ?>
+    </tr>
+
+    <tr>
+        <td class="w-10 center">količina</td>
+        <?php
+            foreach ($sistemEnergijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
+        ?>
+            <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
+        <?php
+            }
+        ?>
+    </tr>
+      
+    <?php
+                $i++;
+            }
+        }
+    ?>
+</table>
 
 
 <table border="1" cellpadding="3" width="100%">

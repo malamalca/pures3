@@ -7,6 +7,7 @@ use App\Calc\TSS\EnergentFactory;
 use App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
+use App\Lib\CalcCone;
 
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
@@ -75,6 +76,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         $this->tsv->potrebnaElektricnaEnergija = [];
         $this->tsv->obnovljivaEnergija = [];
         $this->tsv->vracljiveIzgubeVOgrevanje = [];
+        $this->tsv->vneseneIzgube = [];
 
         if (isset($this->tsv->razvodi)) {
             foreach ($this->tsv->razvodi as $razvodId) {
@@ -122,12 +124,18 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
             }
 
-            $generator->analiza($this->tsv->potrebnaEnergija, $this, $cona, $okolje, ['rezim' => $this->tsv->rezim]);
+            $generator->analiza(
+                $this->tsv->potrebnaEnergija,
+                $this,
+                $cona,
+                $okolje,
+                ['namen' => 'tsv', 'rezim' => $this->tsv->rezim]
+            );
 
             $this->tsv->obnovljivaEnergija =
-                array_sum_values($this->tsv->obnovljivaEnergija, $generator->obnovljivaEnergija);
+                array_sum_values($this->tsv->obnovljivaEnergija, $generator->obnovljivaEnergija['tsv']);
             $this->tsv->potrebnaElektricnaEnergija =
-                array_sum_values($this->tsv->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
+                array_sum_values($this->tsv->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija['tsv']);
         }
     }
 
@@ -140,11 +148,14 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      */
     public function analizaOgrevanja($cona, $okolje)
     {
-        $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
         if (!empty($this->tsv->vracljiveIzgubeVOgrevanje)) {
-            $this->ogrevanje->potrebnaEnergija =
-                array_subtract_values($this->ogrevanje->potrebnaEnergija, $this->tsv->vracljiveIzgubeVOgrevanje);
+            // ponovno poračunam potrebno energijo za ogrevanje
+            $cona->vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje;
+            CalcCone::izracunFaktorjaIzkoristka($cona, $okolje);
+            CalcCone::izracunEnergijeOgrevanjeHlajanje($cona, $okolje);
+            $this->init($cona);
         }
+        $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
 
         $this->ogrevanje->potrebnaElektricnaEnergija = [];
         $this->ogrevanje->obnovljivaEnergija = [];
@@ -214,18 +225,21 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
             }
 
+            //$generator->potrebnaEnergija = [];
+            //$generator->potrebnaElektricnaEnergija = [];
+
             $generator->analiza(
                 $this->ogrevanje->potrebnaEnergija,
                 $this,
                 $cona,
                 $okolje,
-                ['rezim' => $this->ogrevanje->rezim]
+                ['namen' => 'ogrevanje', 'rezim' => $this->ogrevanje->rezim]
             );
 
             $this->ogrevanje->obnovljivaEnergija =
-                array_sum_values($this->ogrevanje->obnovljivaEnergija, $generator->obnovljivaEnergija);
+                array_sum_values($this->ogrevanje->obnovljivaEnergija, $generator->obnovljivaEnergija['ogrevanje']);
             $this->ogrevanje->potrebnaElektricnaEnergija =
-                array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija);
+                array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $generator->potrebnaElektricnaEnergija['ogrevanje']);
         }
     }
 
@@ -234,45 +248,65 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      *
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
-     * @return array
+     * @return void
      */
     public function analiza($cona, $okolje)
     {
         $this->init($cona);
 
         $this->energijaPoEnergentih = [];
+        $this->potrebnaEnergija = [];
+        $this->potrebnaElektricnaEnergija = [];
+        $this->obnovljivaEnergija = [];
+
+        $this->podsistemi = [];
 
         // najprej analiziram toplo vodo
         if (!empty($this->tsv)) {
             $this->analizaTSV($cona, $okolje);
 
-            $dejanskaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $this->tsv->obnovljivaEnergija);
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = array_sum($dejanskaEnergija);
+            $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $this->tsv->potrebnaEnergija);
+            $this->potrebnaElektricnaEnergija =
+                array_sum_values($this->potrebnaElektricnaEnergija, $this->tsv->potrebnaElektricnaEnergija);
 
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
+            $this->obnovljivaEnergija =
+                array_sum_values($this->obnovljivaEnergija, $this->tsv->obnovljivaEnergija);
+
+            $dejanskaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $this->tsv->obnovljivaEnergija);
+            
+            $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Elektrika->value] = 
+                ($this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Elektrika->value]  ?? 0) +
+                array_sum($dejanskaEnergija) +
                 array_sum($this->tsv->potrebnaElektricnaEnergija);
 
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] = array_sum($this->tsv->obnovljivaEnergija);
+            $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Okolje->value]  =
+                ($this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Okolje->value]  ?? 0) +
+                array_sum($this->tsv->obnovljivaEnergija);
         }
 
         // potem ogrevanje
         if (!empty($this->ogrevanje)) {
             $this->analizaOgrevanja($cona, $okolje);
 
+            $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $this->ogrevanje->potrebnaEnergija);
+            $this->potrebnaElektricnaEnergija =
+                array_sum_values($this->potrebnaElektricnaEnergija, $this->ogrevanje->potrebnaElektricnaEnergija);
+
+            $this->obnovljivaEnergija =
+                array_sum_values($this->obnovljivaEnergija, $this->ogrevanje->obnovljivaEnergija);
+
             $dejanskaEnergija = array_subtract_values(
                 $this->ogrevanje->potrebnaEnergija,
                 $this->ogrevanje->obnovljivaEnergija
             );
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = array_sum($dejanskaEnergija);
-
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
+            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] =
+                ($this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] ?? 0) +
+                array_sum($dejanskaEnergija) +
                 array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
 
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] = array_sum(
-                $this->ogrevanje->obnovljivaEnergija
-            );
+            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Okolje->value] =
+                ($this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Okolje->value] ?? 0) +
+                array_sum($this->ogrevanje->obnovljivaEnergija);
         }
-
-        return [];
     }
 }

@@ -31,12 +31,12 @@ abstract class OgrevalniSistem
     public array $hranilniki = [];
     public array $generatorji = [];
 
-    public array $potrebnaEnergija;
-    public array $potrebnaElektricnaEnergija;
-    public array $obnovljivaEnergija;
-    public array $vracljiveIzgube;
+    public array $potrebnaEnergija = [];
+    public array $potrebnaElektricnaEnergija = [];
+    public array $obnovljivaEnergija = [];
+    public array $vracljiveIzgube = [];
 
-    public array $energijaPoEnergentih;
+    public array $energijaPoEnergentih = [];
 
     /**
      * Class Constructor

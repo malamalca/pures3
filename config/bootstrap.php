@@ -34,13 +34,13 @@ function echo_exception_handler($e) {
 if (Configure::read('debug')) {
     error_reporting(E_ALL);
     ini_set('display_errors', true);
-    set_exception_handler('echo_exception_handler');
+//    set_exception_handler('echo_exception_handler');
 }
 
 
 // Handle php error logs with monolog
 $logger = Log::getInstance()->getLogger();
-ErrorHandler::register($logger);
+//ErrorHandler::register($logger);
 
 /**
  * Set server timezone to UTC. You can change it to another timezone of your

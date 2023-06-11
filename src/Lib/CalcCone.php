@@ -214,7 +214,11 @@ class CalcCone
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
-            $vsotaVirov_ogrevanje = $cona->notranjiViriOgrevanje[$mesec] + $cona->solarniDobitkiOgrevanje[$mesec];
+            $vsotaVirov_ogrevanje =
+                $cona->notranjiViriOgrevanje[$mesec] +
+                $cona->solarniDobitkiOgrevanje[$mesec] +
+                ($cona->vracljiveIzgube[$mesec] ?? 0);
+
             $gama_ogrevanje = $vsotaVirov_ogrevanje /
                 ($cona->prezracevalneIzgubeOgrevanje[$mesec] + $cona->transIzgubeOgrevanje[$mesec]);
 
@@ -233,7 +237,7 @@ class CalcCone
                         $cona->ucinekDobitkov[$mesec] =
                             (1 - pow($gama_ogrevanje, $A_ogrevanje)) / (1 - pow($gama_ogrevanje, $A_ogrevanje + 1));
                     }
-                }
+                }   
             }
 
             $vsotaVirov_hlajenje = $cona->notranjiViriHlajenje[$mesec] + $cona->solarniDobitkiHlajenje[$mesec];
@@ -276,7 +280,11 @@ class CalcCone
                 $cona->energijaOgrevanje[$mesec] =
                     $cona->transIzgubeOgrevanje[$mesec] + $cona->prezracevalneIzgubeOgrevanje[$mesec] -
                     $cona->ucinekDobitkov[$mesec] * ($cona->notranjiViriOgrevanje[$mesec] +
-                    $cona->solarniDobitkiOgrevanje[$mesec]);
+                    $cona->solarniDobitkiOgrevanje[$mesec] + ($cona->vracljiveIzgube[$mesec] ?? 0));
+                
+                if ($cona->energijaOgrevanje[$mesec] < 0) {
+                    $cona->energijaOgrevanje[$mesec] = 0;
+                }
             }
             $cona->skupnaEnergijaOgrevanje += $cona->energijaOgrevanje[$mesec];
 

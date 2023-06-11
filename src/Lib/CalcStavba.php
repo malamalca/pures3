@@ -121,20 +121,37 @@ class CalcStavba
         $stavba->izpustCO2 = 0;
 
         foreach ($sistemi as $sistem) {
-            $stavba->energijaPoEnergentih += (array)$sistem->energijaPoEnergentih;
-            foreach ((array)$sistem->energijaPoEnergentih as $energent => $energija) {
-                $stavba->neutezenaDovedenaEnergija += $energija;
-                $stavba->utezenaDovedenaEnergija +=
-                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+            $podsistemi = [];
+            if (isset($sistem->energijaPoEnergentih->tsv)) {
+                $podsistemi[] = 'tsv';
+            }
+            if (isset($sistem->energijaPoEnergentih->ogrevanje)) {
+                $podsistemi[] = 'ogrevanje';
+            }
 
-                $stavba->neobnovljivaPrimarnaEnergija +=
-                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
+            $sistemEnergijaPoEnergentih = (array)$sistem->energijaPoEnergentih;
+            if (count($podsistemi) == 0) {
+                $podsistemi[] = 'default';
+                $sistemEnergijaPoEnergentih = ['default' => $sistemEnergijaPoEnergentih];
+            }
 
-                $stavba->obnovljivaPrimarnaEnergija +=
-                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('ren');
+            foreach ($podsistemi as $podsistem) {
+                $stavba->energijaPoEnergentih += (array)$sistemEnergijaPoEnergentih[$podsistem];
+                foreach ((array)$sistemEnergijaPoEnergentih[$podsistem] as $energent => $energija) {
+                
+                    $stavba->neutezenaDovedenaEnergija += $energija;
+                    $stavba->utezenaDovedenaEnergija +=
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
 
-                $stavba->izpustCO2 +=
-                    $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
+                    $stavba->neobnovljivaPrimarnaEnergija +=
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
+
+                    $stavba->obnovljivaPrimarnaEnergija +=
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('ren');
+
+                    $stavba->izpustCO2 +=
+                        $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
+                }
             }
         }
 

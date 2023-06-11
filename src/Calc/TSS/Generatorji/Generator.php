@@ -9,10 +9,10 @@ abstract class Generator
 
     public float $nazivnaMoc;
 
-    public array $toplotneIzgube;
     public array $potrebnaEnergija;
     public array $potrebnaElektricnaEnergija;
     public array $obnovljivaEnergija;
+    public array $vracljiveIzgube;
 
     /**
      * Class Constructor
@@ -55,13 +55,13 @@ abstract class Generator
      */
     public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
     {
-        $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->potrebnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
         $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
         $this->obnovljivaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
     }
 
     /**
-     * Izračun toplotnih izgub
+     * Izračun potrebne energije
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
@@ -70,7 +70,7 @@ abstract class Generator
      * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+    abstract public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 
     /**
      * Izračun potrebne električne energije

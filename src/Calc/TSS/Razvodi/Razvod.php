@@ -15,10 +15,10 @@ abstract class Razvod
     public ?string $id;
     public ?string $idPrenosnika;
 
-    public array $toplotneIzgube;
-    public array $vracljiveIzgube;
-    public array $vracljiveIzgubeAux;
-    public array $potrebnaElektricnaEnergija;
+    public array $toplotneIzgube = [];
+    public array $vracljiveIzgube = [];
+    public array $vracljiveIzgubeAux = [];
+    public array $potrebnaElektricnaEnergija = [];
 
     /**
      * Class Constructor

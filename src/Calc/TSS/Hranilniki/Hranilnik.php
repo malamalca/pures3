@@ -9,10 +9,10 @@ abstract class Hranilnik
 
     public float $volumen;
 
-    public array $toplotneIzgube;
-    public array $potrebnaElektricnaEnergija;
-    public array $vracljiveIzgube;
-    public array $vracljiveIzgubeAux;
+    public array $toplotneIzgube = [];
+    public array $potrebnaElektricnaEnergija = [];
+    public array $vracljiveIzgube = [];
+    public array $vracljiveIzgubeAux = [];
 
     /**
      * Class Constructor

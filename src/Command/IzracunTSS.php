@@ -103,6 +103,8 @@ class IzracunTSS extends Command
                         $generator->potrebnaEnergija = $sistemOgrevanja->generatorji[$k]->potrebnaEnergija;
                         $generator->potrebnaElektricnaEnergija =
                             $sistemOgrevanja->generatorji[$k]->potrebnaElektricnaEnergija;
+
+                        $generator->vneseneIzgube = $sistemOgrevanja->generatorji[$k]->vneseneIzgube;
                     }
 
                     $sistem->potrebnaEnergija = $sistemOgrevanja->potrebnaEnergija;
