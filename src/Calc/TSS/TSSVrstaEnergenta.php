@@ -9,6 +9,8 @@ enum TSSVrstaEnergenta: string
 
     case Okolje = 'okolje';
     case Elektrika = 'elektrika';
+    case Biomasa = 'biomasa';
+    case ELKO = 'ELKO';
 
     /**
      * Vrne utezni faktor za vrsto energenta
@@ -44,6 +46,22 @@ enum TSSVrstaEnergenta: string
         $faktorjiIzpusta = [0, 0.42];
 
         return $faktorjiIzpusta[$this->getOrdinal()];
+    }
+
+    /**
+     * Minimalni izkoristek sistema OgrHlaTsv
+     *
+     * @return float
+     */
+    public function minimalniIzkoristekOgrHlaTsv(): float
+    {
+        return match ($this) {
+            TSSVrstaEnergenta::Elektrika => 0.5,
+            TSSVrstaEnergenta::Biomasa => 0.65,
+            // vsi ostali energenti
+            TSSVrstaEnergenta::Okolje,
+            TSSVrstaEnergenta::ELKO => 0.7,
+        };
     }
 
     /**

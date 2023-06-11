@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi;
 
-use App\Calc\TSS\Energenti\Energent;
 use App\Calc\TSS\GeneratorFactory;
 use App\Calc\TSS\HranilnikFactory;
 use App\Calc\TSS\KoncniPrenosnikFactory;
 use App\Calc\TSS\RazvodFactory;
+use App\Calc\TSS\TSSVrstaEnergenta;
 
 abstract class OgrevalniSistem
 {
-    public Energent $energent;
+    public TSSVrstaEnergenta $energent;
 
     /**
      * QN – standardna potrebna toplotna moč za ogrevanje (cone) – moč ogreval, skladno s SIST
@@ -40,6 +40,9 @@ abstract class OgrevalniSistem
 
     public array $energijaPoEnergentih = [];
 
+    public float $letnaUcinkovitostOgrHlaTsv = 0;
+    public float $minLetnaUcinkovitostOgrHlaTsv = 0;
+
     /**
      * Class Constructor
      *
@@ -65,6 +68,8 @@ abstract class OgrevalniSistem
         if (is_string($config)) {
             $config = json_decode($config);
         }
+
+        $this->energent = TSSVrstaEnergenta::from($config->energent ?? 'default');
 
         if (!empty($config->razvodi)) {
             foreach ($config->razvodi as $razvod) {

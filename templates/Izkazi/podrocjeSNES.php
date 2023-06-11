@@ -299,8 +299,24 @@ za področje TSS</h1>
     <tr>
         <td class="w-60" colspan="2"></td>
         <td class="w-20 center">energetska cona oz. stavba</td>
-        <td class="w-20 center">E<sub>V,del,an</sub><br />(kWh/an)</td>
+        <td class="w-20 center">ustrezno</td>
     </tr>
+    <?php
+        foreach ($sistemiOgrevanja as $sistem) {
+    ?>
+    <tr>
+        <td class="w-60" colspan="2"><?= h($sistem->id) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($sistem->letnaUcinkovitostOgrHlaTsv * 100, 1) ?> %</td>
+        <td class="w-20 center">
+            <span title="&#951; > <?= $this->numFormat($sistem->minLetnaUcinkovitostOgrHlaTsv, 1) ?>">
+            <b class="<?= $sistem->letnaUcinkovitostOgrHlaTsv > $sistem->minLetnaUcinkovitostOgrHlaTsv ? 'green' : 'red' ?>">
+            <?= $sistem->letnaUcinkovitostOgrHlaTsv > $sistem->minLetnaUcinkovitostOgrHlaTsv ? '&#10003;' : '&#10006;' ?>
+            </b></span>
+        </td>
+    </tr>
+    <?php
+        }
+    ?>
 </table>
 <table border="1" cellpadding="3" width="100%">
     <tr>
@@ -541,7 +557,11 @@ za področje TSS</h1>
 
     <tr>
         <td colspan="3">ustreza (DA/NE)</td>
-        <td class="w-20 center"><?= $stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija > $stavba->korigiranaSpecificnaPrimarnaEnergija ? 'DA' : 'NE' ?></td>
+        <td class="w-20 center">
+            <b class="<?= $stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija > $stavba->korigiranaSpecificnaPrimarnaEnergija ? 'green' : 'red' ?>">
+            <?= $stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija > $stavba->korigiranaSpecificnaPrimarnaEnergija ? 'DA' : 'NE' ?>
+            </b>
+        </td>
     </tr>
 
 
@@ -555,7 +575,11 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td colspan="3">ustreza (DA/NE)</td>
-        <td class="w-20 center"><?= $stavba->ROVE > $stavba->minROVE ? 'DA' : 'NE' ?></td>
+        <td class="w-20 center">
+            <b class="<?= $stavba->ROVE > $stavba->minROVE ? 'green' : 'red' ?>">
+            <?= $stavba->ROVE > $stavba->minROVE ? 'DA' : 'NE' ?>
+            </b>
+        </td>
     </tr>
 
     <tr>

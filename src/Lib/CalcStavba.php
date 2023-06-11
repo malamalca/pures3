@@ -116,10 +116,12 @@ class CalcStavba
         $stavba->energijaPoEnergentih = [];
         $stavba->neutezenaDovedenaEnergija = 0;
         $stavba->utezenaDovedenaEnergija = 0;
-        $stavba->utezenaDovedenaEnergijaOgrHlaTsv = 0;
         $stavba->neobnovljivaPrimarnaEnergija = 0;
         $stavba->obnovljivaPrimarnaEnergija = 0;
         $stavba->izpustCO2 = 0;
+
+        $utezenaDovedenaEnergijaOgrHlaTsv = 0;
+        $skupnaDovedenaEnergijaOgrHlaTsv = 0;
 
         foreach ($sistemi as $sistem) {
             $jeOgrevalniSistem = false;
@@ -127,14 +129,17 @@ class CalcStavba
             if (isset($sistem->energijaPoEnergentih->tsv)) {
                 $podsistemi[] = 'tsv';
                 $jeOgrevalniSistem = true;
+                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaPotrebaTSV;
             }
             if (isset($sistem->energijaPoEnergentih->ogrevanje)) {
                 $podsistemi[] = 'ogrevanje';
                 $jeOgrevalniSistem = true;
+                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaEnergijaOgrevanje;
             }
             if (isset($sistem->energijaPoEnergentih->hlajenje)) {
                 $podsistemi[] = 'hlajenje';
                 $jeOgrevalniSistem = true;
+                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaEnergijaHlajenje;
             }
 
             $sistemEnergijaPoEnergentih = (array)$sistem->energijaPoEnergentih;
@@ -151,7 +156,7 @@ class CalcStavba
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
 
                     if ($jeOgrevalniSistem) {
-                        $stavba->utezenaDovedenaEnergijaOgrHlaTsv +=
+                        $utezenaDovedenaEnergijaOgrHlaTsv +=
                             $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
                     }
 
@@ -166,6 +171,8 @@ class CalcStavba
                 }
             }
         }
+
+        $stavba->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
 
         $stavba->specificnaPrimarnaEnergija = $stavba->utezenaDovedenaEnergija / $stavba->ogrevanaPovrsina;
         $stavba->korigiranaSpecificnaPrimarnaEnergija =

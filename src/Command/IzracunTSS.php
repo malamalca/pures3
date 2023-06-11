@@ -114,6 +114,9 @@ class IzracunTSS extends Command
 
                     $sistem->energijaPoEnergentih = $sistemOgrevanja->energijaPoEnergentih;
 
+                    $sistem->letnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->letnaUcinkovitostOgrHlaTsv;
+                    $sistem->minLetnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->minLetnaUcinkovitostOgrHlaTsv;
+
                     $TSSSistemiOgrevanjeOut[] = $sistem;
                 }
             }
