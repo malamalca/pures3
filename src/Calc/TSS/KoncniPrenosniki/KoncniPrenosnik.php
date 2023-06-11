@@ -38,9 +38,9 @@ abstract class KoncniPrenosnik
     public VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
     public VrstaRegulacijeTemperature $regulacijaTemperature;
 
-    public array $toplotneIzgube;
-    public array $potrebnaElektricnaEnergija;
-    public array $vracljiveIzgubeAux;
+    public array $toplotneIzgube = [];
+    public array $potrebnaElektricnaEnergija = [];
+    public array $vracljiveIzgubeAux = [];
 
     /**
      * Class Constructor
@@ -75,15 +75,33 @@ abstract class KoncniPrenosnik
     }
 
     /**
+     * Analiza podsistema
+     *
+     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return void
+     */
+    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    {
+        $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->vracljiveIzgubeAux($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+    }
+
+    /**
      * Izračun toplotnih izgub
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki cone
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje);
+    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 
     /**
      * Izračun potrebne električne energije

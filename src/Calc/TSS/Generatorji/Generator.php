@@ -9,10 +9,11 @@ abstract class Generator
 
     public float $nazivnaMoc;
 
-    public array $toplotneIzgube;
+    public array $vneseneIzgube;
     public array $potrebnaEnergija;
     public array $potrebnaElektricnaEnergija;
     public array $obnovljivaEnergija;
+    public array $vracljiveIzgube;
 
     /**
      * Class Constructor
@@ -44,16 +45,33 @@ abstract class Generator
     }
 
     /**
-     * Izračun toplotnih izgub
+     * Analiza podsistema
+     *
+     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return void
+     */
+    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    {
+        $this->potrebnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->obnovljivaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+    }
+
+    /**
+     * Izračun potrebne energije
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
-    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+    abstract public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 
     /**
      * Izračun potrebne električne energije
@@ -63,7 +81,7 @@ abstract class Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     abstract public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 
@@ -75,7 +93,7 @@ abstract class Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     abstract public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 }

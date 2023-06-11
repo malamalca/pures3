@@ -9,10 +9,10 @@ abstract class Hranilnik
 
     public float $volumen;
 
-    public array $toplotneIzgube;
-    public array $potrebnaElektricnaEnergija;
-    public array $vracljiveIzgube;
-    public array $vracljiveIzgubeAux;
+    public array $toplotneIzgube = [];
+    public array $potrebnaElektricnaEnergija = [];
+    public array $vracljiveIzgube = [];
+    public array $vracljiveIzgubeAux = [];
 
     /**
      * Class Constructor
@@ -40,6 +40,7 @@ abstract class Hranilnik
         }
 
         $this->volumen = $config->volumen ?? 0;
+        $this->id = $config->id ?? null;
     }
 
     /**
@@ -49,7 +50,8 @@ abstract class Hranilnik
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki cone
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje);
+    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 }

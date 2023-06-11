@@ -13,6 +13,7 @@ final class PosrednoOgrevanHranilnikTest extends TestCase
 
         $config = <<<EOT
         {
+            "id": "TSV",
             "vrsta": "posrednoogrevan",
             "volumen": 250,
             "istiProstorKotGrelnik": true,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\TSS\OgrevalniSistemi\Izbire;
 
 use App\Calc\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\TSS\TSSVrstaEnergenta;
 
 enum VrstaRezima: string
 {
@@ -23,7 +24,7 @@ enum VrstaRezima: string
     {
         if (
             $sistem instanceof ToplovodniOgrevalniSistem ||
-            $sistem->energent instanceof \App\Calc\TSS\Energenti\Elektrika
+            $sistem->energent == TSSVrstaEnergenta::Elektrika
         ) {
             // za ploskovno | toplovodno+elektrika
             $srednjeTemperature = [32.5, 35, 50];
@@ -69,7 +70,7 @@ enum VrstaRezima: string
 
         if (
             $sistem instanceof ToplovodniOgrevalniSistem ||
-            $sistem->energent instanceof \App\Calc\TSS\Energenti\Elektrika
+            $sistem->energent == TSSVrstaEnergenta::Elektrika
         ) {
             $deltaT_HK = $deltaTHKLookup[$this->getOrdinal()][0];
         } else {

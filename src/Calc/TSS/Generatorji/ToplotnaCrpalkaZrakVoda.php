@@ -7,7 +7,7 @@ use App\Lib\Calc;
 
 class ToplotnaCrpalkaZrakVoda extends Generator
 {
-    public const REZIMI = ['w-7', 'w2', 'w7', 'w10'];
+    public const REZIMI = ['w-7', 'w2', 'w7', 'w10', 'w20'];
     public const REZIMI_TEMPERATURE = [-7, 2, 7, 10, 20];
 
     public const TRAJANJE = [
@@ -72,73 +72,95 @@ class ToplotnaCrpalkaZrakVoda extends Generator
     }
 
     /**
-     * Izračun toplotnih izgub generatorja
+     * Izračun potrebne energije generatorja
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
-    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         $relativnaMoc = [];
         $dejanskaMoc = [];
         $cop = [];
-        foreach (self::REZIMI as $ix => $rezim) {
-            $relativnaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix];
-            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix] * $this->nazivnaMoc;
+        $rezimRazvoda = $params['rezim'];
+        $namen = $params['namen'];
+
+        $rezimi = self::REZIMI;
+
+        // za ogrevanje ne upoštevamo režima 20°
+        if ($namen != 'tsv') {
+            unset($rezimi[4]);
+        }
+
+        $this->vneseneIzgube[$namen] = $vneseneIzgube;
+
+        foreach ($rezimi as $ix => $rezim) {
+            $relativnaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix];
+            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix] * $this->nazivnaMoc;
 
             $temperaturaEvaporacije = 2;
             $temperaturaKondenzacije = 35;
+            $temperaturaPonora = $rezimRazvoda->temperaturaPonora();
 
             $cop[$rezim] = $this->cop[$rezim] ?? $this->nazivniCOP *
-                ($sistem->rezim->temperaturaPonora() + 273.15) / ($temperaturaKondenzacije + 273.15) *
+                ($temperaturaPonora + 273.15) / ($temperaturaKondenzacije + 273.15) *
                 ($temperaturaKondenzacije - $temperaturaEvaporacije) /
-                ($sistem->rezim->temperaturaPonora() - self::REZIMI_TEMPERATURE[$ix]);
+                ($temperaturaPonora - self::REZIMI_TEMPERATURE[$ix]);
 
-            // prilagoditveni faktor glede na režuim
-            $cop[$rezim] = $cop[$rezim] * $sistem->rezim->faktorDeltaTempTC();
+            // prilagoditveni faktor glede na režim
+            $faktorRezima = 1;
+            if ($namen != 'tsv') {
+                $faktorRezima = $rezimRazvoda->faktorDeltaTempTC();
+            }
+            $cop[$rezim] = $cop[$rezim] * $faktorRezima;
         }
 
         $En = [];
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $sumUr = 0;
-            foreach (self::REZIMI as $rezim) {
+            foreach ($rezimi as $k => $rezim) {
                 $sumUr += self::TRAJANJE[$this->podnebje][$rezim][$mesec];
             }
 
             // razdelitev mesečnih vnešenih izgub na posamezne režime
-            foreach (self::REZIMI as $rezim) {
+            foreach ($rezimi as $rezim) {
                 $trajanjeUr = self::TRAJANJE[$this->podnebje][$rezim][$mesec];
 
-                $toplotneIzgube[$mesec][$rezim] = $vneseneIzgube[$mesec] * $trajanjeUr / $sumUr;
+                $potrebnaEnergija[$mesec][$rezim] = $vneseneIzgube[$mesec] * $trajanjeUr / $sumUr;
 
                 // število ur delovanja TČ
-                $t_ON_TC = $toplotneIzgube[$mesec][$rezim] / $dejanskaMoc[$rezim];
+                $t_ON_TC = $potrebnaEnergija[$mesec][$rezim] / $dejanskaMoc[$rezim];
 
                 // to vse rabimo za korekcijo copa
-                //$FC_i = ($trajanjeUr == 0) ? 0 : $toplotneIzgube[$mesec][$rezim] / ($dejanskaMoc[$rezim] * $trajanjeUr);
+                //$FC_i = ($trajanjeUr == 0) ? 0 : $potrebnaEnergija[$mesec][$rezim] / ($dejanskaMoc[$rezim] * $trajanjeUr);
                 //$FC_i_round = $FC_i > 10 ? 10 : round($FC_i * 10, 0);
 
                 // TODO: korektura odvisno od vrste prenosnikov
                 //  - radiatorji lookup glede na % ($FC_i_round+2) * 10
                 //  - ploskovna mokri = 0.985 ostali = 0.975
                 //  - za zrak ni korekcije = 1
-                $faktroCOPzaOgrevala = 0.985;
+                if ($namen == 'tsv') {
+                    $faktroCOPzaOgrevala = 1;
+                } else {
+                    $faktroCOPzaOgrevala = 0.985;
+                }
 
                 $COP_t = $cop[$rezim] * $faktroCOPzaOgrevala;
 
-                $E_tc[$mesec][$rezim] = $toplotneIzgube[$mesec][$rezim] / $COP_t;
+                $E_tc[$mesec][$rezim] = $potrebnaEnergija[$mesec][$rezim] / $COP_t;
 
-                $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
+                if (empty($namen)) {
+                    $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
+                } else {
+                    $this->potrebnaEnergija[$namen][$mesec] =
+                        ($this->potrebnaEnergija[$namen][$mesec] ?? 0) + $E_tc[$mesec][$rezim];
+                }
             }
-
-            $this->toplotneIzgube[$mesec] = 0;
         }
-
-        return $this->toplotneIzgube;
     }
 
     /**
@@ -149,19 +171,24 @@ class ToplotnaCrpalkaZrakVoda extends Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        if (empty($this->toplotneIzgube)) {
-            $this->toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+        $namen = $params['namen'];
+
+        if (empty($this->potrebnaEnergija)) {
+            $this->potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params);
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $this->obnovljivaEnergija[$mesec] = $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$mesec];
+            if (empty($namen)) {
+                $this->obnovljivaEnergija[$mesec] = $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$mesec];
+            } else {
+                $this->obnovljivaEnergija[$namen][$mesec] =
+                    $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$namen][$mesec];
+            }
         }
-
-        return $this->obnovljivaEnergija;
     }
 
     /**
@@ -172,14 +199,17 @@ class ToplotnaCrpalkaZrakVoda extends Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         $dejanskaMoc = [];
         $cop = [];
+        $rezimRazvoda = $params['rezim'];
+        $namen = $params['namen'];
+
         foreach (self::REZIMI as $ix => $rezim) {
-            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$sistem->rezim->temperaturaPonora()][$ix] * $this->nazivnaMoc;
+            $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix] * $this->nazivnaMoc;
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -192,14 +222,21 @@ class ToplotnaCrpalkaZrakVoda extends Generator
             $delovanjeUr = 0;
             foreach (self::REZIMI as $rezim) {
                 $trajanjeUr = self::TRAJANJE[$this->podnebje][$rezim][$mesec];
-                $toplotneIzgube[$mesec][$rezim] = $vneseneIzgube[$mesec] * $trajanjeUr / $sumUr;
-                $delovanjeUr += $toplotneIzgube[$mesec][$rezim] / $dejanskaMoc[$rezim];
+                $potrebnaEnergija[$mesec][$rezim] = $vneseneIzgube[$mesec] * $trajanjeUr / $sumUr;
+                $delovanjeUr += $potrebnaEnergija[$mesec][$rezim] / $dejanskaMoc[$rezim];
             }
 
-            $this->potrebnaElektricnaEnergija[$mesec] =
-                ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) * $delovanjeUr / 1000;
+            if (empty($namen)) {
+                $this->potrebnaElektricnaEnergija[$mesec] =
+                    ($this->potrebnaElektricnaEnergija[$mesec] ?? 0) +
+                    ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
+                    $delovanjeUr / 1000;
+            } else {
+                $this->potrebnaElektricnaEnergija[$namen][$mesec] =
+                    ($this->potrebnaElektricnaEnergija[$namen][$mesec] ?? 0) +
+                    ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
+                    $delovanjeUr / 1000;
+            }
         }
-
-        return $this->potrebnaElektricnaEnergija;
     }
 }

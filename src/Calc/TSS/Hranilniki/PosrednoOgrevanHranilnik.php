@@ -42,15 +42,31 @@ class PosrednoOgrevanHranilnik extends Hranilnik
     }
 
     /**
+     * Analiza podsistema
+     *
+     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
+     * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return void
+     */
+    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    {
+        $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+    }
+
+    /**
      * Izračun toplotnih izgub
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
      * @param \App\Calc\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki cone
+     * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje)
+    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         // f - vpliv cevne povezave med hranilnikom in grelnikom in hranilnikom. Če sta
         // nameščena v istem prostoru, je fpovezava = 1,2. V nasprotnem primeru je fpovezava = 1,

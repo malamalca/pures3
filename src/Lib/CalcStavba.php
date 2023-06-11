@@ -120,23 +120,59 @@ class CalcStavba
         $stavba->obnovljivaPrimarnaEnergija = 0;
         $stavba->izpustCO2 = 0;
 
+        $utezenaDovedenaEnergijaOgrHlaTsv = 0;
+        $skupnaDovedenaEnergijaOgrHlaTsv = 0;
+
         foreach ($sistemi as $sistem) {
-            $stavba->energijaPoEnergentih += (array)$sistem->energijaPoEnergentih;
-            foreach ((array)$sistem->energijaPoEnergentih as $energent => $energija) {
-                $stavba->neutezenaDovedenaEnergija += $energija;
-                $stavba->utezenaDovedenaEnergija +=
-                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+            $jeOgrevalniSistem = false;
+            $podsistemi = [];
+            if (isset($sistem->energijaPoEnergentih->tsv)) {
+                $podsistemi[] = 'tsv';
+                $jeOgrevalniSistem = true;
+                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaPotrebaTSV;
+            }
+            if (isset($sistem->energijaPoEnergentih->ogrevanje)) {
+                $podsistemi[] = 'ogrevanje';
+                $jeOgrevalniSistem = true;
+                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaEnergijaOgrevanje;
+            }
+            if (isset($sistem->energijaPoEnergentih->hlajenje)) {
+                $podsistemi[] = 'hlajenje';
+                $jeOgrevalniSistem = true;
+                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaEnergijaHlajenje;
+            }
 
-                $stavba->neobnovljivaPrimarnaEnergija +=
-                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
+            $sistemEnergijaPoEnergentih = (array)$sistem->energijaPoEnergentih;
+            if (count($podsistemi) == 0) {
+                $podsistemi[] = 'default';
+                $sistemEnergijaPoEnergentih = ['default' => $sistemEnergijaPoEnergentih];
+            }
 
-                $stavba->obnovljivaPrimarnaEnergija +=
-                    $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('ren');
+            foreach ($podsistemi as $podsistem) {
+                $stavba->energijaPoEnergentih += (array)$sistemEnergijaPoEnergentih[$podsistem];
+                foreach ((array)$sistemEnergijaPoEnergentih[$podsistem] as $energent => $energija) {
+                    $stavba->neutezenaDovedenaEnergija += $energija;
+                    $stavba->utezenaDovedenaEnergija +=
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
 
-                $stavba->izpustCO2 +=
-                    $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
+                    if ($jeOgrevalniSistem) {
+                        $utezenaDovedenaEnergijaOgrHlaTsv +=
+                            $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                    }
+
+                    $stavba->neobnovljivaPrimarnaEnergija +=
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
+
+                    $stavba->obnovljivaPrimarnaEnergija +=
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('ren');
+
+                    $stavba->izpustCO2 +=
+                        $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
+                }
             }
         }
+
+        $stavba->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
 
         $stavba->specificnaPrimarnaEnergija = $stavba->utezenaDovedenaEnergija / $stavba->ogrevanaPovrsina;
         $stavba->korigiranaSpecificnaPrimarnaEnergija =

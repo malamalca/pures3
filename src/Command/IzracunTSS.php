@@ -103,6 +103,8 @@ class IzracunTSS extends Command
                         $generator->potrebnaEnergija = $sistemOgrevanja->generatorji[$k]->potrebnaEnergija;
                         $generator->potrebnaElektricnaEnergija =
                             $sistemOgrevanja->generatorji[$k]->potrebnaElektricnaEnergija;
+
+                        $generator->vneseneIzgube = $sistemOgrevanja->generatorji[$k]->vneseneIzgube;
                     }
 
                     $sistem->potrebnaEnergija = $sistemOgrevanja->potrebnaEnergija;
@@ -111,6 +113,9 @@ class IzracunTSS extends Command
                     $sistem->vracljiveIzgube = $sistemOgrevanja->vracljiveIzgube;
 
                     $sistem->energijaPoEnergentih = $sistemOgrevanja->energijaPoEnergentih;
+
+                    $sistem->letnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->letnaUcinkovitostOgrHlaTsv;
+                    $sistem->minLetnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->minLetnaUcinkovitostOgrHlaTsv;
 
                     $TSSSistemiOgrevanjeOut[] = $sistem;
                 }

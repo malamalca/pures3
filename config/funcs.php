@@ -36,6 +36,38 @@ function ar($a) {
 }
 
 /**
+ * Array sum values
+ *
+ * @param array &$a Destination array
+ * @param array $b Array of elements to be sumed to $a
+ * @return array
+ */
+function array_sum_values(&$a, $b) {
+    $ret = $a;
+    foreach ($b as $k => $v) {
+        $ret[$k] = ($ret[$k] ?? 0) + $v;
+    }
+
+    return $ret;
+}
+
+/**
+ * Array subtract values
+ *
+ * @param array &$a Destination array
+ * @param array $b Array of elements to be subtracted from $a
+ * @return array
+ */
+function array_subtract_values(&$a, $b) {
+    $ret = $a;
+    foreach ($b as $k => $v) {
+        $ret[$k] = ($ret[$k] ?? 0) - $v;
+    }
+
+    return $ret;
+}
+
+/**
  * Return the first element in an array passing a given truth test.
  *
  * @param  iterable  $array

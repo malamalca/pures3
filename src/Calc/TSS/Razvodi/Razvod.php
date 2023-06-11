@@ -12,12 +12,13 @@ abstract class Razvod
     public ElementRazvoda $dvizniVod;
     public ElementRazvoda $prikljucniVod;
 
+    public ?string $id;
     public ?string $idPrenosnika;
 
-    public array $toplotneIzgube;
-    public array $vracljiveIzgube;
-    public array $vracljiveIzgubeAux;
-    public array $potrebnaElektricnaEnergija;
+    public array $toplotneIzgube = [];
+    public array $vracljiveIzgube = [];
+    public array $vracljiveIzgubeAux = [];
+    public array $potrebnaElektricnaEnergija = [];
 
     /**
      * Class Constructor
@@ -44,6 +45,7 @@ abstract class Razvod
             $config = json_decode($config);
         }
 
+        $this->id = $config->id ?? null;
         $this->idPrenosnika = $config->idPrenosnika ?? null;
     }
 
