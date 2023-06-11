@@ -9,6 +9,7 @@ abstract class Generator
 
     public float $nazivnaMoc;
 
+    public array $vneseneIzgube;
     public array $potrebnaEnergija;
     public array $potrebnaElektricnaEnergija;
     public array $obnovljivaEnergija;
@@ -68,7 +69,7 @@ abstract class Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     abstract public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 
@@ -80,7 +81,7 @@ abstract class Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     abstract public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 
@@ -92,7 +93,7 @@ abstract class Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     abstract public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 }

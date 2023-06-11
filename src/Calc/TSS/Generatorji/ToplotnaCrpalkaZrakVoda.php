@@ -156,11 +156,11 @@ class ToplotnaCrpalkaZrakVoda extends Generator
                 if (empty($namen)) {
                     $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
                 } else {
-                    $this->potrebnaEnergija[$namen][$mesec] = ($this->potrebnaEnergija[$namen][$mesec] ?? 0) + $E_tc[$mesec][$rezim];
+                    $this->potrebnaEnergija[$namen][$mesec] =
+                        ($this->potrebnaEnergija[$namen][$mesec] ?? 0) + $E_tc[$mesec][$rezim];
                 }
             }
         }
-        
     }
 
     /**
@@ -171,14 +171,14 @@ class ToplotnaCrpalkaZrakVoda extends Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         $namen = $params['namen'];
 
         if (empty($this->potrebnaEnergija)) {
-            $this->toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+            $this->potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params);
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -189,8 +189,6 @@ class ToplotnaCrpalkaZrakVoda extends Generator
                     $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$namen][$mesec];
             }
         }
-
-        return $this->obnovljivaEnergija;
     }
 
     /**
@@ -201,7 +199,7 @@ class ToplotnaCrpalkaZrakVoda extends Generator
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
@@ -240,7 +238,5 @@ class ToplotnaCrpalkaZrakVoda extends Generator
                     $delovanjeUr / 1000;
             }
         }
-
-        return $this->potrebnaElektricnaEnergija;
     }
 }
