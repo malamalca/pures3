@@ -116,17 +116,25 @@ class CalcStavba
         $stavba->energijaPoEnergentih = [];
         $stavba->neutezenaDovedenaEnergija = 0;
         $stavba->utezenaDovedenaEnergija = 0;
+        $stavba->utezenaDovedenaEnergijaOgrHlaTsv = 0;
         $stavba->neobnovljivaPrimarnaEnergija = 0;
         $stavba->obnovljivaPrimarnaEnergija = 0;
         $stavba->izpustCO2 = 0;
 
         foreach ($sistemi as $sistem) {
+            $jeOgrevalniSistem = false;
             $podsistemi = [];
             if (isset($sistem->energijaPoEnergentih->tsv)) {
                 $podsistemi[] = 'tsv';
+                $jeOgrevalniSistem = true;
             }
             if (isset($sistem->energijaPoEnergentih->ogrevanje)) {
                 $podsistemi[] = 'ogrevanje';
+                $jeOgrevalniSistem = true;
+            }
+            if (isset($sistem->energijaPoEnergentih->hlajenje)) {
+                $podsistemi[] = 'hlajenje';
+                $jeOgrevalniSistem = true;
             }
 
             $sistemEnergijaPoEnergentih = (array)$sistem->energijaPoEnergentih;
@@ -142,6 +150,11 @@ class CalcStavba
                     $stavba->neutezenaDovedenaEnergija += $energija;
                     $stavba->utezenaDovedenaEnergija +=
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+
+                    if ($jeOgrevalniSistem) {
+                        $stavba->utezenaDovedenaEnergijaOgrHlaTsv +=
+                            $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                    }
 
                     $stavba->neobnovljivaPrimarnaEnergija +=
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
