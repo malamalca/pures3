@@ -12,6 +12,7 @@
     <meta name="author" content="ARHIM d.o.o.">
 
     <link rel="stylesheet" href="<?= $this->url("/css/main.css") ?>">
+    <link rel="stylesheet" media="print" href="<?= $this->url("/css/print.css") ?>" />
 </head>
 
 <body>

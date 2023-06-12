@@ -88,6 +88,8 @@ class RazvodTSV extends Razvod
         $steviloUrCrpalke = $this->izracunCasaDelovanjaCrpalke($cona);
         $steviloUrBrezCrpalke = 24 - $steviloUrCrpalke;
 
+            var_dump($steviloUrCrpalke);
+
         $povprecniUCevi = ($this->horizontalniVod->toplotneIzgube($this, $cona) +
             $this->dvizniVod->toplotneIzgube($this, $cona) +
             $this->prikljucniVod->toplotneIzgube($this, $cona)) / (

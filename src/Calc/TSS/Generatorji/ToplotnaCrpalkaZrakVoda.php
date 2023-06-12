@@ -26,7 +26,7 @@ class ToplotnaCrpalkaZrakVoda extends Generator
             'w20' => [0, 0, 34, 101, 299, 513, 631, 582, 360, 101, 14, 0],
         ],
         'primorsko' => [
-            'w-1' => [68, 43, 13, 0, 0, 0, 0, 0, 0, 0, 0, 69],
+            'w-7' => [68, 43, 13, 0, 0, 0, 0, 0, 0, 0, 0, 69],
             'w2' => [317, 267, 199, 63, 7, 3, 0, 0, 0, 41, 57, 259],
             'w7' => [249, 226, 279, 167, 25, 12, 0, 0, 12, 92, 149, 311],
             'w10' => [110, 136, 205, 269, 266, 86, 44, 18, 163, 330, 468, 104],
@@ -66,6 +66,8 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         if (!empty($config->nazivniCOP)) {
             $this->nazivniCOP = $config->nazivniCOP;
         }
+
+        $this->podnebje = $config->podnebje ?? 'alpsko';
 
         $this->elektricnaMocNaPrimarnemKrogu = $config->elektricnaMocNaPrimarnemKrogu ?? 0;
         $this->elektricnaMocNaSekundarnemKrogu = $config->elektricnaMocNaSekundarnemKrogu ?? 0;

@@ -9,6 +9,7 @@ za področje gradbene fizike</h1>
     </tr>
     </thead>
     <?php
+        $i = 0;
         foreach ($cone as $cona) {
     ?>
     <tr>
@@ -18,7 +19,7 @@ za področje gradbene fizike</h1>
     </tr>
     <?php
             $konstrukcije = array_combine(array_map(fn($k) => $k->id, $ntKons), $ntKons);
-            foreach ($cona->ovoj->netransparentneKonstrukcije as $i => $elementOvoja) {
+            foreach ($cona->ovoj->netransparentneKonstrukcije as $elementOvoja) {
                 $konstrukcija = $konstrukcije[$elementOvoja->idKonstrukcije];
     ?>
     <tr>
@@ -33,9 +34,10 @@ za področje gradbene fizike</h1>
         </td>
     </tr>
     <?php
+                $i++;
             }
             $konstrukcije = array_combine(array_map(fn($k) => $k->id, $tKons), $tKons);
-            foreach ($cona->ovoj->transparentneKonstrukcije as $i => $elementOvoja) {
+            foreach ($cona->ovoj->transparentneKonstrukcije as $elementOvoja) {
                 $konstrukcija = $konstrukcije[$elementOvoja->idKonstrukcije];
     ?>
     <tr>
@@ -50,6 +52,7 @@ za področje gradbene fizike</h1>
         </td>
     </tr>
     <?php
+                $i++;
             }
         }
     ?>
@@ -66,7 +69,7 @@ za področje gradbene fizike</h1>
         <td class="w-5 center"><span style="border: solid 1px black; display: inline-block; width: 18px;">&#10003;</span></td>
         <td class="w-65">Določitev po poenostavljeni metodi (s konstantno vrednostjo):</td>
         <td class="w-20 center">&Delta;<i class="big serif">&Psi;</i> (W/(m K))</td>
-        <td class="w-10 center"><?= 5 ?></td>
+        <td class="w-10 center"><?= $this->numFormat($cone[0]->deltaPsi, 2) ?></td>
     </tr>
     <tr>
         <td class="w-5 center"><span style="border: solid 1px black; display: inline-block; width: 18px;">&nbsp;</span></td>

@@ -134,8 +134,12 @@ class Pdf extends \TCPDF
      */
     public function newPage($html, $options = [])
     {
-        $this->addPage();
-        $this->writeHTML($html);
+        $rendered = explode('<!-- NEW PAGE -->', $html);
+
+        foreach ($rendered as $page) {
+            $this->addPage();
+            $this->writeHTML($page);
+        }
     }
 
     /**

@@ -18,14 +18,13 @@ class CalcOvojTransparenten
      */
     public static function analiza($cona, $okolje, $konstrukcije)
     {
-        $konstrukcije = array_combine(array_map(fn($k) => $k->id, $konstrukcije), $konstrukcije);
-
         if (isset($cona->ovoj->transparentneKonstrukcije)) {
             foreach ($cona->ovoj->transparentneKonstrukcije as $ix => $elementOvoja) {
-                if (!isset($konstrukcije[$elementOvoja->idKonstrukcije])) {
+                $kons = array_first($konstrukcije, fn($k) => $k->id == $elementOvoja->idKonstrukcije);
+                if (!$kons) {
+                    var_dump($konstrukcije);
                     throw new \Exception(sprintf('Konstrukcija "%1$s" ne obstaja', $elementOvoja->idKonstrukcije));
                 }
-                $kons = $konstrukcije[$elementOvoja->idKonstrukcije];
 
                 $elementOvoja->stevilo = $elementOvoja->stevilo ?? 1;
 
@@ -42,20 +41,20 @@ class CalcOvojTransparenten
                 $elementOvoja->g_sh = $elementOvoja->g * $elementOvoja->faktorSencil;
 
                 switch ($kons->vrsta) {
+                    case '0':
                     case '1':
-                    case '2':
-                        // 1 - okna
-                        // 2 - strešna okna
+                        // 0 - okna
+                        // 1 - strešna okna
                         $elementOvoja->U = (
                             $elementOvoja->povrsina * $kons->Ug * (1 - ($elementOvoja->delezOkvirja ?? 0)) +
                             $elementOvoja->povrsina * $kons->Uf * ($elementOvoja->delezOkvirja ?? 0) +
                             $elementOvoja->dolzinaOkvirja * $kons->Psi
                             ) / $elementOvoja->povrsina;
                         break;
+                    case '2':
                     case '3':
-                    case '4':
-                        // 3 - vrata
-                        // 4 - garažna vrata ali proti neogrevavanem prostoru
+                        // 2 - vrata
+                        // 3 - garažna vrata ali proti neogrevavanem prostoru
                         $elementOvoja->U = $kons->Ud;
                         break;
                     default:
@@ -123,10 +122,10 @@ class CalcOvojTransparenten
                     $P2_ovh = $H ? $L_ovh / $H : 0;
 
                     $P1_stena_l = $W ? $D_stena_l / $W : 0;
-                    $P2_stena_l = $H ? $L_stena_l / $H : 0;
+                    $P2_stena_l = $W ? $L_stena_l / $W : 0;
 
                     $P1_stena_d = $W ? $D_stena_d / $W : 0;
-                    $P2_stena_d = $H ? $L_stena_d / $H : 0;
+                    $P2_stena_d = $W ? $L_stena_d / $W : 0;
 
                     // dolžina sence nadstreška
                     // po standardu je malo drugačna enačba:

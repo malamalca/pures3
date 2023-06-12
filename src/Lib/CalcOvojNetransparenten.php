@@ -178,7 +178,7 @@ class CalcOvojNetransparenten
             }
 
             // za tla z obodno izolacijo
-            if ($elementOvoja->dodatnaIzolacija->tip == 'horizontalna') {
+            if (!empty($elementOvoja->dodatnaIzolacija) && $elementOvoja->dodatnaIzolacija->tip == 'horizontalna') {
                 $elementOvoja->U = $U0 + 2 * $elementOvoja->obodniPsi / $B;
             } else {
                 $elementOvoja->U = $U0;
@@ -194,22 +194,24 @@ class CalcOvojNetransparenten
             $elementOvoja->Lpi = $elementOvoja->povrsina * $lambdaTla / $dt *
                 sqrt(2 / (pow(1 + $sigma / $dt, 2) + 1));
 
-            if ($elementOvoja->dodatnaIzolacija->tip == 'horizontalna') {
-                // horizontalna izolacija po obodu
-                // ISO 13370, C.3.6
-                $elementOvoja->Lpe = 0.37 * $elementOvoja->obseg * $lambdaTla * (
-                    (1 - exp(-$elementOvoja->dodatnaIzolacija->dolzina / $sigma)) * log($sigma / ($dt + $d_) + 1)
-                    +
-                    (exp(-$elementOvoja->dodatnaIzolacija->dolzina / $sigma) * log($sigma / $dt + 1))
-                );
-            } elseif ($elementOvoja->dodatnaIzolacija->tip == 'vertikalna') {
-                // vertikalna izolacija po vertikali oboda
-                // ISO 13370, C.3.7
-                $elementOvoja->Lpe = 0.37 * $elementOvoja->obseg * $lambdaTla * (
-                    (1 - exp(-2 * $elementOvoja->dodatnaIzolacija->dolzina / $sigma)) * log($sigma / ($dt + $d_) + 1)
-                    +
-                    (exp(-2 * $elementOvoja->dodatnaIzolacija->dolzina / $sigma) * log($sigma / $dt + 1))
-                );
+            if (!empty($elementOvoja->dodatnaIzolacija)) {
+                if ($elementOvoja->dodatnaIzolacija->tip == 'horizontalna') {
+                    // horizontalna izolacija po obodu
+                    // ISO 13370, C.3.6
+                    $elementOvoja->Lpe = 0.37 * $elementOvoja->obseg * $lambdaTla * (
+                        (1 - exp(-$elementOvoja->dodatnaIzolacija->dolzina / $sigma)) * log($sigma / ($dt + $d_) + 1)
+                        +
+                        (exp(-$elementOvoja->dodatnaIzolacija->dolzina / $sigma) * log($sigma / $dt + 1))
+                    );
+                } elseif ($elementOvoja->dodatnaIzolacija->tip == 'vertikalna') {
+                    // vertikalna izolacija po vertikali oboda
+                    // ISO 13370, C.3.7
+                    $elementOvoja->Lpe = 0.37 * $elementOvoja->obseg * $lambdaTla * (
+                        (1 - exp(-2 * $elementOvoja->dodatnaIzolacija->dolzina / $sigma)) *
+                        log($sigma / ($dt + $d_) + 1) +
+                        (exp(-2 * $elementOvoja->dodatnaIzolacija->dolzina / $sigma) * log($sigma / $dt + 1))
+                    );
+                }
             } else {
                 // neizolirana
                 // ??
