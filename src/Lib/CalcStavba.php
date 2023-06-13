@@ -19,17 +19,10 @@ class CalcStavba
     {
         $stavba = new \stdClass();
 
-        $stavba->brutoProstornina = array_reduce($cone, function ($vsota, $cona) {
-            return $vsota += $cona->brutoProstornina;
-        }, 0);
-        $stavba->povrsinaOvoja = array_reduce($cone, function ($vsota, $cona) {
-
-            return $vsota += $cona->povrsinaOvoja;
-        }, 0);
-        $stavba->ogrevanaPovrsina = array_reduce($cone, function ($vsota, $cona) {
-
-            return $vsota += $cona->ogrevanaPovrsina;
-        }, 0);
+        $stavba->brutoProstornina = array_reduce($cone, fn($vsota, $cona) => $vsota + $cona->brutoProstornina, 0);
+        $stavba->povrsinaOvoja = array_reduce($cone, fn($vsota, $cona) => $vsota + $cona->povrsinaOvoja, 0);
+        $stavba->ogrevanaPovrsina = array_reduce($cone, fn($vsota, $cona) => $vsota + $cona->ogrevanaPovrsina, 0);
+        
         $stavba->transparentnaPovrsina = 0;
         foreach ($cone as $cona) {
             foreach ($cona->ovoj->transparentneKonstrukcije as $elementOvoja) {
