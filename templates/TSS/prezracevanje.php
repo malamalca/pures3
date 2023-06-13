@@ -73,7 +73,7 @@
     </thead>
     <tr>
         <td>E<sub>V,el,del,m</sub>; E<sub>V,el,del,an</sub></td>
-        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->dovedenaEnergija)) ?>
-        <th class="right"><?= $this->numFormat(array_sum($sistem->dovedenaEnergija), 0) ?></th>
+        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->potrebnaEnergija)) ?>
+        <th class="right"><?= $this->numFormat(array_sum($sistem->potrebnaEnergija), 0) ?></th>
     </tr>
 </table>
