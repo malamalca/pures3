@@ -151,7 +151,7 @@ class IzracunTSS extends Command
             foreach ($TSSFotonapetostniSistemi as $sistem) {
                 $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
-                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
+                    throw new \Exception('TSS Fotovoltaika: Cona ne obstaja.');
                 }
 
                 $fotonapetostniSistem = new FotonapetostniSistem($sistem);
