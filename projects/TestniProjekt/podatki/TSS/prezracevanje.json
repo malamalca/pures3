@@ -10,6 +10,7 @@
         },
         "dovod": {
             "filter": "hepa"
-        }
+        },
+        "volumenProjekt": 200
     }
 ]

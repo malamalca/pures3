@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\Hranilniki\PosrednoOgrevanHranilnik;
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Hranilniki\PosrednoOgrevanHranilnik;
 
 final class PosrednoOgrevanHranilnikTest extends TestCase
 {

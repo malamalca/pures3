@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Calc\TSS\FotonapetostniSistemi\FotonapetostniSistem;
-use App\Calc\TSS\PrezracevalniSistemi\PrezracevalniSistem;
 use App\Calc\TSS\Razsvetljava\Razsvetljava;
 use App\Calc\TSS\SistemOgrevanjaFactory;
+use App\Calc\TSS\SistemPrezracevanjaFactory;
 use App\Core\App;
 use App\Core\Command;
 
@@ -42,7 +42,7 @@ class IzracunTSS extends Command
                 if (!$cona) {
                     throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
-                $prezracevalniSistem = new PrezracevalniSistem($sistem);
+                $prezracevalniSistem = SistemPrezracevanjaFactory::create($sistem->vrsta, $sistem);
                 $prezracevalniSistem->analiza([], $cona, $okolje);
 
                 $elektrikaPoConah[$sistem->idCone] =

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\KoncniPrenosniki\PloskovnoOgrevalo;
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
 
 final class PloskovnoOgrevaloTest extends TestCase
 {

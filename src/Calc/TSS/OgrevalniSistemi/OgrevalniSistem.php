@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi;
 
-use App\Calc\TSS\GeneratorFactory;
-use App\Calc\TSS\HranilnikFactory;
-use App\Calc\TSS\KoncniPrenosnikFactory;
-use App\Calc\TSS\RazvodFactory;
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\GeneratorFactory;
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\HranilnikFactory;
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosnikFactory;
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\RazvodFactory;
 use App\Calc\TSS\TSSVrstaEnergenta;
 
 abstract class OgrevalniSistem
