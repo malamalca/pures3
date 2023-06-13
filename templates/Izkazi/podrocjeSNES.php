@@ -415,7 +415,7 @@ za področje TSS</h1>
         <td class="w-5 center"><?= $i ?></td>
         <td class="w-55"><?= h($sistem->id) ?></td>
         <td class="w-20 center"><?= h($sistem->idCone) ?></td>
-        <td class="w-20 center"><?= $this->numFormat($sistem->skupnaDovodenaEnergija, 0) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($sistem->skupnaPotrebnaEnergija, 0) ?></td>
     </tr>
     <?php
                 $i++;
@@ -439,7 +439,7 @@ za področje TSS</h1>
         <td class="w-5 center"><?= $i ?></td>
         <td class="w-55"><?= h($sistem->id) ?></td>
         <td class="w-20 center"><?= h($sistem->idCone) ?></td>
-        <td class="w-20 center"><?= $this->numFormat($sistem->skupnaDovodenaEnergija, 0) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($sistem->skupnaPotrebnaEnergija, 0) ?></td>
     </tr>
     <?php
                 $i++;
@@ -481,11 +481,11 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td colspan="3">oddana električna energija, proizvedena v, na, ob stavbi ali njeni neposredni bližini E<sub>exp,el,an</sub> (kWh/an)</td>
-        <td class="w-20 center"></td>
+        <td class="w-20 center"><?= $this->numFormat($stavba->skupnaOddanaElektricnaEnergija, 0) ?></td>
     </tr>
     <tr>
         <td colspan="3">faktor ujemanja f<sub>match,m</sub></td>
-        <td class="w-20 center"></td>
+        <td class="w-20 center">1.0</td>
     </tr>
     <tr>
         <td colspan="3">faktor k<sub>exp</sub></td>
@@ -494,7 +494,7 @@ za področje TSS</h1>
 </table>
 
 
-
+<!-- NEW PAGE -->
 <h3>Kazalniki energijske učinkovitosti stavbe</h3>
 <table border="1" cellpadding="3" width="100%">
     <tr>
@@ -511,7 +511,7 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td colspan="3">oddana električna energija iz stavbe E<sub>exp,el,an</sub> (kWh/an)</td>
-        <td class="w-20 center">0</td>
+        <td class="w-20 center"><?= $this->numFormat($stavba->skupnaOddanaElektricnaEnergija, 0) ?></td>
     </tr>
     <tr>
         <td colspan="3">potrebna neobnovljiva primarna energija za delovanje TSS E<sub>Pnren,an</sub> (kWh/an)</td>
@@ -523,7 +523,7 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td colspan="3">potrebna skupna primarna energija za delovanje TSS E<sub>Ptot,an</sub> (kWh/an)</td>
-        <td class="w-20 center"><?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 0) ?></td>
     </tr>
 
     <tr>

@@ -116,9 +116,12 @@ class CalcStavba
         $stavba->energijaPoEnergentih = [];
         $stavba->neutezenaDovedenaEnergija = 0;
         $stavba->utezenaDovedenaEnergija = 0;
+        $stavba->skupnaPrimarnaEnergija = 0;
         $stavba->neobnovljivaPrimarnaEnergija = 0;
         $stavba->obnovljivaPrimarnaEnergija = 0;
         $stavba->izpustCO2 = 0;
+
+        $stavba->skupnaOddanaElektricnaEnergija = 0;
 
         $utezenaDovedenaEnergijaOgrHlaTsv = 0;
         $skupnaDovedenaEnergijaOgrHlaTsv = 0;
@@ -151,14 +154,21 @@ class CalcStavba
             foreach ($podsistemi as $podsistem) {
                 $stavba->energijaPoEnergentih += (array)$sistemEnergijaPoEnergentih[$podsistem];
                 foreach ((array)$sistemEnergijaPoEnergentih[$podsistem] as $energent => $energija) {
-                    $stavba->neutezenaDovedenaEnergija += $energija;
-                    $stavba->utezenaDovedenaEnergija +=
-                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                    // za siseme, ki ne uporabljajo elektricne energije ampak jo proizvajajo
+                    if (!empty($sistem->potrebnaEnergija) || !empty($sistem->potrebnaElektricnaEnergija)) {
+                        $stavba->neutezenaDovedenaEnergija += $energija;
+
+                        $stavba->utezenaDovedenaEnergija +=
+                            $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                    }
 
                     if ($jeOgrevalniSistem) {
                         $utezenaDovedenaEnergijaOgrHlaTsv +=
                             $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
                     }
+
+                    $stavba->skupnaPrimarnaEnergija +=
+                            $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
 
                     $stavba->neobnovljivaPrimarnaEnergija +=
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
@@ -170,18 +180,34 @@ class CalcStavba
                         $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
                 }
             }
+
+            // fotovoltaika pri oddaji električne energije v omrežje
+            if (isset($sistem->oddanaElektricnaEnergija)) {
+                $stavba->skupnaPrimarnaEnergija -= array_sum($sistem->oddanaElektricnaEnergija) *
+                    TSSVrstaEnergenta::Elektrika->utezniFaktor('tot');
+
+                $stavba->skupnaOddanaElektricnaEnergija += array_sum($sistem->oddanaElektricnaEnergija);
+            }
         }
 
         $stavba->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
 
-        $stavba->specificnaPrimarnaEnergija = $stavba->utezenaDovedenaEnergija / $stavba->ogrevanaPovrsina;
+        $stavba->ROVE = $stavba->obnovljivaPrimarnaEnergija / $stavba->skupnaPrimarnaEnergija * 100;
+        $stavba->minROVE = 50 * $stavba->X_OVE;
+
+        if ($stavba->ROVE < $stavba->minROVE) {
+            $stavba->Y_ROVE = 1.2;
+        }
+        if ($stavba->ROVE > $stavba->minROVE) {
+            // TODO: uporablja se do leta 2026
+            $stavba->Y_ROVE = 0.8;
+        }
+
+        $stavba->specificnaPrimarnaEnergija = $stavba->skupnaPrimarnaEnergija / $stavba->ogrevanaPovrsina;
         $stavba->korigiranaSpecificnaPrimarnaEnergija =
             $stavba->specificnaPrimarnaEnergija * $stavba->Y_Hnd * $stavba->Y_ROVE;
 
         $stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija = 75 * $stavba->X_p * $stavba->X_s;
-
-        $stavba->ROVE = $stavba->obnovljivaPrimarnaEnergija / $stavba->utezenaDovedenaEnergija * 100;
-        $stavba->minROVE = 50 * $stavba->X_OVE;
 
         return $stavba;
     }

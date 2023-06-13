@@ -67,7 +67,7 @@
         'razsvetljava' => 'razsvetljava',
         'avtomatizacija' => 'avtomatizacija in nadzor',
         'emobilnost' => 'e-mobilnost',
-        'spte' => 'proizvodnja toplote in električne energije',
+        'fotovoltaika' => 'proizvodnja toplote in električne energije',
         'transport' => 'transportni sistemi v stavbi',
     ];
 ?>
@@ -83,7 +83,7 @@
         foreach ($sistemi as $slug => $naziv) {
     ?>
     <tr>
-        <td class="w-5 checkbox"><?= in_array($slug, $sistemi) ? '&#x2611;' : '&#x2610;' ?></td>
+        <td class="w-5 checkbox"><?= in_array($slug, $vgrajeniSistemi) ? '&#x2611;' : '&#x2610;' ?></td>
         <td class="w-35"><?= h($naziv) ?></td>
         <td class="w-30" style="border: 1px solid black; border-top: 0px solid black;"></td>
         <td class="w-30" style="border: 1px solid black; border-top: 0px solid black;"></td>

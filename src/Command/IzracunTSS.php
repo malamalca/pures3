@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Calc\TSS\FotonapetostniSistemi\FotonapetostniSistem;
 use App\Calc\TSS\SistemOgrevanjaFactory;
 use App\Core\App;
 use App\Core\Command;
@@ -30,6 +31,8 @@ class IzracunTSS extends Command
         /** @var array $cone */
         $cone = App::loadProjectCalculation($projectId, 'cone');
 
+        $elektrikaPoConah = [];
+
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $TSSSistemiPrezracevanja = App::loadProjectData($projectId, 'TSS' . DS . 'prezracevanje') ?? [];
         if (count($TSSSistemiPrezracevanja) > 0) {
@@ -39,8 +42,10 @@ class IzracunTSS extends Command
                 if (!$cona) {
                     throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
-                $TSSSistemiPrezracevanjaOut[] =
-                    CalcTSSPrezracevanje::analiza($sistem, $cona, $okolje, $splosniPodatki);
+                $sistem = CalcTSSPrezracevanje::analiza($sistem, $cona, $okolje, $splosniPodatki);
+                $elektrikaPoConah[$sistem->idCone] =
+                    array_sum_values($elektrikaPoConah[$sistem->idCone], $sistem->potrebnaEnergija);
+                $TSSSistemiPrezracevanjaOut[] = $sistem;
             }
             App::saveProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje', $TSSSistemiPrezracevanjaOut);
         }
@@ -54,8 +59,10 @@ class IzracunTSS extends Command
                 if (!$cona) {
                     throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
-                $TSSSistemiRazsvetljavaOut[] =
-                    CalcTSSRazsvetljava::analiza($sistem, $cona, $okolje, $splosniPodatki);
+                $sistem = CalcTSSRazsvetljava::analiza($sistem, $cona, $okolje, $splosniPodatki);
+                $elektrikaPoConah[$sistem->idCone] =
+                    array_sum_values($elektrikaPoConah[$sistem->idCone], $sistem->potrebnaEnergija);
+                $TSSSistemiRazsvetljavaOut[] = $sistem;
             }
             App::saveProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava', $TSSSistemiRazsvetljavaOut);
         }
@@ -117,11 +124,43 @@ class IzracunTSS extends Command
                     $sistem->letnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->letnaUcinkovitostOgrHlaTsv;
                     $sistem->minLetnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->minLetnaUcinkovitostOgrHlaTsv;
 
+                    $elektrikaPoConah[$sistem->idCone] =
+                        array_sum_values($elektrikaPoConah[$sistem->idCone], $sistem->potrebnaElektricnaEnergija);
+                    $elektrikaPoConah[$sistem->idCone] =
+                        array_sum_values(
+                            $elektrikaPoConah[$sistem->idCone],
+                            array_subtract_values($sistem->potrebnaEnergija, $sistem->obnovljivaEnergija)
+                        );
+
                     $TSSSistemiOgrevanjeOut[] = $sistem;
                 }
             }
 
             App::saveProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje', $TSSSistemiOgrevanjeOut);
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $TSSFotonapetostniSistemi = App::loadProjectData($projectId, 'TSS' . DS . 'fotovoltaika') ?? [];
+        if (count($TSSFotonapetostniSistemi) > 0) {
+            $TSSFotonapetostniSistemiOut = [];
+            foreach ($TSSFotonapetostniSistemi as $sistem) {
+                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
+                if (!$cona) {
+                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
+                }
+
+                $fotonapetostniSistem = new FotonapetostniSistem($sistem);
+                $fotonapetostniSistem->analiza(
+                    $elektrikaPoConah[$sistem->idCone],
+                    $cona,
+                    $okolje
+                );
+
+                $sistem->energijaPoEnergentih = $fotonapetostniSistem->energijaPoEnergentih;
+
+                $TSSFotonapetostniSistemiOut[] = $fotonapetostniSistem;
+            }
+            App::saveProjectCalculation($projectId, 'TSS' . DS . 'fotovoltaika', $TSSFotonapetostniSistemiOut);
         }
     }
 }

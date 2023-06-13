@@ -1,4 +1,7 @@
     <style>
+        td {
+            font-size: 80%;
+        }
         .center {
             text-align: center;
         }
@@ -14,6 +17,7 @@
         th {
             background-color: #c0c0c0;
             padding: 3;
+            font-size: 80%;
         }
         .w-5 {
             width: 5%;

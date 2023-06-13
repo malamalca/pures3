@@ -73,17 +73,17 @@ class CalcTSSRazsvetljava
 
         $mesecniUtezniFaktor = [1.25, 1.1, 0.94, 0.86, 0.83, 0.73, 0.79, 0.87, 0.94, 1.09, 1.21, 1.35];
 
-        $sistem->skupnaDovodenaEnergija = 0;
+        $sistem->skupnaPotrebnaEnergija = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
-            $sistem->dovedenaEnergija[$mesec] = $letnaDovedenaEnergija * $stDni / 365 * $mesecniUtezniFaktor[$mesec];
+            $sistem->potrebnaEnergija[$mesec] = $letnaDovedenaEnergija * $stDni / 365 * $mesecniUtezniFaktor[$mesec];
 
-            $sistem->skupnaDovodenaEnergija += $sistem->dovedenaEnergija[$mesec];
+            $sistem->skupnaPotrebnaEnergija += $sistem->potrebnaEnergija[$mesec];
 
             $sistem->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
                 ($sistem->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) +
-                $sistem->dovedenaEnergija[$mesec];
+                $sistem->potrebnaEnergija[$mesec];
         }
 
         return $sistem;

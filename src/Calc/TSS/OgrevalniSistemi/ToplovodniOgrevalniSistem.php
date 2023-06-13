@@ -148,12 +148,12 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         if (!empty($this->tsv->vracljiveIzgubeVOgrevanje)) {
             // ponovno poračunam potrebno energijo za ogrevanje
             $cona->vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje;
+
             CalcCone::izracunFaktorjaIzkoristka($cona, $okolje);
             CalcCone::izracunEnergijeOgrevanjeHlajanje($cona, $okolje);
             $this->init($cona);
         }
         $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
-
         $this->ogrevanje->potrebnaElektricnaEnergija = [];
         $this->ogrevanje->obnovljivaEnergija = [];
 
@@ -296,7 +296,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
         // potem ogrevanje
         if (!empty($this->ogrevanje)) {
-            $skupnaDovedenaEnergijaOgrHlaTsv += $cona->skupnaEnergijaOgrevanje;
+            $skupnaDovedenaEnergijaOgrHlaTsv += ($cona->skupnaEnergijaOgrevanje ?? 0);
 
             $this->analizaOgrevanja($cona, $okolje);
 

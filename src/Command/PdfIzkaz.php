@@ -33,7 +33,11 @@ class PdfIzkaz extends Command
         $view->set('sistemiPrezracevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
 
         $tssFolder = App::getProjectFolder($projectId, 'izracuni') . 'TSS' . DS;
-        $view->set('sistemi', array_filter((array)scandir($tssFolder), fn($d) => is_file($tssFolder . $d)));
+        $vgrajeniSistemi = array_filter((array)scandir($tssFolder), fn($d) => is_file($tssFolder . $d));
+        $view->set('vgrajeniSistemi', array_map(
+            fn($s) => substr((string)$s, 0, (int)strrpos((string)$s, '.')),
+            $vgrajeniSistemi
+        ));
 
         $splosniPodatki = $view->render('Izkazi', 'splosniPodatki');
         $podrocjeGf = $view->render('Izkazi', 'podrocjeGf');

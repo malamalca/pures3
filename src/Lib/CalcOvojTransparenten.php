@@ -22,7 +22,6 @@ class CalcOvojTransparenten
             foreach ($cona->ovoj->transparentneKonstrukcije as $ix => $elementOvoja) {
                 $kons = array_first($konstrukcije, fn($k) => $k->id == $elementOvoja->idKonstrukcije);
                 if (!$kons) {
-                    var_dump($konstrukcije);
                     throw new \Exception(sprintf('Konstrukcija "%1$s" ne obstaja', $elementOvoja->idKonstrukcije));
                 }
 
