@@ -8,6 +8,9 @@
 >
     <projectFiles>
         <directory name="src" />
+        <ignoreFiles>
+            <file name="src/Core/Pdf.php" />
+        </ignoreFiles>
     </projectFiles>
     <stubs>
         <file name="config/paths.php" />

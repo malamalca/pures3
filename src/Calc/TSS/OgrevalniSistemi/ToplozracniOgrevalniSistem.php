@@ -10,10 +10,9 @@ class ToplozracniOgrevalniSistem extends OgrevalniSistem
      *
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
-     * @return array
+     * @return void
      */
     public function analiza($cona, $okolje)
     {
-        return [];
     }
 }

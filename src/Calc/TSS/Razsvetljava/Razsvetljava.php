@@ -26,7 +26,7 @@ class Razsvetljava
     public float $varnostnaRazsvetljavaEnergijaZaPolnjenje = 0;
     public float $varnostnaRazsvetljavaEnergijaZaDelovanje = 0;
 
-    public float $mocSvetilk;
+    public ?float $mocSvetilk = null;
 
     public float $skupnaPotrebnaEnergija = 0;
     public array $potrebnaEnergija = [];
@@ -114,7 +114,7 @@ class Razsvetljava
     public function analiza($potrebnaEnergija, $cona, $okolje, $params = [])
     {
         // ker je LAHKO odvisna od $cone oz. faktorjaOblikeCone
-        $mocSvetilk = $this->mocSvetilk ??
+        $mocSvetilk = !is_null($this->mocSvetilk) ? $this->mocSvetilk :
             $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine * ($cona->faktorOblikeCone ?? 1) *
             $this->faktorZmanjsaneOsvetlitveDelovnePovrsine * $this->faktorVzdrzevanja;
 
