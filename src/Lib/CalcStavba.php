@@ -63,7 +63,7 @@ class CalcStavba
         $stavba->specVentilacijskeIzgube = 0;
         $stavba->skupnaEnergijaOgrevanje = 0;
         $stavba->skupnaEnergijaHlajenje = 0;
-        $stavba->skupnaPotrebaTSV = 0;
+        $stavba->skupnaEnergijaTSV = 0;
         $stavba->skupnaEnergijaNavlazevanje = 0;
         $stavba->skupnaEnergijaRazvlazevanje = 0;
         $stavba->skupnaPotrebaRazsvetljava = 0;
@@ -72,7 +72,7 @@ class CalcStavba
             $stavba->specVentilacijskeIzgube += $cona->specVentilacijskeIzgube;
             $stavba->skupnaEnergijaOgrevanje += $cona->skupnaEnergijaOgrevanje;
             $stavba->skupnaEnergijaHlajenje += $cona->skupnaEnergijaHlajenje;
-            $stavba->skupnaPotrebaTSV += $cona->skupnaPotrebaTSV;
+            $stavba->skupnaEnergijaTSV += $cona->skupnaEnergijaTSV;
             $stavba->skupnaEnergijaNavlazevanje += $cona->skupnaEnergijaNavlazevanje;
             $stavba->skupnaEnergijaRazvlazevanje += $cona->skupnaEnergijaRazvlazevanje;
             $stavba->skupnaPotrebaRazsvetljava += $cona->skupnaPotrebaRazsvetljava;
@@ -81,7 +81,7 @@ class CalcStavba
         $stavba->specKoeficientTransmisijskihIzgub = $stavba->specTransmisijskeIzgube / $stavba->povrsinaOvoja;
         $stavba->specLetnaToplota = $stavba->skupnaEnergijaOgrevanje / $stavba->ogrevanaPovrsina;
         $stavba->specLetniHlad = $stavba->skupnaEnergijaHlajenje / $stavba->ogrevanaPovrsina;
-        $stavba->specPotrebaTSV = $stavba->skupnaPotrebaTSV / $stavba->ogrevanaPovrsina;
+        $stavba->specenergijaTSV = $stavba->skupnaEnergijaTSV / $stavba->ogrevanaPovrsina;
 
         $stavba->specEnergijaNavlazevanje = $stavba->skupnaEnergijaNavlazevanje / $stavba->ogrevanaPovrsina;
         $stavba->specEnergijaRazvlazevanje = $stavba->skupnaEnergijaRazvlazevanje / $stavba->ogrevanaPovrsina;
@@ -132,7 +132,7 @@ class CalcStavba
             if (isset($sistem->energijaPoEnergentih->tsv)) {
                 $podsistemi[] = 'tsv';
                 $jeOgrevalniSistem = true;
-                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaPotrebaTSV;
+                $skupnaDovedenaEnergijaOgrHlaTsv += $stavba->skupnaEnergijaTSV;
             }
             if (isset($sistem->energijaPoEnergentih->ogrevanje)) {
                 $podsistemi[] = 'ogrevanje';

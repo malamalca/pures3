@@ -69,7 +69,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      */
     public function analizaTSV($cona, $okolje)
     {
-        $this->tsv->potrebnaEnergija = $cona->potrebaTSV;
+        $this->tsv->potrebnaEnergija = $cona->energijaTSV;
         $this->tsv->potrebnaElektricnaEnergija = [];
         $this->tsv->obnovljivaEnergija = [];
         $this->tsv->vracljiveIzgubeVOgrevanje = [];
@@ -262,7 +262,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
         // najprej analiziram toplo vodo
         if (!empty($this->tsv)) {
-            $skupnaDovedenaEnergijaOgrHlaTsv += $cona->skupnaPotrebaTSV;
+            $skupnaDovedenaEnergijaOgrHlaTsv += $cona->skupnaEnergijaTSV;
 
             $this->analizaTSV($cona, $okolje);
 

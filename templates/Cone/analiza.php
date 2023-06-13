@@ -100,8 +100,8 @@
 
         <tr>
             <td>Priprava TSV - Q<sub>W,nd,zn</sub></td>
-            <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->potrebaTSV)) ?>
-            <td class="center"><?= $this->numFormat($cona->skupnaPotrebaTSV, 0) ?></td>
+            <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->energijaTSV)) ?>
+            <td class="center"><?= $this->numFormat($cona->skupnaEnergijaTSV, 0) ?></td>
         </tr>
 
         <tr>

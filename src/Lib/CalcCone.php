@@ -341,14 +341,14 @@ class CalcCone
         $cona->TSV->toplaVodaT = $cona->TSV->toplaVodaT ?? 42;
         $cona->TSV->hladnaVodaT = $cona->TSV->hladnaVodaT ?? 10;
 
-        $cona->skupnaPotrebaTSV = 0;
+        $cona->skupnaEnergijaTSV = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
-            $cona->potrebaTSV[$mesec] = 0.001 * $cona->TSV->dnevnaKolicina * $cona->TSV->steviloOseb * 4.2 / 3.6 *
+            $cona->energijaTSV[$mesec] = 0.001 * $cona->TSV->dnevnaKolicina * $cona->TSV->steviloOseb * 4.2 / 3.6 *
                 ($cona->TSV->toplaVodaT - $cona->TSV->hladnaVodaT) * $stDni;
 
-            $cona->skupnaPotrebaTSV += $cona->potrebaTSV[$mesec];
+            $cona->skupnaEnergijaTSV += $cona->energijaTSV[$mesec];
         }
     }
 

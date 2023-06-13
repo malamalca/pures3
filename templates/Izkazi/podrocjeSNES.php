@@ -81,7 +81,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-5 center"><?= $i ?></td>
         <td class="w-75" colspan="2"><?= h($cona->naziv) ?></td>
-        <td class="w-20 center"><?= $this->numFormat($cona->skupnaPotrebaTSV, 2) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($cona->skupnaEnergijaTSV, 2) ?></td>
     </tr>
     <?php
                 $i++;
@@ -90,12 +90,12 @@ za področje TSS</h1>
     <tr>
         <td class="w-60" colspan="2"><b>SKUPAJ</b></td>
         <td class="w-20 right">Q<sub>W,nd,an</sub> (kWh/an)</td>
-        <td class="w-20 center"><?= $this->numFormat($stavba->skupnaPotrebaTSV, 2) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($stavba->skupnaEnergijaTSV, 2) ?></td>
     </tr>
     <tr>
         <td class="w-60" colspan="2">specifična potrebna toplota za pripravo TSV</td>
         <td class="w-20 right">Q'<sub>W,nd,an</sub> (kWh/m² an)</td>
-        <td class="w-20 center"><?= $this->numFormat($stavba->specPotrebaTSV, 2) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($stavba->specenergijaTSV, 2) ?></td>
     </tr>
 
 
