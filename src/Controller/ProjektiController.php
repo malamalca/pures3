@@ -32,6 +32,7 @@ class ProjektiController
 
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
+        App::set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
         App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
         App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
 

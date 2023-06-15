@@ -1,3 +1,7 @@
 #header {
     display: none !important;
 }
+
+p.actions {
+    display: none;
+}

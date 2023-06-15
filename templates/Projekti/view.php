@@ -4,13 +4,13 @@
 ?>
 <h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 
-<p>
+<p class="actions">
 <a class="button" href="<?= App::url('/projekti/analiza/' . $projectId) ?>">Analiza GF</a>
 <a class="button" href="<?= App::url('/izkazi/podrocjeGf/' . $projectId) ?>">Izkaz GF</a>
 <a class="button" href="<?= App::url('/projekti/snes/' . $projectId) ?>">Analiza SNES</a>
 <a class="button" href="<?= App::url('/izkazi/podrocjeSNES/' . $projectId) ?>">Izkaz sNES</a>
 </p>
-<p>
+<p class="actions">
 <?php
     foreach ($cone as $cona) {
 ?>
@@ -21,7 +21,7 @@
     }
 ?>
 </p>
-<p>
+<p class="actions">
 <?php
     $vrsteTSS = ['ogrevanje' => $ogrevanje, 'prezracevanje' => $prezracevanje, 'razsvetljava' => $razsvetljava];
     foreach ($vrsteTSS as $vrstaTSS => $sistemi) {
@@ -64,4 +64,55 @@
         <td></td>
     </tr>
     <tr><td colspan="4"></tr>
+
+    <tr>
+        <td colspan="2">Klasifikacija</td>
+        <td colspan="2" class="left"><?= h($splosniPodatki->stavba->klasifikacija) ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">Opredelitev stavbe</td>
+        <td colspan="2" class="left"><?= h($splosniPodatki->stavba->vrsta) ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">Vrsta gradnje</td>
+        <td colspan="2" class="left"><?= h($splosniPodatki->stavba->tip) ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">Javna stavba</td>
+        <td colspan="2" class="left"><?= h($splosniPodatki->stavba->javna ? "DA" : "NE") ?></td>
+    </tr>
+    <tr><td colspan="4"></tr>
+
+    <tr>
+        <td colspan="2">Povprečna letna T (°C)</td>
+        <td colspan="2" class="left"><?= $this->numFormat($okolje->povprecnaLetnaTemp, 1) ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">Projektna zimska T (°C)</td>
+        <td colspan="2" class="left"><?= $this->numFormat($okolje->projektnaZunanjaT, 1) ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">Energija sončnega obsevanja (kWh/m2)</td>
+        <td colspan="2" class="left"><?= $this->numFormat($okolje->energijaSoncnegaObsevanja, 1) ?></td>
+    </tr>
+</table>
+<br />
+<table border="1">
+    <thead>
+        <tr>
+            <td></td>
+            <td></td>
+            <?= implode(PHP_EOL, array_map(fn($mes) => '<td class="center">' . $mes . '</td>', Calc::MESECI)) ?>
+        </tr>
+    </thead>
+    <tr>
+        <td>Temperatura (°C)</td>
+        <td>θ<sub>e,m</sub></td>
+        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 0) . '</td>', $okolje->zunanjaT)) ?>
+    </tr>
+    <tr>
+        <td>Rel. vlažnost (%)</td>
+        <td>&#934;<sub>e,m</sub></td>
+        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 0) . '</td>', $okolje->zunanjaVlaga)) ?>
+    </tr>
 </table>

@@ -44,12 +44,13 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      * Inicializacija parametrov sistema
      *
      * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return void
      */
-    public function init($cona)
+    public function init($cona, $okolje)
     {
         $this->standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
-            ($cona->notranjaTOgrevanje - $cona->zunanjaT) / 1000;
+            ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT) / 1000;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
@@ -151,7 +152,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
             CalcCone::izracunFaktorjaIzkoristka($cona, $okolje);
             CalcCone::izracunEnergijeOgrevanjeHlajanje($cona, $okolje);
-            $this->init($cona);
+            $this->init($cona, $okolje);
         }
         $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
         $this->ogrevanje->potrebnaElektricnaEnergija = [];
@@ -248,7 +249,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      */
     public function analiza($cona, $okolje)
     {
-        $this->init($cona);
+        $this->init($cona, $okolje);
 
         $this->energijaPoEnergentih = [];
         $this->potrebnaEnergija = [];

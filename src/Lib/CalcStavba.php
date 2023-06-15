@@ -200,6 +200,7 @@ class CalcStavba
         $stavba->korigiranaSpecificnaPrimarnaEnergija =
             $stavba->specificnaPrimarnaEnergija * $stavba->Y_Hnd * $stavba->Y_ROVE;
 
+        $stavba->dovoljenaSpecificnaPrimarnaEnergija = 75;
         $stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija = 75 * $stavba->X_p * $stavba->X_s;
 
         return $stavba;

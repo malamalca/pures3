@@ -150,11 +150,12 @@ final class DvocevniRazvodTest extends TestCase
         $cona->steviloEtaz = 3;
         $cona->etaznaVisina = 3;
         $cona->notranjaTOgrevanje = 20;
-        $cona->zunanjaT = -13;
         $cona->energijaOgrevanje = [1206.707, 746.368, 390.117, 135.734, 19.220, 0.000, 0.000, 0.000, 17.903, 179.496, 761.644, 1208.785];
         $cona->specTransmisijskeIzgube = 143.8765034039049;
         $cona->specVentilacijskeIzgube = 8.184;
 
+        $okolje = new \stdClass();
+        $okolje->projektnaZunanjaT = -13;
 
         $configSistem = <<<EOT
         {
@@ -163,7 +164,7 @@ final class DvocevniRazvodTest extends TestCase
         }
         EOT;
         $sistem = new ToplovodniOgrevalniSistem($configSistem);
-        $sistem->init($cona);
+        $sistem->init($cona, $okolje);
 
         $configPrenosnika = <<<EOT
         {
@@ -219,11 +220,12 @@ final class DvocevniRazvodTest extends TestCase
         $cona->steviloEtaz = 3;
         $cona->etaznaVisina = 3;
         $cona->notranjaTOgrevanje = 20;
-        $cona->zunanjaT = -13;
         $cona->energijaOgrevanje = [1206.707, 746.368, 390.117, 135.734, 19.220, 0.000, 0.000, 0.000, 17.903, 179.496, 761.644, 1208.785];
         $cona->specTransmisijskeIzgube = 143.8765034039049;
         $cona->specVentilacijskeIzgube = 8.184;
 
+        $okolje = new \stdClass();
+        $okolje->projektnaZunanjaT = -13;
 
         $configSistem = <<<EOT
         {
@@ -233,7 +235,7 @@ final class DvocevniRazvodTest extends TestCase
         }
         EOT;
         $sistem = new ToplovodniOgrevalniSistem($configSistem);
-        $sistem->init($cona);
+        $sistem->init($cona, $okolje);
 
         $configPrenosnika = <<<EOT
         {

@@ -11,7 +11,6 @@ final class ToplovodniOgrevalniSistemSamoTSV extends TestCase
         $cona = new \stdClass();
         $cona->id = "Cona1";
         $cona->notranjaTOgrevanje = 20;
-        $cona->zunanjaT = -13;
         $cona->energijaTSV = [114.253972, 103.197136, 114.253972, 110.56836, 114.253972, 110.56836,114.253972, 114.253972, 110.56836, 114.253972, 110.56836, 114.25392];
         $cona->energijaOgrevanje = [1206.6498424364968, 746.3227400063487, 390.0830744323009, 135.71842830225137, 19.217650278634665, 0, 0, 0, 17.900038879386443, 179.47284892375217, 761.5928197350089, 1208.7268259786833];
         $cona->specVentilacijskeIzgube = 8.184;
@@ -22,6 +21,7 @@ final class ToplovodniOgrevalniSistemSamoTSV extends TestCase
         $cona->etaznaVisina = 3;
 
         $okolje = new \stdClass();
+        $okolje->projektnaZunanjaT = -13;
 
         $config = <<<EOT
         {

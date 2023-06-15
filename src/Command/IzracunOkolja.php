@@ -72,6 +72,9 @@ class IzracunOkolja extends Command
         $okolje = CalcOkolje::notranjeOkolje(['zunanjaT' => $zunanjaTemp, 'zunanjaVlaga' => $zunanjaVlaga]);
 
         $okolje->povprecnaLetnaTemp = $splosniPodatkiOut->YXTemp->letnaT;
+        $okolje->projektnaZunanjaT = $splosniPodatkiOut->YXTemp->projT;
+        $okolje->temperaturniPrimanjkljaj = $splosniPodatkiOut->YXTemp->tempPrim;
+        $okolje->energijaSoncnegaObsevanja = $splosniPodatkiOut->YXTemp->sevanje;
 
         // izračun sončnega obsevanja
         // ARSO in Pures3 naredita to zelo čudno - ne na podlagi koordinat ampak primerja letno sevanje

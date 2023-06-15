@@ -37,7 +37,8 @@ class CalcOvojNetransparenten
 
                 // temperaturni korekcijski faktor
                 $elementOvoja->b = empty($kons->ogrRazvodT) ? 1 :
-                    ($kons->ogrRazvodT - $cona->zunanjaT) / ($cona->notranjaTOgrevanje - $cona->zunanjaT);
+                    ($kons->ogrRazvodT - $okolje->projektnaZunanjaT) /
+                    ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
 
                 $elementOvoja->faktorSencenja = $elementOvoja->faktorSencenja ?? array_map(fn($m) => 1, Calc::MESECI);
 
