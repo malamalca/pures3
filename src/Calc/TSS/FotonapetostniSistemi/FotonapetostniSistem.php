@@ -11,6 +11,7 @@ use App\Lib\Calc;
 class FotonapetostniSistem
 {
     public string $id;
+    public string $idCone;
 
     public float $povrsina;
     public string $orientacija;
@@ -20,10 +21,16 @@ class FotonapetostniSistem
     public VrstaVgradnje $vgradnja;
 
     public float $kontrolniFaktor;
+    public float $koeficientMoci;
+    public float $koeficientVgradnje;
+
+    public float $nazivnaMoc;
 
     public array $energijaPoEnergentih = [];
     public array $porabljenaEnergija = [];
     public array $oddanaElektricnaEnergija = [];
+    public array $potrebnaEnergija = [];
+    public array $celotnaEnergijaObsevanja = [];
 
     /**
      * Class Constructor
@@ -51,6 +58,7 @@ class FotonapetostniSistem
         }
 
         $this->id = $config->id;
+        $this->idCone = $config->idCone;
         $this->povrsina = $config->povrsina;
         $this->orientacija = $config->orientacija;
         $this->naklon = $config->naklon;
@@ -60,7 +68,10 @@ class FotonapetostniSistem
         $this->kontrolniFaktor = $config->kontrolniFaktor;
 
         $this->vrsta = VrstaSoncnihCelic::from($config->vrsta);
+        $this->koeficientMoci = $this->vrsta->koeficientMoci();
         $this->vgradnja = VrstaVgradnje::from($config->vgradnja);
+        $this->koeficientVgradnje = $this->vgradnja->koeficientVgradnje();
+        $this->nazivnaMoc = $this->povrsina * $this->koeficientMoci;
     }
 
     /**
@@ -74,6 +85,8 @@ class FotonapetostniSistem
      */
     public function analiza($potrebnaEnergija, $cona, $okolje, $params = [])
     {
+        $this->potrebnaEnergija = $potrebnaEnergija;
+
         $celotnaEnergijaObsevanja = [];
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
@@ -88,14 +101,14 @@ class FotonapetostniSistem
             }
             $solarnoObsevanje = $stDni * $solarnoObsevanje[$mesec] / 1000;
 
-            $celotnaEnergijaObsevanja[$mesec] = $this->povrsina * $solarnoObsevanje *
+            $this->celotnaEnergijaObsevanja[$mesec] = $this->povrsina * $solarnoObsevanje *
                 $this->vrsta->koeficientMoci() * $this->vgradnja->koeficientVgradnje();
 
             $this->porabljenaEnergija[$mesec] = $this->kontrolniFaktor *
-                min($celotnaEnergijaObsevanja[$mesec], $potrebnaEnergija[$mesec]);
+                min($this->celotnaEnergijaObsevanja[$mesec], $potrebnaEnergija[$mesec]);
 
             $this->oddanaElektricnaEnergija[$mesec] = $this->kontrolniFaktor *
-                ($celotnaEnergijaObsevanja[$mesec] - $this->porabljenaEnergija[$mesec]);
+                ($this->celotnaEnergijaObsevanja[$mesec] - $this->porabljenaEnergija[$mesec]);
         }
 
         $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = -array_sum($this->porabljenaEnergija);

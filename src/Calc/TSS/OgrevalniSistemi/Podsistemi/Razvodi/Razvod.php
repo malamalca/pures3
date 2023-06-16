@@ -8,6 +8,8 @@ use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
 
 abstract class Razvod
 {
+    public string $sistem = 'razvod';
+
     public ElementRazvoda $horizontalniVod;
     public ElementRazvoda $dvizniVod;
     public ElementRazvoda $prikljucniVod;
@@ -90,4 +92,28 @@ abstract class Razvod
      * @return array
      */
     abstract public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = new \stdClass();
+        $sistem->id = $this->id;
+        $sistem->sistem = $this->sistem;
+
+        $sistem->toplotneIzgube = $this->toplotneIzgube;
+        $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
+        $sistem->vracljiveIzgube = $this->vracljiveIzgube;
+        $sistem->vracljiveIzgubeAux = $this->vracljiveIzgubeAux;
+
+        $sistem->vodi = [];
+        $sistem->vodi[] = $this->horizontalniVod->export();
+        $sistem->vodi[] = $this->dvizniVod->export();
+        $sistem->vodi[] = $this->prikljucniVod->export();
+
+        return $sistem;
+    }
 }

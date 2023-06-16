@@ -314,4 +314,17 @@ abstract class RazvodOgrevanje extends Razvod
 
         return $mocCrpalke;
     }
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = parent::export();
+        $sistem->crpalka = $this->crpalka;
+
+        return $sistem;
+    }
 }

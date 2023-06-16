@@ -23,7 +23,9 @@
 </p>
 <p class="actions">
 <?php
-    $vrsteTSS = ['ogrevanje' => $ogrevanje, 'prezracevanje' => $prezracevanje, 'razsvetljava' => $razsvetljava];
+    $vrsteTSS = ['ogrevanje' => $ogrevanje, 'prezracevanje' => $prezracevanje, 'razsvetljava' => $razsvetljava,
+        'fotovoltaika' => $fotovoltaika];
+
     foreach ($vrsteTSS as $vrstaTSS => $sistemi) {
         if ($sistemi) {
             foreach ($sistemi as $sistem) {

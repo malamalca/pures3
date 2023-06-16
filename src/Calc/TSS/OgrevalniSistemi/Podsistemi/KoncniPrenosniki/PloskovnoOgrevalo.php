@@ -12,6 +12,8 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
     public const DELTAT_VRSTE_SISTEMOV = [0, 0, 0, 0.4, 0.7];
     public const DELTAT_SPECIFICNIH_IZGUB = [1.4, 0.5, 0.1];
 
+    public string $vrsta = 'Ploskovna ogrevala';
+
     public float $exponentOgrevala = 1.1;
     public float $deltaP_FBH = 25;
 

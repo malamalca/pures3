@@ -14,6 +14,7 @@ abstract class KoncniPrenosnik
     public const DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_NAD_10 = [0.6, 0.4, 0.3, 0.2, 0];
 
     public string $id;
+    public string $vrsta = 'Končni prenosnik';
 
     public float $exponentOgrevala;
 
@@ -152,5 +153,26 @@ abstract class KoncniPrenosnik
         }
 
         return $this->vracljiveIzgubeAux;
+    }
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = new \stdClass();
+        $sistem->id = $this->id;
+        $sistem->vrsta = $this->vrsta;
+
+        $sistem->hidravlicnoUravnotezenje = $this->hidravlicnoUravnotezenje->toString();
+        $sistem->regulacijaTemperature = $this->regulacijaTemperature->toString();
+
+        $sistem->toplotneIzgube = $this->toplotneIzgube;
+        $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
+        $sistem->vracljiveIzgubeAux = $this->vracljiveIzgubeAux;
+
+        return $sistem;
     }
 }

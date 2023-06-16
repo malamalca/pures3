@@ -7,7 +7,7 @@
 
 ?>
 <h1>Ovoj cone "<?= h($cona->naziv) ?>"</h1>
-<p>
+<p class="actions">
 <a class="button" href="<?= App::url('/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
 

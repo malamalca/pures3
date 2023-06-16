@@ -12,4 +12,22 @@ enum VrstaHidravlicnegaUravnotezenja: string
     case StaticnoUravnotezenjeDviznihVodov = 'staticnoDviznihVodov';
     case DinamicnoUravnotezenjePolnaObremenitev = 'dinamicnoPolnaObremenitev';
     case DinamicnoUravnotezenjeDelnaObremenitev = 'dinamicnoDelnaObremenitev';
+
+    /**
+     * Friendly name
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        $lookup = [
+            'Neuravnoteženo',
+            'Statično uravnotezenje končnih prenosnikov',
+            'Statično uravnoteženje dvižnih vodov',
+            'Dinamično uravnoteženje pri polni obremenitvi',
+            'Dinamično uravnoteženje pri delni obremenitvi',
+        ];
+
+        return $lookup[$this->getOrdinal()];
+    }
 }

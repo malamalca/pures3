@@ -7,6 +7,7 @@ use App\Core\App;
 use App\Core\Command;
 use App\Lib\Calc;
 use App\Lib\CalcOkolje;
+use JsonSchema\Validator;
 
 class IzracunOkolja extends Command
 {
@@ -21,6 +22,17 @@ class IzracunOkolja extends Command
         parent::run();
 
         $splosniPodatkiIn = App::loadProjectData($projectId, 'splosniPodatki');
+
+        $validator = new Validator();
+        $schema = (string)file_get_contents(SCHEMAS . 'splosniPodatkiSchema.json');
+        $validator->validate($splosniPodatkiIn, json_decode($schema));
+        if (!$validator->isValid()) {
+            $this->out('splosniPodatki.json vsebuje napake:', 'error');
+            foreach ($validator->getErrors() as $error) {
+                $this->out(sprintf("[%s] %s\n", $error['property'], $error['message']), 'info');
+            }
+        }
+
         $splosniPodatkiOut = $splosniPodatkiIn;
 
         // find temp regime

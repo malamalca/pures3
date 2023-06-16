@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "required": ["stavba"],
+    "properties": {
+        "stavba": {
+            "type": "object",
+            "required": ["naziv", "lokacija", "KO", "parcele", "koordinate", "klasifikacija", "vrsta", "tip", "javna"],
+            
+            "properties": {
+                "naziv": {"type": "string"},
+                "lokacija": {"type": "string"},
+                "KO": {"type": "string"},
+                "parcele": {"type": "array", "minItems": 1},
+                "koordinate": {
+                    "type": "object",
+                    "required": ["X", "Y"],
+                    "properties": {
+                        "X": {"type": "integer", "minimum": 30500, "maximum": 193500},
+                        "Y": {"type": "integer", "minimum": 375500, "maximum": 624500}
+                    }
+                },
+                "klasifikacija": {"type": "string"},
+                "vrsta": {"enum": ["nezahtevna", "manjzahtevna", "zahtevna"]},
+                "tip": {"enum": ["nova", "rekonstrukcija", "celovitaObnova"]},
+                "javna": {"type": "boolean"}
+            }
+        },
+        "investitorji": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "required": ["naziv", "naslov"]
+            }
+        },
+        "vodjaProjektiranja": {"type": "string"},
+        "izdelovalec": {"type": "string"},
+        "datum": {"type": "string"}
+    }
+}

@@ -241,4 +241,20 @@ class ToplotnaCrpalkaZrakVoda extends Generator
             }
         }
     }
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = parent::export();
+        $sistem->podnebje = $this->podnebje;
+        $sistem->nazivnaMoc = $this->nazivnaMoc;
+        $sistem->elektricnaMocNaPrimarnemKrogu = $this->elektricnaMocNaPrimarnemKrogu;
+        $sistem->elektricnaMocNaSekundarnemKrogu = $this->elektricnaMocNaSekundarnemKrogu;
+
+        return $sistem;
+    }
 }

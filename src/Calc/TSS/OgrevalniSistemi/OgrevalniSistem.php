@@ -11,6 +11,9 @@ use App\Calc\TSS\TSSVrstaEnergenta;
 
 abstract class OgrevalniSistem
 {
+    public ?string $id;
+    public ?string $idCone;
+    public string $vrsta;
     public TSSVrstaEnergenta $energent;
 
     /**
@@ -69,6 +72,9 @@ abstract class OgrevalniSistem
             $config = json_decode($config);
         }
 
+        $this->id = $config->id ?? null;
+        $this->idCone = $config->idCone ?? null;
+        $this->vrsta = $config->vrsta;
         $this->energent = TSSVrstaEnergenta::from($config->energent ?? 'default');
 
         if (!empty($config->razvodi)) {
@@ -104,4 +110,58 @@ abstract class OgrevalniSistem
      * @return void
      */
     abstract public function analiza($cona, $okolje);
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = new \stdClass();
+        $sistem->id = $this->id;
+        $sistem->idCone = $this->idCone;
+        $sistem->vrsta = $this->vrsta;
+        $sistem->energent = $this->energent;
+
+        $sistem->potrebnaEnergija = $this->potrebnaEnergija;
+        $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
+        $sistem->obnovljivaEnergija = $this->obnovljivaEnergija;
+        $sistem->vracljiveIzgube = $this->vracljiveIzgube;
+
+        $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
+
+        $sistem->letnaUcinkovitostOgrHlaTsv = $this->letnaUcinkovitostOgrHlaTsv;
+        $sistem->minLetnaUcinkovitostOgrHlaTsv = $this->minLetnaUcinkovitostOgrHlaTsv;
+
+        if (!empty($this->koncniPrenosniki)) {
+            $sistem->prenosniki = [];
+            foreach ($this->koncniPrenosniki as $prenosnik) {
+                $sistem->prenosniki[] = $prenosnik->export();
+            }
+        }
+
+        if (!empty($this->razvodi)) {
+            $sistem->razvodi = [];
+            foreach ($this->razvodi as $razvod) {
+                $sistem->razvodi[] = $razvod->export();
+            }
+        }
+
+        if (!empty($this->hranilniki)) {
+            $sistem->hranilniki = [];
+            foreach ($this->hranilniki as $hranilnik) {
+                $sistem->hranilniki[] = $hranilnik->export();
+            }
+        }
+
+        if (!empty($this->generatorji)) {
+            $sistem->generatorji = [];
+            foreach ($this->generatorji as $generator) {
+                $sistem->generatorji[] = $generator->export();
+            }
+        }
+
+        return $sistem;
+    }
 }

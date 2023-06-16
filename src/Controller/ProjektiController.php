@@ -39,6 +39,7 @@ class ProjektiController
         App::set('ogrevanje', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
         App::set('prezracevanje', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
         App::set('razsvetljava', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
+        App::set('fotovoltaika', App::loadProjectCalculation($projectId, 'TSS' . DS . 'fotovoltaika'));
     }
 
     /**

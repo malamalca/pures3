@@ -10,6 +10,7 @@ use App\Lib\Calc;
 
 class RazvodTSV extends Razvod
 {
+    public string $sistem = 'toplavoda';
     public ?\stdClass $crpalka;
 
     public bool $prikljucniVodNaInstalacijskiSteni = false;

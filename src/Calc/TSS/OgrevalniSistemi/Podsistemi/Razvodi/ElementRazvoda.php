@@ -13,6 +13,8 @@ class ElementRazvoda
     public VrstaIzolacijeCevi $izolacija;
     public VrstaNamenaCevi $namen;
 
+    public float $dolzina = 0;
+
     public ?float $toplotnaPrevodnost = null;
     public ?float $delezVOgrevaniConi = null;
 
@@ -121,9 +123,27 @@ class ElementRazvoda
      */
     public function toplotneIzgube($razvod, $cona, $delez = 1)
     {
-        $U = $this->toplotnaPrevodnost ?? $this->racunskaToplotnaPrevodnost($cona->sirina * $cona->dolzina);
-        $dolzina = $razvod->dolzinaCevi($this->vrsta, $cona);
+        $this->toplotnaPrevodnost =
+            $this->toplotnaPrevodnost ?? $this->racunskaToplotnaPrevodnost($cona->sirina * $cona->dolzina);
+        $this->dolzina = $razvod->dolzinaCevi($this->vrsta, $cona);
 
-        return $U * $dolzina * $delez;
+        return $this->toplotnaPrevodnost * $this->dolzina * $delez;
+    }
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = new \stdClass();
+        $sistem->vrsta = $this->vrsta->value;
+        $sistem->namen = $this->namen->value;
+        $sistem->dolzina = $this->dolzina;
+        $sistem->toplotnaPrevodnost = $this->toplotnaPrevodnost;
+        $sistem->delezVOgrevaniConi = $this->delezVOgrevaniConi;
+
+        return $sistem;
     }
 }

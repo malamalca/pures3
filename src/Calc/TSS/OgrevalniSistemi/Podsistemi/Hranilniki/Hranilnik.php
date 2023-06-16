@@ -54,4 +54,20 @@ abstract class Hranilnik
      * @return array
      */
     abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = new \stdClass();
+        $sistem->id = $this->id;
+        $sistem->volumen = $this->volumen;
+
+        $sistem->toplotneIzgube = $this->toplotneIzgube;
+
+        return $sistem;
+    }
 }

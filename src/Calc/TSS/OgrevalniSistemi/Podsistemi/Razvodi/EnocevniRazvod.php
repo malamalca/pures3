@@ -8,6 +8,8 @@ use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
 
 class EnocevniRazvod extends RazvodOgrevanje
 {
+    public string $sistem = 'enocevni';
+
     /**
      * Vrne dolžino cevi za podano vrsto razvodnih cevi
      *

@@ -2,6 +2,11 @@
     display: none !important;
 }
 
+#container {
+    margin: auto;
+    width: 100%;
+}
+
 p.actions {
     display: none;
 }

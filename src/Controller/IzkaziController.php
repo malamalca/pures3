@@ -24,7 +24,10 @@ class IzkaziController
         App::set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
 
         $tssFolder = App::getProjectFolder($projectId, 'izracuni') . 'TSS' . DS;
-        App::set('sistemi', array_filter((array)scandir($tssFolder), fn($d) => is_file($tssFolder . $d)));
+        App::set('vgrajeniSistemi', array_map(
+            fn($s) => substr((string)$s, 0, (int)strrpos((string)$s, '.')),
+            array_filter((array)scandir($tssFolder), fn($d) => is_file($tssFolder . $d))
+        ));
     }
 
     /**

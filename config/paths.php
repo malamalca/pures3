@@ -50,3 +50,8 @@ define('TMP', ROOT . DS . 'tmp' . DS);
  * Path to the projects directory.
  */
 define('PROJECTS', ROOT . DS . 'projects' . DS);
+
+/**
+ * Path to the schemas directory.
+ */
+define('SCHEMAS', ROOT . DS . 'schemas' . DS);

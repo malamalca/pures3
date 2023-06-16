@@ -96,4 +96,21 @@ abstract class Generator
      * @return void
      */
     abstract public function obnovljivaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = new \stdClass();
+        $sistem->id = $this->id;
+
+        $sistem->potrebnaEnergija = $this->potrebnaEnergija;
+        $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
+        $sistem->vneseneIzgube = $this->vneseneIzgube;
+
+        return $sistem;
+    }
 }

@@ -259,6 +259,8 @@ class CalcKonstrukcije
                             $kons->gm[$mesec] = ($kons->gm[$mesec] ?? 0) + ($gm < 0 ? 0 : $gm);
                         }
                     }
+                    ksort($sloj->gc);
+                    ksort($sloj->gm);
                 }
             }
         }

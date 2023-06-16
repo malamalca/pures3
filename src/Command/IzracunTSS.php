@@ -86,58 +86,20 @@ class IzracunTSS extends Command
                 if ($sistemOgrevanja) {
                     $sistemOgrevanja->analiza($cona, $okolje);
 
-                    if (!empty($sistem->prenosniki)) {
-                        foreach ($sistem->prenosniki as $k => $prenosnik) {
-                            $prenosnik->toplotneIzgube = $sistemOgrevanja->koncniPrenosniki[$k]->toplotneIzgube;
-                            $prenosnik->potrebnaElektricnaEnergija =
-                                $sistemOgrevanja->koncniPrenosniki[$k]->potrebnaElektricnaEnergija;
-                            $prenosnik->vracljiveIzgubeAux = $sistemOgrevanja->koncniPrenosniki[$k]->vracljiveIzgubeAux;
-                        }
-                    }
-
-                    if (!empty($sistem->razvodi)) {
-                        foreach ($sistem->razvodi as $k => $razvod) {
-                            $razvod->toplotneIzgube = $sistemOgrevanja->razvodi[$k]->toplotneIzgube;
-                            $razvod->vracljiveIzgube = $sistemOgrevanja->razvodi[$k]->vracljiveIzgube;
-                            $razvod->potrebnaElektricnaEnergija =
-                                $sistemOgrevanja->razvodi[$k]->potrebnaElektricnaEnergija;
-                            $razvod->vracljiveIzgubeAux = $sistemOgrevanja->razvodi[$k]->vracljiveIzgubeAux;
-                        }
-                    }
-
-                    if (!empty($sistem->hranilniki)) {
-                        foreach ($sistem->hranilniki as $k => $hranilnik) {
-                            $hranilnik->toplotneIzgube = $sistemOgrevanja->hranilniki[$k]->toplotneIzgube;
-                        }
-                    }
-
-                    foreach ($sistem->generatorji as $k => $generator) {
-                        $generator->potrebnaEnergija = $sistemOgrevanja->generatorji[$k]->potrebnaEnergija;
-                        $generator->potrebnaElektricnaEnergija =
-                            $sistemOgrevanja->generatorji[$k]->potrebnaElektricnaEnergija;
-
-                        $generator->vneseneIzgube = $sistemOgrevanja->generatorji[$k]->vneseneIzgube;
-                    }
-
-                    $sistem->potrebnaEnergija = $sistemOgrevanja->potrebnaEnergija;
-                    $sistem->potrebnaElektricnaEnergija = $sistemOgrevanja->potrebnaElektricnaEnergija;
-                    $sistem->obnovljivaEnergija = $sistemOgrevanja->obnovljivaEnergija;
-                    $sistem->vracljiveIzgube = $sistemOgrevanja->vracljiveIzgube;
-
-                    $sistem->energijaPoEnergentih = $sistemOgrevanja->energijaPoEnergentih;
-
-                    $sistem->letnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->letnaUcinkovitostOgrHlaTsv;
-                    $sistem->minLetnaUcinkovitostOgrHlaTsv = $sistemOgrevanja->minLetnaUcinkovitostOgrHlaTsv;
-
-                    $elektrikaPoConah[$sistem->idCone] =
-                        array_sum_values($elektrikaPoConah[$sistem->idCone], $sistem->potrebnaElektricnaEnergija);
-                    $elektrikaPoConah[$sistem->idCone] =
+                    $elektrikaPoConah[$sistemOgrevanja->idCone] = array_sum_values(
+                        $elektrikaPoConah[$sistemOgrevanja->idCone],
+                        $sistemOgrevanja->potrebnaElektricnaEnergija
+                    );
+                    $elektrikaPoConah[$sistemOgrevanja->idCone] =
                         array_sum_values(
-                            $elektrikaPoConah[$sistem->idCone],
-                            array_subtract_values($sistem->potrebnaEnergija, $sistem->obnovljivaEnergija)
+                            $elektrikaPoConah[$sistemOgrevanja->idCone],
+                            array_subtract_values(
+                                $sistemOgrevanja->potrebnaEnergija,
+                                $sistemOgrevanja->obnovljivaEnergija
+                            )
                         );
 
-                    $TSSSistemiOgrevanjeOut[] = $sistem;
+                    $TSSSistemiOgrevanjeOut[] = $sistemOgrevanja->export();
                 }
             }
 

@@ -81,11 +81,24 @@
     </tr>
     <?php
         foreach ($sistemi as $slug => $naziv) {
+            $energenti = '';
+            if ($slug == 'ogrevanje') {
+                $energenti = 'elektrika, okolje';
+            }
+            if ($slug == 'razsvetljava') {
+                $energenti = 'elektrika';
+            }
+            if ($slug == 'razsvetljava') {
+                $energenti = 'elektrika';
+            }
+            if ($slug == 'fotovoltaika') {
+                $energenti = 'sončna energija';
+            }
     ?>
     <tr>
         <td class="w-5 checkbox"><?= in_array($slug, $vgrajeniSistemi) ? '&#x2611;' : '&#x2610;' ?></td>
         <td class="w-35"><?= h($naziv) ?></td>
-        <td class="w-30" style="border: 1px solid black; border-top: 0px solid black;"></td>
+        <td class="w-30" style="border: 1px solid black; border-top: 0px solid black;"><?= h($energenti) ?></td>
         <td class="w-30" style="border: 1px solid black; border-top: 0px solid black;"></td>
     </tr>
     <?php

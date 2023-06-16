@@ -4,7 +4,7 @@
 ?>
 <h1>Analiza TSS Ogrevanja "<?= h($sistem->id) ?>"</h1>
 
-<p>
+<p class="actions">
 <a class="button" href="<?= App::url('/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
 <table border="1">
@@ -30,6 +30,28 @@
     if (!empty($sistem->prenosniki)) {
 ?>
 <h2>Analiza končnih prenosnikov</h2>
+<?php
+        foreach ($sistem->prenosniki as $prenosnik) {
+?>
+<table border="1">
+    <tr>
+        <th colspan="2">Prenosnik:</th>
+        <th colspan="3"><?= h($prenosnik->id) ?></th>
+    </tr>
+    <tr>
+        <td colspan="2">Vrsta ogreval:</td>
+        <td colspan="3"><?= h($prenosnik->vrsta) ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">Hidravlično uravnoteženje razvoda:</td>
+        <td colspan="3"><?= h($prenosnik->hidravlicnoUravnotezenje) ?></td>
+    </tr>
+    <tr>
+        <td colspan="2">Regulacija temperature prostora:</td>
+        <td colspan="3"><?= h($prenosnik->regulacijaTemperature) ?></td>
+    </tr>
+</table>
+<br />
 <table border="1">
     <thead>
         <tr>
@@ -39,11 +61,6 @@
             <td class="center">kWh/an</td>
         </tr>
     </thead>
-
-    <?php
-        if (!empty($sistem->prenosniki)) {
-            foreach ($sistem->prenosniki as $prenosnik) {
-    ?>
     <tr>
         <td rowspan="3"><?= h($prenosnik->id) ?></td>
         <td>Q<sub>H,em,ls</sub></td>
@@ -60,17 +77,53 @@
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 2) . '</td>', $prenosnik->vracljiveIzgubeAux)) ?>
         <th class="right w-6"><?= $this->numFormat(array_sum($prenosnik->vracljiveIzgubeAux), 0) ?></th>
     </tr>
-    <?php
-        }
-    ?>
 </table>
 <?php
         }
     }
 ?>
 
+<?php
+    if (!empty($sistem->razvodi)) {
+?>
 <h2>Analiza razvoda</h2>
-<table border="1">
+<?php
+        foreach ($sistem->razvodi as $razvod) {
+?>
+    <table border="1">
+        <tr>
+            <th colspan="2">Razvod:</th>
+            <th colspan="3"><?= $razvod->id ?></th>
+        </tr>
+        <tr>
+            <td colspan="2">Sistem:</td>
+            <td colspan="3"><?= $razvod->sistem ?? '' ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">Črpalka:</td>
+            <td colspan="3"><?= empty($razvod->crpalka) ? 'NE' : ($this->numFormat($razvod->crpalka->moc ?? 0, 1) . ' W') ?></td>
+        </tr>
+        <tr>
+            <td colspan="2">Vodi:</td>
+            <td>Dolzina L [m]</td>
+            <td>Izolacija U [W/mk]</td>
+            <td>Delež v ogrevani coni [%]</td>
+        </tr>
+        <?php
+                foreach ($razvod->vodi as $vod) {
+        ?>
+        <tr>
+            <td colspan="2"><?= $vod->vrsta ?></td>
+            <td class="center"><?= $this->numFormat($vod->dolzina ?? 0, 1) ?></td>
+            <td class="center"><?= $this->numFormat($vod->toplotnaPrevodnost ?? 0, 1) ?></td>
+            <td class="center"><?= $this->numFormat($vod->delezVOgrevaniConi ?? 0, 1) ?></td>
+        </tr>
+        <?php
+                }
+        ?>
+    </table>
+    <br />
+    <table border="1">
     <thead>
         <tr>
             <td></td>
@@ -79,11 +132,6 @@
             <td class="center">kWh/an</td>
         </tr>
     </thead>
-
-    <?php
-        if (!empty($sistem->razvodi)) {
-            foreach ($sistem->razvodi as $razvod) {
-    ?>
     <tr>
         <td rowspan="4"><?= h($razvod->id ?? '') ?></td>
         <td>Q<sub>H,dis,ls</sub></td>
@@ -105,16 +153,33 @@
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $razvod->vracljiveIzgubeAux)) ?>
         <th class="right w-6"><?= $this->numFormat(array_sum($razvod->vracljiveIzgubeAux), 0) ?></th>
     </tr>
-    <?php
-            }
-        }
-    ?>
 </table>
+<br />
+<?php
+        }
+    }
+?>
 
 <?php
     if (!empty($sistem->hranilniki)) {
 ?>
 <h2>Analiza hranilnikov</h2>
+<?php
+        foreach ($sistem->hranilniki as $hranilnik) {
+?>
+<table border="1">
+    <tr>
+        <th colspan="2">Hranilnik:</th>
+        <th colspan="2"><?= $hranilnik->id ?></th>
+    </tr>
+    <tr>
+        <td>Volumen hranilnika:</td>
+        <td>V<sub>sto</sub></td>
+        <td><?= $this->numFormat($hranilnik->volumen, 1) ?></td>
+        <td>L</td>
+    </tr>
+</table>
+<br />
 <table border="1">
     <thead>
         <tr>
@@ -124,25 +189,61 @@
             <td class="center">kWh/an</td>
         </tr>
     </thead>
-
-    <?php
-            foreach ($sistem->hranilniki as $hranilnik) {
-    ?>
     <tr>
         <td rowspan="4"><?= h($hranilnik->id ?? '') ?></td>
         <td>Q<sub>W,dis,ls</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $hranilnik->toplotneIzgube)) ?>
         <th class="right w-6"><?= $this->numFormat(array_sum($hranilnik->toplotneIzgube), 0) ?></th>
     </tr>
-    <?php
-            }
-    ?>
 </table>
 <?php
+        }
     }
 ?>
 
+<?php
+    if (!empty($sistem->generatorji)) {
+?>
 <h2>Analiza generatorja</h2>
+<?php
+    foreach ($sistem->generatorji as $generator) {
+        $podsistemi = [];
+        if (isset($generator->potrebnaEnergija->tsv)) {
+            $podsistemi[] = 'tsv';
+        }
+        if (isset($generator->potrebnaEnergija->ogrevanje)) {
+            $podsistemi[] = 'ogrevanje';
+        }
+?>
+<table border="1">
+    <tr>
+        <th colspan="2">Generator:</th>
+        <th colspan="2"><?= $generator->id ?></th>
+    </tr>
+    <tr>
+        <td colspan="2">Podnebje:</td>
+        <td colspan="2"><?= $generator->podnebje ?></td>
+    </tr>
+    <tr>
+        <td>Nazivna moč TČ:</td>
+        <td>P<sub>n,gen</sub></td>
+        <td><?= $this->numFormat($generator->nazivnaMoc, 1) ?></td>
+        <td>kW</td>
+    </tr>
+    <tr>
+        <td>El. moč na primarnem krogu:</td>
+        <td>P<sub>prim,aux</sub></td>
+        <td><?= $this->numFormat($generator->elektricnaMocNaPrimarnemKrogu, 1) ?></td>
+        <td>W</td>
+    </tr>
+    <tr>
+        <td>El. moč na sekundarnem krogu:</td>
+        <td>P<sub>sek,aux</sub></td>
+        <td><?= $this->numFormat($generator->elektricnaMocNaSekundarnemKrogu, 1) ?></td>
+        <td>W</td>
+    </tr>
+</table>
+<br />
 <table border="1">
     <thead>
         <tr>
@@ -154,15 +255,8 @@
     </thead>
 
     <?php
-        foreach ($sistem->generatorji as $generator) {
-            $podsistemi = [];
-            if (isset($generator->potrebnaEnergija->tsv)) {
-                $podsistemi[] = 'tsv';
-            }
-            if (isset($generator->potrebnaEnergija->ogrevanje)) {
-                $podsistemi[] = 'ogrevanje';
-            }
-            foreach ($podsistemi as $podsistem) {
+
+        foreach ($podsistemi as $podsistem) {
     ?>
     
     <tr>
@@ -182,10 +276,13 @@
         <th class="right w-6"><?= $this->numFormat(array_sum($generator->potrebnaElektricnaEnergija->$podsistem), 0) ?></th>
     </tr>
     <?php
-            }
         }
     ?>
 </table>
+<?php
+        }
+    }
+?>
 
 <h2>Analiza sistema</h2>
 <table border="1">

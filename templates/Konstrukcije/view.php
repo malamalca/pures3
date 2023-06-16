@@ -62,7 +62,7 @@
 </table>
 
 <h3>Prikaz temperature v konstrukciji</h3>
-<div>
+<div style="height: 20rem;">
   <canvas id="myChart"></canvas>
 </div>
 
@@ -146,7 +146,7 @@
 
 
 <h3>Prikaz tlaka in kondenzacije</h3>
-<div>
+<div style="height: 20rem;">
   <canvas id="myChart2"></canvas>
 </div>
 <div>
@@ -198,8 +198,8 @@
             <td class="right w-10"><?= round($sloj->T[$mesec], 1) ?></td>
             <td class="right w-10"><?= round($sloj->dejanskiTlak[$mesec], 1) ?></td>
             <td class="right w-10"><?= round($sloj->nasicenTlak[$mesec], 1) ?></td>
-            <td class="right w-10"><?= isset($sloj->gc[$mesec]) ? round($sloj->gc[$mesec], 5) : '' ?></td>
-            <td class="right w-10"><?= isset($sloj->gm[$mesec]) ? round($sloj->gm[$mesec], 5) : '' ?></td>
+            <td class="right w-10"><?= isset($sloj->gc->$mesec) ? round($sloj->gc->$mesec, 5) : '' ?></td>
+            <td class="right w-10"><?= isset($sloj->gm->$mesec) ? round($sloj->gm->$mesec, 5) : '' ?></td>
         </tr>
 <?php
         }
@@ -227,7 +227,7 @@
         </tr>
     </table>
 </div>
-
+<!--
 <div>
     <h2>Kondenzacija</h2>
     <table border="1">
@@ -265,8 +265,8 @@
             foreach (array_keys(Calc::MESECI) as $mes) {
     ?>
 
-            <td class="right w-4" style="background-color:#f0f0f0;"><?= isset($sloj->gm[$mes]) ? round($sloj->gm[$mes]/1000, 4) : '&nbsp;' ?></td>
-            <td class="right w-4" style="border-right: solid 2px black;"><?= isset($sloj->gc[$mes]) ? round($sloj->gc[$mes]/1000, 4) : '&nbsp;' ?></td>
+            <td class="right w-4" style="background-color:#f0f0f0;"><?= isset($sloj->gm->$mes) ? round($sloj->gm->$mes/1000, 4) : '&nbsp;' ?></td>
+            <td class="right w-4" style="border-right: solid 2px black;"><?= isset($sloj->gc->$mes) ? round($sloj->gc->$mes/1000, 4) : '&nbsp;' ?></td>
             
     <?php
             }
@@ -278,6 +278,7 @@
     ?>
     </table>
 </div>
+-->
 
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
 <script src="<?= $this->url("/js/chartjs-plugin-zoom.min.js") ?>"></script>
@@ -403,4 +404,3 @@
         }
     });
 </script>
- 
