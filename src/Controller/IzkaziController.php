@@ -116,7 +116,7 @@ class IzkaziController
 
         $konstrukcija = json_decode($konstrukcijaJson);
 
-        $kons = \App\Lib\CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
+        $kons = \App\Lib\CalcKonstrukcije::konstrukcija($konstrukcija, $okolje, ['izracunKondenzacije' => true]);
 
         App::set('kons', $kons);
         App::set('okolje', $okolje);

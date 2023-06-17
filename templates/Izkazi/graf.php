@@ -3,10 +3,11 @@ use App\Lib\Calc;
 //var_dump($okolje->notranjaVlaga);
 //die;
 
-$mesec = $_GET['mesec'] ?? 0;
+$mesec = $_GET['mesec'] ?? 1;
 if (!in_array($mesec, array_keys(Calc::MESECI))) {
-    $mesec = 0;
+    $mesec = 1;
 }
+$mesec--;
 
 ?>
 
@@ -16,6 +17,7 @@ if (!in_array($mesec, array_keys(Calc::MESECI))) {
   <canvas id="myChart"></canvas>
 </div>
 <div>
+    U: <?= $kons->U ?>
     <table>
         <thead>
             <tr>
@@ -47,7 +49,7 @@ if (!in_array($mesec, array_keys(Calc::MESECI))) {
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"></td>
-            <td class="right"><?= round($kons->Tsi[$mesec], 1) ?></td>
+            <td class="right"><?= round($kons->Tsi[$mesec], 3) ?></td>
             <td class="right"><?= round($kons->dejanskiTlakSi[$mesec], 0) ?></td>
             <td class="right"><?= round($kons->nasicenTlakSi[$mesec], 0) ?></td>
         </tr>
@@ -57,15 +59,15 @@ if (!in_array($mesec, array_keys(Calc::MESECI))) {
 ?>
         <tr>
             <td><?= $sloj->opis ?></td>
-            <td class="right w-10"><?= round(($sloj->debelina ?? 0) * 100, 1) ?></td>
+            <td class="right w-10"><?= round(($sloj->debelina ?? 0) * 100, 3) ?></td>
             <td class="right w-10"><?= round(($sloj->lambda ?? 0), 3) ?></td>
             <td class="right w-10"><?= !empty($sloj->lambda) ? round(($sloj->debelina ?? 0) / ($sloj->lambda ?? 0), 3) : '' ?></td>
             <td class="right w-10"><?= isset($sloj->Sd) ? round($sloj->Sd, 4) : round($sloj->debelina * $sloj->difuzijskaUpornost, 4) ?></td>
-            <td class="right w-10"><?= round($sloj->T[$mesec], 1) ?></td>
-            <td class="right w-10"><?= round($sloj->dejanskiTlak[$mesec], 1) ?></td>
-            <td class="right w-10"><?= round($sloj->nasicenTlak[$mesec], 1) ?></td>
-            <td class="right w-10"><?= isset($sloj->gc[$mesec]) ? round($sloj->gc[$mesec], 5) : '' ?></td>
-            <td class="right w-10"><?= isset($sloj->gm[$mesec]) ? round($sloj->gm[$mesec], 5) : '' ?></td>
+            <td class="right w-10"><?= round($sloj->T[$mesec], 3) ?></td>
+            <td class="right w-10"><?= round($sloj->dejanskiTlak[$mesec], 0) ?></td>
+            <td class="right w-10"><?= round($sloj->nasicenTlak[$mesec], 0) ?></td>
+            <td class="right w-10"><?= isset($sloj->gc[$mesec]) ? round($sloj->gc[$mesec] / 100, 5) : '' ?></td>
+            <td class="right w-10"><?= isset($sloj->gm[$mesec]) ? round($sloj->gm[$mesec] / 100, 5) : '' ?></td>
         </tr>
 <?php
         }
@@ -113,8 +115,8 @@ if (!in_array($mesec, array_keys(Calc::MESECI))) {
             <?php
             foreach (array_keys(Calc::MESECI) as $mes) {
     ?>
+            <td>G<sub>c</sub></td>
             <td>M<sub>a</sub></td>
-            <td>g<sub>c</sub></td>
     <?php
             }
     ?>
@@ -130,10 +132,8 @@ if (!in_array($mesec, array_keys(Calc::MESECI))) {
     <?php
             foreach (array_keys(Calc::MESECI) as $mes) {
     ?>
-
-            <td class="right w-10" style="background-color:#f0f0f0"><?= isset($sloj->gm[$mes]) ? round($sloj->gm[$mes]/1000, 4) : '' ?></td>
-            <td class="right w-10" style="border-right: solid 2px black;"><?= isset($sloj->gc[$mes]) ? round($sloj->gc[$mes]/1000, 4) : '' ?></td>
-            
+            <td class="right w-10" style="background-color:#f0f0f0"><?= isset($sloj->gc[$mes]) ? round($sloj->gc[$mes]/1000, 4) : '' ?></td>
+            <td class="right w-10" style="border-right: solid 2px black;"><?= isset($sloj->gm[$mes]) ? round($sloj->gm[$mes]/1000, 4) : '' ?></td>
     <?php
             }
     ?>

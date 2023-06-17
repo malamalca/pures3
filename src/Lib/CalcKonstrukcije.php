@@ -13,9 +13,10 @@ class CalcKonstrukcije
      *
      * @param \stdClass $kons Podatki konstrukcije
      * @param \stdClass $okolje Podatki okolja
+     * @param array $options Dodatne možnosti
      * @return \stdClass
      */
-    public static function konstrukcija($kons, $okolje)
+    public static function konstrukcija($kons, $okolje, $options = [])
     {
         // parametri za posamezno konstrukcijo po TSG
         if (isset($kons->vrsta)) {
@@ -105,7 +106,11 @@ class CalcKonstrukcije
             }
         }
 
-        if (!isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false) {
+        if (
+            !isset($kons->TSG->kontrolaKond) ||
+            $kons->TSG->kontrolaKond !== false ||
+            !empty($options['izracunKondenzacije'])
+        ) {
             self::izracunKondenzacije($kons);
 
             // sestej kolicino vlage po materialu
@@ -177,6 +182,8 @@ class CalcKonstrukcije
 
         // pa še količino kondenza po mesecih
         if (count($kondRavnine) > 0) {
+            // začetni meseci po id ravnine
+            $zacetniMeseci = [];
             foreach ($kondRavnine as $idRavnine => $sloj) {
                 // poiščemo začetni mesec
                 $zacetniMesec = 0; // januar
@@ -195,43 +202,61 @@ class CalcKonstrukcije
                 if ($zacetniMesec == 11 && !empty($sloj->gc[$zacetniMesec])) {
                     // začetnega meseca nismo našli, to pomeni, da je kondenzacija skozi celotno leto
                     // in se nalaga in nalaga in nalaga....
-                    $gm = -1;
+                    $zacetniMeseci[$idRavnine] = -1;
                 } else {
-                    $gm = 0;
-                    for ($i = $zacetniMesec; $i < $zacetniMesec + 12; $i++) {
-                        $mesec = $i % 12;
+                    $zacetniMeseci[$idRavnine] = $zacetniMesec;
+                }
+            }
 
-                        if ($idRavnine > 0) {
-                            $tlakLevo = $kondRavnine[$idRavnine - 1]->nasicenTlak[$mesec];
-                            $SdLevo = $kondRavnine[$idRavnine - 1]->Sdn;
-                        } else {
-                            $tlakLevo = $kons->dejanskiTlakSi[$mesec];
-                            $SdLevo = 0;
-                        }
+            // preverim, če je en mesec prej res v vseh slojih brez kondenzacije
+            $zacetniMesec = min($zacetniMeseci);
+            $zacetniMesecBrezKondenzacije = ($zacetniMesec + 11) % 12;
+
+            $jeMesecBrezKondenzacije = true;
+            foreach ($kondRavnine as $idRavnine => $sloj) {
+                if (!empty($sloj->gc[$zacetniMesecBrezKondenzacije])) {
+                    $jeMesecBrezKondenzacije = false;
+                }
+            }
+
+            if (!$jeMesecBrezKondenzacije) {
+                $sloj->gm[$mesec] = -1;
+                $kons->gm[$mesec] = -1;
+            } else {
+                for ($i = $zacetniMesec; $i < $zacetniMesec + 12; $i++) {
+                    $mesec = $i % 12;
+                    $prejsnjiMesec = ($mesec + 11) % 12;
+
+                    foreach ($kondRavnine as $idRavnine => $sloj) {
                         if (!empty($sloj->gc[$mesec])) {
-                            $gm += $sloj->gc[$mesec];
+                            // smo v mesecu, ko se kondenzat še nalaga
+
+                            /** @var \stdClass $sloj */
+                            $sloj->gm[$mesec] = ($sloj->gm[$prejsnjiMesec] ?? 0) + $sloj->gc[$mesec];
 
                             // največja količina kondenzata v materialu
                             /** @var \stdClass $sloj->material */
                             $sloj->material->gm = ($sloj->material->gm ?? 0) + $sloj->gc[$mesec];
                         } else {
-                            if ($gm > 0) {
-                                // izračunam izhlapevanje
-                                if ($idRavnine == 0 && $mesec > 3) {
-                                    $tlakDesno = $kons->dejanskiTlakSe[$mesec];
-                                    $SdDesno = $kons->Sd;
+                            if (!empty($sloj->gm[$prejsnjiMesec])) {
+                                if ($idRavnine > 0) {
+                                    $tlakLevo = $kondRavnine[$idRavnine - 1]->nasicenTlak[$mesec];
+                                    $SdLevo = $kondRavnine[$idRavnine - 1]->Sdn;
+                                } else {
                                     $tlakLevo = $kons->dejanskiTlakSi[$mesec];
                                     $SdLevo = 0;
-                                } else {
-                                    if ($idRavnine < count($kondRavnine) - 1) {
-                                        $tlakDesno = $kondRavnine[$idRavnine + 1]->nasicenTlak[$mesec];
-                                        $SdDesno = $kondRavnine[$idRavnine + 1]->Sdn;
-                                    } else {
-                                        $tlakDesno = $kons->dejanskiTlakSe[$mesec];
-                                        $SdDesno = $kons->Sd;
-                                    }
                                 }
 
+                                if (isset($kondRavnine[$idRavnine + 1])) {
+                                    $tlakDesno = $kondRavnine[$idRavnine + 1]->nasicenTlak[$mesec];
+                                    $SdDesno = $kondRavnine[$idRavnine + 1]->Sdn;
+                                } else {
+                                    $tlakDesno = $kons->dejanskiTlakSe[$mesec];
+                                    $SdDesno = $kons->Sd;
+                                }
+
+                                // izhlapevanje
+                                /** @var \stdClass $sloj */
                                 $gc = 2 * pow(10, -10) * cal_days_in_month(CAL_GREGORIAN, $i % 12 + 1, 2023)
                                     * 24 * 3600 * 1000 *
                                     (
@@ -244,23 +269,16 @@ class CalcKonstrukcije
                                     $gc = 0;
                                 }
 
-                                $gm += $gc;
-
-                                $tlakLevo = $sloj->dejanskiTlak[$mesec];
-                                $SdLevo = $sloj->Sdn;
-
                                 $sloj->gc[$mesec] = $gc;
+                                $sloj->gm[$mesec] = ($sloj->gm[$prejsnjiMesec] ?? 0) + $gc;
+                                if ($sloj->gm[$mesec] < 0) {
+                                    $sloj->gm[$mesec] = 0;
+                                    unset($kondRavnine[$idRavnine]);
+                                }
+                                $kons->gm[$mesec] = $sloj->gm[$mesec];
                             }
                         }
-
-                        if (isset($sloj->gc[$mesec])) {
-                            /** @var \stdClass $sloj */
-                            $sloj->gm[$mesec] = $gm < 0 ? 0 : $gm;
-                            $kons->gm[$mesec] = ($kons->gm[$mesec] ?? 0) + ($gm < 0 ? 0 : $gm);
-                        }
                     }
-                    ksort($sloj->gc);
-                    ksort($sloj->gm);
                 }
             }
         }
