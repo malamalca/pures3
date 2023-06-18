@@ -55,5 +55,7 @@ final class IzracunKonstrukcijeISO13788Test extends TestCase
         $expectedGc = [0.00016/*5*/, 0.00013, 0.00008, -0.00005, -0.00016, -0.00025, -0.00028, 0, 0, 0, 0.00007/*6*/, 0.00013];
         $this->assertEquals($expectedGc, $roundedResult);
         $this->assertFalse(empty($expectedGc));
+
+        //$this->assertEquals(145.67, round($result->maxGm, 2));
     }
 }

@@ -17,7 +17,8 @@ $mesec--;
   <canvas id="myChart"></canvas>
 </div>
 <div>
-    U: <?= $kons->U ?>
+    U: <?= $kons->U ?><br />
+    maxGm: <?= $kons->maxGm ?><br />
     <table>
         <thead>
             <tr>

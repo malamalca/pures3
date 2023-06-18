@@ -221,11 +221,14 @@ class CalcKonstrukcije
 
             if (!$jeMesecBrezKondenzacije) {
                 $sloj->gm[$mesec] = -1;
-                $kons->gm[$mesec] = -1;
+                $kons->maxGm = -1;
             } else {
+                $kons->maxGm = 0;
                 for ($i = $zacetniMesec; $i < $zacetniMesec + 12; $i++) {
                     $mesec = $i % 12;
                     $prejsnjiMesec = ($mesec + 11) % 12;
+
+                    $mesecniGm = 0;
 
                     foreach ($kondRavnine as $idRavnine => $sloj) {
                         if (!empty($sloj->gc[$mesec])) {
@@ -236,7 +239,9 @@ class CalcKonstrukcije
 
                             // največja količina kondenzata v materialu
                             /** @var \stdClass $sloj->material */
-                            $sloj->material->gm = ($sloj->material->gm ?? 0) + $sloj->gc[$mesec];
+                            $sloj->material->gm[$mesec] = ($sloj->material->gm[$mesec] ?? 0) + $sloj->gc[$mesec];
+
+                            $kons->gm[$mesec] = ($kons->gm[$mesec] ?? 0) + $sloj->gm[$mesec];
                         } else {
                             if (!empty($sloj->gm[$prejsnjiMesec])) {
                                 if ($idRavnine > 0) {
@@ -275,9 +280,18 @@ class CalcKonstrukcije
                                     $sloj->gm[$mesec] = 0;
                                     unset($kondRavnine[$idRavnine]);
                                 }
-                                $kons->gm[$mesec] = $sloj->gm[$mesec];
+                                /** @var \stdClass $sloj->material */
+                                $sloj->material->gm[$mesec] = ($sloj->material->gm[$mesec] ?? 0) + $sloj->gc[$mesec];
+
+                                $kons->gm[$mesec] = ($kons->gm[$mesec] ?? 0) + $sloj->gm[$mesec];
                             }
                         }
+
+                        $mesecniGm += $sloj->gm[$mesec] ?? 0;
+                    }
+
+                    if ($kons->maxGm < $mesecniGm) {
+                        $kons->maxGm = $mesecniGm;
                     }
                 }
             }
