@@ -29,7 +29,7 @@ class IzracunOkolja extends Command
         if (!$validator->isValid()) {
             $this->out('splosniPodatki.json vsebuje napake:', 'error');
             foreach ($validator->getErrors() as $error) {
-                $this->out(sprintf("[%s] %s\n", $error['property'], $error['message']), 'info');
+                $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
             }
         }
 

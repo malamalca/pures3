@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items" : {
+        "type" : "object",
+        "required": ["id", "naziv", "vrsta", "materiali"],
+        "properties" : {
+            "id": {"type": "string"},
+            "naziv": {"type": "string"},
+            "vrsta" : {"type": "integer"},
+            "Rsi" : {"type": "number"},
+            "Rse" : {"type": "number"},
+            "materiali": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["opis"],
+                    "oneOf": [
+                        {"required": ["Sd"]},
+                        {"required": ["debelina", "difuzijskaUpornost"]}
+                    ],
+                    "properties": {
+                        "opis": {"type": "string"},
+                        "debelina": {"type": "number"},
+                        "lambda": {"type": "number"},
+                        "gostota": {"type": "number"},
+                        "specificnaToplota": {"type": "number"},
+                        "difuzijskaUpornost": {"type": "number"},
+                        "Sd": {"type": "number"}
+                    }
+                }
+            }
+        }
+    }
+}

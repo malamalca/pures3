@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items" : {
+        "anyOf" : [
+            {
+                "type" : "object",
+                "required": ["id", "naziv", "vrsta", "Uf", "Ug", "g", "Psi"],
+                "properties" : {
+                    "id": {"type": "string"},
+                    "naziv": {"type": "string"},
+                    "vrsta" : {
+                        "enum" : [0, 1]
+                    },
+                    "Uf": {"type": "number"},
+                    "Ug": {"type": "number"},
+                    "g": {"type": "number"},
+                    "Psi": {"type": "number"}
+                }
+            },
+            {
+                "type" : "object",
+                "required": ["id", "naziv", "vrsta", "Ud"],
+                "properties" : {
+                    "id": {"type": "string"},
+                    "naziv": {"type": "string"},
+                    "vrsta" : {
+                        "enum" : [2, 3]
+                    },
+                    "Ud": {"type": "number"}
+                }
+            }
+        ]
+    }
+}

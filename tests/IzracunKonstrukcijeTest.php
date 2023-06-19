@@ -43,12 +43,18 @@ final class IzracunKonstrukcijeTest extends TestCase
         }
         EOT;
         $konstrukcija = json_decode($konstrukcijaJson);
-        $result = \App\Lib\CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
-        $roundedResult = array_map(fn($el) => round($el, 1), $result->Tsi);
-        $expectedTsi = [18.7, 18.8, 19.1, 19.4, 22, 23.6, 24.7, 24.2, 22.0, 19.4, 19.0, 18.8];
-        $this->assertEquals($expectedTsi, $roundedResult);
+        $result = \App\Lib\CalcKonstrukcije::konstrukcija($konstrukcija, $okolje, ['izracunKondenzacije' => true]);
+
         $roundedResult = array_map(fn($el) => round($el, 3), $result->fRsi);
         $expected_fRsi = [0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939];
         $this->assertEquals($expected_fRsi, $roundedResult);
+
+        $roundedResult = array_map(fn($el) => round($el, 1), $result->Tsi);
+        $expectedTsi = [18.7, 18.8, 19.1, 19.4, 22, 23.6, 24.7, 24.2, 22.0, 19.4, 19.0, 18.8];
+        $this->assertEquals($expectedTsi, $roundedResult);
+
+        //$roundedResult = array_map(fn($el) => round($el, 1), $result->Gc);
+        //$expectedGs = [9, 4, -8, -21, 0, 0, 0, 0, 0, 0, 2, 7];
+        //$this->assertEquals($expectedTsi, $roundedResult);
     }
 }

@@ -105,10 +105,10 @@ class IzkaziController
      */
     public function graf()
     {
-        $compareWithKI = true;
-        //$primerFilename = 'TSG004.php';
+        //$compareWithKI = true;
+        $primerFilename = 'TSG004.php';
         //$primerFilename = 'ISO13788_C2.php';
-        $primerFilename = 'KondVConi.php';
+        //$primerFilename = 'KondVConi.php';
 
         $konstrukcijaJson = '{}';
         $okolje = new \stdClass();

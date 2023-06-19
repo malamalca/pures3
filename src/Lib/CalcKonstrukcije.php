@@ -75,7 +75,7 @@ class CalcKonstrukcije
 
                 if (isset($material->lambda)) {
                     $sloj->lambda = $material->lambda;
-                    $Rt += $sloj->debelina / $sloj->lambda;
+                    $Rt += ($sloj->debelina ?? 0) / $sloj->lambda;
                 }
 
                 $sloj->Rn = $Rt;
@@ -157,7 +157,7 @@ class CalcKonstrukcije
                 $tlakLevo = $kons->dejanskiTlakSi[$mesec];
                 $SdLevo = 0;
                 foreach ($kondRavnineVMesecu as $i => $sloj) {
-                    if ($i < count($kondRavnineVMesecu) - 1) {
+                    if (!empty($kondRavnineVMesecu[$i + 1])) {
                         $tlakDesno = $kondRavnineVMesecu[$i + 1]->nasicenTlak[$mesec];
                         $SdDesno = $kondRavnineVMesecu[$i + 1]->Sdn;
                     } else {
@@ -176,6 +176,7 @@ class CalcKonstrukcije
                     $SdLevo = $sloj->Sdn;
 
                     $sloj->gc[$mesec] = $gc;
+                    $kons->gc[$mesec] = ($kons->gc[$mesec] ?? 0) + $sloj->gc[$mesec];
                 }
             } // sizeof($kondRavnine) > 0
         } // foreach (self::MESECI)
@@ -283,6 +284,7 @@ class CalcKonstrukcije
                                 /** @var \stdClass $sloj->material */
                                 $sloj->material->gm[$mesec] = ($sloj->material->gm[$mesec] ?? 0) + $sloj->gc[$mesec];
 
+                                $kons->gc[$mesec] = ($kons->gc[$mesec] ?? 0) + $sloj->gc[$mesec];
                                 $kons->gm[$mesec] = ($kons->gm[$mesec] ?? 0) + $sloj->gm[$mesec];
                             }
                         }
