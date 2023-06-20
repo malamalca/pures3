@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Calc\GF\StavbaFactory;
 use App\Core\App;
 use App\Core\Command;
-use App\Lib\CalcStavba;
 
 class IzracunStavbe extends Command
 {
@@ -25,14 +25,13 @@ class IzracunStavbe extends Command
         /** @var \stdClass $okolje */
         $okolje = App::loadProjectCalculation($projectId, 'okolje');
 
-        /** @var array $cone */
-        $cone = App::loadProjectCalculation($projectId, 'cone');
+        $stavba = StavbaFactory::create($splosniPodatki->stavba->vrsta, $splosniPodatki->stavba);
+        $stavba->cone = App::loadProjectCalculation($projectId, 'cone');
+        $stavba->analiza($okolje);
+        $stavba->sistemi = App::loadProjectCalculation($projectId, 'TSS' . DS);
+        $stavba->analizaTSS();
+        $stavbaJson = $stavba->export();
 
-        $stavba = CalcStavba::analiza($cone, $okolje, $splosniPodatki);
-
-        $sistemi = App::loadProjectCalculation($projectId, 'TSS' . DS);
-        $stavba = CalcStavba::analizaTSS($stavba, $sistemi);
-
-        App::saveProjectCalculation($projectId, 'stavba', $stavba);
+        App::saveProjectCalculation($projectId, 'stavba', $stavbaJson);
     }
 }

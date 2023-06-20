@@ -95,7 +95,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-60" colspan="2">specifična potrebna toplota za pripravo TSV</td>
         <td class="w-20 right">Q'<sub>W,nd,an</sub> (kWh/m² an)</td>
-        <td class="w-20 center"><?= $this->numFormat($stavba->specenergijaTSV, 2) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($stavba->specEnergijaTSV, 2) ?></td>
     </tr>
 
 
