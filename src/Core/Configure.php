@@ -55,20 +55,18 @@ class Configure
         $ret = $default;
         $levels = (array)explode('.', $key);
 
-        if (count($levels) > 0) {
-            $base = $instance->config;
+        $base = $instance->config;
 
-            $i = 0;
+        $i = 0;
 
-            while (isset($base[$levels[$i]])) {
-                if (is_array($base[$levels[$i]]) && ($i < count($levels) - 1)) {
-                    $base = $base[$levels[$i]];
+        while (isset($base[$levels[$i]])) {
+            if (is_array($base[$levels[$i]]) && ($i < count($levels) - 1)) {
+                $base = $base[$levels[$i]];
 
-                    $i++;
-                } else {
-                    if ($i == count($levels) - 1) {
-                        return $base[$levels[$i]];
-                    }
+                $i++;
+            } else {
+                if ($i == count($levels) - 1) {
+                    return $base[$levels[$i]];
                 }
             }
         }
