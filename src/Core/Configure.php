@@ -55,7 +55,7 @@ class Configure
         $ret = $default;
         $levels = (array)explode('.', $key);
 
-        if (!empty($levels)) {
+        if (count($levels) > 0) {
             $base = $instance->config;
 
             $i = 0;
