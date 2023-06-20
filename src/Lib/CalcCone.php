@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lib;
 
+use App\Calc\TSS\Razsvetljava\Razsvetljava;
 use App\Core\Log;
 
 class CalcCone
@@ -362,70 +363,10 @@ class CalcCone
     public static function izracunRazsvetljave($cona, $okolje)
     {
         $cona->razsvetljava = $cona->razsvetljava ?? new \stdClass();
-
-        // fluo     1-brez zatemnjevanja        0.9-z zatemnjevanjem
-        // LED      1-brez zatemnjevanja        0.85-z zatemnjevanjem
-        $cona->razsvetljava->faktorZmanjsanjaSvetlobnegaToka =
-            $cona->razsvetljava->faktorZmanjsanjaSvetlobnegaToka ?? 1;
-
-        // stanovanjske     0.7-ročni vklop     0.55-avtomatsko zatemnjevanje       0.5-ročni vklop, samodejni izklop
-        // pisarne          0.9-ročni vklop     0.85-avtomatsko zatemnjevanje       0.7-ročni vklop, samodejni izklop
-        // ostale stavbe    1-za vse načine krmiljenja
-        $cona->razsvetljava->faktorPrisotnosti = $cona->razsvetljava->faktorPrisotnosti ?? 0.7;
-
-                // halogen      30 lm/W
-                // fluo         80 lm/W
-                // LED          100-140 lm/W
-                // ref.stavba   65 lm/W oz. 95 lm/W po letu 2025
-                $ucinkovitostViraSvetlobe = $cona->razsvetljava->ucinkovitostViraSvetlobe ?? 65;
-
-                // stanovanjske 300 lx
-                // poslovne     500 lx
-                $osvetlitevDelovnePovrsine = $cona->razsvetljava->osvetlitevDelovnePovrsine ?? 300;
-
-                // k = TSG stran 95
-                $faktorOblikeCone = $cona->razsvetljava->faktorOblikeCone ?? 1;
-
-                // F_CA = TSG stran 96
-                $faktorZmanjsaneOsvetlitveDelovnePovrsine =
-                    $cona->razsvetljava->faktorZmanjsaneOsvetlitveDelovnePovrsine ?? 1;
-
-                // CFL fluo     1.15
-                // T5 fluo      1.1
-                // LED          1
-                $faktorVzdrzevanja = $cona->razsvetljava->faktorVzdrzevanja ?? 1;
-
-        $cona->razsvetljava->mocSvetilk = $cona->razsvetljava->mocSvetilk ??
-            $ucinkovitostViraSvetlobe * $osvetlitevDelovnePovrsine * $faktorOblikeCone *
-            $faktorZmanjsaneOsvetlitveDelovnePovrsine * $faktorVzdrzevanja;
-
-        $cona->razsvetljava->faktorNaravneOsvetlitve = $cona->razsvetljava->faktorNaravneOsvetlitve ?? 0.6;
-
-        $cona->razsvetljava->letnoUrPodnevi = $cona->razsvetljava->letnoUrPodnevi ?? 1820;
-        $cona->razsvetljava->letnoUrPonoci = $cona->razsvetljava->letnoUrPonoci ?? 1680;
-
-        $cona->razsvetljava->varnostna = $cona->razsvetljava->varnostna ?? new \stdClass();
-        $cona->razsvetljava->varnostna->energijaZaPolnjenje = $cona->razsvetljava->varnostna->energijaZaPolnjenje ?? 0;
-        $cona->razsvetljava->varnostna->energijaZaDelovanje = $cona->razsvetljava->varnostna->energijaZaDelovanje ?? 0;
-
-        $letnaDovedenaEnergija = ($cona->razsvetljava->faktorZmanjsanjaSvetlobnegaToka *
-            $cona->razsvetljava->faktorPrisotnosti *
-            $cona->razsvetljava->mocSvetilk / 1000 *
-            (($cona->razsvetljava->letnoUrPodnevi * $cona->razsvetljava->faktorNaravneOsvetlitve) +
-            $cona->razsvetljava->letnoUrPonoci) +
-            $cona->razsvetljava->varnostna->energijaZaPolnjenje +
-            $cona->razsvetljava->varnostna->energijaZaDelovanje) * $cona->ogrevanaPovrsina;
-
-        $mesecniUtezniFaktor = [1.25, 1.1, 0.94, 0.86, 0.83, 0.73, 0.79, 0.87, 0.94, 1.09, 1.21, 1.35];
-
-        $cona->skupnaPotrebaRazsvetljava = 0;
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
-
-            $cona->potrebaRazsveljava[$mesec] = $letnaDovedenaEnergija * $stDni / 365 * $mesecniUtezniFaktor[$mesec];
-
-            $cona->skupnaPotrebaRazsvetljava += $cona->potrebaRazsveljava[$mesec];
-        }
+        $TSSRazsvetljava = new Razsvetljava($cona->razsvetljava);
+        $TSSRazsvetljava->analiza([], $cona, null);
+        $cona->potrebaRazsveljava = $TSSRazsvetljava->potrebnaEnergija;
+        $cona->skupnaPotrebaRazsvetljava = $TSSRazsvetljava->skupnaPotrebnaEnergija;
     }
 
     /**

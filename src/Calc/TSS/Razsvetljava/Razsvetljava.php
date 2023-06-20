@@ -8,8 +8,8 @@ use App\Lib\Calc;
 
 class Razsvetljava
 {
-    public string $id;
-    public string $idCone;
+    public ?string $id;
+    public ?string $idCone;
 
     public float $faktorDnevneSvetlobe;
 
@@ -57,8 +57,8 @@ class Razsvetljava
             $config = json_decode($config);
         }
 
-        $this->id = $config->id;
-        $this->idCone = $config->idCone;
+        $this->id = $config->id ?? null;
+        $this->idCone = $config->idCone ?? null;
 
         $this->faktorDnevneSvetlobe = $config->faktorDnevneSvetlobe;
 
@@ -107,7 +107,7 @@ class Razsvetljava
      *
      * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
      * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
+     * @param \stdClass|null $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
@@ -165,7 +165,6 @@ class Razsvetljava
         //public float $faktorNaravneOsvetlitve = 0;
         $ret->letnoUrPodnevi = $this->letnoUrPodnevi;
         $ret->letnoUrPonoci = $this->letnoUrPonoci;
-        //public float $letnoUrPonoci = 0;
 
         //public float $varnostnaRazsvetljavaEnergijaZaPolnjenje = 0;
         //public float $varnostnaRazsvetljavaEnergijaZaDelovanje = 0;
