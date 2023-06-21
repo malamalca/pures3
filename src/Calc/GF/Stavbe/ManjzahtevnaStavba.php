@@ -22,7 +22,7 @@ class ManjzahtevnaStavba extends Stavba
     public float $skupnaEnergijaTSV = 0;
     public float $skupnaEnergijaNavlazevanje = 0;
     public float $skupnaEnergijaRazvlazevanje = 0;
-    public float $skupnaPotrebaRazsvetljava = 0;
+    public float $skupnaEnergijaRazsvetljava = 0;
 
     public float $specKoeficientTransmisijskihIzgub = 0;
     public float $specLetnaToplota = 0;
@@ -131,7 +131,7 @@ class ManjzahtevnaStavba extends Stavba
             $this->skupnaEnergijaTSV += $cona->skupnaEnergijaTSV;
             $this->skupnaEnergijaNavlazevanje += $cona->skupnaEnergijaNavlazevanje;
             $this->skupnaEnergijaRazvlazevanje += $cona->skupnaEnergijaRazvlazevanje;
-            $this->skupnaPotrebaRazsvetljava += $cona->skupnaPotrebaRazsvetljava;
+            $this->skupnaEnergijaRazsvetljava += $cona->skupnaEnergijaRazsvetljava;
         }
 
         $this->specKoeficientTransmisijskihIzgub = $this->specTransmisijskeIzgube / $this->povrsinaOvoja;

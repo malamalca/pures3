@@ -15,6 +15,7 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
         $cona->energijaOgrevanje = [1206.7067763529, 746.3679541588, 390.1171250327, 135.7338005150, 19.2204599611, 0, 0, 0, 17.9030263837, 179.4962090259, 761.6441705740, 1208.7845887780];
         $cona->specVentilacijskeIzgube = 8.184;
         $cona->specTransmisijskeIzgube = 143.8765034039049;
+        $cona->skupnaEnergijaOgrevanje = 4665.684268972864;
         $cona->sirina = 8;
         $cona->dolzina = 10;
         $cona->steviloEtaz = 3;

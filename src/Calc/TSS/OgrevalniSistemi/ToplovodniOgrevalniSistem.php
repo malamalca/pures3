@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi;
 
+use App\Calc\GF\Cone\Cona;
 use App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
-use App\Lib\CalcCone;
 
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
@@ -148,10 +148,11 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
     {
         if (!empty($this->tsv->vracljiveIzgubeVOgrevanje)) {
             // ponovno poračunam potrebno energijo za ogrevanje
-            $cona->vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje;
-
-            CalcCone::izracunFaktorjaIzkoristka($cona, $okolje);
-            CalcCone::izracunEnergijeOgrevanjeHlajanje($cona, $okolje);
+            $spremembaCone = new Cona($cona);
+            $spremembaCone->vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje;
+            $spremembaCone->izracunFaktorjaIzkoristka();
+            $spremembaCone->izracunEnergijeOgrevanjeHlajanje();
+            $cona = $spremembaCone->export();
             $this->init($cona, $okolje);
         }
         $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
@@ -292,7 +293,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
         // potem ogrevanje
         if (!empty($this->ogrevanje)) {
-            $skupnaDovedenaEnergijaOgrHlaTsv += ($cona->skupnaEnergijaOgrevanje ?? 0);
+            $skupnaDovedenaEnergijaOgrHlaTsv += $cona->skupnaEnergijaOgrevanje;
 
             $this->analizaOgrevanja($cona, $okolje);
 

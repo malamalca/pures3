@@ -11,7 +11,7 @@ class CalcOvojNetransparenten
     /**
      * Glavna funkcija za analizo cone
      *
-     * @param \stdClass $cona Podatki o coni
+     * @param \App\Calc\GF\Cone\Cona $cona Podatki o coni
      * @param \stdClass $okolje Podatki o okolju
      * @param array $konstrukcije Seznam konstrukcij
      * @return void
@@ -124,8 +124,8 @@ class CalcOvojNetransparenten
                         $okolje->povprecnaLetnaTemp);
 
                     // toplotni tok proti zemljini
-                    $cona->Hgr_ogrevanje = ($cona->Hgr_ogrevanje ?? 0) + $elementOvoja->Hgr_ogrevanje;
-                    $cona->Hgr_hlajenje = ($cona->Hgr_hlajenje ?? 0) + $elementOvoja->Hgr_hlajenje;
+                    $cona->Hgr_ogrevanje = $elementOvoja->Hgr_ogrevanje;
+                    $cona->Hgr_hlajenje = $elementOvoja->Hgr_hlajenje;
                 }
             }
         }
@@ -234,7 +234,7 @@ class CalcOvojNetransparenten
      *
      * @param \stdClass $elementOvoja Element ovoja
      * @param \stdClass $kons Podatki konstrukcije
-     * @param \stdClass $cona Podatki cone
+     * @param \App\Calc\GF\Cone\Cona $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @return array
      */

@@ -106,7 +106,7 @@ class Razsvetljava
      * Analiza podsistema
      *
      * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
-     * @param \stdClass $cona Podatki cone
+     * @param \App\Calc\GF\Cone\Cona $cona Podatki cone
      * @param \stdClass|null $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void

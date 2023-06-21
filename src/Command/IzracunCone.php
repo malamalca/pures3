@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Calc\GF\Cone\Cona;
 use App\Core\App;
 use App\Core\Command;
-use App\Lib\CalcCone;
 
 class IzracunCone extends Command
 {
@@ -32,14 +32,18 @@ class IzracunCone extends Command
         $coneIn = App::loadProjectData($projectId, 'cone');
 
         $coneOut = [];
-        foreach ($coneIn as $cona) {
+        foreach ($coneIn as $conaConfig) {
+            $cona = new Cona($conaConfig);
+            $cona->analiza($okolje, $netransparentneKonstrukcije, $transparentneKonstrukcije);
+            $coneOut[] = $cona->export();
+
             /** @var \stdClass $cona */
-            $coneOut[] = CalcCone::analizaCone(
-                $cona,
+            /*$coneOut[] = CalcCone::analizaCone(
+                $conaConfig,
                 $okolje,
                 $netransparentneKonstrukcije,
                 $transparentneKonstrukcije
-            );
+            );*/
         }
 
         if (count($coneOut) == 0) {

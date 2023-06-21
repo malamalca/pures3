@@ -11,7 +11,7 @@ class CalcOvojTransparenten
     /**
      * Glavna funkcija za analizo transparentnega dela oboja
      *
-     * @param \stdClass $cona Cona
+     * @param \App\Calc\GF\Cone\Cona $cona Cona
      * @param \stdClass $okolje Parametri okolja
      * @param array $konstrukcije Seznam konstrukcij
      * @return void

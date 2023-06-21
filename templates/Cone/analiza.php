@@ -117,8 +117,8 @@
 
         <tr>
             <td>Razsvetljava - EL,del,an,zn</td>
-            <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->potrebaRazsveljava)) ?>
-            <td class="center"><?= $this->numFormat($cona->skupnaPotrebaRazsvetljava, 0) ?></td>
+            <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->energijaRazsvetljava)) ?>
+            <td class="center"><?= $this->numFormat($cona->skupnaEnergijaRazsvetljava, 0) ?></td>
         </tr>
 </table>
 

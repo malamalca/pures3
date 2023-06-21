@@ -9,7 +9,8 @@ final class IzracunNavlazevanjaTest extends TestCase
     {
         $konstrukcija = null;
 
-        $cona = new \stdClass();
+        //$cona = new \stdClass();
+        $cona = new \App\Calc\GF\Cone\Cona();
         $cona->ogrevanaPovrsina = 1632;
         $cona->notranjaTOgrevanje = 22;
         $cona->notranjaTHlajenje = 26;
@@ -29,7 +30,9 @@ final class IzracunNavlazevanjaTest extends TestCase
         $okolje->zunanjaVlaga = [82, 77, 72, 71, 73, 72, 75, 76, 80, 82, 84, 85];
         $okolje->absVlaznost = [3.98, 4.16, 5.96, 7.65, 11.86, 14.83, 15.24, 14.79, 10.47, 8.14, 5.85, 4.55];
 
-        \App\Lib\CalcCone::izracunNavlazevanje($cona, $okolje, ['details' => true]);
+        //$cona = new \App\Calc\GF\Cone\Cona($cona);
+        $cona->izracunNavlazevanje($okolje, ['details' => true]);
+        //\App\Lib\CalcCone::izracunNavlazevanje($cona, $okolje, ['details' => true]);
 
         $expected_X_eam = [3.98, 4.16, 5.96, 7.65, 11.86, 14.83, 15.24, 14.79, 10.47, 8.14, 5.85, 4.55];
         $roundedResult = array_map(fn($el) => round($el, 2), $cona->uravnavanjeVlage->absZunanjaVlaznost);
