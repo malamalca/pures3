@@ -36,14 +36,6 @@ class IzracunCone extends Command
             $cona = new Cona($conaConfig);
             $cona->analiza($okolje, $netransparentneKonstrukcije, $transparentneKonstrukcije);
             $coneOut[] = $cona->export();
-
-            /** @var \stdClass $cona */
-            /*$coneOut[] = CalcCone::analizaCone(
-                $conaConfig,
-                $okolje,
-                $netransparentneKonstrukcije,
-                $transparentneKonstrukcije
-            );*/
         }
 
         if (count($coneOut) == 0) {

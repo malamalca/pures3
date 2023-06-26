@@ -197,7 +197,7 @@ class CalcOvojTransparenten
 
                     // izračun solarnih dobitkov
                     $alphaSr = 0.3;
-                    $Fsky = $elementOvoja->naklon < 45 ? 1 : 0.5;
+                    $Fsky = $elementOvoja->naklon < 45 ? 0.5 : 1;
                     $hri = 4.14;
                     $dTsky = 11;
                     $Rse = 0.04;
@@ -220,7 +220,14 @@ class CalcOvojTransparenten
                         $hri * $dTsky * $stDni * 24;
 
                     $elementOvoja->solarniDobitkiOgrevanje[$mesec] = ($Qsol_ogrevanje - $Qsky) / 1000;
+                    if ($elementOvoja->solarniDobitkiOgrevanje[$mesec] < 0) {
+                        $elementOvoja->solarniDobitkiOgrevanje[$mesec] = 0;
+                    }
+
                     $elementOvoja->solarniDobitkiHlajenje[$mesec] = ($Qsol_hlajenje - $Qsky) / 1000;
+                    if ($elementOvoja->solarniDobitkiHlajenje[$mesec] < 0) {
+                        $elementOvoja->solarniDobitkiHlajenje[$mesec] = 0;
+                    }
 
                     $cona->solarniDobitkiOgrevanje[$mesec] +=
                         $elementOvoja->solarniDobitkiOgrevanje[$mesec] * $elementOvoja->stevilo;

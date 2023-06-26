@@ -172,7 +172,7 @@
             <td colspan="2"></td>
             <td class="center"><?= Calc::MESECI[$mesec] ?></td>
             <td class="center"><?= $daysInMonth ?></td>
-            <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->solarniDobitkiOgrevanje[$mesec], 1) . '</td>', $elementiOvoja)) ?>
+            <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->solarniDobitkiOgrevanje[$mesec], 2) . '</td>', $elementiOvoja)) ?>
             <td class="center"><?= $this->numFormat($cona->solarniDobitkiOgrevanje[$mesec], 1) ?></td>
         </tr>
     <?php
@@ -194,7 +194,7 @@
             <td colspan="2"></td>
             <td class="center"><?= Calc::MESECI[$mesec] ?></td>
             <td class="center"><?= $daysInMonth ?></td>
-            <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->solarniDobitkiHlajenje[$mesec], 1) . '</td>', $elementiOvoja)) ?>
+            <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->solarniDobitkiHlajenje[$mesec], 3) . '</td>', $elementiOvoja)) ?>
             <th class="center"><?= $this->numFormat($cona->solarniDobitkiHlajenje[$mesec], 1) ?></th>
         </tr>
     <?php
