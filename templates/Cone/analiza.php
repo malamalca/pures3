@@ -42,7 +42,7 @@
 
         <tr>
             <td>QH,nd,zn,m; QH,nd,zn,an</td>
-            <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 1) : '') . '</td>', $cona->energijaOgrevanje)) ?>
+            <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->energijaOgrevanje)) ?>
             <td class="center"><?= $this->numFormat($cona->skupnaEnergijaOgrevanje, 0) ?></td>
         </tr>
 

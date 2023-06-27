@@ -182,6 +182,8 @@ class Cona
 
         // končni izračuni
         $skupni_Uab = 0;
+        $this->povrsinaOvoja = 0;
+        $this->transparentnaPovrsina = 0;
         foreach ($this->ovoj->netransparentneKonstrukcije as $elementOvoja) {
             $skupni_Uab += $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
             $this->povrsinaOvoja += $elementOvoja->povrsina * $elementOvoja->stevilo;
@@ -360,6 +362,8 @@ class Cona
      */
     public function izracunEnergijeOgrevanjeHlajanje()
     {
+        $this->skupnaEnergijaOgrevanje = 0;
+        $this->skupnaEnergijaHlajenje = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $this->energijaOgrevanje[$mesec] = 0;
             if ($this->ucinekDobitkov[$mesec]) {

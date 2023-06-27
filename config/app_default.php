@@ -21,4 +21,14 @@ return [
             'level' => \Monolog\Logger::ERROR,
         ],
     ],
+
+    'PDF' => [
+        'engine' => 'TCPDF',
+        'TCPDF' => [
+            'layout' => 'tcpdf',
+        ],
+        'WKHTML2PDF' => [
+            'layout' => 'wkhtml2pdf',
+        ],
+    ],
 ];

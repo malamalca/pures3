@@ -99,7 +99,7 @@
     <tr>
         <td>Dovedena energija za razsvetljavo</td>
         <td>E<sub>L,del,an</sub></td>
-        <td class="center"><?= $this->numFormat($stavba->skupnaPotrebaRazsvetljava, 0) ?></td>
+        <td class="center"><?= $this->numFormat($stavba->skupnaEnergijaRazsvetljava, 0) ?></td>
         <td>kWh/an</td>
     </tr>
     <tr><td colspan="4">&nbsp;</td></tr>

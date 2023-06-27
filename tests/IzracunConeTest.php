@@ -27,7 +27,7 @@ class IzracunConeTest extends TestCase
         $transparentneKonstrukcije = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'transparentne.json'));
 
         /** @var array $coneIn */
-        $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
+        $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'podatki' . DS . 'cone.json'));
 
         $cona = new Cona($coneIn[0]);
         $cona->analiza($okolje, $netransparentneKonstrukcije, $transparentneKonstrukcije);
@@ -56,12 +56,12 @@ class IzracunConeTest extends TestCase
 
         // faktor izkoristljivosti dobitkov
         $roundedResult = array_map(fn($el) => round($el ?? 0, 3), $cona->ucinekDobitkov);
-        $expected = [0.988, 0.961, 0.881, 0.74, 0.505, 0.0, 0.0, 0.0, 0.515, 0.809, 0.973, 0.991];
+        $expected = [0.988, 0.961, 0.882, 0.741, 0.505, 0.0, 0.0, 0.0, 0.515, 0.809, 0.973, 0.991];
         $this->assertEquals($expected, $roundedResult);
 
         // skupna energija v času ogrevanja
         $roundedResult = array_map(fn($el) => round($el ?? 0, 2), $cona->energijaOgrevanje);
-        $expected = [1206.73, 746.49, 390.39, 136.0, 19.31, 0.0, 0.0, 0.0, 17.98, 179.73, 761.71, 1208.79];
+        $expected = [1206.66, 746.33, 390.09, 135.72, 19.22, 0.0, 0.0, 0.0, 17.9, 179.48, 761.61, 1208.74];
         $this->assertEquals($expected, $roundedResult);
 
         // transmisijske izgube hlajenja
@@ -93,12 +93,29 @@ class IzracunConeTest extends TestCase
 
         // faktor izkoristljivosti dobitkov
         $roundedResult = array_map(fn($el) => round($el ?? 0, 2), $cona->energijaHlajenje);
-        $expected = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 32.48, 32.82, 0.0, 0.0, 0.0, 0.0];
+        $expected = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 32.42, 32.75, 0.0, 0.0, 0.0, 0.0];
         $this->assertEquals($expected, $roundedResult);
 
         // tsv
         $roundedResult = array_map(fn($el) => round($el ?? 0, 2), $cona->energijaTSV);
         $expected = [114.25, 103.20, 114.25, 110.57, 114.25, 110.57, 114.25, 114.25, 110.57, 114.25, 110.57, 114.25];
         $this->assertEquals($expected, $roundedResult);
+
+        // razsvetljava
+        $roundedResult = array_map(fn($el) => round($el ?? 0, 2), $cona->energijaRazsvetljava);
+        $expected = [131.84, 104.79, 99.14, 87.78, 87.54, 74.51, 83.32, 91.76, 95.95, 114.97, 123.51, 142.39];
+        $this->assertEquals($expected, $roundedResult);
+
+        // končne vrednosti
+        $this->assertEquals(4665.76, round($cona->skupnaEnergijaOgrevanje, 2));
+        $this->assertEquals(65.17, round($cona->skupnaEnergijaHlajenje, 2));
+        $this->assertEquals(1345.25, round($cona->skupnaEnergijaTSV, 2));
+        $this->assertEquals(1237.50, round($cona->skupnaEnergijaRazsvetljava, 2));
+
+        $this->assertEquals(143.88, round($cona->specTransmisijskeIzgube, 2));
+        $this->assertEquals(8.18, round($cona->specVentilacijskeIzgube, 2));
+        $this->assertEquals(0.212, round($cona->specKoeficientTransmisijskihIzgub, 3));
+        $this->assertEquals(29.16, round($cona->specLetnaToplota, 2));
+        $this->assertEquals(0.41, round($cona->specLetniHlad, 2));
     }
 }

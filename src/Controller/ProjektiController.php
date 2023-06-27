@@ -36,10 +36,10 @@ class ProjektiController
         App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
         App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
 
-        App::set('ogrevanje', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
-        App::set('prezracevanje', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
-        App::set('razsvetljava', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
-        App::set('fotovoltaika', App::loadProjectCalculation($projectId, 'TSS' . DS . 'fotovoltaika'));
+        App::set('sistemiOgrevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
+        App::set('sistemiPrezracevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
+        App::set('sistemiRazsvetljave', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
+        App::set('sistemiSTPE', App::loadProjectCalculation($projectId, 'TSS' . DS . 'fotovoltaika'));
     }
 
     /**

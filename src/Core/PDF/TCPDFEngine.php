@@ -1,10 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Core;
+namespace App\Core\PDF;
 
-class Pdf extends \TCPDF
+class TCPDFEngine extends \TCPDF implements PdfEngineInterface
 {
+    /**
+     * PDF options
+     *
+     * @var array
+     */
     private array $_options = [];
 
     private array $_defaultOptions = [
@@ -14,9 +19,9 @@ class Pdf extends \TCPDF
         'unicode' => true,
         'encoding' => 'UTF-8',
         'diskcache' => false,
-        'creator' => 'Pures',
-        'author' => 'Pures',
-        'title' => 'PDF Report',
+        'creator' => 'Lil',
+        'author' => 'Lil',
+        'title' => 'Lil PDF Report',
         'subject' => 'PDF',
         'keywords' => '',
         'font' => 'dejavusans',
@@ -114,18 +119,6 @@ class Pdf extends \TCPDF
     }
 
     /**
-     * Render pdf.
-     *
-     * @return bool
-     */
-    public function render()
-    {
-        $this->Output();
-
-        return true;
-    }
-
-    /**
      * Add page with html contents
      *
      * @param string $html Html page content.
@@ -134,12 +127,8 @@ class Pdf extends \TCPDF
      */
     public function newPage($html, $options = [])
     {
-        $rendered = explode('<!-- NEW PAGE -->', $html);
-
-        foreach ($rendered as $page) {
-            $this->addPage();
-            $this->writeHTML($page);
-        }
+        $this->addPage();
+        $this->writeHTML($html);
     }
 
     /**
