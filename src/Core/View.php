@@ -102,6 +102,21 @@ class View
     }
 
     /**
+     * Get variable from view render
+     *
+     * @param string $varName Variable name
+     * @return mixed
+     */
+    public function get($varName)
+    {
+        if (isset($this->_vars[$varName])) {
+            return $this->_vars[$varName];
+        }
+
+        return null;
+    }
+
+    /**
      * Build url with specified base
      *
      * @param string $params Url params

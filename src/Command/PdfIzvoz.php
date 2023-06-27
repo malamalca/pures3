@@ -57,14 +57,17 @@ class PdfIzvoz extends Command
      */
     private function elaborat($projectId, $view)
     {
-        $splosniPodatki = $view->render('Projekti', 'view');
-        $analizaProjekta = $view->render('Projekti', 'analiza');
-
         $pdfEngine = Configure::read('PDF.engine');
         $pdf = PdfFactory::create($pdfEngine, Configure::read('PDF.' . $pdfEngine, []));
 
-        $pdf->newPage((string)$splosniPodatki);
-        $pdf->newPage((string)$analizaProjekta);
+        $pdf->newPage((string)$view->render('Projekti', 'view'));
+        $pdf->newPage((string)$view->render('Projekti', 'analiza'));
+
+        foreach ($view->get('cone') as $cona) {
+            $view->set('cona', $cona);
+            $pdf->newPage((string)$view->render('Cone', 'analiza'));
+            $pdf->newPage((string)$view->render('Cone', 'ovoj'));
+        }
 
         $pdfFolder = App::getProjectFolder($projectId, 'pdf');
         if (!is_dir($pdfFolder)) {
