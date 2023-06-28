@@ -6,6 +6,7 @@ namespace App\Command;
 use App\Calc\GF\Cone\Cona;
 use App\Core\App;
 use App\Core\Command;
+use JsonSchema\Validator;
 
 class IzracunCone extends Command
 {
@@ -30,6 +31,19 @@ class IzracunCone extends Command
 
         /** @var array $coneIn */
         $coneIn = App::loadProjectData($projectId, 'cone');
+
+        // validate input json
+        $validator = new Validator();
+        $schema = (string)file_get_contents(SCHEMAS . 'coneSchema.json');
+        $validator->validate($coneIn, json_decode($schema));
+        if (!$validator->isValid()) {
+            $this->out('cone.json vsebuje napake:', 'error');
+            foreach ($validator->getErrors() as $error) {
+                $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
+            }
+
+            return;
+        }
 
         $coneOut = [];
         foreach ($coneIn as $conaConfig) {

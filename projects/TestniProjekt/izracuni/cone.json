@@ -38,22 +38,9 @@
             "mocSvetilk": 4
         },
         "prezracevanje": {
-            "_vrsta": "mehansko",
-            "_regulacija": "brez",
-            "_volumenProjekt": 200,
-            "_volumenDovedenegaZraka": {
-                "ogrevanje": 200,
-                "hlajenje": 200
-            },
-            "__vrsta": "naravno",
-            "__izmenjava": {
-                "ogrevanje": 0.5,
-                "hlajenje": 0.5
-            },
             "vrsta": "rekuperacija",
             "regulacija": "brez",
             "izkoristek": 0.9,
-            "volumenProjekt": 200,
             "volumenDovedenegaZraka": {
                 "ogrevanje": 200,
                 "hlajenje": 200

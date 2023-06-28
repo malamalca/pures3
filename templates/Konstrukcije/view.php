@@ -66,7 +66,7 @@
   <canvas id="myChart"></canvas>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="<?= $this->url("/js/chartjs.min.js") ?>"></script>
 
 <script>
     const ctx = document.getElementById('myChart');
@@ -280,7 +280,7 @@
 </div>
 -->
 
-<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+<script src="<?= $this->url("/js/hammer.min.js") ?>"></script>
 <script src="<?= $this->url("/js/chartjs-plugin-zoom.min.js") ?>"></script>
 
 <script>

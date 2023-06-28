@@ -63,6 +63,11 @@ class PdfIzvoz extends Command
         $pdf->newPage((string)$view->render('Projekti', 'view'));
         $pdf->newPage((string)$view->render('Projekti', 'analiza'));
 
+        foreach ($view->get('ntKons') as $kons) {
+            $view->set('kons', $kons);
+            $pdf->newPage((string)$view->render('Konstrukcije', 'view'));
+        }
+
         foreach ($view->get('cone') as $cona) {
             $view->set('cona', $cona);
             $pdf->newPage((string)$view->render('Cone', 'analiza'));
