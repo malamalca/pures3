@@ -69,4 +69,16 @@ class ProjektiController
         App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
         App::set('sistemi', App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje.json'));
     }
+
+    /**
+     * Prikaz naslovnice
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
+    public function naslovnica($projectId)
+    {
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
+    }
 }
