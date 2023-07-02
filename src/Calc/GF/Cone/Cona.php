@@ -127,6 +127,23 @@ class Cona
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             switch ($prop->getName()) {
+                case 'ovoj':
+                    $this->ovoj = new \stdClass();
+                    if (!empty($config->ovoj->netransparentneKonstrukcije))
+                        $this->ovoj->netransparentneKonstrukcije = [];
+                        foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
+                            $this->ovoj->netransparentneKonstrukcije[] =
+                                new NetransparentenElementOvoja($kons, $konsConfig);
+                        }
+                    }
+                    if (!empty($config->ovoj->transparentneKonstrukcije))
+                        $this->ovoj->transparentneKonstrukcije = [];
+                        foreach ($config->ovoj->transparentneKonstrukcije as $konsConfig) {
+                            $this->ovoj->transparentneKonstrukcije[] =
+                                new TransparentenElementOvoja($kons, $konsConfig);
+                        }
+                    }
+                    break;
                 default:
                     if (isset($config->{$prop->getName()})) {
                         $configValue = $config->{$prop->getName()};

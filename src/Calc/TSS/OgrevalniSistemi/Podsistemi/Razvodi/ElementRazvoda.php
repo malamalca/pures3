@@ -62,29 +62,14 @@ class ElementRazvoda
     {
         $zaPovrsino = $povrsinaCone <= 200 ? 1 : ($povrsinaCone > 500 ? 3 : 2);
 
-        switch ($this->namen) {
-            case VrstaNamenaCevi::Ogrevanje:
-            case VrstaNamenaCevi::ToplaSanitarnaVoda:
-            case VrstaNamenaCevi::Hlajenje:
-                $vrednostiU = [
-                    VrstaRazvodnihCevi::HorizontalniRazvod->value =>
-                        [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
-                    VrstaRazvodnihCevi::DvizniVod->value =>
-                        [0.3, 0.75, 1.35, $zaPovrsino, $zaPovrsino],
-                    VrstaRazvodnihCevi::PrikljucniVod->value =>
-                        [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
-                ];
-                break;
-            default:
-                $vrednostiU = [
-                    VrstaRazvodnihCevi::HorizontalniRazvod->value =>
-                        [$zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
-                    VrstaRazvodnihCevi::DvizniVod->value =>
-                        [$zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
-                    VrstaRazvodnihCevi::PrikljucniVod->value =>
-                        [$zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
-                ];
-        }
+        $vrednostiU = [
+            VrstaRazvodnihCevi::HorizontalniRazvod->value =>
+                [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
+            VrstaRazvodnihCevi::DvizniVod->value =>
+                [0.3, 0.75, 1.35, $zaPovrsino, $zaPovrsino],
+            VrstaRazvodnihCevi::PrikljucniVod->value =>
+                [0.3, $zaPovrsino, $zaPovrsino, $zaPovrsino, $zaPovrsino],
+        ];
 
         return $vrednostiU[$this->vrsta->value][$this->izolacija->getOrdinal()];
     }

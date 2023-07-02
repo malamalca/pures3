@@ -33,8 +33,8 @@ interface PdfEngineInterface
     /**
      * Saves PDF to a file
      *
-     * @param string $fileName Options values.
+     * @param string $filename Options values.
      * @return mixed
      */
-    public function saveAs($fileName);
+    public function saveAs($filename);
 }
