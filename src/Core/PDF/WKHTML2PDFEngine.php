@@ -70,12 +70,12 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
     /**
      * Save PDF as file.
      *
-     * @param string $fileName Filename.
+     * @param string $filename Filename.
      * @return bool
      */
-    public function saveAs($fileName)
+    public function saveAs($filename)
     {
-        $result = parent::saveAs($fileName);
+        $result = parent::saveAs($filename);
 
         if (!$result) {
             throw new \Exception(parent::getError());
@@ -106,7 +106,7 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
     /**
      * Get last error.
      *
-     * @return null|string
+     * @return string
      */
     public function getError()
     {

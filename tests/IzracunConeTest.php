@@ -29,8 +29,12 @@ class IzracunConeTest extends TestCase
         /** @var array $coneIn */
         $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'podatki' . DS . 'cone.json'));
 
-        $cona = new Cona($coneIn[0]);
-        $cona->analiza($okolje, $netransparentneKonstrukcije, $transparentneKonstrukcije);
+        $konstrukcije = new \stdClass();
+        $konstrukcije->transparentne = $transparentneKonstrukcije;
+        $konstrukcije->netransparentne = $netransparentneKonstrukcije;
+
+        $cona = new Cona($konstrukcije, $coneIn[0]);
+        $cona->analiza($okolje);
 
         // transmisijske izgube ogrevanja
         $roundedResult = array_map(fn($el) => round($el, 2), $cona->transIzgubeOgrevanje);

@@ -23,11 +23,11 @@ class IzracunCone extends Command
         /** @var \stdClass $okolje */
         $okolje = App::loadProjectCalculation($projectId, 'okolje');
 
-        /** @var array $netransparentneKonstrukcije */
-        $netransparentneKonstrukcije = App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne');
-
-        /** @var array $transparentneKonstrukcije */
-        $transparentneKonstrukcije = App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne');
+        $konstrukcije = new \stdClass();
+        $konstrukcije->netransparentne =
+            App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne');
+        $konstrukcije->transparentne =
+            App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne');
 
         /** @var array $coneIn */
         $coneIn = App::loadProjectData($projectId, 'cone');
@@ -47,8 +47,8 @@ class IzracunCone extends Command
 
         $coneOut = [];
         foreach ($coneIn as $conaConfig) {
-            $cona = new Cona($conaConfig);
-            $cona->analiza($okolje, $netransparentneKonstrukcije, $transparentneKonstrukcije);
+            $cona = new Cona($konstrukcije, $conaConfig);
+            $cona->analiza($okolje);
             $coneOut[] = $cona->export();
         }
 

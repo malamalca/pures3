@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\Cone;
 
+use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
+use App\Calc\GF\Cone\ElementiOvoja\TransparentenElementOvoja;
 use App\Calc\TSS\Razsvetljava\Razsvetljava;
 use App\Lib\Calc;
-use App\Lib\CalcOvojNetransparenten;
-use App\Lib\CalcOvojTransparenten;
 use App\Lib\EvalMath;
 
 class Cona
@@ -96,14 +96,25 @@ class Cona
     public array $ucinekDobitkov = [];
     public array $ucinekPonorov = [];
 
+    private \stdClass $konstrukcije;
+
     /**
      * Class Constructor
      *
-     * @param string|\stdClass $config Configuration
+     * @param \stdClass|null $konstrukcije Seznam konstrukcij
+     * @param \stdClass|string $config Configuration
      * @return void
      */
-    public function __construct($config = null)
+    public function __construct($konstrukcije = null, $config = null)
     {
+        if ($konstrukcije) {
+            $this->konstrukcije = $konstrukcije;
+        } else {
+            $this->konstrukcije = new \stdClass();
+            $this->konstrukcije->transparentne = [];
+            $this->konstrukcije->netransparentne = [];
+        }
+
         if ($config) {
             $this->parseConfig($config);
         }
@@ -127,6 +138,35 @@ class Cona
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             switch ($prop->getName()) {
+                case 'ovoj':
+                    $this->ovoj = new \stdClass();
+                    if (!empty($config->ovoj->netransparentneKonstrukcije)) {
+                        $this->ovoj->netransparentneKonstrukcije = [];
+                        if (!empty($config->ovoj->netransparentneKonstrukcije)) {
+                            foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
+                                $kons = array_first(
+                                    $this->konstrukcije->netransparentne,
+                                    fn($k) => $k->id == $konsConfig->idKonstrukcije
+                                );
+                                $this->ovoj->netransparentneKonstrukcije[] =
+                                    new NetransparentenElementOvoja($kons, $konsConfig);
+                            }
+                        }
+                    }
+                    if (!empty($config->ovoj->transparentneKonstrukcije)) {
+                        $this->ovoj->transparentneKonstrukcije = [];
+                        if (!empty($config->ovoj->transparentneKonstrukcije)) {
+                            foreach ($config->ovoj->transparentneKonstrukcije as $konsConfig) {
+                                $kons = array_first(
+                                    $this->konstrukcije->transparentne,
+                                    fn($k) => $k->id == $konsConfig->idKonstrukcije
+                                );
+                                $this->ovoj->transparentneKonstrukcije[] =
+                                    new TransparentenElementOvoja($kons, $konsConfig);
+                            }
+                        }
+                    }
+                    break;
                 default:
                     if (isset($config->{$prop->getName()})) {
                         $configValue = $config->{$prop->getName()};
@@ -147,11 +187,9 @@ class Cona
      * Glavna funkcija za analizo cone
      *
      * @param \stdClass $okolje Podatki okolja
-     * @param array $netransparentneKonstrukcije Seznam projektnih konstrukcij
-     * @param array $transparentneKonstrukcije Seznam projektnih konstrukcij
      * @return void
      */
-    public function analiza($okolje, $netransparentneKonstrukcije, $transparentneKonstrukcije)
+    public function analiza($okolje)
     {
         // izračunaj delto temperature med notranjostjo in zuanjim zrakom
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -173,9 +211,7 @@ class Cona
                 $this->notranjiViri->hlajenje * $stDni * 24 / 1000;
         }
 
-        CalcOvojTransparenten::analiza($this, $okolje, $transparentneKonstrukcije);
-        CalcOvojNetransparenten::analiza($this, $okolje, $netransparentneKonstrukcije);
-
+        $this->izracunTransmisijskihIzgub($okolje);
         $this->izracunVentilacijskihIzgub();
         $this->izracunFaktorjaIzkoristka();
         $this->izracunEnergijeOgrevanjeHlajanje();
@@ -193,8 +229,7 @@ class Cona
         }
         foreach ($this->ovoj->transparentneKonstrukcije as $elementOvoja) {
             $skupni_Uab += $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
-            $this->povrsinaOvoja +=
-                $elementOvoja->povrsina * $elementOvoja->stevilo;
+            $this->povrsinaOvoja += $elementOvoja->povrsina * $elementOvoja->stevilo;
             $this->transparentnaPovrsina +=
                 $elementOvoja->povrsina * (1 - $elementOvoja->delezOkvirja) * $elementOvoja->stevilo;
         }
@@ -217,6 +252,44 @@ class Cona
             $povprecnaLetnaTemp / 300 +
             0.04 / $faktorOblike +
             ($this->transparentnaPovrsina / $this->povrsinaOvoja) / 8;
+    }
+
+    /**
+     * Izračun navlaževanje
+     *
+     * @param \stdClass $okolje Podatki okolj
+     * @param array $options Opcije za izračun
+     * @return void
+     */
+    private function izracunTransmisijskihIzgub($okolje, $options = [])
+    {
+        foreach ($this->ovoj->transparentneKonstrukcije as $elementOvoja) {
+            $elementOvoja->analiza($this, $okolje);
+
+            $this->transIzgubeOgrevanje =
+                array_sum_values($this->transIzgubeOgrevanje, $elementOvoja->transIzgubeOgrevanje);
+            $this->transIzgubeHlajenje =
+                array_sum_values($this->transIzgubeHlajenje, $elementOvoja->transIzgubeHlajenje);
+
+            $this->solarniDobitkiOgrevanje =
+                array_sum_values($this->solarniDobitkiOgrevanje, $elementOvoja->solarniDobitkiOgrevanje);
+            $this->solarniDobitkiHlajenje =
+                array_sum_values($this->solarniDobitkiHlajenje, $elementOvoja->solarniDobitkiHlajenje);
+        }
+
+        foreach ($this->ovoj->netransparentneKonstrukcije as $elementOvoja) {
+            $elementOvoja->analiza($this, $okolje);
+
+            $this->transIzgubeOgrevanje =
+                array_sum_values($this->transIzgubeOgrevanje, $elementOvoja->transIzgubeOgrevanje);
+            $this->transIzgubeHlajenje =
+                array_sum_values($this->transIzgubeHlajenje, $elementOvoja->transIzgubeHlajenje);
+
+            $this->solarniDobitkiOgrevanje =
+                array_sum_values($this->solarniDobitkiOgrevanje, $elementOvoja->solarniDobitkiOgrevanje);
+            $this->solarniDobitkiHlajenje =
+                array_sum_values($this->solarniDobitkiHlajenje, $elementOvoja->solarniDobitkiHlajenje);
+        }
     }
 
     /**
@@ -286,24 +359,21 @@ class Cona
      */
     public function izracunFaktorjaIzkoristka()
     {
-        $Cm_eff = $this->ogrevanaPovrsina * $this->toplotnaKapaciteta;
-
-        $protiZraku_Uab = 0;
-        $protiZraku_povrsina = 0;
         foreach ($this->ovoj->transparentneKonstrukcije as $elementOvoja) {
-            $protiZraku_Uab += $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
-            $protiZraku_povrsina += $elementOvoja->povrsina * $elementOvoja->stevilo;
+            $this->Htr_ogrevanje += $elementOvoja->H_ogrevanje;
+            $this->Htr_hlajenje += $elementOvoja->H_hlajenje;
         }
         foreach ($this->ovoj->netransparentneKonstrukcije as $elementOvoja) {
             if ($elementOvoja->protiZraku) {
-                $protiZraku_Uab +=
-                    $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
-                $protiZraku_povrsina += $elementOvoja->povrsina * $elementOvoja->stevilo;
+                $this->Htr_ogrevanje += $elementOvoja->H_ogrevanje;
+                $this->Htr_hlajenje += $elementOvoja->H_hlajenje;
+            } else {
+                $this->Hgr_ogrevanje += $elementOvoja->H_ogrevanje;
+                $this->Hgr_hlajenje += $elementOvoja->H_hlajenje;
             }
         }
 
-        $this->Htr_ogrevanje = $protiZraku_Uab + $protiZraku_povrsina * $this->deltaPsi;
-        $this->Htr_hlajenje = $this->Htr_ogrevanje;
+        $Cm_eff = $this->ogrevanaPovrsina * $this->toplotnaKapaciteta;
 
         $tau_ogrevanje = $Cm_eff / 3600 / ($this->Htr_ogrevanje + $this->Hgr_ogrevanje + $this->Hve_ogrevanje);
         $A_ogrevanje = 1 + $tau_ogrevanje / 15;

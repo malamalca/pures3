@@ -4,7 +4,6 @@
 
     $elementiOvoja = array_merge($cona->ovoj->netransparentneKonstrukcije, $cona->ovoj->transparentneKonstrukcije);
     $stElementov = count($elementiOvoja);
-
 ?>
 <h1>Ovoj cone "<?= h($cona->naziv) ?>"</h1>
 <p class="actions">
@@ -18,8 +17,8 @@
         <?= implode(PHP_EOL, array_map(fn($elementOvoja) =>
             '<th class="center">' . 
             '<a class="button" href="' .
-            App::url('/konstrukcije/view/' . $projectId . '/' . $elementOvoja->idKonstrukcije) .
-            '">' . $elementOvoja->idKonstrukcije . '</a>' . '</th>', $elementiOvoja)) ?>
+            App::url('/konstrukcije/view/' . $projectId . '/' . $elementOvoja->konstrukcija->id) .
+            '">' . $elementOvoja->konstrukcija->id . '</a>' . '</th>', $elementiOvoja)) ?>
     </tr>
     <tr>
         <td colspan="4">Št. enakih</td>
@@ -151,7 +150,6 @@
             <td class="center"><?= $daysInMonth ?></td>
             <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->transIzgubeHlajenje[$mesec], 1) . '</td>', $elementiOvoja)) ?>
             <td class="center"><?= $this->numFormat($cona->transIzgubeHlajenje[$mesec], 1) ?></td>
-        </tr>
         </tr>
     <?php
         }
