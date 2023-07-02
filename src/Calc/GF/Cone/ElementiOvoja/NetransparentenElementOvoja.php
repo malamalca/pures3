@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Calc\GF\Stavbe\ElementiOvoja;
+namespace App\Calc\GF\Cone\ElementiOvoja;
 
 use App\Core\Configure;
 use App\Lib\Calc;
@@ -10,15 +10,18 @@ class NetransparentenElementOvoja extends ElementOvoja
 {
     public bool $protiZraku = true;
 
-    public float $tla = 0;
+    public string $tla = 'pesek';
 
     // velja za konstrukcije v stiku z zemljino
     public float $obseg = 0;
     public float $debelinaStene = 0;
     public float $obodniPsi = 0;
     public float $vertPsi = 0;
-    public float $Lpi = 0;
-    public float $Lpe = 0;
+
+    private float $Lpi = 0;
+    private float $Lpe = 0;
+
+    private \stdClass $dodatnaIzolacija;
 
     /**
      * Loads configuration from json|stdClass
@@ -33,7 +36,16 @@ class NetransparentenElementOvoja extends ElementOvoja
             $config = json_decode($config);
         }
         $this->protiZraku = $this->konstrukcija->TSG->tip == 'zunanja';
-        $this->tla = $config->tla;
+        $this->tla = $config->tla ?? 'pesek';
+
+        $this->obseg = $config->obseg ?? 0;
+        $this->debelinaStene = $config->debelinaStene ?? 0;
+        $this->obodniPsi = $config->obodniPsi ?? 0;
+        $this->vertPsi = $config->vertPsi ?? 0;
+
+        if (!empty($config->dodatnaIzolacija)) {
+            $this->dodatnaIzolacija = $config->dodatnaIzolacija;
+        }
     }
 
     /**
@@ -60,13 +72,13 @@ class NetransparentenElementOvoja extends ElementOvoja
         if (empty($this->soncnoObsevanje)) {
             throw new \Exception(sprintf('Sončno obsevanje za element %s ne obstaja', $this->opis));
         }
-        
+
         // napolni podatke o vplivu zemljine
         if ($this->konstrukcija->TSG->tip != 'zunanja') {
             $this->vplivZemljine();
         } else {
-            $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b;
-            $this->H_hlajenje = $this->H_ogrevanje;
+            $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
+            $this->H_hlajenje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
         }
 
         // izračun dodatnih temperatura
@@ -78,10 +90,10 @@ class NetransparentenElementOvoja extends ElementOvoja
             if ($this->konstrukcija->TSG->tip == 'zunanja') {
                 // konstrukcija proti zraku
                 $this->transIzgubeOgrevanje[$mesec] = $this->H_ogrevanje * 24 / 1000 *
-                    $cona->deltaTOgrevanje[$mesec] * $stDni;
+                    $cona->deltaTOgrevanje[$mesec] * $stDni * $this->stevilo;
 
                 $this->transIzgubeHlajenje[$mesec] = $this->H_hlajenje * 24 / 1000 *
-                    $cona->deltaTHlajenje[$mesec] * $stDni;
+                    $cona->deltaTHlajenje[$mesec] * $stDni * $this->stevilo;
 
                 $alphaSr = 0.3;
                 $Fsky = $this->naklon < 45 ? 1 : 0.5;
@@ -95,8 +107,8 @@ class NetransparentenElementOvoja extends ElementOvoja
                     $this->povrsina * $hri * $dTsky * $stDni * 24;
 
                 if (!empty($this->konstrukcija->TSG->dobitekSS)) {
-                    $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol - $Qsky) / 1000;
-                    $this->solarniDobitkiHlajenje[$mesec] = ($Qsol - $Qsky) / 1000;
+                    $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol - $Qsky) / 1000 * $this->stevilo;
+                    $this->solarniDobitkiHlajenje[$mesec] = ($Qsol - $Qsky) / 1000 * $this->stevilo;
                 } else {
                     $this->solarniDobitkiOgrevanje[$mesec] = 0;
                     $this->solarniDobitkiHlajenje[$mesec] = 0;
@@ -111,6 +123,16 @@ class NetransparentenElementOvoja extends ElementOvoja
                 $this->solarniDobitkiOgrevanje[$mesec] = 0;
                 $this->solarniDobitkiHlajenje[$mesec] = 0;
             }
+        }
+
+        if ($this->konstrukcija->TSG->tip != 'zunanja') {
+            $this->H_ogrevanje = $this->H_ogrevanje /
+                $temperature['stMesecevOgrevanja'] / ($temperature['povprecnaTOgrevanja'] -
+                $okolje->povprecnaLetnaTemp);
+
+            $this->H_hlajenje = $this->H_hlajenje /
+                (12 - $temperature['stMesecevOgrevanja']) / ($temperature['povprecnaTHlajenja'] -
+                $okolje->povprecnaLetnaTemp);
         }
     }
 
@@ -274,13 +296,13 @@ class NetransparentenElementOvoja extends ElementOvoja
             $this->Lpi * ($povprecnaNotranjaT - $notranjaT[$mesec]) +
             $this->Lpe * ($okolje->povprecnaLetnaTemp - $okolje->zunanjaT[$mesec]);
 
-        $this->transIzgubeOgrevanje[$mesec] = $urniToplotniTok * 24 * $stDni / 1000;
-        $this->transIzgubeHlajenje[$mesec] = $this->transIzgubeOgrevanje[$mesec];
+        $this->transIzgubeOgrevanje[$mesec] = $urniToplotniTok * 24 * $stDni / 1000 * $this->stevilo;
+        $this->transIzgubeHlajenje[$mesec] = $urniToplotniTok * 24 * $stDni / 1000 * $this->stevilo;
 
         if (Calc::jeMesecBrezOgrevanja($mesec)) {
-            $this->H_hlajenje += $urniToplotniTok;
+            $this->H_hlajenje += $urniToplotniTok * $this->stevilo;
         } else {
-            $this->H_ogrevanje += $urniToplotniTok;
+            $this->H_ogrevanje += $urniToplotniTok * $this->stevilo;
         }
     }
 
@@ -300,6 +322,8 @@ class NetransparentenElementOvoja extends ElementOvoja
         $elementOvoja->debelinaStene = $this->debelinaStene;
         $elementOvoja->obodniPsi = $this->obodniPsi;
         $elementOvoja->vertPsi = $this->vertPsi;
+
+        $elementOvoja->dodatnaIzolacija = $this->dodatnaIzolacija;
 
         return $elementOvoja;
     }

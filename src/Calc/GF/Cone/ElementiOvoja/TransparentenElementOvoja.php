@@ -1,19 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Calc\GF\Stavbe\ElementiOvoja;
+namespace App\Calc\GF\Cone\ElementiOvoja;
 
 use App\Core\Configure;
 use App\Lib\Calc;
 
-class NetransparentenElementOvoja extends ElementOvoja
+class TransparentenElementOvoja extends ElementOvoja
 {
     public float $delezOkvirja = 0;
     public float $dolzinaOkvirja = 0;
 
+    public float $visinaStekla = 0;
+    public float $sirinaStekla = 0;
+
     public float $g = 0;
     public float $faktorSencil = 0;
-    
+    public float $g_sh = 0;
+
+    public array $sencenjeOvir;
+    public \stdClass $stranskoSencenje;
+
     /**
      * Loads configuration from json|stdClass
      *
@@ -23,16 +30,30 @@ class NetransparentenElementOvoja extends ElementOvoja
     protected function parseConfig($config)
     {
         parent::parseConfig($config);
-        
+
         if (is_string($config)) {
             $config = json_decode($config);
         }
 
         $this->delezOkvirja = $config->delezOkvirja ?? 1;
+        $this->dolzinaOkvirja = $config->dolzinaOkvirja ?? 1;
 
         // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
         $this->g = $this->konstrukcija->g ?? 0.5;
         $this->faktorSencil = $config->faktorSencil ?? 1;
+
+        $this->g_sh = $this->g * $this->faktorSencil;
+
+        $this->sirinaStekla = $config->sirinaStekla ?? 0;
+        $this->visinaStekla = $config->visinaStekla ?? 0;
+
+        if (!empty($config->sencenjeOvir)) {
+            $this->sencenjeOvir = $config->sencenjeOvir;
+        }
+
+        if (!empty($config->stranskoSencenje)) {
+            $this->stranskoSencenje = $config->stranskoSencenje;
+        }
 
         switch ($this->konstrukcija->vrsta) {
             case '0':
@@ -51,11 +72,6 @@ class NetransparentenElementOvoja extends ElementOvoja
                 // 3 - garažna vrata ali proti neogrevavanem prostoru
                 $this->U = $this->konstrukcija->Ud;
                 break;
-            default:
-                throw new \Exception(sprintf(
-                    'Tip transparentne konstrukcije %1$s ne obstaja!',
-                    $this->konstrukcija->id
-                ));
         }
     }
 
@@ -96,8 +112,8 @@ class NetransparentenElementOvoja extends ElementOvoja
         $visineSonca = Configure::read('lookups.transparentne.visinaSonca');
         $faktorjiSencenjaOvir = Configure::read('lookups.transparentne.faktorjiSencenja');
 
-        $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b;
-        $this->H_hlajenje = $this->H_ogrevanje;
+        $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
+        $this->H_hlajenje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
@@ -224,12 +240,12 @@ class NetransparentenElementOvoja extends ElementOvoja
             $Qsky = 0.001 * $Fsky * $Rse * ($this->U + $cona->deltaPsi) * $this->povrsina *
                 $hri * $dTsky * $stDni * 24;
 
-            $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol_ogrevanje - $Qsky) / 1000;
+            $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol_ogrevanje - $Qsky) / 1000 * $this->stevilo;
             if ($this->solarniDobitkiOgrevanje[$mesec] < 0) {
                 $this->solarniDobitkiOgrevanje[$mesec] = 0;
             }
 
-            $this->solarniDobitkiHlajenje[$mesec] = ($Qsol_hlajenje - $Qsky) / 1000;
+            $this->solarniDobitkiHlajenje[$mesec] = ($Qsol_hlajenje - $Qsky) / 1000 * $this->stevilo;
             if ($this->solarniDobitkiHlajenje[$mesec] < 0) {
                 $this->solarniDobitkiHlajenje[$mesec] = 0;
             }
@@ -255,8 +271,14 @@ class NetransparentenElementOvoja extends ElementOvoja
         $elementOvoja->delezOkvirja = $this->delezOkvirja;
         $elementOvoja->dolzinaOkvirja = $this->dolzinaOkvirja;
 
+        $elementOvoja->sirinaStekla = $this->sirinaStekla;
+        $elementOvoja->visinaStekla = $this->visinaStekla;
+
         $elementOvoja->g = $this->g;
         $elementOvoja->faktorSencil = $this->faktorSencil;
+        $elementOvoja->g_sh = $this->g_sh;
+
+        $elementOvoja->sencenjeOvir = $this->sencenjeOvir;
 
         return $elementOvoja;
     }
