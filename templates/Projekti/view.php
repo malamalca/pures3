@@ -5,17 +5,18 @@
 <h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 
 <p class="actions">
-<a class="button" href="<?= App::url('/projekti/analiza/' . $projectId) ?>">Analiza GF</a>
-<a class="button" href="<?= App::url('/izkazi/podrocjeGf/' . $projectId) ?>">Izkaz GF</a>
-<a class="button" href="<?= App::url('/projekti/snes/' . $projectId) ?>">Analiza SNES</a>
-<a class="button" href="<?= App::url('/izkazi/podrocjeSNES/' . $projectId) ?>">Izkaz sNES</a>
-</p>
+    <a class="button" href="<?= App::url('/projekti/analiza/' . $projectId) ?>">Analiza GF</a>
+    <a class="button" href="<?= App::url('/izkazi/podrocjeGf/' . $projectId) ?>">Izkaz GF</a>
+    <a class="button" href="<?= App::url('/projekti/snes/' . $projectId) ?>">Analiza SNES</a>
+    <a class="button" href="<?= App::url('/izkazi/podrocjeSNES/' . $projectId) ?>">Izkaz sNES</a>
+    </p>
 <p class="actions">
 <?php
     foreach ($cone as $cona) {
 ?>
-<a class="button" href="<?= App::url('/cone/analiza/' . $projectId . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
+
 <a class="button" href="<?= App::url('/cone/ovoj/' . $projectId . '/' . $cona->id) ?>">Analiza ovoja cone "<?= $cona->id ?>"</a>
+<a class="button" href="<?= App::url('/cone/analiza/' . $projectId . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
 
 <?php
     }
@@ -23,8 +24,9 @@
 </p>
 <p class="actions">
 <?php
-    $vrsteTSS = ['ogrevanje' => $ogrevanje, 'prezracevanje' => $prezracevanje, 'razsvetljava' => $razsvetljava,
-        'fotovoltaika' => $fotovoltaika];
+    $vrsteTSS = ['ogrevanje' => $sistemiOgrevanja, 'prezracevanje' => $sistemiPrezracevanja,
+        'razsvetljava' => $sistemiRazsvetljave,
+        'fotovoltaika' => $sistemiSTPE];
 
     foreach ($vrsteTSS as $vrstaTSS => $sistemi) {
         if ($sistemi) {

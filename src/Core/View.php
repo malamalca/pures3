@@ -102,6 +102,21 @@ class View
     }
 
     /**
+     * Get variable from view render
+     *
+     * @param string $varName Variable name
+     * @return mixed
+     */
+    public function get($varName)
+    {
+        if (isset($this->_vars[$varName])) {
+            return $this->_vars[$varName];
+        }
+
+        return null;
+    }
+
+    /**
      * Build url with specified base
      *
      * @param string $params Url params
@@ -109,8 +124,11 @@ class View
      */
     public function url($params)
     {
-        //$url_base = substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['SCRIPT_NAME'], Configure::read('App.baseUrl')) + 1);
-        $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
+        if (defined('CLI')) {
+            $url_base = WWW_ROOT;
+        } else {
+            $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
+        }
 
         return $url_base . substr($params, 1);
     }

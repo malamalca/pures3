@@ -14,21 +14,21 @@ class Cona
     public string $id;
     public string $naziv;
     public string $klasifikacija;
-    public float $brutoProstornina;
-    public float $netoProstornina;
-    public float $ogrevanaPovrsina;
-    public float $dolzina;
-    public float $sirina;
-    public float $etaznaVisina;
-    public int $steviloEtaz;
+    public float $brutoProstornina = 0;
+    public float $netoProstornina = 0;
+    public float $ogrevanaPovrsina = 0;
+    public float $dolzina = 0;
+    public float $sirina = 0;
+    public float $etaznaVisina = 0;
+    public int $steviloEtaz = 0;
 
-    public float $deltaPsi;
+    public float $deltaPsi = 0;
 
     public float $notranjaTOgrevanje;
     public float $notranjaTHlajenje;
     public float $zunanjaT;
 
-    public float $toplotnaKapaciteta;
+    public float $toplotnaKapaciteta = 0;
 
     public float $povrsinaOvoja = 0;
     public float $transparentnaPovrsina = 0;
@@ -126,16 +126,19 @@ class Cona
         $reflect = new \ReflectionClass(Cona::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
-            if (isset($config->{$prop->getName()})) {
-                $configValue = $config->{$prop->getName()};
-                if (
-                    $prop->isInitialized($this) &&
-                    in_array(gettype($this->{$prop->getName()}), ['double', 'int']) &&
-                    gettype($configValue) == 'string'
-                ) {
-                    $configValue = (float)$EvalMath->e($configValue);
-                }
-                $this->{$prop->getName()} = $configValue;
+            switch ($prop->getName()) {
+                default:
+                    if (isset($config->{$prop->getName()})) {
+                        $configValue = $config->{$prop->getName()};
+                        if (
+                            $prop->isInitialized($this) &&
+                            in_array(gettype($this->{$prop->getName()}), ['double', 'int']) &&
+                            gettype($configValue) == 'string'
+                        ) {
+                            $configValue = (float)$EvalMath->e($configValue);
+                        }
+                        $this->{$prop->getName()} = $configValue;
+                    }
             }
         }
     }
@@ -182,6 +185,8 @@ class Cona
 
         // končni izračuni
         $skupni_Uab = 0;
+        $this->povrsinaOvoja = 0;
+        $this->transparentnaPovrsina = 0;
         foreach ($this->ovoj->netransparentneKonstrukcije as $elementOvoja) {
             $skupni_Uab += $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
             $this->povrsinaOvoja += $elementOvoja->povrsina * $elementOvoja->stevilo;
@@ -230,33 +235,35 @@ class Cona
         ];
         $faktorLokacije = $faktorLokacijeLookup[$this->infiltracija->zavetrovanost - 1][$this->infiltracija->lega - 1];
 
+        $volumenZrakaOgrevanje = $this->prezracevanje->volumenDovedenegaZraka->ogrevanje ??
+            $this->netoProstornina * $this->prezracevanje->izmenjava->ogrevanje;
+        $volumenZrakaHlajenje = $this->prezracevanje->volumenDovedenegaZraka->hlajenje ??
+            $this->netoProstornina * $this->prezracevanje->izmenjava->hlajenje;
+
         switch ($this->prezracevanje->vrsta) {
             case 'naravno':
-                $this->Hve_ogrevanje = 0.33 * $this->netoProstornina * $this->prezracevanje->izmenjava->ogrevanje;
-                $this->Hve_hlajenje = 0.33 * $this->netoProstornina * $this->prezracevanje->izmenjava->hlajenje;
+                $this->Hve_ogrevanje = 0.33 * $volumenZrakaOgrevanje;
+                $this->Hve_hlajenje = 0.33 * $volumenZrakaHlajenje;
                 break;
             case 'mehansko':
                 $Vinf_ogrevanje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
                     (1 + $faktorVetra / $faktorLokacije *
-                    pow($this->prezracevanje->volumenDovedenegaZraka->ogrevanje /
-                        ($this->netoProstornina * $this->infiltracija->n50), 2));
+                    pow($volumenZrakaOgrevanje / ($this->netoProstornina * $this->infiltracija->n50), 2));
                 $Vinf_hlajenje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
                     (1 + $faktorVetra / $faktorLokacije *
-                    pow($this->prezracevanje->volumenDovedenegaZraka->hlajenje /
-                    ($this->netoProstornina * $this->infiltracija->n50), 2));
+                    pow($volumenZrakaHlajenje / ($this->netoProstornina * $this->infiltracija->n50), 2));
 
                 $this->Hve_ogrevanje =
-                    0.33 * ($this->prezracevanje->volumenDovedenegaZraka->ogrevanje + $Vinf_ogrevanje);
+                    0.33 * ($volumenZrakaOgrevanje + $Vinf_ogrevanje);
                 $this->Hve_hlajenje =
-                    0.33 * ($this->prezracevanje->volumenDovedenegaZraka->hlajenje + $Vinf_hlajenje);
+                    0.33 * ($volumenZrakaHlajenje + $Vinf_hlajenje);
                 break;
             case 'rekuperacija':
                 $Vinf_ogrevanje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije;
                 $Vinf_hlajenje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije;
                 $this->Hve_ogrevanje = 0.33 * ($Vinf_ogrevanje +
-                    (1 - $this->prezracevanje->izkoristek) * $this->prezracevanje->volumenDovedenegaZraka->ogrevanje);
-                $this->Hve_hlajenje = 0.33 * ($Vinf_hlajenje +
-                    $this->prezracevanje->volumenDovedenegaZraka->hlajenje);
+                    (1 - $this->prezracevanje->izkoristek) * $volumenZrakaOgrevanje);
+                $this->Hve_hlajenje = 0.33 * ($Vinf_hlajenje + $volumenZrakaHlajenje);
                 break;
             default:
                 $this->Hve_ogrevanje = 0;
@@ -360,6 +367,8 @@ class Cona
      */
     public function izracunEnergijeOgrevanjeHlajanje()
     {
+        $this->skupnaEnergijaOgrevanje = 0;
+        $this->skupnaEnergijaHlajenje = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $this->energijaOgrevanje[$mesec] = 0;
             if ($this->ucinekDobitkov[$mesec]) {

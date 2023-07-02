@@ -2,7 +2,7 @@
     use App\Core\App;
     use App\Lib\Calc;
 ?>
-<h1>Analiza prezracevalnega sistema "<?= h($sistem->id) ?>"</h1>
+<h1>Analiza prezračevalnega sistema "<?= h($sistem->id) ?>"</h1>
 
 <p class="actions">
 <a class="button" href="<?= App::url('/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>

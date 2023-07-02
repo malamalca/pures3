@@ -1,0 +1,37 @@
+[
+    {
+        "id": "Prezracevanje",
+        "idCone": "Cona1",
+        "razredH1H2": true,
+        "vrsta": "naravno",
+        "faktorKrmiljenja": 1,
+        "odvod": {
+            "volumen": 200,
+            "mocVentilatorja": 0.08395555555555555,
+            "filter": "hepa"
+        },
+        "dovod": {
+            "volumen": 200,
+            "mocVentilatorja": 0.09775555555555555,
+            "filter": "hepa"
+        },
+        "potrebnaEnergija": [
+            135.93706666666665,
+            122.78186666666666,
+            135.93706666666665,
+            131.552,
+            135.93706666666665,
+            131.552,
+            135.93706666666665,
+            135.93706666666665,
+            131.552,
+            135.93706666666665,
+            131.552,
+            135.93706666666665
+        ],
+        "skupnaPotrebnaEnergija": 1600.549333333333,
+        "energijaPoEnergentih": {
+            "elektrika": 1600.549333333333
+        }
+    }
+]

@@ -8,7 +8,7 @@
     <meta charset="utf-8">
 
     <title>PURES 3</title>
-    <meta name="description" content="ARHIM orodja">
+    <meta name="description" content="PHPures 3">
     <meta name="author" content="ARHIM d.o.o.">
 
     <link rel="stylesheet" href="<?= $this->url("/css/main.css") ?>">

@@ -1,0 +1,231 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items" : {
+        "type" : "object",
+        "required": ["id", "naziv", "klasifikacija", "prezracevanje"],
+        "properties" : {
+            "id": {"type": "string"},
+            "naziv": {"type": "string"},
+            "klasifikacija" : {"type": "string"},
+
+            "brutoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+            "netoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+            "ogrevanaPovrsina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+            "dolzina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+            "sirina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+            "etaznaVisina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+            "steviloEtaz": {"type": "integer"},
+
+            "notranjaTOgrevanje": {"type": "number"},
+            "notranjaTHlajenje": {"type": "number"},
+            "zunanjaT": {"type": "number"},
+
+            "toplotnaKapaciteta": {"oneOf": [{"type": "number"}, {"enum": ["zeloLahkeKonstrukcije", "lahkeKonstrukcije", "srednjeTezkeKonstrukcije", "tezkeKonstrukcije", "zeloTezkeKonstrukcije"]}]},
+
+            "infiltracija": {
+                "type": "object",
+                "required": ["n50", "lega", "zavetrovanost"],
+                "properties": {
+                    "n50": {"type": "number"},
+                    "lega": {"oneOf": [{"type": "integer"}, {"enum": ["naPodezelju", "visokaStavbaVMestu", "naPodezeljuMedDrevesi", "obkrozenaStavbaVMestu", "stavbaVPredmestju", "povprecnaStavbaVMestu", "stavbaVGozdu"]}]},
+                    "zavetrovanost": {"oneOf": [{"type": "integer"}, {"enum": ["izpostavljenaEnaFasada", "izpostavljenihVecFasad"]}]}
+                }
+            },
+
+            "notranjiViri": {
+                "type": "object",
+                "required": ["ogrevanje", "hlajenje"],
+                "properties": {
+                    "ogrevanje": {"type": "number"},
+                    "hlajenje": {"type": "number"}
+                }
+            },
+
+            "prezracevanje": {
+                "type": "object",
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "required": ["vrsta"],
+                        "oneOf": [
+                            {"required": ["izmenjava"]},
+                            {"required": ["volumenDovedenegaZraka"]}
+                        ],
+                        "properties": {
+                            "vrsta": {"const": "naravno"},
+                            "izmenjava": {
+                                "type": "object",
+                                "properties": {
+                                    "ogrevanje": {"type": "number"},
+                                    "hlajenje": {"type": "number"}
+                                }
+                            },
+                            "volumenDovedenegaZraka": {
+                                "type": "object",
+                                "properties": {
+                                    "ogrevanje": {"type": "number"},
+                                    "hlajenje": {"type": "number"}
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": ["vrsta"],
+                        "oneOf": [
+                            {"required": ["izmenjava"]},
+                            {"required": ["volumenDovedenegaZraka"]}
+                        ],
+                        "properties": {
+                            "vrsta": {"const": "mehansko"},
+                            "regulacija": {"enum": ["brez", "senzorPrisotnosti", "senzorCO2", "senzorStevilaLjudi"]},
+                            "izmenjava": {
+                                "type": "object",
+                                "properties": {
+                                    "ogrevanje": {"type": "number"},
+                                    "hlajenje": {"type": "number"}
+                                }
+                            },
+                            "volumenDovedenegaZraka": {
+                                "type": "object",
+                                "properties": {
+                                    "ogrevanje": {"type": "number"},
+                                    "hlajenje": {"type": "number"}
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": ["vrsta", "izkoristek"],
+                        "oneOf": [
+                            {"required": ["izmenjava"]},
+                            {"required": ["volumenDovedenegaZraka"]}
+                        ],
+                        "properties": {
+                            "vrsta": {"const": "rekuperacija"},
+                            "izkoristek": {"type": "number"},
+                            "regulacija": {"enum": ["brez", "senzorPrisotnosti", "senzorCO2", "senzorStevilaLjudi"]},
+                            "izmenjava": {
+                                "type": "object",
+                                "properties": {
+                                    "ogrevanje": {"type": "number"},
+                                    "hlajenje": {"type": "number"}
+                                }
+                            },
+                            "volumenDovedenegaZraka": {
+                                "type": "object",
+                                "properties": {
+                                    "ogrevanje": {"type": "number"},
+                                    "hlajenje": {"type": "number"}
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+
+            "TSV": {
+                "type": "object",
+                "properties": {
+                    "steviloOseb": {"type": "number"},
+                    "dnevnaKolicina": {"type": "number"},
+                    "toplaVodaT": {"type": "number"},
+                    "hladnaVodaT": {"type": "number"}
+                }
+            },
+
+            "razsvetljava": {
+                "type": "object",
+                "required": ["faktorDnevneSvetlobe"],
+                "properties": {
+                    "faktorDnevneSvetlobe": {"type": "number"},
+                    "mocSvetilk": {"type": "number"},
+                    "faktorZmanjsanjaSvetlobnegaToka": {"type": "number"},
+                    "faktorPrisotnosti": {"type": "number"},
+                    "ucinkovitostViraSvetlobe": {"type": "number"},
+                    "osvetlitevDelovnePovrsine": {"type": "number"},
+                    "faktorZmanjsaneOsvetlitveDelovnePovrsine": {"type": "number"},
+                    "faktorVzdrzevanja": {"type": "number"},
+                    "faktorNaravneOsvetlitve": {"type": "number"},
+                    "letnoUrPodnevi": {"type": "number"},
+                    "letnoUrPonoci": {"type": "number"},
+                    "varnostna": {
+                        "type": "object",
+                        "properties": {
+                            "energijaZaPolnjenje": {"type": "number"},
+                            "energijaZaDelovanje": {"type": "number"}
+                        }
+                    }
+                }
+            },
+
+            "ovoj": {
+                "type": "object",
+                "properties": {
+                    "netransparentneKonstrukcije": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["idKonstrukcije", "povrsina"],
+                            "properties": {
+                                "idKonstrukcije": {"type": "string"},
+                                "opis": {"type": "string"},
+                                "povrsina": {"type": "number"},
+                                "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90]},
+                                "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]},
+                                "obseg": {"type": "number"},
+                                "debelinaStene": {"type": "number"},
+                                "tla": {"enum": ["pesek", "glina", "kamen"]},
+                                "dodatnaIzolacija": {
+                                    "type": "object",
+                                    "required": ["lambda", "tip"],
+                                    "properties": {
+                                        "lambda": {"type": "number", "min": 0.01},
+                                        "tip": {"enum": ["vertikalna", "horizontalna"]},
+                                        "debelina": {"type": "number"},
+                                        "dolzina": {"type": "number"}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "transparentneKonstrukcije": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["idKonstrukcije", "povrsina"],
+                            "properties": {
+                                "idKonstrukcije": {"type": "string"},
+                                "opis": {"type": "string"},
+                                "stevilo": {"type": "integer"},
+                                "povrsina": {"type": "number"},
+                                "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90]},
+                                "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]},
+
+                                "visinaStekla": {"type": "number"},
+                                "sirinaStekla": {"type": "number"},
+                                "delezOkvirja": {"type": "number"},
+                                "dolzinaOkvirja": {"type": "number"},
+                                "faktorSencil": {"type": "number"},
+
+                                "stranskoSencenje": {
+                                    "type": "object",
+                                    "properties": {
+                                        "zgorajDolzina": {"type": "number"},
+                                        "zgorajRazdalja": {"type": "number"},
+                                        "levoDolzina": {"type": "number"},
+                                        "levoRazdalja": {"type": "number"},
+                                        "desnoDolzina": {"type": "number"},
+                                        "desnoRazdalja": {"type": "number"}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
