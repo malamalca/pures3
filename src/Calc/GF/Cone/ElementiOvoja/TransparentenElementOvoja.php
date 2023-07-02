@@ -36,7 +36,7 @@ class TransparentenElementOvoja extends ElementOvoja
         }
 
         if (empty($config->delezOkvirja) && !empty($config->dolzinaStekla) && !empty($config->sirinaStekla)) {
-            $this->delezOkvirja = 1 - ($config->sirinaStekla * $config->dolzinaStekla / $config->povrsina);
+            $this->delezOkvirja = 1 - ($config->sirinaStekla * $config->dolzinaStekla / $this->povrsina);
         } else {
             $this->delezOkvirja = $config->delezOkvirja ?? 1;
         }
