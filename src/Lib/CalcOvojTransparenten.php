@@ -31,6 +31,14 @@ class CalcOvojTransparenten
                 $elementOvoja->naklon = $elementOvoja->naklon ?? 0;
                 $elementOvoja->povrsina = $elementOvoja->povrsina ?? 0;
 
+                if (
+                    empty($elementOvoja->delezOkvirja) &&
+                    !empty($elementOvoja->dolzinaStekla) &&
+                    !empty($elementOvoja->sirinaStekla)
+                ) {
+                    $elementOvoja->delezOkvirja =
+                        1 - ($elementOvoja->sirinaStekla * $elementOvoja->dolzinaStekla / $elementOvoja->povrsina);
+                }
                 $elementOvoja->delezOkvirja = $elementOvoja->delezOkvirja ?? 1;
 
                 // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
