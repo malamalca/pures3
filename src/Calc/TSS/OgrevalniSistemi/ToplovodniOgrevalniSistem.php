@@ -148,7 +148,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
     {
         if (!empty($this->tsv->vracljiveIzgubeVOgrevanje)) {
             // ponovno poračunam potrebno energijo za ogrevanje
-            $spremembaCone = new Cona($cona);
+            $spremembaCone = new Cona(null, $cona);
             $spremembaCone->vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje;
             $spremembaCone->izracunFaktorjaIzkoristka();
             $spremembaCone->izracunEnergijeOgrevanjeHlajanje();

@@ -75,10 +75,10 @@ class PdfIzvoz extends Command
         foreach ($view->get('cone') as $cona) {
             $view->set('cona', $cona);
             $pdf->newPage((string)$view->render('Cone', 'ovoj'));
-            $pdf->newPage((string)$view->render('Cone', 'analiza'));
+            //$pdf->newPage((string)$view->render('Cone', 'analiza'));
         }
 
-        foreach ($view->get('sistemiOgrevanja') as $sistem) {
+        /*foreach ($view->get('sistemiOgrevanja') as $sistem) {
             $view->set('sistem', $sistem);
             $pdf->newPage((string)$view->render('TSS', 'ogrevanje'));
         }
@@ -96,7 +96,7 @@ class PdfIzvoz extends Command
         foreach ($view->get('sistemiSTPE') as $sistem) {
             $view->set('sistem', $sistem);
             $pdf->newPage((string)$view->render('TSS', 'fotovoltaika'));
-        }
+        }*/
 
         $pdfFolder = App::getProjectFolder($projectId, 'pdf');
         if (!is_dir($pdfFolder)) {

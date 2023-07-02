@@ -57,10 +57,11 @@ class TransportZraka
      */
     public function izracunMociVentilatorja()
     {
-        $dodatekH1H2 = $this->visokIzkoristek ? 0 : 300;
+        $dodatekH1H2 = $this->visokIzkoristek ? 300 : 0;
 
         // kW/(m3/h)
         $spf = ($this->vrsta->faktorSpf() * 3600 + $this->vrstaFiltra->dodatekFiltra() + $dodatekH1H2) / 3600000;
+
         $mocVentilatorja = $spf * $this->volumen;
 
         return $mocVentilatorja;

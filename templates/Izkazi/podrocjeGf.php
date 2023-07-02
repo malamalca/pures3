@@ -298,8 +298,8 @@ za področje gradbene fizike</h1>
     <tr>
         <td class="w-5 center"><?= $i+1 ?></td>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
-        <td class="w-20 center"><?= $this->numFormat($elementOvoja->Hgr_ogrevanje, 2) ?></td>
-        <td class="w-20 center"><?= $this->numFormat($elementOvoja->Hgr_hlajenje, 2) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($elementOvoja->H_ogrevanje, 2) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($elementOvoja->H_hlajenje, 2) ?></td>
     </tr>
     <?php
                 $i++;

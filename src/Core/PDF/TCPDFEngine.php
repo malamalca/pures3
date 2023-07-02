@@ -108,12 +108,12 @@ class TCPDFEngine extends \TCPDF implements PdfEngineInterface
     /**
      * Save PDF as file.
      *
-     * @param string $fileName Filename.
+     * @param string $filename Filename.
      * @return bool
      */
-    public function saveAs($fileName)
+    public function saveAs($filename)
     {
-        $this->Output($fileName, 'F');
+        $this->Output($filename, 'F');
 
         return true;
     }
