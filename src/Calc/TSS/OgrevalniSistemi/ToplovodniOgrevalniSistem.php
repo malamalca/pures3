@@ -10,6 +10,8 @@ use App\Lib\Calc;
 
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
+    private const STEVILO_ITERACIJ = 4;
+
     public string $namen;
 
     public ?\stdClass $tsv;
@@ -146,75 +148,89 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      */
     public function analizaOgrevanja($cona, $okolje)
     {
-        if (!empty($this->tsv->vracljiveIzgubeVOgrevanje)) {
+        $vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje ?? [];
+
+        // iteracija za vračljive izgube
+        for ($i = 0; $i < self::STEVILO_ITERACIJ; $i++) {
             // ponovno poračunam potrebno energijo za ogrevanje
             $spremembaCone = new Cona(null, $cona);
-            $spremembaCone->vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje;
+            $spremembaCone->vracljiveIzgube = $vracljiveIzgube;
             $spremembaCone->izracunFaktorjaIzkoristka();
             $spremembaCone->izracunEnergijeOgrevanjeHlajanje();
             $cona = $spremembaCone->export();
             $this->init($cona, $okolje);
-        }
-        $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
-        $this->ogrevanje->potrebnaElektricnaEnergija = [];
-        $this->ogrevanje->obnovljivaEnergija = [];
 
-        if (isset($this->ogrevanje->prenosniki)) {
-            foreach ($this->ogrevanje->prenosniki as $prenosnikId) {
-                $prenosnik = array_first($this->koncniPrenosniki, fn($p) => $p->id == $prenosnikId);
-                if (!$prenosnik) {
-                    throw new \Exception(sprintf('Prenosnik ogrevanja "%s" ne obstaja', $prenosnikId));
+            $vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje ?? [];
+
+            $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
+            $this->ogrevanje->potrebnaElektricnaEnergija = [];
+            $this->ogrevanje->obnovljivaEnergija = [];
+
+            if (isset($this->ogrevanje->prenosniki)) {
+                foreach ($this->ogrevanje->prenosniki as $prenosnikId) {
+                    $prenosnik = array_first($this->koncniPrenosniki, fn($p) => $p->id == $prenosnikId);
+                    if (!$prenosnik) {
+                        throw new \Exception(sprintf('Prenosnik ogrevanja "%s" ne obstaja', $prenosnikId));
+                    }
+
+                    $prenosnik->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje);
+
+                    $this->ogrevanje->potrebnaEnergija =
+                        array_sum_values($this->ogrevanje->potrebnaEnergija, $prenosnik->toplotneIzgube);
+                    $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values(
+                        $this->ogrevanje->potrebnaElektricnaEnergija,
+                        $prenosnik->potrebnaElektricnaEnergija
+                    );
+
+                    $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgube);
+                    $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgubeAux);
                 }
-
-                $prenosnik->analiza($this->ogrevanje->potrebnaEnergija, $this, $cona, $okolje);
-
-                $this->ogrevanje->potrebnaEnergija =
-                    array_sum_values($this->ogrevanje->potrebnaEnergija, $prenosnik->toplotneIzgube);
-                $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values(
-                    $this->ogrevanje->potrebnaElektricnaEnergija,
-                    $prenosnik->potrebnaElektricnaEnergija
-                );
             }
-        }
 
-        if (isset($this->ogrevanje->razvodi)) {
-            foreach ($this->ogrevanje->razvodi as $razvodId) {
-                $razvod = array_first($this->razvodi, fn($r) => $r->id == $razvodId);
-                if (!$razvod) {
-                    throw new \Exception(sprintf('Razvod ogrevanja "%s" ne obstaja', $razvodId));
+            if (isset($this->ogrevanje->razvodi)) {
+                foreach ($this->ogrevanje->razvodi as $razvodId) {
+                    $razvod = array_first($this->razvodi, fn($r) => $r->id == $razvodId);
+                    if (!$razvod) {
+                        throw new \Exception(sprintf('Razvod ogrevanja "%s" ne obstaja', $razvodId));
+                    }
+
+                    $prenosnik = array_first($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
+
+                    $razvod->analiza(
+                        $this->ogrevanje->potrebnaEnergija,
+                        $this,
+                        $cona,
+                        $okolje,
+                        ['prenosnik' => $prenosnik, 'rezim' => $this->ogrevanje->rezim]
+                    );
+
+                    $this->ogrevanje->potrebnaEnergija =
+                        array_sum_values($this->ogrevanje->potrebnaEnergija, $razvod->toplotneIzgube);
+                    $this->ogrevanje->potrebnaElektricnaEnergija =
+                        array_sum_values(
+                            $this->ogrevanje->potrebnaElektricnaEnergija,
+                            $razvod->potrebnaElektricnaEnergija
+                        );
+
+                    $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgube);
+                    $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgubeAux);
                 }
-
-                $prenosnik = array_first($this->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
-
-                $razvod->analiza(
-                    $this->ogrevanje->potrebnaEnergija,
-                    $this,
-                    $cona,
-                    $okolje,
-                    ['prenosnik' => $prenosnik, 'rezim' => $this->ogrevanje->rezim]
-                );
-
-                $this->ogrevanje->potrebnaEnergija =
-                    array_sum_values($this->ogrevanje->potrebnaEnergija, $razvod->toplotneIzgube);
-                $this->ogrevanje->potrebnaElektricnaEnergija =
-                    array_sum_values($this->ogrevanje->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
-
-                // TODO:
-                // $this->ogrevanje->potrebnaEnergija = array_subtract_values($this->ogrevanje->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
-                // Se res ne upošteva energija Aux kot vrnjena???
             }
-        }
 
-        if (isset($this->ogrevanje->hranilniki)) {
-            foreach ($this->ogrevanje->hranilniki as $hranilnikId) {
-                $hranilnik = array_first($this->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
-                if (!$hranilnik) {
-                    throw new \Exception(sprintf('Hranilnik ogrevanja "%s" ne obstaja', $hranilnikId));
+            if (isset($this->ogrevanje->hranilniki)) {
+                foreach ($this->ogrevanje->hranilniki as $hranilnikId) {
+                    $hranilnik = array_first($this->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
+                    if (!$hranilnik) {
+                        throw new \Exception(sprintf('Hranilnik ogrevanja "%s" ne obstaja', $hranilnikId));
+                    }
+
+                    $hranilnik->analiza([], $this, $cona, $okolje);
+                    $this->ogrevanje->potrebnaEnergija =
+                        array_sum_values($this->ogrevanje->potrebnaEnergija, $hranilnik->toplotneIzgube);
+
+                    $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube);
+                    $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux);
                 }
-
-                $hranilnik->analiza([], $this, $cona, $okolje);
-                $this->ogrevanje->potrebnaEnergija =
-                    array_sum_values($this->ogrevanje->potrebnaEnergija, $hranilnik->toplotneIzgube);
             }
         }
 

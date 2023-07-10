@@ -85,7 +85,7 @@
     {
         "id": "Ts1",
         "naziv": "Strop",
-        "vrsta": 16,
+        "vrsta": 15,
         "Rsi": 0.1,
         "Rse": 0.04,
         "materiali": [

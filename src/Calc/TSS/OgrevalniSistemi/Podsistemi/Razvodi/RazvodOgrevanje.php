@@ -113,6 +113,7 @@ abstract class RazvodOgrevanje extends Razvod
             // θ m - povprečna temperatura ogrevnega medija [°C]
             // enačba (39)
             $srednjaT = $rezim->srednjaTemperatura($sistem);
+
             $exponentOgrevala = $prenosnik->exponentOgrevala ?? 1;
             $temperaturaRazvoda = $betaI > 0 ? (($srednjaT - $cona->notranjaTOgrevanje) *
                 pow($betaI, 1 / $exponentOgrevala) + $cona->notranjaTOgrevanje) : $cona->notranjaTOgrevanje;
@@ -262,8 +263,8 @@ abstract class RazvodOgrevanje extends Razvod
         // (enačba 68, spodaj)
         $faktorCrpalkaPoProjektu = 1;
 
-        $fe_crpalke = !empty($this->crpalka->moc) ?
-            $this->crpalka->moc / $hidravlicnaMoc :
+        $fe_crpalke = /*!empty($this->crpalka->moc) ?
+            $this->crpalka->moc / $hidravlicnaMoc :*/
             1.25 + pow(200 / $hidravlicnaMoc, 0.5) * $faktorCrpalkaPoProjektu;
 
         return $fe_crpalke;

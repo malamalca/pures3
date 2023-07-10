@@ -53,12 +53,13 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
         $deltaT_ctr = parent::DELTAT_REGULACIJE_TEMPERATURE[$this->regulacijaTemperature->getOrdinal()];
 
         // Δθemb - deltaTemp za izolacijo (polje R206)
-        $deltaT_emb = self::DELTAT_VRSTE_SISTEMOV[$this->sistemOgreval->getOrdinal()] +
-            self::DELTAT_SPECIFICNIH_IZGUB[$this->izolacija->getOrdinal()];
+        $deltaT_emb = (self::DELTAT_VRSTE_SISTEMOV[$this->sistemOgreval->getOrdinal()] +
+            self::DELTAT_SPECIFICNIH_IZGUB[$this->izolacija->getOrdinal()]) / 2;
 
         // Δθstr - deltaTemp Str (polje Q208)
         $deltaT_str = self::DELTAT_VRSTE_SISTEMOV[$this->sistemOgreval->getOrdinal()];
 
+        // polje G244
         $deltaT = $deltaT_hydr + $deltaT_ctr + $deltaT_emb + $deltaT_str;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {

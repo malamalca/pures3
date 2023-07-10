@@ -61,7 +61,7 @@
     },
     {
         "id": 15, "naziv": "Strop proti neogrevanemu prostoru",
-            "Umax": 0.15, "Rsi": 0.1, "Rse": 0.04, "tip": "zunanja", "kontrolaKond": false
+            "Umax": 0.15, "Rsi": 0.1, "Rse": 0.04, "tip": "zunanja", "kontrolaKond": false, "dobitekSS": true
     },
     {
         "id": 16, "naziv": "Strop proti terenu",

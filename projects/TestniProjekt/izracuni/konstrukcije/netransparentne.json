@@ -3089,7 +3089,7 @@
     {
         "id": "Ts1",
         "naziv": "Strop",
-        "vrsta": 16,
+        "vrsta": 15,
         "Rsi": 0.1,
         "Rse": 0.04,
         "materiali": [
@@ -5006,12 +5006,14 @@
             }
         ],
         "TSG": {
-            "id": 16,
-            "naziv": "Strop proti terenu",
-            "Umax": 0.35,
+            "id": 15,
+            "naziv": "Strop proti neogrevanemu prostoru",
+            "Umax": 0.15,
             "Rsi": 0.1,
-            "Rse": 0.1,
-            "tip": "zunanja"
+            "Rse": 0.04,
+            "tip": "zunanja",
+            "kontrolaKond": false,
+            "dobitekSS": true
         },
         "U": 0.11065547093666604,
         "Sd": 9.3,

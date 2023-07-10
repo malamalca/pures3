@@ -75,12 +75,12 @@
     <tr>
         <td>Korekcijski faktor razmernika ROVE X<sub>OVE</sub></td>
         <td></td>
-        <td class="center"><?= $this->numFormat($stavba->X_OVE, 0) ?></td>
+        <td class="center"><?= $this->numFormat($stavba->X_OVE, 1) ?></td>
     </tr>
     <tr>
         <td>Kompenzacijski faktor razmernika ROVE Y<sub>ROVE</sub></td>
         <td></td>
-        <td class="center"><?= $this->numFormat($stavba->Y_ROVE, 0) ?></td>
+        <td class="center"><?= $this->numFormat($stavba->Y_ROVE, 1) ?></td>
     </tr>
 
     <tr><td colspan="3"></td></tr>

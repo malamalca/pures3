@@ -134,8 +134,8 @@ class TransparentenElementOvoja extends ElementOvoja
             $D_stena_d = $this->stranskoSencenje->desnoDolzina ?? 0;
             $L_stena_d = $this->stranskoSencenje->desnoRazdalja ?? 0;
 
-            $W = $this->sirinaStekla ?? 0;
-            $H = $this->visinaStekla ?? 0;
+            $W = $this->sirinaStekla;
+            $H = $this->visinaStekla;
             $zemljepisnaSirina = 40;
             $deklinacija = Configure::read('lookups.transparentne.mesecnaDeklinacija.' . $mesec);
 
@@ -221,37 +221,31 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->faktorSencenja[$mesec] = 1 - $delezObsevanja + $Fsh * $delezObsevanja;
 
             // izračun solarnih dobitkov
-            $alphaSr = 0.3;
-            $Fsky = $this->naklon < 45 ? 0.5 : 1;
+            $Fsky = $this->naklon < 45 ? 1 : 0.5;
             $hri = 4.14;
             $dTsky = 11;
             $Rse = 0.04;
             $Fic = 0.9; // faktor vpadnega kota. TSG stran 71
 
             // mesečna prehodnost sevanja zaradi zasteklitve s senčili
-            $g = $this->g ?? 0;
-            $g_sh_ogrevanje = 1;
-            $g_sh_hlajenje = $g * ($this->faktorSencil ?? 0);
+            $g = $this->g;
+            $g_sh_ogrevanje = $g;
+            $g_sh_hlajenje = $g * $this->faktorSencil;
 
             // sevanje elementa proti nebu za trenutni mesec
-            $Qsol_ogrevanje = $g * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
-                $this->faktorSencenja[$mesec] * $g_sh_ogrevanje *
-                $this->soncnoObsevanje[$mesec] * $stDni;
-            $Qsol_hlajenje = $g * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
-                $this->faktorSencenja[$mesec] * $g_sh_hlajenje *
-                $this->soncnoObsevanje[$mesec] * $stDni;
+            $Qsol_ogrevanje = $g_sh_ogrevanje * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
+                $this->faktorSencenja[$mesec] * $this->soncnoObsevanje[$mesec] * $stDni;
+            $Qsol_hlajenje = $g_sh_hlajenje * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
+                $this->faktorSencenja[$mesec] * $this->soncnoObsevanje[$mesec] * $stDni;
 
-            $Qsky = 0.001 * $Fsky * $Rse * ($this->U + $cona->deltaPsi) * $this->povrsina *
+            $Qsky = $Fsky * $Rse * ($this->U + $cona->deltaPsi) * $this->povrsina *
                 $hri * $dTsky * $stDni * 24;
 
             $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol_ogrevanje - $Qsky) / 1000 * $this->stevilo;
-            if ($this->solarniDobitkiOgrevanje[$mesec] < 0) {
-                $this->solarniDobitkiOgrevanje[$mesec] = 0;
-            }
-
             $this->solarniDobitkiHlajenje[$mesec] = ($Qsol_hlajenje - $Qsky) / 1000 * $this->stevilo;
-            if ($this->solarniDobitkiHlajenje[$mesec] < 0) {
-                $this->solarniDobitkiHlajenje[$mesec] = 0;
+
+            if ($this->idKonstrukcije == 'O1') {
+                //var_dump( $g_sh_ogrevanje); die;
             }
 
             // transmisijske izgube
@@ -282,7 +276,9 @@ class TransparentenElementOvoja extends ElementOvoja
         $elementOvoja->faktorSencil = $this->faktorSencil;
         $elementOvoja->g_sh = $this->g_sh;
 
-        $elementOvoja->sencenjeOvir = $this->sencenjeOvir;
+        if (isset($elementOvoja->sencenjeOvir)) {
+            $elementOvoja->sencenjeOvir = $this->sencenjeOvir;
+        }
 
         return $elementOvoja;
     }

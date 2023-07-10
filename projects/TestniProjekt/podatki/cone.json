@@ -68,7 +68,8 @@
                     "idKonstrukcije": "Z1",
                     "povrsina": 243,
                     "naklon": 90,
-                    "orientacija": "S"
+                    "orientacija": "S",
+                    "barva": "svetla"
                 },
                 {
                     "idKonstrukcije": "Tp1",

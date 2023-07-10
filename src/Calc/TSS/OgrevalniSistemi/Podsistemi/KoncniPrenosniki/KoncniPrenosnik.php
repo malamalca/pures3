@@ -41,6 +41,7 @@ abstract class KoncniPrenosnik
 
     public array $toplotneIzgube = [];
     public array $potrebnaElektricnaEnergija = [];
+    public array $vracljiveIzgube = [];
     public array $vracljiveIzgubeAux = [];
 
     /**

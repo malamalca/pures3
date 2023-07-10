@@ -3,11 +3,6 @@
 $lookups = [];
 $lookups['konstrukcije'] = json_decode(file_get_contents(dirname(__FILE__) . DS . 'lookupKonstrukcije.json'));
 $lookups['transparentneKonstrukcije'] = json_decode(file_get_contents(dirname(__FILE__) . DS . 'lookupTransparentneKonstrukcije.json'));
-$lookups['tla'] = [
-    'glina' => ['lambda' => 1.5, 'ro*c' => 3000000, 'sigma' => 2.2],
-    'pesek' => ['lambda' => 2, 'ro*c' => 2000000, 'sigma' => 3.2],
-    'kamen ' => ['lambda' => 3.5, 'ro*c' => 2000000, 'sigma' => 4.2],
-];
 $lookups['transparentne']['pomozniFaktorji']['nadstresek'] = [
     'A1' => ['J' => -3.020, 'JV' => -1.260, 'JZ' => -1.260, 'V'=> -0.684, 'Z' => -0.684, 'SV' => -0.654, 'SZ' => -0.654, 'S' => -0.726],
     'B1' => ['J' => 0.045, 'JV' => 0.015, 'JZ' => 0.015, 'V'=> 0.005, 'Z' => 0.005, 'SV' => 0.006, 'SZ' => 0.006, 'S' => 0.007],

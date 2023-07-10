@@ -142,28 +142,24 @@ class Cona
                     $this->ovoj = new \stdClass();
                     if (!empty($config->ovoj->netransparentneKonstrukcije)) {
                         $this->ovoj->netransparentneKonstrukcije = [];
-                        if (!empty($config->ovoj->netransparentneKonstrukcije)) {
-                            foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
-                                $kons = array_first(
-                                    $this->konstrukcije->netransparentne,
-                                    fn($k) => $k->id == $konsConfig->idKonstrukcije
-                                );
-                                $this->ovoj->netransparentneKonstrukcije[] =
-                                    new NetransparentenElementOvoja($kons, $konsConfig);
-                            }
+                        foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
+                            $kons = array_first(
+                                $this->konstrukcije->netransparentne,
+                                fn($k) => $k->id == $konsConfig->idKonstrukcije
+                            );
+                            $this->ovoj->netransparentneKonstrukcije[] =
+                                new NetransparentenElementOvoja($kons, $konsConfig);
                         }
                     }
                     if (!empty($config->ovoj->transparentneKonstrukcije)) {
                         $this->ovoj->transparentneKonstrukcije = [];
-                        if (!empty($config->ovoj->transparentneKonstrukcije)) {
-                            foreach ($config->ovoj->transparentneKonstrukcije as $konsConfig) {
-                                $kons = array_first(
-                                    $this->konstrukcije->transparentne,
-                                    fn($k) => $k->id == $konsConfig->idKonstrukcije
-                                );
-                                $this->ovoj->transparentneKonstrukcije[] =
-                                    new TransparentenElementOvoja($kons, $konsConfig);
-                            }
+                        foreach ($config->ovoj->transparentneKonstrukcije as $konsConfig) {
+                            $kons = array_first(
+                                $this->konstrukcije->transparentne,
+                                fn($k) => $k->id == $konsConfig->idKonstrukcije
+                            );
+                            $this->ovoj->transparentneKonstrukcije[] =
+                                new TransparentenElementOvoja($kons, $konsConfig);
                         }
                     }
                     break;
@@ -273,7 +269,8 @@ class Cona
 
             $this->solarniDobitkiOgrevanje =
                 array_sum_values($this->solarniDobitkiOgrevanje, $elementOvoja->solarniDobitkiOgrevanje);
-            $this->solarniDobitkiHlajenje =
+
+                $this->solarniDobitkiHlajenje =
                 array_sum_values($this->solarniDobitkiHlajenje, $elementOvoja->solarniDobitkiHlajenje);
         }
 
@@ -289,6 +286,17 @@ class Cona
                 array_sum_values($this->solarniDobitkiOgrevanje, $elementOvoja->solarniDobitkiOgrevanje);
             $this->solarniDobitkiHlajenje =
                 array_sum_values($this->solarniDobitkiHlajenje, $elementOvoja->solarniDobitkiHlajenje);
+        }
+
+        foreach ($this->solarniDobitkiOgrevanje as $k => $mesec) {
+            if ($this->solarniDobitkiOgrevanje[$k] < 0) {
+                $this->solarniDobitkiOgrevanje[$k] = 0;
+            }
+        }
+        foreach ($this->solarniDobitkiHlajenje as $k => $mesec) {
+            if ($this->solarniDobitkiHlajenje[$k] < 0) {
+                $this->solarniDobitkiHlajenje[$k] = 0;
+            }
         }
     }
 
@@ -350,6 +358,15 @@ class Cona
             $this->prezracevalneIzgubeHlajenje[$mesec] = $this->Hve_hlajenje *
                 $this->deltaTHlajenje[$mesec] * $stDni * 24 / 1000;
         }
+    }
+
+    /**
+     * Izračun faktorjev Htr, Hgr,
+     *
+     * @return void
+     */
+    public function izracunFaktorjaH()
+    {
     }
 
     /**
@@ -637,7 +654,23 @@ class Cona
         $reflect = new \ReflectionClass(Cona::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
-            $cona->{$prop->getName()} = $prop->getValue($this);
+            if ($prop->getName() == 'ovoj') {
+                $cona->ovoj = new \stdClass();
+                if (!empty($this->ovoj->netransparentneKonstrukcije)) {
+                    $cona->ovoj->netransparentneKonstrukcije = [];
+                    foreach ($this->ovoj->netransparentneKonstrukcije as $elementOvoja) {
+                        $cona->ovoj->netransparentneKonstrukcije[] = $elementOvoja->export();
+                    }
+                }
+                if (!empty($this->ovoj->transparentneKonstrukcije)) {
+                    $cona->ovoj->transparentneKonstrukcije = [];
+                    foreach ($this->ovoj->transparentneKonstrukcije as $elementOvoja) {
+                        $cona->ovoj->transparentneKonstrukcije[] = $elementOvoja->export();
+                    }
+                }
+            } else {
+                $cona->{$prop->getName()} = $prop->getValue($this);
+            }
         }
 
         return $cona;

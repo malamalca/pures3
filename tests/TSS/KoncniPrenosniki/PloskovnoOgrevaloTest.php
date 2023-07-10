@@ -37,7 +37,7 @@ final class PloskovnoOgrevaloTest extends TestCase
         $izgube = $sistem->toplotneIzgube($preneseneIzgube, null, $cona, $okolje);
         $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
 
-        $expected = [109.18, 74.64, 49.41, 23.44, 6.09, 0.00, 0.00, 0.00, 6.80, 34.10, 90.45, 114.83];
+        $expected = [106.31, 72.67, 48.11, 22.83, 5.93, 0.00, 0.00, 0.00, 6.62, 33.21, 88.07, 111.81];
 
         $this->assertEquals($expected, $roundedResult);
     }

@@ -11,7 +11,7 @@
             "razvodi": ["ogrevanje"],
             "prenosniki": ["TALNO"]
         },
-        "tsv": {
+        "_tsv": {
             "rezim": "55/45",
             "generatorji": ["TC"],
             "razvodi": ["TSV"],
@@ -27,6 +27,7 @@
             {
                 "id": "TC",
                 "vrsta": "TC_zrakvoda",
+                "podnebje": "celinsko",
                 "nazivnaMoc": 6,
                 "nazivniCOP": 3,
                 "elektricnaMocNaPrimarnemKrogu": 6,
