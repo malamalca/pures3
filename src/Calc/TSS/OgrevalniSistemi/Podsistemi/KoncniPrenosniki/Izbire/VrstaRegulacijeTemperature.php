@@ -30,4 +30,22 @@ enum VrstaRegulacijeTemperature: string
 
         return $lookup[$this->getOrdinal()];
     }
+
+    /**
+     * Delta T za neposredno električno ogrevanje
+     *
+     * @return float
+     */
+    public function deltaTElektricnoOgrevalo()
+    {
+        if ($this == VrstaRegulacijeTemperature::P_krmilnik) {
+            return 1.1;
+        }
+
+        if ($this == VrstaRegulacijeTemperature::PI_krmilnik) {
+            return 0.7;
+        }
+
+        throw new \Exception(sprintf('Regulacija "%s" za električno ogrevalo ni podprta', $this->toString()));
+    }
 }

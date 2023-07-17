@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki;
 
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaHidravlicnegaUravnotezenja;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaNamestitve;
 use App\Lib\Calc;
 
@@ -14,6 +15,7 @@ class Radiator extends KoncniPrenosnik
     public float $exponentOgrevala = 1.33;
 
     protected VrstaNamestitve $namestitev;
+    protected VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
 
     /**
      * Loads configuration from json|stdClass
@@ -63,5 +65,18 @@ class Radiator extends KoncniPrenosnik
         }
 
         return $this->toplotneIzgube;
+    }
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = parent::export();
+        $sistem->hidravlicnoUravnotezenje = $this->hidravlicnoUravnotezenje->toString();
+
+        return $sistem;
     }
 }

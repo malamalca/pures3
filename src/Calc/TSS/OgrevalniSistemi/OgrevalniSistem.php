@@ -75,7 +75,7 @@ abstract class OgrevalniSistem
         $this->id = $config->id ?? null;
         $this->idCone = $config->idCone ?? null;
         $this->vrsta = $config->vrsta;
-        $this->energent = TSSVrstaEnergenta::from($config->energent ?? 'default');
+        $this->energent = TSSVrstaEnergenta::from($config->energent ?? 'elektrika');
 
         if (!empty($config->razvodi)) {
             foreach ($config->razvodi as $razvod) {

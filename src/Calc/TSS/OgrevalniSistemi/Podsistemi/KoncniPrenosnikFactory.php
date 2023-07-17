@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi\Podsistemi;
 
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\ElektricnoOgrevalo;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Konvektor;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Radiator;
@@ -25,6 +26,8 @@ class KoncniPrenosnikFactory
                 return new Konvektor($options);
             case 'ploskovnaOgrevala':
                 return new PloskovnoOgrevalo($options);
+            case 'elektricnoOgrevalo':
+                return new ElektricnoOgrevalo($options);
             default:
                 throw new \Exception(sprintf('Končni prenosniki : Vrsta "%s" ne obstaja', $type));
         }

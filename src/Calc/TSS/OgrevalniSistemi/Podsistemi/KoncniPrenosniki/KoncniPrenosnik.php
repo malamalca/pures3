@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki;
 
-use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaHidravlicnegaUravnotezenja;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaRegulacijeTemperature;
 use App\Lib\Calc;
 
@@ -36,7 +35,6 @@ abstract class KoncniPrenosnik
      */
     protected float $mocRegulatorja = 0;
 
-    public VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
     public VrstaRegulacijeTemperature $regulacijaTemperature;
 
     public array $toplotneIzgube = [];
@@ -71,8 +69,6 @@ abstract class KoncniPrenosnik
         $this->steviloRegulatorjev = $config->steviloRegulatorjev ?? 0;
         $this->mocRegulatorja = $config->mocRegulatorja ?? 0;
 
-        $this->hidravlicnoUravnotezenje =
-            VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');
         $this->regulacijaTemperature = VrstaRegulacijeTemperature::from($config->regulacijaTemperature ?? 'centralna');
     }
 
@@ -167,7 +163,6 @@ abstract class KoncniPrenosnik
         $sistem->id = $this->id;
         $sistem->vrsta = $this->vrsta;
 
-        $sistem->hidravlicnoUravnotezenje = $this->hidravlicnoUravnotezenje->toString();
         $sistem->regulacijaTemperature = $this->regulacijaTemperature->toString();
 
         $sistem->toplotneIzgube = $this->toplotneIzgube;

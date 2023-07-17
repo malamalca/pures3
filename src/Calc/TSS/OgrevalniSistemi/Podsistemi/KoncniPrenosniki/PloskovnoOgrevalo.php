@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki;
 
+use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaHidravlicnegaUravnotezenja;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaIzolacijePloskovnihOgreval;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaSistemaPloskovnihOgreval;
 use App\Lib\Calc;
@@ -19,6 +20,7 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
 
     protected VrstaSistemaPloskovnihOgreval $sistemOgreval;
     protected VrstaIzolacijePloskovnihOgreval $izolacija;
+    protected VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
 
     /**
      * Loads configuration from json|stdClass
@@ -32,6 +34,9 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
 
         $this->sistemOgreval = VrstaSistemaPloskovnihOgreval::from($config->sistem);
         $this->izolacija = VrstaIzolacijePloskovnihOgreval::from($config->izolacija);
+
+        $this->hidravlicnoUravnotezenje =
+            VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');
     }
 
     /**
@@ -69,5 +74,18 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
         }
 
         return $this->toplotneIzgube;
+    }
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = parent::export();
+        $sistem->hidravlicnoUravnotezenje = $this->hidravlicnoUravnotezenje->toString();
+
+        return $sistem;
     }
 }
