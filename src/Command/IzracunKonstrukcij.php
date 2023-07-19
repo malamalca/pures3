@@ -39,7 +39,7 @@ class IzracunKonstrukcij extends Command
                 return;
             }
 
-            $libraryArray = json_decode(file_get_contents(CONFIG . 'TSGKonstrukcije.json'));
+            $libraryArray = json_decode((string)file_get_contents(CONFIG . 'TSGKonstrukcije.json'));
             foreach ($libraryArray as $item) {
                 CalcKonstrukcije::$library[$item->sifra] = $item;
             }

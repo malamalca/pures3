@@ -8,7 +8,10 @@ use App\Core\Log;
 
 class CalcKonstrukcije
 {
-    public static $library = [];
+    /**
+     * @var array<int|string, \stdClass>
+     */
+    public static array $library = [];
 
     /**
      * Izračun konstrukcije
@@ -34,13 +37,19 @@ class CalcKonstrukcije
         foreach ($kons->materiali as $material) {
             $material->R = 0;
             if (!empty($material->sifra) && isset(self::$library[$material->sifra])) {
-                $material->opis = $material->opis ?? self::$library[$material->sifra]->opis;
-                $material->lambda = $material->lambda ?? self::$library[$material->sifra]->lambda;
-                $material->gostota = $material->gostota ?? self::$library[$material->sifra]->gostota;
-                $material->difuzijskaUpornost =
-                    $material->difuzijskaUpornost ?? self::$library[$material->sifra]->difuzijskaUpornost;
-                $material->specificnaToplota =
-                    $material->specificnaToplota ?? self::$library[$material->sifra]->specificnaToplota;
+                /** @var \stdClass $libraryMaterial */
+                $libraryMaterial = self::$library[$material->sifra];
+
+                /* @phpstan-ignore-next-line */
+                $material->opis = $material->opis ?? $libraryMaterial->opis;
+                /* @phpstan-ignore-next-line */
+                $material->lambda = $material->lambda ?? $libraryMaterial->lambda;
+                /* @phpstan-ignore-next-line */
+                $material->gostota = $material->gostota ?? $libraryMaterial->gostota;
+                /* @phpstan-ignore-next-line */
+                $material->difuzijskaUpornost = $material->difuzijskaUpornost ?? $libraryMaterial->difuzijskaUpornost;
+                /* @phpstan-ignore-next-line */
+                $material->specificnaToplota = $material->specificnaToplota ?? $libraryMaterial->specificnaToplota;
             }
             if (isset($material->lambda) && isset($material->debelina)) {
                 $material->R = $material->debelina / $material->lambda;
