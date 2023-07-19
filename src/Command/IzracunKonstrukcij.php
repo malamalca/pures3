@@ -25,47 +25,54 @@ class IzracunKonstrukcij extends Command
 
         /** @var array $netransparentneKonstrukcije */
         $netransparentneKonstrukcije = App::loadProjectData($projectId, 'konstrukcije' . DS . 'netransparentne');
+        if (!empty($netransparentneKonstrukcije)) {
+            // validate input json
+            $schema = (string)file_get_contents(SCHEMAS . 'netransparentneSchema.json');
+            $validator = new Validator();
+            $validator->validate($netransparentneKonstrukcije, json_decode($schema));
+            if (!$validator->isValid()) {
+                $this->out('netransparentne.json vsebuje napake:', 'error');
+                foreach ($validator->getErrors() as $error) {
+                    $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
+                }
 
-        // validate input json
-        $schema = (string)file_get_contents(SCHEMAS . 'netransparentneSchema.json');
-        $validator = new Validator();
-        $validator->validate($netransparentneKonstrukcije, json_decode($schema));
-        if (!$validator->isValid()) {
-            $this->out('netransparentne.json vsebuje napake:', 'error');
-            foreach ($validator->getErrors() as $error) {
-                $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
+                return;
             }
 
-            return;
-        }
+            $libraryArray = json_decode(file_get_contents(CONFIG . 'TSGKonstrukcije.json'));
+            foreach ($libraryArray as $item) {
+                CalcKonstrukcije::$library[$item->sifra] = $item;
+            }
 
-        $netransparentneKonsOut = [];
-        foreach ($netransparentneKonstrukcije as $konstrukcija) {
-            $netransparentneKonsOut[] = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
+            $netransparentneKonsOut = [];
+            foreach ($netransparentneKonstrukcije as $konstrukcija) {
+                $netransparentneKonsOut[] = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
+            }
+            App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne', $netransparentneKonsOut);
         }
-        App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne', $netransparentneKonsOut);
 
         /** @var array $transparentneKonstrukcije */
         $transparentneKonstrukcije = App::loadProjectData($projectId, 'konstrukcije' . DS . 'transparentne');
+        if (!empty($transparentneKonstrukcije)) {
+            // validate input json
+            $validator = new Validator();
+            $schema = (string)file_get_contents(SCHEMAS . 'oknavrataSchema.json');
+            $validator->validate($transparentneKonstrukcije, json_decode($schema));
+            if (!$validator->isValid()) {
+                $this->out('oknavrata.json vsebuje napake:', 'error');
+                foreach ($validator->getErrors() as $error) {
+                    $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
+                }
 
-        // validate input json
-        $validator = new Validator();
-        $schema = (string)file_get_contents(SCHEMAS . 'oknavrataSchema.json');
-        $validator->validate($transparentneKonstrukcije, json_decode($schema));
-        if (!$validator->isValid()) {
-            $this->out('oknavrata.json vsebuje napake:', 'error');
-            foreach ($validator->getErrors() as $error) {
-                $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
+                return;
             }
 
-            return;
-        }
+            $transparentneKonsOut = [];
+            foreach ($transparentneKonstrukcije as $konstrukcija) {
+                $transparentneKonsOut[] = CalcKonstrukcije::transparentne($konstrukcija, $okolje);
+            }
 
-        $transparentneKonsOut = [];
-        foreach ($transparentneKonstrukcije as $konstrukcija) {
-            $transparentneKonsOut[] = CalcKonstrukcije::transparentne($konstrukcija, $okolje);
+            App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne', $transparentneKonsOut);
         }
-
-        App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne', $transparentneKonsOut);
     }
 }

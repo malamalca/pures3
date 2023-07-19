@@ -8,6 +8,8 @@ use App\Core\Log;
 
 class CalcKonstrukcije
 {
+    public static $library = [];
+
     /**
      * Izračun konstrukcije
      *
@@ -31,6 +33,15 @@ class CalcKonstrukcije
         $totalSd = 0;
         foreach ($kons->materiali as $material) {
             $material->R = 0;
+            if (!empty($material->sifra) && isset(self::$library[$material->sifra])) {
+                $material->opis = $material->opis ?? self::$library[$material->sifra]->opis;
+                $material->lambda = $material->lambda ?? self::$library[$material->sifra]->lambda;
+                $material->gostota = $material->gostota ?? self::$library[$material->sifra]->gostota;
+                $material->difuzijskaUpornost =
+                    $material->difuzijskaUpornost ?? self::$library[$material->sifra]->difuzijskaUpornost;
+                $material->specificnaToplota =
+                    $material->specificnaToplota ?? self::$library[$material->sifra]->specificnaToplota;
+            }
             if (isset($material->lambda) && isset($material->debelina)) {
                 $material->R = $material->debelina / $material->lambda;
             }

@@ -75,6 +75,20 @@ class Configure
     }
 
     /**
+     * Store configuration options to class.
+     *
+     * @param string $key Configure key
+     * @param mixed $values Configuration values
+     * @return void
+     */
+    public static function store($key, $values)
+    {
+        $instance = self::getInstance();
+
+        $instance->config[$key] = $values;
+    }
+
+    /**
      * Empty function
      *
      * @return void

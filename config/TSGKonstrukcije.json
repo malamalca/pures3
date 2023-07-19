@@ -1,0 +1,47 @@
+[
+    {
+        "id": "2.1",
+        "sifra": "opeka",
+        "opis": "Mrežasta in votla opeka",
+        "lambda": 0.61,
+        "gostota": 1400,
+        "specificnaToplota": 920,
+        "difuzijskaUpornost": 6
+    },
+    {
+        "id": "21",
+        "sifra": "cementnoLepilo",
+        "opis": "Cementna malta",
+        "lambda": 1.4,
+        "gostota": 2100,
+        "specificnaToplota": 1050,
+        "difuzijskaUpornost": 30
+    },
+    {
+        "id": "23",
+        "sifra": "fasadniSloj",
+        "opis": "Pigmentna fasadna malta",
+        "lambda": 0.7,
+        "gostota": 1850,
+        "specificnaToplota": 1050,
+        "difuzijskaUpornost": 15
+    },
+    {
+        "id": "44",
+        "sifra": "beton",
+        "opis": "Beton s kamnitimi agregati",
+        "lambda": 2.04,
+        "gostota": 2400,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 60
+    },
+    {
+        "id": "114",
+        "sifra": "EPSNeo",
+        "opis": "EPS F grafitni",
+        "lambda": 0.031,
+        "gostota": 15,
+        "specificnaToplota": 1260,
+        "difuzijskaUpornost": 25
+    }
+]

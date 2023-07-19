@@ -13,21 +13,34 @@
             "materiali": {
                 "type": "array",
                 "items": {
-                    "type": "object",
-                    "required": ["opis"],
-                    "oneOf": [
-                        {"required": ["Sd"]},
-                        {"required": ["debelina", "difuzijskaUpornost"]}
-                    ],
-                    "properties": {
-                        "opis": {"type": "string"},
-                        "debelina": {"type": "number"},
-                        "lambda": {"type": "number"},
-                        "gostota": {"type": "number"},
-                        "specificnaToplota": {"type": "number"},
-                        "difuzijskaUpornost": {"type": "number"},
-                        "Sd": {"type": "number"}
-                    }
+                    "anyOf": [
+                        {
+                            "type": "object",
+                            "required": ["opis"],
+                            "oneOf": [
+                                {"required": ["Sd"]},
+                                {"required": ["debelina", "difuzijskaUpornost"]}
+                            ],
+                            "properties": {
+                                "opis": {"type": "string"},
+                                "debelina": {"type": "number"},
+                                "lambda": {"type": "number"},
+                                "gostota": {"type": "number"},
+                                "specificnaToplota": {"type": "number"},
+                                "difuzijskaUpornost": {"type": "number"},
+                                "Sd": {"type": "number"}
+                            }
+                        },
+                        {
+                            "type": "object",
+                            "required": ["sifra"],
+                            "properties": {
+                                "sifra": {"type": "string"},
+                                "debelina": {"type": "number"},
+                                "lambda": {"type": "number"}
+                            }
+                        }
+                    ]
                 }
             }
         }

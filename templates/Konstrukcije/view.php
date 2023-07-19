@@ -47,7 +47,7 @@
     foreach ($kons->materiali as $material) {
 ?>
     <tr>
-        <td class="center"><?= h($material->opis) ?></td>
+        <td class="left"><?= h($material->opis) ?></td>
         <td class="center"><?= number_format($material->debelina, 3, ',', '') ?></td>
         <td class="center"><?= number_format($material->lambda, 3, ',', '') ?></td>
         <td class="center"><?= number_format($material->gostota, 0, ',', '') ?></td>

@@ -12,13 +12,15 @@
     </p>
 <p class="actions">
 <?php
-    foreach ($cone as $cona) {
+    if (!empty($cone)) {
+        foreach ($cone as $cona) {
 ?>
 
 <a class="button" href="<?= App::url('/cone/ovoj/' . $projectId . '/' . $cona->id) ?>">Analiza ovoja cone "<?= $cona->id ?>"</a>
 <a class="button" href="<?= App::url('/cone/analiza/' . $projectId . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
 
 <?php
+        }
     }
 ?>
 </p>
