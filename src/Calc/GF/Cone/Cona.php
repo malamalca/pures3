@@ -26,7 +26,6 @@ class Cona
 
     public float $notranjaTOgrevanje;
     public float $notranjaTHlajenje;
-    public float $zunanjaT;
 
     public float $toplotnaKapaciteta = 0;
 
@@ -140,8 +139,10 @@ class Cona
             switch ($prop->getName()) {
                 case 'ovoj':
                     $this->ovoj = new \stdClass();
+                    $this->ovoj->netransparentneKonstrukcije = [];
+                    $this->ovoj->transparentneKonstrukcije = [];
+
                     if (!empty($config->ovoj->netransparentneKonstrukcije)) {
-                        $this->ovoj->netransparentneKonstrukcije = [];
                         foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
                             $kons = array_first(
                                 $this->konstrukcije->netransparentne,
@@ -152,7 +153,6 @@ class Cona
                         }
                     }
                     if (!empty($config->ovoj->transparentneKonstrukcije)) {
-                        $this->ovoj->transparentneKonstrukcije = [];
                         foreach ($config->ovoj->transparentneKonstrukcije as $konsConfig) {
                             $kons = array_first(
                                 $this->konstrukcije->transparentne,
@@ -230,24 +230,26 @@ class Cona
                 $elementOvoja->povrsina * (1 - $elementOvoja->delezOkvirja) * $elementOvoja->stevilo;
         }
 
-        $this->specTransmisijskeIzgube = $skupni_Uab + $this->povrsinaOvoja * $this->deltaPsi;
-        $this->specVentilacijskeIzgube = $this->Hve_ogrevanje;
+        if ($this->povrsinaOvoja > 0) {
+            $this->specTransmisijskeIzgube = $skupni_Uab + $this->povrsinaOvoja * $this->deltaPsi;
+            $this->specVentilacijskeIzgube = $this->Hve_ogrevanje;
 
-        $this->specLetnaToplota = $this->skupnaEnergijaOgrevanje / $this->ogrevanaPovrsina;
-        $this->specLetniHlad = $this->skupnaEnergijaHlajenje / $this->ogrevanaPovrsina;
+            $this->specLetnaToplota = $this->skupnaEnergijaOgrevanje / $this->ogrevanaPovrsina;
+            $this->specLetniHlad = $this->skupnaEnergijaHlajenje / $this->ogrevanaPovrsina;
 
-        $this->faktorOblike = round($this->povrsinaOvoja / $this->brutoProstornina, 3);
+            $this->faktorOblike = round($this->povrsinaOvoja / $this->brutoProstornina, 3);
 
-        $this->specKoeficientTransmisijskihIzgub = $skupni_Uab / $this->povrsinaOvoja + $this->deltaPsi;
+            $this->specKoeficientTransmisijskihIzgub = $skupni_Uab / $this->povrsinaOvoja + $this->deltaPsi;
 
-        $povprecnaLetnaTemp = $okolje->povprecnaLetnaTemp < 7 ? 7 :
-            ($okolje->povprecnaLetnaTemp > 11 ? 11 : $okolje->povprecnaLetnaTemp);
-        $faktorOblike = $this->faktorOblike < 0.2 ? 0.2 : ($this->faktorOblike > 1.2 ? 1.2 : $this->faktorOblike);
+            $povprecnaLetnaTemp = $okolje->povprecnaLetnaTemp < 7 ? 7 :
+                ($okolje->povprecnaLetnaTemp > 11 ? 11 : $okolje->povprecnaLetnaTemp);
+            $faktorOblike = $this->faktorOblike < 0.2 ? 0.2 : ($this->faktorOblike > 1.2 ? 1.2 : $this->faktorOblike);
 
-        $this->dovoljenSpecKoeficientTransmisijskihIzgub = 0.25 +
-            $povprecnaLetnaTemp / 300 +
-            0.04 / $faktorOblike +
-            ($this->transparentnaPovrsina / $this->povrsinaOvoja) / 8;
+            $this->dovoljenSpecKoeficientTransmisijskihIzgub = 0.25 +
+                $povprecnaLetnaTemp / 300 +
+                0.04 / $faktorOblike +
+                ($this->transparentnaPovrsina / $this->povrsinaOvoja) / 8;
+        }
     }
 
     /**
@@ -405,9 +407,13 @@ class Cona
                 $this->notranjiViriOgrevanje[$mesec] +
                 $this->solarniDobitkiOgrevanje[$mesec] +
                 ($this->vracljiveIzgube[$mesec] ?? 0);
+            $vsotaPonorov_ogrevanje = $this->prezracevalneIzgubeOgrevanje[$mesec] + $this->transIzgubeOgrevanje[$mesec];
 
-            $gama_ogrevanje = $vsotaVirov_ogrevanje /
-                ($this->prezracevalneIzgubeOgrevanje[$mesec] + $this->transIzgubeOgrevanje[$mesec]);
+            if ($vsotaPonorov_ogrevanje == 0.0) {
+                $gama_ogrevanje = -1;
+            } else {
+                $gama_ogrevanje = $vsotaVirov_ogrevanje / $vsotaPonorov_ogrevanje;
+            }
 
             $this->ucinekDobitkov[$mesec] = null;
             if ($gama_ogrevanje > -0.1 && $gama_ogrevanje < 2) {
@@ -428,8 +434,13 @@ class Cona
             }
 
             $vsotaVirov_hlajenje = $this->notranjiViriHlajenje[$mesec] + $this->solarniDobitkiHlajenje[$mesec];
-            $gama_hlajenje = $vsotaVirov_hlajenje /
-                ($this->prezracevalneIzgubeHlajenje[$mesec] + $this->transIzgubeHlajenje[$mesec]);
+            $vsotaPonorov_hlajenje = $this->prezracevalneIzgubeHlajenje[$mesec] + $this->transIzgubeHlajenje[$mesec];
+
+            if ($vsotaPonorov_hlajenje == 0.0) {
+                $gama_hlajenje = -1;
+            } else {
+                $gama_hlajenje = $vsotaVirov_hlajenje / $vsotaPonorov_hlajenje;
+            }
 
             $this->ucinekPonorov[$mesec] = null;
             if (1 / $gama_hlajenje <= 2) {
@@ -656,14 +667,14 @@ class Cona
         foreach ($props as $prop) {
             if ($prop->getName() == 'ovoj') {
                 $cona->ovoj = new \stdClass();
+                $cona->ovoj->netransparentneKonstrukcije = [];
+                $cona->ovoj->transparentneKonstrukcije = [];
                 if (!empty($this->ovoj->netransparentneKonstrukcije)) {
-                    $cona->ovoj->netransparentneKonstrukcije = [];
                     foreach ($this->ovoj->netransparentneKonstrukcije as $elementOvoja) {
                         $cona->ovoj->netransparentneKonstrukcije[] = $elementOvoja->export();
                     }
                 }
                 if (!empty($this->ovoj->transparentneKonstrukcije)) {
-                    $cona->ovoj->transparentneKonstrukcije = [];
                     foreach ($this->ovoj->transparentneKonstrukcije as $elementOvoja) {
                         $cona->ovoj->transparentneKonstrukcije[] = $elementOvoja->export();
                     }

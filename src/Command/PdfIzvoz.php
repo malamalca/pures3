@@ -30,8 +30,8 @@ class PdfIzvoz extends Command
         $view->set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
         $view->set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
         $view->set('cone', App::loadProjectCalculation($projectId, 'cone'));
-        $view->set('tKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne'));
-        $view->set('ntKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne'));
+        $view->set('tKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne'), []);
+        $view->set('ntKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne'), []);
         $view->set('sistemiOgrevanja', (array)App::loadProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje'));
         $view->set('sistemiRazsvetljave', (array)App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
         $view->set(

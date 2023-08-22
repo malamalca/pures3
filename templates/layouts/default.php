@@ -37,7 +37,7 @@
 			  </div>
 
         <div id="footer">
-          &copy; Pures 3 2023
+          &copy; <a href="https://github.com/malamalca/pures3">PHPures3</a> 2023
         </div>
       </div>
 		</div>

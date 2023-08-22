@@ -36,8 +36,8 @@ class IzkaziController
     public function podrocjeGf($projectId)
     {
         App::set('stavba', App::loadProjectCalculation($projectId, 'stavba'));
-        App::set('tKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne'));
-        App::set('ntKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne'));
+        App::set('tKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne') ?? []);
+        App::set('ntKons', App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne') ?? []);
         App::set('cone', App::loadProjectCalculation($projectId, 'cone'));
         App::set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
     }

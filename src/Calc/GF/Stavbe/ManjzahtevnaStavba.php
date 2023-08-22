@@ -112,6 +112,10 @@ class ManjzahtevnaStavba extends Stavba
         $this->povrsinaOvoja = array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->povrsinaOvoja, 0);
         $this->ogrevanaPovrsina = array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->ogrevanaPovrsina, 0);
 
+        if ($this->povrsinaOvoja == 0.00 || $this->ogrevanaPovrsina == 0.00) {
+            return;
+        }
+
         foreach ($this->cone as $cona) {
             foreach ($cona->ovoj->transparentneKonstrukcije as $elementOvoja) {
                 $this->transparentnaPovrsina += $elementOvoja->povrsina *
@@ -231,6 +235,10 @@ class ManjzahtevnaStavba extends Stavba
 
                 $this->skupnaOddanaElektricnaEnergija += array_sum($sistem->oddanaElektricnaEnergija);
             }
+        }
+
+        if ($utezenaDovedenaEnergijaOgrHlaTsv == 0.0 || $this->skupnaPrimarnaEnergija == 0.0) {
+            return;
         }
 
         $this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;

@@ -40,6 +40,16 @@ class App
             unset($vars['action']);
         }
 
+        $extension = pathinfo($methodName, PATHINFO_EXTENSION);
+        if (empty($extension)) {
+            $lastParameter = array_slice($vars, -1);
+            if (count($lastParameter) == 1) {
+                $extension = pathinfo(array_values($lastParameter)[0], PATHINFO_EXTENSION);
+            }
+        } else {
+            $methodName = substr($methodName, 0, -(strlen($extension) + 1));
+        }
+
         $controllerClass = 'App\Controller\\' . $controllerName . 'Controller';
 
         // check if action exists
@@ -50,6 +60,9 @@ class App
         }
 
         $controller = new $controllerClass();
+        $controller->request = new \stdClass();
+        $controller->request->action = $methodName;
+        $controller->request->extension = $extension;
 
         $func = [$controller, $methodName];
         if (is_callable($func)) {
