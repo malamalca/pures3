@@ -68,7 +68,11 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
         $deltaT = $deltaT_hydr + $deltaT_ctr + $deltaT_emb + $deltaT_str;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $faktorDeltaT = $deltaT / ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
+            if (($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]) != 0.0) {
+                $faktorDeltaT = $deltaT / ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
+            } else {
+                $faktorDeltaT = $deltaT;
+            }
 
             $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
         }

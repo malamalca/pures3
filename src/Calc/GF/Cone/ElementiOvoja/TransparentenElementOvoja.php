@@ -35,11 +35,19 @@ class TransparentenElementOvoja extends ElementOvoja
             $config = json_decode($config);
         }
 
+        if (!empty($config->A) && !empty($config->B) && !empty($config->sirinaOkvirja)) {
+            $config->sirinaStekla = $config->A - $config->sirinaOkvirja;
+            $config->dolzinaStekla = $config->B - $config->sirinaOkvirja;
+            $config->dolzinaOkvirja = 2 * $config->A + 2 * $config->B;
+        }
+
         if (empty($config->delezOkvirja) && !empty($config->dolzinaStekla) && !empty($config->sirinaStekla)) {
             $this->delezOkvirja = 1 - ($config->sirinaStekla * $config->dolzinaStekla / $this->povrsina);
         } else {
             $this->delezOkvirja = $config->delezOkvirja ?? 1;
         }
+
+        
         $this->dolzinaOkvirja = $config->dolzinaOkvirja ?? 1;
 
         // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
