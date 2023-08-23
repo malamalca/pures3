@@ -26,10 +26,6 @@ class ProjektiController
      */
     public function view($projectId = null)
     {
-        if (empty($projectId)) {
-            App::redirect(App::url('/projects/index'));
-        }
-
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData($projectId, 'splosniPodatki'));
         App::set('okolje', App::loadProjectCalculation($projectId, 'okolje'));
