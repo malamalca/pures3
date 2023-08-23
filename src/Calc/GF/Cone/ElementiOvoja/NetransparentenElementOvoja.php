@@ -52,7 +52,6 @@ class NetransparentenElementOvoja extends ElementOvoja
         }
         $this->obseg = $obseg;
 
-
         $this->debelinaStene = $config->debelinaStene ?? 0;
         $this->obodniPsi = $config->obodniPsi ?? 0;
         $this->vertPsi = $config->vertPsi ?? 0;

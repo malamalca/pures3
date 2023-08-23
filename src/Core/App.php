@@ -39,6 +39,7 @@ class App
         if (isset($vars['action'])) {
             unset($vars['action']);
         }
+        $vars = array_map(fn($var) => urldecode($var), $vars);
 
         $controllerClass = 'App\Controller\\' . $controllerName . 'Controller';
 

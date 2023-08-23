@@ -207,7 +207,7 @@ za področje gradbene fizike</h1>
                     }
     ?>
     <tr>
-        <td class="w-5 center"><?= $i+1 ?></td>
+        <td class="w-5 center"><?= $i ?></td>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
         <td class="w-15 center"><?= $this->numFormat($konstrukcija->g ?? 0, 2) ?></td>
         <td class="w-15 center"><?= $this->numFormat($elementOvoja->g_sh, 2) ?></td>

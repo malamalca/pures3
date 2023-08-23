@@ -138,9 +138,15 @@
         <td>W/K</td>
     </tr>
     <tr>
-        <td>Površina ovoja</td>
+        <td>Površina celotnega ovoja</td>
         <td>A</td>
         <td class="center"><?= $this->numFormat($cona->povrsinaOvoja, 1) ?></td>
+        <td>m²</td>
+    </tr>
+    <tr>
+        <td>Površina transparentnega dela ovoja</td>
+        <td>A<sub>trans</sub></td>
+        <td class="center"><?= $this->numFormat($cona->transparentnaPovrsina, 1) ?></td>
         <td>m²</td>
     </tr>
     <tr><td colspan="4">&nbsp;</td></tr>

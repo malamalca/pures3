@@ -35,6 +35,7 @@ class TransparentenElementOvoja extends ElementOvoja
             $config = json_decode($config);
         }
 
+        /** @var \stdClass $config */
         if (!empty($config->A) && !empty($config->B) && !empty($config->sirinaOkvirja)) {
             $config->sirinaStekla = $config->A - $config->sirinaOkvirja;
             $config->dolzinaStekla = $config->B - $config->sirinaOkvirja;
@@ -47,7 +48,6 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->delezOkvirja = $config->delezOkvirja ?? 1;
         }
 
-        
         $this->dolzinaOkvirja = $config->dolzinaOkvirja ?? 1;
 
         // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
