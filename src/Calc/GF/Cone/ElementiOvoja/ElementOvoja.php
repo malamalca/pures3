@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF\Cone\ElementiOvoja;
 
 use App\Lib\Calc;
+use App\Lib\EvalMath;
 
 abstract class ElementOvoja
 {
@@ -72,13 +73,24 @@ abstract class ElementOvoja
             $config = json_decode($config);
         }
 
+        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+
         $this->opis = $config->opis ?? '';
 
         $this->stevilo = $config->stevilo ?? 1;
 
         $this->orientacija = $config->orientacija ?? '';
         $this->naklon = $config->naklon ?? 0;
-        $this->povrsina = $config->povrsina ?? 0;
+
+        if (isset($config->A) && isset($config->B)) {
+            $this->povrsina = $config->A * $config->B;
+        } else {
+            $povrsina = $config->povrsina ?? 0;
+            if (gettype($povrsina) == 'string') {
+                $povrsina = (float)$EvalMath->e($povrsina);
+            }
+            $this->povrsina = $povrsina;
+        }
 
         $this->U = $this->konstrukcija->U ?? 0;
         $this->faktorSencenja = $config->faktorSencenja ?? array_map(fn($m) => 1, Calc::MESECI);

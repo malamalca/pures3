@@ -172,10 +172,14 @@
                             "properties": {
                                 "idKonstrukcije": {"type": "string"},
                                 "opis": {"type": "string"},
-                                "povrsina": {"type": "number"},
+                                "povrsina": {
+                                    "oneOf": [{"type": "number"}, {"type": "string"}]
+                                },
                                 "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90]},
                                 "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]},
-                                "obseg": {"type": "number"},
+                                "obseg": {
+                                    "oneOf": [{"type": "number"}, {"type": "string"}]
+                                },
                                 "debelinaStene": {"type": "number"},
                                 "tla": {"enum": ["pesek", "glina", "kamen"]},
                                 "dodatnaIzolacija": {
@@ -195,7 +199,7 @@
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "required": ["idKonstrukcije", "povrsina"],
+                            "required": ["idKonstrukcije"],
                             "properties": {
                                 "idKonstrukcije": {"type": "string"},
                                 "opis": {"type": "string"},

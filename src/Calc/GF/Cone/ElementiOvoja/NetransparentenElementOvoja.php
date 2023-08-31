@@ -6,6 +6,7 @@ namespace App\Calc\GF\Cone\ElementiOvoja;
 use App\Calc\GF\Cone\ElementiOvoja\Izbire\BarvaElementaOvoja;
 use App\Calc\GF\Cone\ElementiOvoja\Izbire\VrstaTal;
 use App\Lib\Calc;
+use App\Lib\EvalMath;
 
 class NetransparentenElementOvoja extends ElementOvoja
 {
@@ -37,12 +38,20 @@ class NetransparentenElementOvoja extends ElementOvoja
         if (is_string($config)) {
             $config = json_decode($config);
         }
+
+        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+
         $this->protiZraku = $this->konstrukcija->TSG->tip == 'zunanja';
         $this->tla = VrstaTal::from($config->tla ?? 'pesek');
 
         $this->barva = BarvaElementaOvoja::from($config->barva ?? 'brez');
 
-        $this->obseg = $config->obseg ?? 0;
+        $obseg = $config->obseg ?? 0;
+        if (gettype($obseg) == 'string') {
+            $obseg = (float)$EvalMath->e($obseg);
+        }
+        $this->obseg = $obseg;
+
         $this->debelinaStene = $config->debelinaStene ?? 0;
         $this->obodniPsi = $config->obodniPsi ?? 0;
         $this->vertPsi = $config->vertPsi ?? 0;

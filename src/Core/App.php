@@ -39,6 +39,7 @@ class App
         if (isset($vars['action'])) {
             unset($vars['action']);
         }
+        $vars = array_map(fn($var) => urldecode($var), $vars);
 
         $extension = pathinfo($methodName, PATHINFO_EXTENSION);
         if (empty($extension)) {
