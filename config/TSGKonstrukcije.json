@@ -9,11 +9,29 @@
         "difuzijskaUpornost": 6
     },
     {
+        "id": "2.2",
+        "sifra": "termoOpeka",
+        "opis": "Mrežasta in votla opeka",
+        "lambda": 0.23,
+        "gostota": 1400,
+        "specificnaToplota": 920,
+        "difuzijskaUpornost": 6
+    },
+    {
         "id": "21",
         "sifra": "cementnoLepilo",
         "opis": "Cementna malta",
         "lambda": 1.4,
         "gostota": 2100,
+        "specificnaToplota": 1050,
+        "difuzijskaUpornost": 30
+    },
+    {
+        "id": "22",
+        "sifra": "estrih",
+        "opis": "Cementni estrih",
+        "lambda": 1.4,
+        "gostota": 2200,
         "specificnaToplota": 1050,
         "difuzijskaUpornost": 30
     },
@@ -27,6 +45,24 @@
         "difuzijskaUpornost": 15
     },
     {
+        "id": "25",
+        "sifra": "omet",
+        "opis": "Mavčna in apneno mavčna malta",
+        "lambda": 0.7,
+        "gostota": 1050,
+        "specificnaToplota": 920,
+        "difuzijskaUpornost": 9
+    },
+    {
+        "id": "37",
+        "sifra": "tampon",
+        "opis": "Gramoz, suh",
+        "lambda": 0.81,
+        "gostota": 1700,
+        "specificnaToplota": 840,
+        "difuzijskaUpornost": 1.4
+    },
+    {
         "id": "44",
         "sifra": "beton",
         "opis": "Beton s kamnitimi agregati",
@@ -36,6 +72,69 @@
         "difuzijskaUpornost": 60
     },
     {
+        "id": "50.1",
+        "sifra": "MKplosce",
+        "opis": "Mavčno-kartonske plošče do 15mm",
+        "lambda": 0.21,
+        "gostota": 900,
+        "specificnaToplota": 840,
+        "difuzijskaUpornost": 12
+    },
+    {
+        "id": "56.2",
+        "sifra": "keramika",
+        "opis": "Keramične ploščice, talne, neglazirane",
+        "lambda": 1.28,
+        "gostota": 2300,
+        "specificnaToplota": 920,
+        "difuzijskaUpornost": 200
+    },
+    {
+        "id": "68.3",
+        "sifra": "les",
+        "opis": "Les smreka, bor",
+        "lambda": 0.14,
+        "gostota": 550,
+        "specificnaToplota": 2090,
+        "difuzijskaUpornost": 70
+    },
+    {
+        "id": "78",
+        "sifra": "vinil",
+        "opis": "PVC, homogen",
+        "lambda": 0.23,
+        "gostota": 1400,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 10000
+    },
+    {
+        "id": "85",
+        "sifra": "PEfolija",
+        "opis": "Polietilenske folije",
+        "lambda": 0.19,
+        "gostota": 1000,
+        "specificnaToplota": 1250,
+        "difuzijskaUpornost": 80000
+    },
+    {
+        "id": "91.2",
+        "sifra": "hidroizolacija",
+        "opis": "Večplastna bitumenska hidroizolacija",
+        "lambda": 0.19,
+        "gostota": 1200,
+        "specificnaToplota": 1460,
+        "difuzijskaUpornost": 14000
+    },
+    {
+        "id": "113.4",
+        "sifra": "EPS100",
+        "opis": "EPS 100",
+        "lambda": 0.039,
+        "gostota": 15,
+        "specificnaToplota": 1260,
+        "difuzijskaUpornost": 25
+    },
+    {
         "id": "114",
         "sifra": "EPSNeo",
         "opis": "EPS F grafitni",
@@ -43,5 +142,51 @@
         "gostota": 15,
         "specificnaToplota": 1260,
         "difuzijskaUpornost": 25
+    },
+    {
+        "id": "120.1",
+        "sifra": "XPS",
+        "opis": "Ekstrudirani polistiren (XPS)",
+        "lambda": 0.035,
+        "gostota": 33,
+        "specificnaToplota": 1500,
+        "difuzijskaUpornost": 50
+    },
+    {
+        "id": "126.5",
+        "sifra": "kamenaVolna",
+        "opis": "Mineralna kamena volna",
+        "lambda": 0.034,
+        "gostota": 80,
+        "specificnaToplota": 1030,
+        "difuzijskaUpornost": 1
+    },
+
+    {
+        "id": "00.1",
+        "sifra": "paropropustnaFolija",
+        "opis": "Paropropustna folija",
+        "lambda": 0.22,
+        "gostota": 250,
+        "specificnaToplota": 1700,
+        "difuzijskaUpornost": 40
+    },
+    {
+        "id": "00.2",
+        "sifra": "parnaZapora",
+        "opis": "Parna zapora",
+        "lambda": 0.19,
+        "gostota": 964,
+        "specificnaToplota": 1700,
+        "difuzijskaUpornost": 526000
+    },
+    {
+        "id": "00.3",
+        "sifra": "OSB",
+        "opis": "OSB3 plošča",
+        "lambda": 0.13,
+        "gostota": 600,
+        "specificnaToplota": 2100,
+        "difuzijskaUpornost": 200
     }
 ]

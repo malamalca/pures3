@@ -15,8 +15,7 @@
     <link rel="stylesheet" media="print" href="<?= $this->url("/css/print.css") ?>" />
 </head>
 
-<body>
-<body translate="no" >
+<body translate="no">
   <div id="container">
       <?php include TEMPLATES . 'elements' . DS . 'header.php'; ?>
       <div id="content">

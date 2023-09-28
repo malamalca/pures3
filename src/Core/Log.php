@@ -25,10 +25,16 @@ class Log
         foreach ((array)$handlers as $handler) {
             $class = reset($handler);
 
+            $addCliProcessor = !empty($handler['cli']);
+            unset($handler['cli']);
+
             if (!empty($handler['formatter'])) {
                 $formatterClass = reset($handler['formatter']);
                 $formatterParams = array_values(array_slice($handler['formatter'], 1));
                 $formatter = new $formatterClass(...$formatterParams);
+                if (is_a($formatter, '\Monolog\Formatter\LineFormatter')) {
+                    $formatter->includeStacktraces(true);
+                }
                 unset($handler['formatter']);
             }
 
@@ -38,6 +44,25 @@ class Log
             $handlerClass = new $class(...$params);
             if (isset($formatter) && is_callable([$handlerClass, 'setFormatter'])) {
                 $handlerClass->setFormatter($formatter);
+            }
+
+            if ($addCliProcessor && is_a($handlerClass, '\Monolog\Handler\StreamHandler')) {
+                $handlerClass->pushProcessor(function ($entry) {
+                    $msg = $entry['message'];
+                    switch ($entry['level_name']) {
+                        case 'ERROR':
+                            $entry['message'] = "\033[31m$msg \033[0m";
+                            break;
+                        case 'WARNING':
+                            $entry['message'] = "\033[33m$msg \033[0m";
+                            break;
+                        case 'INFO':
+                            $entry['message'] = "\033[36m$msg \033[0m";
+                            break;
+                    }
+
+                    return $entry;
+                });
             }
 
             self::$logger->pushHandler($handlerClass);

@@ -5,6 +5,8 @@ namespace App\Lib;
 
 use App\Core\Configure;
 use App\Core\Log;
+use App\Lib\SpanIterators\MonthlySpanIterator;
+use \Iterator;
 
 class CalcKonstrukcije
 {
@@ -12,6 +14,11 @@ class CalcKonstrukcije
      * @var array<int|string, \stdClass>
      */
     public static array $library = [];
+
+    /**
+     * @var \Iterator $spanIterator;
+     */
+    public static ?Iterator $spanIterator = null;
 
     /**
      * Izračun konstrukcije
@@ -23,6 +30,10 @@ class CalcKonstrukcije
      */
     public static function konstrukcija($kons, $okolje, $options = [])
     {
+        if (!isset(self::$spanIterator)) {
+            CalcKonstrukcije::$spanIterator = new MonthlySpanIterator();
+        }
+
         // parametri za posamezno konstrukcijo po TSG
         if (isset($kons->vrsta)) {
             $kons->TSG = Configure::read('lookups.konstrukcije.' . $kons->vrsta);
@@ -36,20 +47,25 @@ class CalcKonstrukcije
         $totalSd = 0;
         foreach ($kons->materiali as $material) {
             $material->R = 0;
-            if (!empty($material->sifra) && isset(self::$library[$material->sifra])) {
-                /** @var \stdClass $libraryMaterial */
-                $libraryMaterial = self::$library[$material->sifra];
+            if (!empty($material->sifra)) {
+                if (isset(self::$library[$material->sifra])) {
+                    /** @var \stdClass $libraryMaterial */
+                    $libraryMaterial = self::$library[$material->sifra];
 
-                /* @phpstan-ignore-next-line */
-                $material->opis = $material->opis ?? $libraryMaterial->opis;
-                /* @phpstan-ignore-next-line */
-                $material->lambda = $material->lambda ?? $libraryMaterial->lambda;
-                /* @phpstan-ignore-next-line */
-                $material->gostota = $material->gostota ?? $libraryMaterial->gostota;
-                /* @phpstan-ignore-next-line */
-                $material->difuzijskaUpornost = $material->difuzijskaUpornost ?? $libraryMaterial->difuzijskaUpornost;
-                /* @phpstan-ignore-next-line */
-                $material->specificnaToplota = $material->specificnaToplota ?? $libraryMaterial->specificnaToplota;
+                    /* @phpstan-ignore-next-line */
+                    $material->opis = $material->opis ?? $libraryMaterial->opis;
+                    /* @phpstan-ignore-next-line */
+                    $material->lambda = $material->lambda ?? $libraryMaterial->lambda;
+                    /* @phpstan-ignore-next-line */
+                    $material->gostota = $material->gostota ?? $libraryMaterial->gostota;
+                    /* @phpstan-ignore-next-line */
+                    $material->difuzijskaUpornost =
+                        $material->difuzijskaUpornost ?? $libraryMaterial->difuzijskaUpornost;
+                    /* @phpstan-ignore-next-line */
+                    $material->specificnaToplota = $material->specificnaToplota ?? $libraryMaterial->specificnaToplota;
+                } else {
+                    throw new \Exception(sprintf('Kataloški material "%s" ne obstaja', $material->sifra));
+                }
             }
             if (isset($material->lambda) && isset($material->debelina)) {
                 $material->R = $material->debelina / $material->lambda;
@@ -62,7 +78,7 @@ class CalcKonstrukcije
         $kons->U = 1 / $totalR;
         $kons->Sd = $totalSd;
 
-        foreach (array_keys(Calc::MESECI) as $mesec) {
+        foreach (self::$spanIterator as $mesec) {
             $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
             $kons->Tsi[$mesec] = $okolje->notranjaT[$mesec] - $kons->Rsi * $toplotniTok;
             $kons->Tse[$mesec] = $okolje->zunanjaT[$mesec] + $kons->Rse * $toplotniTok;
@@ -88,9 +104,7 @@ class CalcKonstrukcije
             for ($i = 0; $i < $steviloRacunskihSlojev; $i++) {
                 $sloj = new \stdClass();
                 $sloj->opis = $material->opis . ($steviloRacunskihSlojev == 1 ? '' : '.' . ($i + 1));
-
                 $sloj->debelina = isset($material->debelina) ? $material->debelina / $steviloRacunskihSlojev : 0;
-
                 $sloj->difuzijskaUpornost = $material->difuzijskaUpornost ?? null;
 
                 if (isset($material->lambda)) {
@@ -113,7 +127,7 @@ class CalcKonstrukcije
             // konec določitve računskih slojev
 
             foreach ($material->racunskiSloji as $sloj) {
-                foreach (array_keys(Calc::MESECI) as $mesec) {
+                foreach (self::$spanIterator as $mesec) {
                     $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
                     $sloj->T[$mesec] = $okolje->notranjaT[$mesec] - $sloj->Rn * $toplotniTok;
 
@@ -123,6 +137,12 @@ class CalcKonstrukcije
                     $sloj->dejanskiTlak[$mesec] = $kons->dejanskiTlakSi[$mesec] -
                         $deltaDejanskegaTlaka * $sloj->Sdn / $kons->Sd;
                 }
+            }
+
+            foreach (self::$spanIterator as $mesec) {
+                $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
+                $material->T[$mesec] =
+                    $okolje->notranjaT[$mesec] - $Rt * $toplotniTok;
             }
         }
 
@@ -156,7 +176,7 @@ class CalcKonstrukcije
     {
         $kondRavnine = [];
         // iščemo kondenzacijo po mesecih
-        foreach (array_keys(Calc::MESECI) as $mesec) {
+        foreach (self::$spanIterator as $mesec) {
             $kondRavnineVMesecu = [];
 
             $i = 0;
@@ -241,7 +261,7 @@ class CalcKonstrukcije
             }
 
             if (!$jeMesecBrezKondenzacije) {
-                $sloj->gm[$mesec] = -1;
+                //$sloj->gm[$mesec] = -1;
                 $kons->maxGm = -1;
             } else {
                 $kons->maxGm = 0;
@@ -437,5 +457,275 @@ class CalcKonstrukcije
         }
 
         return $kons;
+    }
+
+    /**
+     * Graf s podatki o konstrukciji
+     *
+     * @param array $data Podatki za graf
+     * @return string|false
+     */
+    public static function graf($data)
+    {
+        if (empty($data['data'])) {
+            throw new \Exception('No data!');
+        }
+        if (empty($data['thickness'])) {
+            throw new \Exception('No thickness!');
+        }
+        if (empty($data['layer'])) {
+            throw new \Exception('No layers!');
+        }
+
+        if (!empty($data['data2'])) {
+            $data2 = $data['data2'];
+        }
+
+        // podatki o slojih konstrukcije: naziv | debelina | lambda
+        $thicknesses = $data['thickness'];
+        $sloji = $data['layer'];
+        //$thicknesses = [0.2, 0.2, 0.01];
+        //$sloji = ['ab', 'eps', 'fasada'];
+
+        // podatki o temperaturah na posameznem stiku slojev -  T_Si + T_[n] + T_se
+        //$data = [20, 19.8, 19, -11, -12.8, -13];
+        $data = $data['data'];
+
+        // Image dimensions
+        $imageWidth = 600;
+        $imageHeight = 400;
+
+        // Grid dimensions and placement within image
+        $gridTop = 10;
+        $gridLeft = 50;
+        $gridBottom = $imageHeight - 40;
+        $gridRight = $imageWidth - 50;
+        $gridHeight = $gridBottom - $gridTop;
+        $gridWidth = $gridRight - $gridLeft;
+
+        // Bar and line width
+        $lineWidth = 1;
+        $data1lineWidth = 4;
+        $data2lineWidth = 2;
+        $barWidth = 20;
+
+        // Font settings
+        $font = RESOURCES . 'OpenSans-Regular.ttf';
+        $fontSize = 8;
+
+        // Margin between label and axis
+        $labelMargin = 8;
+
+        // Margin between axis and graph
+        $offsetMargin = 20;
+
+        // Max value on y-axis
+        $yMaxValue = max($data);
+        $yMinValue = min($data);
+        if (!empty($data2)) {
+            $yMaxValue2 = max($data2);
+            $yMinValue2 = min($data2);
+            $yMaxValue = max($yMaxValue, $yMaxValue2);
+            $yMinValue = min($yMinValue, $yMinValue2);
+        }
+
+        $yMaxAxis = $yMaxValue + abs(0.05 * ($yMaxValue - $yMinValue));
+        $yMinAxis = $yMinValue - abs(0.05 * ($yMaxValue - $yMinValue));
+
+        // calculate chart lines on y-axis
+        //var_dump(($yMaxValue - $yMinValue) / 5);
+
+        // Distance between grid lines on y-axis
+        //$yGridStep = 10;
+        // Number of lines we want in a grid
+        $yGridLinesCount = 4;
+        $gridSteps = [1, 2, 5];
+        $yGridStepReal = ($yMaxValue - $yMinValue) / $yGridLinesCount;
+
+        $yGridFactor = 1;
+        while ($yGridStepReal < 10) {
+            $yGridStepReal *= 10;
+            $yGridFactor *= 0.1;
+        }
+        while ($yGridStepReal > 100) {
+            $yGridStepReal /= 10;
+            $yGridFactor *= 10;
+        }
+
+        $yGridStepReal = ((int)$yGridStepReal) / 10;
+        $yGridStep = null;
+        $yGridMinDifference = 10;
+        foreach ($gridSteps as $gridStep) {
+            if (abs($gridStep - $yGridStepReal) < $yGridMinDifference) {
+                $yGridMinDifference = abs($gridStep - $yGridStepReal);
+                $yGridStep = $gridStep;
+            }
+        }
+
+        $yGridStep = $yGridStep * $yGridFactor * 10;
+
+        $yGridLines = [];
+        $yGridStepDiff = ($yMaxValue - $yMinValue) / $yGridLinesCount;
+
+        $yGridLines[] = floor($yMinAxis / $yGridStep) * $yGridStep;
+        $yGridLinesCount = floor(($yMaxAxis - $yGridLines[0]) / $yGridStep);
+
+        for ($i = 0; $i < $yGridLinesCount; $i++) {
+            $yGridLines[] = $yGridLines[count($yGridLines) - 1] + $yGridStep;
+        }
+
+        // Init image
+        $chart = imagecreatetruecolor($imageWidth, $imageHeight);
+        if (!$chart) {
+            return false;
+        }
+
+        // Setup colors
+        $backgroundColor = imagecolorallocate($chart, 255, 255, 255);
+        $axisColor = imagecolorallocate($chart, 85, 85, 85);
+        $labelColor = $axisColor;
+        $gridColor = imagecolorallocate($chart, 212, 212, 212);
+        $barColor = imagecolorallocatealpha($chart, 127, 201, 255, 50);
+        $separatorLineColor = imagecolorallocate($chart, 80, 80, 80);
+        $dataLineColor = imagecolorallocate($chart, 255, 0, 0);
+        $data2LineColor = imagecolorallocate($chart, 64, 64, 255);
+
+        if (
+            $backgroundColor === false ||
+            $axisColor === false ||
+            $labelColor === false ||
+            $gridColor === false ||
+            $barColor === false ||
+            $separatorLineColor === false ||
+            $dataLineColor == false ||
+            $data2LineColor == false
+        ) {
+            return false;
+        }
+
+        imagefill($chart, 0, 0, $backgroundColor);
+        imagesetthickness($chart, $lineWidth);
+
+        /*
+        * Print grid lines bottom up
+        */
+        //for ($i = 0; $i <= $yMaxValue; $i += $yLabelSpan) {
+        foreach ($yGridLines as $yGridLineValue) {
+            //$y = $gridBottom - $i * $gridHeight / $yMaxAxis;
+
+            $y = $gridBottom - ($yGridLineValue - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+
+            // draw the line
+            imageline($chart, $gridLeft, (int)$y, $gridRight, (int)$y, $gridColor);
+
+            // draw right aligned label
+            $labelBox = imagettfbbox($fontSize, 0, $font, strval($yGridLineValue));
+            if ($labelBox) {
+                $labelWidth = $labelBox[4] - $labelBox[0];
+
+                $labelX = $gridLeft - $labelWidth - $labelMargin;
+                $labelY = $y + $fontSize / 2;
+
+                imagettftext($chart, $fontSize, 0, (int)$labelX, (int)$labelY, $labelColor, $font, strval($yGridLineValue));
+            }
+        }
+
+        /*
+        * Draw x- and y-axis
+        */
+        imageline($chart, $gridLeft, $gridTop, $gridLeft, $gridBottom, $axisColor);
+        imageline($chart, $gridLeft, $gridBottom, $gridRight, $gridBottom, $axisColor);
+
+        /*
+        * Draw the bars with labels
+        */
+        $debelinaKonstrukcije = array_sum($thicknesses);
+
+        $sirinaGrafa = $gridWidth - 2 * $offsetMargin;
+
+        $offsetX = $gridLeft + $offsetMargin;
+
+        $x1 = 0;
+        $y1 = 0;
+        $x2 = 0;
+        $y2 = 0;
+        foreach ($sloji as $ix => $sloj) {
+            $nazivSloja = $sloj;
+            $debelinaSloja = $thicknesses[$ix];
+
+            $x1 = $offsetX;
+            $y1 = $gridBottom - $gridHeight;
+            $x2 = $offsetX + $debelinaSloja / $debelinaKonstrukcije * $sirinaGrafa;
+            $y2 = $gridBottom - 1;
+
+            imagefilledrectangle($chart, (int)$x1, (int)$y1, (int)$x2, (int)$y2, $barColor);
+
+            /* Linija med sloji */
+            imageline($chart, (int)$x1, (int)$y1, (int)$x1, (int)$y2, $separatorLineColor);
+
+            // Draw the label
+            $labelBox = imagettfbbox($fontSize, 0, $font, $nazivSloja);
+            if ($labelBox) {
+                $labelWidth = $labelBox[4] - $labelBox[0];
+
+                $labelX = ($x1 + $x2) / 2 - $labelWidth / 2;
+                $labelY = $gridBottom + $labelMargin + $fontSize;
+
+                imagettftext($chart, $fontSize, 0, (int)$labelX, $labelY, $labelColor, $font, $nazivSloja);
+            }
+
+            $offsetX += $debelinaSloja / $debelinaKonstrukcije * $sirinaGrafa;
+        }
+
+        /* Linija med sloji (zadnja) */
+        imageline($chart, (int)$x2, (int)$y1, (int)$x2, (int)$y2, $separatorLineColor);
+
+        /** Draw the data (temperature) axis line */
+
+        $dataX = [];
+
+        /** First data point for external temperature */
+        $offsetX = $gridLeft + $offsetMargin;
+
+        $dataX[] = $offsetX - $offsetMargin / 2;
+        $dataX[] = $offsetX;
+        foreach ($thicknesses as $debelinaSloja) {
+            $dataX[] = $offsetX + $debelinaSloja / $debelinaKonstrukcije * $sirinaGrafa;
+            $offsetX += $debelinaSloja / $debelinaKonstrukcije * $sirinaGrafa;
+        }
+        $dataX[] = $offsetX + $offsetMargin / 2;
+
+        $prevValue = 0;
+        foreach ($dataX as $k => $value) {
+            if ($k > 0) {
+                $x1 = $prevValue;
+                $y1 = $gridBottom - ($data[$k - 1] - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+                $x2 = $value;
+                $y2 = $gridBottom - ($data[$k] - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+
+                imagesetthickness($chart, $data1lineWidth);
+                imageline($chart, (int)$x1, (int)$y1, (int)$x2, (int)$y2, $dataLineColor);
+
+                if (!empty($data2)) {
+                    $x1 = $prevValue;
+                    $y1 = $gridBottom - ($data2[$k - 1] - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+                    $x2 = $value;
+                    $y2 = $gridBottom - ($data2[$k] - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+
+                    imagesetthickness($chart, $data2lineWidth);
+                    imageline($chart, (int)$x1, (int)$y1, (int)$x2, (int)$y2, $data2LineColor);
+                }
+            }
+            $prevValue = $value;
+        }
+
+        ob_start();
+        imagepng($chart);
+        $imageData = ob_get_contents();
+        ob_end_clean();
+
+        imagedestroy($chart);
+
+        return $imageData;
     }
 }

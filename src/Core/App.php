@@ -61,6 +61,7 @@ class App
         }
 
         $controller = new $controllerClass();
+        /** @var \stdClass $controller->request */
         $controller->request = new \stdClass();
         $controller->request->action = $methodName;
         $controller->request->extension = $extension;

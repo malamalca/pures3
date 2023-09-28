@@ -6,6 +6,7 @@ namespace App\Calc\GF\Cone;
 use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
 use App\Calc\GF\Cone\ElementiOvoja\TransparentenElementOvoja;
 use App\Calc\TSS\Razsvetljava\Razsvetljava;
+use App\Core\Log;
 use App\Lib\Calc;
 use App\Lib\EvalMath;
 
@@ -187,6 +188,8 @@ class Cona
      */
     public function analiza($okolje)
     {
+        Log::info(sprintf('"%s": Začetek analize cone', $this->id));
+
         // izračunaj delto temperature med notranjostjo in zuanjim zrakom
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
@@ -250,6 +253,8 @@ class Cona
                 0.04 / $faktorOblike +
                 ($this->transparentnaPovrsina / $this->povrsinaOvoja) / 8;
         }
+
+        Log::info(sprintf('"%s": Konec analize cone', $this->id));
     }
 
     /**
@@ -407,7 +412,8 @@ class Cona
                 $this->notranjiViriOgrevanje[$mesec] +
                 $this->solarniDobitkiOgrevanje[$mesec] +
                 ($this->vracljiveIzgube[$mesec] ?? 0);
-            $vsotaPonorov_ogrevanje = $this->prezracevalneIzgubeOgrevanje[$mesec] + $this->transIzgubeOgrevanje[$mesec];
+            $vsotaPonorov_ogrevanje =
+                (float)($this->prezracevalneIzgubeOgrevanje[$mesec] + $this->transIzgubeOgrevanje[$mesec]);
 
             if ($vsotaPonorov_ogrevanje == 0.0) {
                 $gama_ogrevanje = -1;
@@ -434,7 +440,8 @@ class Cona
             }
 
             $vsotaVirov_hlajenje = $this->notranjiViriHlajenje[$mesec] + $this->solarniDobitkiHlajenje[$mesec];
-            $vsotaPonorov_hlajenje = $this->prezracevalneIzgubeHlajenje[$mesec] + $this->transIzgubeHlajenje[$mesec];
+            $vsotaPonorov_hlajenje =
+                (float)$this->prezracevalneIzgubeHlajenje[$mesec] + $this->transIzgubeHlajenje[$mesec];
 
             if ($vsotaPonorov_hlajenje == 0.0) {
                 $gama_hlajenje = -1;

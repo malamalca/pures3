@@ -44,7 +44,7 @@
     </tr>
     <tr>
         <td colspan="2">Hidravlično uravnoteženje razvoda:</td>
-        <td colspan="3"><?= h($prenosnik->hidravlicnoUravnotezenje) ?></td>
+        <td colspan="3"><?= h($prenosnik->hidravlicnoUravnotezenje ?? '') ?></td>
     </tr>
     <tr>
         <td colspan="2">Regulacija temperature prostora:</td>

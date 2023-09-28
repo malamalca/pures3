@@ -13,6 +13,9 @@ enum VrstaRegulacijeTemperature: string
     case PI_krmilnik = 'PI-krmilnik';
     case PI_krmilnikZOptimizacijo = 'PI-krmilnikZOptimizacijo';
 
+    case TermostatNaPeci = 'termostatNaPeci';
+    case SobniTermostat = 'sobniTermostat';
+
     /**
      * Friendly name
      *
@@ -26,6 +29,8 @@ enum VrstaRegulacijeTemperature: string
             'P-krmilnik',
             'PI-krmilnik',
             'PI-krmilnik z algoritmom optimizacije',
+            'Termostat na peči',
+            'Sobni termostat',
         ];
 
         return $lookup[$this->getOrdinal()];
@@ -47,5 +52,23 @@ enum VrstaRegulacijeTemperature: string
         }
 
         throw new \Exception(sprintf('Regulacija "%s" za električno ogrevalo ni podprta', $this->toString()));
+    }
+
+    /**
+     * Delta Tctr za peč na drva, kamine,..
+     *
+     * @return float
+     */
+    public function deltaTCtrPecNaDrva()
+    {
+        if ($this == VrstaRegulacijeTemperature::TermostatNaPeci) {
+            return 2.5;
+        }
+
+        if ($this == VrstaRegulacijeTemperature::SobniTermostat) {
+            return 2;
+        }
+
+        throw new \Exception(sprintf('Regulacija "%s" za peč na drva ni podprta', $this->toString()));
     }
 }

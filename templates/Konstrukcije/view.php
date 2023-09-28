@@ -1,12 +1,14 @@
 <?php
+    use \App\Core\App;
     use \App\Lib\Calc;
+    use \App\Lib\CalcKonstrukcije;
 ?>
 <h1>Analiza netransparentne konstrukcije</h1>
 
 <table>
     <tr>
         <td>Naziv:</td>
-        <td><?= h($kons->naziv) ?></td>
+        <td><b><?= h($kons->id) ?> :: <?= h($kons->naziv) ?></b></td>
         <td colspan="4"></td>
     </tr>
     <tr>
@@ -62,93 +64,72 @@
 </table>
 
 <h3>Prikaz temperature v konstrukciji</h3>
-<div style="height: 20rem;">
-  <canvas id="myChart"></canvas>
-</div>
-
-<script src="<?= $this->url("/js/chartjs.min.js") ?>"></script>
-
-<script>
-    const ctx = document.getElementById('myChart');
-
-    var temp = [
 <?php
-    $debelinaAccum = 0;
     $mesec = 0;
 
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, -0.05, $okolje->notranjaT[$mesec]);
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, 0, $kons->Tsi[$mesec]);
+    $thicknesses = [];
+    $temperatures = [];
+    $layers = [];
+
+    $temperatures[] = $okolje->notranjaT[$mesec];
+    $temperatures[] = $kons->Tsi[$mesec];
+
+    foreach ($kons->materiali as $i => $material) {
+        $temperatures[] = $material->T[$mesec];
+        $thicknesses[] = $material->debelina;
+        $layers[] = $material->opis;
+        //foreach ($material->racunskiSloji as $k => $sloj) {
+        //    $temperatures[] = $sloj->T[$mesec];
+        //    $thicknesses[] = $sloj->debelina;
+        //    $layers[] = $sloj->opis;
+        //}
+    }
+
+    $temperatures[] = $kons->Tse[$mesec];
+    $temperatures[] = $okolje->zunanjaT[$mesec];
+
+    $data = ['data' => $temperatures, 'thickness' => $thicknesses, 'layer' => $layers];
+    $png = CalcKonstrukcije::graf($data);
+?>
+
+<img src="data:image/png;base64,<?= base64_encode($png) ?>"/>
+
+<h3>Prikaz tlaka in kondenzacije</h3>
+<?php
+    $mesec = 0;
+
+    $thicknesses = [];
+    $layers = [];
+    $nasicenTlak = [];
+    $dejanskiTlak = [];
+
+    $nasicenTlak[] = Calc::nasicenTlak($okolje->notranjaT[$mesec]);
+    $nasicenTlak[] = $kons->nasicenTlakSi[$mesec];
+
+    $dejanskiTlak[] = $kons->dejanskiTlakSi[$mesec];
+    $dejanskiTlak[] = $kons->dejanskiTlakSi[$mesec];
 
     foreach ($kons->materiali as $i => $material) {
         foreach ($material->racunskiSloji as $k => $sloj) {
-            printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, $debelinaAccum + $sloj->debelina, $sloj->T[$mesec]);
-            $debelinaAccum += $sloj->debelina;
+            $nasicenTlak[] = $sloj->nasicenTlak[$mesec];
+            $dejanskiTlak[] = $sloj->dejanskiTlak[$mesec];
+            $thicknesses[] = $sloj->Sd;
+            $layers[] = $sloj->opis;
         }
     }
 
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, $debelinaAccum, $kons->Tse[$mesec]);
-    printf('{"x": %1$f, "y":%2$f}' . PHP_EOL, $debelinaAccum+0.05, $okolje->zunanjaT[$mesec]);
+    $nasicenTlak[] = $kons->nasicenTlakSe[$mesec];
+    $nasicenTlak[] = Calc::nasicenTlak($okolje->zunanjaT[$mesec]);
+
+    $dejanskiTlak[] = $kons->dejanskiTlakSe[$mesec];
+    $dejanskiTlak[] = $kons->dejanskiTlakSe[$mesec];
+
+    $data = ['data' => $nasicenTlak, 'data2' => $dejanskiTlak, 'thickness' => $thicknesses, 'layer' => $layers];
+    $png = CalcKonstrukcije::graf($data);
 ?>
-    ];
 
-    new Chart(ctx, {
-        "type": 'scatter',
-        "data": {
-            "datasets": [
-                { 
-                "label":"Temperatura v konstrukciji",
-                "data": temp,
-                "fill":false,
-                "borderColor": "#fa4444",
-                "lineTension":0.1,
-                showLine: true
-                }
-            ]
-        },
-        plugins: [{
-    beforeDraw: chart => {
-      var ctx = chart.ctx;
-      var xAxis = chart.scales.x;
-      var yAxis = chart.scales.y;
+<img src="data:image/png;base64,<?= base64_encode($png) ?>"/>
 
-      ctx.fillStyle = "lightgray";
-      ctx.rect(xAxis.getPixelForValue(temp[1].x), yAxis.top, xAxis.getPixelForValue(temp[temp.length - 2].x) - xAxis.getPixelForValue(temp[1].x), yAxis.bottom-yAxis.top);
-      ctx.fill();
-
-      temp.forEach((value, index) => {
-        if (index > 0 && index < temp.length - 1) {
-            var x = xAxis.getPixelForValue(temp[index].x);
-            var yTop = yAxis.getPixelForValue(temp[index].y);
-
-            ctx.save();
-            ctx.strokeStyle = '#404040';
-            ctx.beginPath();
-            ctx.moveTo(x, yAxis.bottom);
-            ctx.lineTo(x, yAxis.top);
-            ctx.stroke();
-            ctx.restore();
-        }
-      });
-    }
-  }],
-        "options": {
-            "scales": {
-                x: {
-                    type: "linear",
-                    position: "bottom",
-                    min: -0.10,
-                    max: <?= $debelinaAccum ?> + 0.1
-                }
-            }
-        }
-    });
-</script>
-
-
-<h3>Prikaz tlaka in kondenzacije</h3>
-<div style="height: 20rem;">
-  <canvas id="myChart2"></canvas>
-</div>
 <div>
     <table border="1">
         <thead>
@@ -191,7 +172,7 @@
 ?>
         <tr>
             <td><?= $sloj->opis ?></td>
-            <td class="right w-10"><?= round(($sloj->debelina ?? 0) * 100, 1) ?></td>
+            <td class="right w-10"><?= $this->numFormat(round(($sloj->debelina ?? 0) * 100, 1), 2) ?></td>
             <td class="right w-10"><?= round(($sloj->lambda ?? 0), 3) ?></td>
             <td class="right w-10"><?= !empty($sloj->lambda) ? round(($sloj->debelina ?? 0) / ($sloj->lambda ?? 0), 3) : '' ?></td>
             <td class="right w-10"><?= isset($sloj->Sd) ? round($sloj->Sd, 4) : round($sloj->debelina * $sloj->difuzijskaUpornost, 4) ?></td>
@@ -227,7 +208,10 @@
         </tr>
     </table>
 </div>
-<!--
+
+<?php
+    if (1 == 21) {
+?>
 <div>
     <h2>Kondenzacija</h2>
     <table border="1">
@@ -278,129 +262,6 @@
     ?>
     </table>
 </div>
--->
-
-<script src="<?= $this->url("/js/hammer.min.js") ?>"></script>
-<script src="<?= $this->url("/js/chartjs-plugin-zoom.min.js") ?>"></script>
-
-<script>
-    const ctx2 = document.getElementById('myChart2');
-    ////////////////////////////////////////////////////////
-    var nasicenTlak = [
 <?php
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, -($kons->Sd * 0.05), Calc::nasicenTlak($okolje->notranjaT[$mesec]));
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, 0, $kons->nasicenTlakSi[$mesec]);
-
-    $totalSd = 0;
-    foreach ($kons->materiali as $i => $material) {
-        foreach ($material->racunskiSloji as $k => $sloj) {
-            printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, $sloj->Sdn, $sloj->nasicenTlak[$mesec]);
-            $totalSd += $sloj->Sd;
-        }
     }
-
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, $kons->Sd, $kons->nasicenTlakSe[$mesec]);
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, $kons->Sd, Calc::nasicenTlak($okolje->zunanjaT[$mesec]));
 ?>
-    ];
-
-    ////////////////////////////////////////////////////////
-    var dejanskiTlak = [
-        {"x": 0, "y": <?= Calc::nasicenTlak($okolje->notranjaT[$mesec]) * $okolje->notranjaVlaga[$mesec] / 100 ?>},
-        {"x": <?= $kons->Sd; ?>, "y": <?= Calc::nasicenTlak($okolje->zunanjaT[$mesec]) * $okolje->zunanjaVlaga[$mesec] / 100 ?>}
-    ];
-
-    ////////////////////////////////////////////////////////
-    var dejanskiTlakTocke = [
-<?php
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, 0, $kons->dejanskiTlakSi[$mesec]);
-
-    foreach ($kons->materiali as $i => $material) {
-        foreach ($material->racunskiSloji as $k => $sloj) {
-            printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, $sloj->Sdn, $sloj->dejanskiTlak[$mesec]);
-        }
-    }
-
-    printf('{"x": %1$f, "y":%2$f},' . PHP_EOL, $kons->Sd, $kons->dejanskiTlakSe[$mesec]);
-?>
-    ];
-
-    new Chart(ctx2, {
-        "type": 'scatter',
-        "data": {
-            "datasets": [
-                { 
-                "label":"Nasičen Tlak",
-                "data": nasicenTlak,
-                "fill":false,
-                "borderColor":"rgb(75, 192, 192)",
-                showLine: true
-                },
-                {
-                    "label":"Dejanski Tlak",
-                    "data": dejanskiTlak,
-                    "showLine": true
-                },
-                {
-                    "label":"Dejanski Tlak Tocke",
-                    "data": dejanskiTlakTocke,
-                    "borderColor":"rgb(75, 50, 20)",
-                    "showLine": true
-                }
-            ]
-        },
-        "plugins": [{
-            beforeDraw: chart => {
-            var ctx = chart.ctx;
-            var xAxis = chart.scales.x;
-            var yAxis = chart.scales.y;
-
-            ctx.fillStyle = "lightgray";
-            ctx.rect(xAxis.getPixelForValue(nasicenTlak[1].x), yAxis.top, xAxis.getPixelForValue(nasicenTlak[nasicenTlak.length - 2].x) - xAxis.getPixelForValue(nasicenTlak[1].x), yAxis.bottom-yAxis.top);
-            ctx.fill();
-
-            nasicenTlak.forEach((value, index) => {
-                if (index > 0 && index < nasicenTlak.length - 1) {
-                    var x = xAxis.getPixelForValue(nasicenTlak[index].x);
-                    var yTop = yAxis.getPixelForValue(nasicenTlak[index].y);
-
-                    ctx.save();
-                    ctx.strokeStyle = '#404040';
-                    ctx.beginPath();
-                    ctx.moveTo(x, yAxis.bottom);
-                    ctx.lineTo(x, yAxis.top);
-                    ctx.stroke();
-                    ctx.restore();
-                }
-            });
-            }
-        }],
-        "options": {
-            "scales": {
-                x: {
-                    type: "linear",
-                    position: "bottom",
-                    min: -0.10,
-                    max: <?= $kons->Sd ?> + 0.1
-                }
-            },
-            "plugins": {
-                zoom: {
-                    zoom: {
-                        wheel: {
-                            enabled: true,
-                        },
-                        pinch: {
-                            enabled: true
-                        },
-                        mode: 'x',
-                    },
-                    pan: {
-                        enabled: true,
-                        mode: 'x',
-                    },
-                }
-            }
-        }
-    });
-</script>

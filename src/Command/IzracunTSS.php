@@ -79,28 +79,29 @@ class IzracunTSS extends Command
             foreach ($TSSSistemiOgrevanje as $sistem) {
                 $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
-                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
+                    throw new \Exception('TSS Ogrevanje: Cona ne obstaja.');
                 }
 
                 $sistemOgrevanja = SistemOgrevanjaFactory::create($sistem->vrsta, $sistem);
-                if ($sistemOgrevanja) {
-                    $sistemOgrevanja->analiza($cona, $okolje);
-
-                    $elektrikaPoConah[$sistemOgrevanja->idCone] = array_sum_values(
-                        $elektrikaPoConah[$sistemOgrevanja->idCone],
-                        $sistemOgrevanja->potrebnaElektricnaEnergija
-                    );
-                    $elektrikaPoConah[$sistemOgrevanja->idCone] =
-                        array_sum_values(
-                            $elektrikaPoConah[$sistemOgrevanja->idCone],
-                            array_subtract_values(
-                                $sistemOgrevanja->potrebnaEnergija,
-                                $sistemOgrevanja->obnovljivaEnergija
-                            )
-                        );
-
-                    $TSSSistemiOgrevanjeOut[] = $sistemOgrevanja->export();
+                if (!$sistemOgrevanja) {
+                    throw new \Exception(sprintf('TSS Ogrevanje: Sistem "%s" ne obstaja.', $sistem->id));
                 }
+                $sistemOgrevanja->analiza($cona, $okolje);
+
+                $elektrikaPoConah[$sistemOgrevanja->idCone] = array_sum_values(
+                    $elektrikaPoConah[$sistemOgrevanja->idCone],
+                    $sistemOgrevanja->potrebnaElektricnaEnergija
+                );
+                $elektrikaPoConah[$sistemOgrevanja->idCone] =
+                    array_sum_values(
+                        $elektrikaPoConah[$sistemOgrevanja->idCone],
+                        array_subtract_values(
+                            $sistemOgrevanja->potrebnaEnergija,
+                            $sistemOgrevanja->obnovljivaEnergija
+                        )
+                    );
+
+                $TSSSistemiOgrevanjeOut[] = $sistemOgrevanja->export();
             }
 
             App::saveProjectCalculation($projectId, 'TSS' . DS . 'ogrevanje', $TSSSistemiOgrevanjeOut);
