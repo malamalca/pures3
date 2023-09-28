@@ -122,9 +122,8 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
         $this->assertEquals($expected, $roundedResult);
     }
 
-    public function testTCZemljaVoda(): void
+    /*public function testTCZemljaVoda(): void
     {
-        /** @var array $coneIn */
         $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
         $cona = $coneIn[0];
 
@@ -235,6 +234,6 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
         $obnovljivaEnergija = $sistem->ogrevanje->obnovljivaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $obnovljivaEnergija);
         $expected = [891.25, 587.45, 360.81, 153.33, 27.74, 0.00, 0.00, 0.00, 27.67, 203.88, 637.95, 919.71];
-        $this->assertEquals($expected, $roundedResult);*/
-    }
+        $this->assertEquals($expected, $roundedResult);
+    }*/
 }

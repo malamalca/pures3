@@ -6,7 +6,7 @@ namespace App\Lib;
 use App\Core\Configure;
 use App\Core\Log;
 use App\Lib\SpanIterators\MonthlySpanIterator;
-use \Iterator;
+use Iterator;
 
 class CalcKonstrukcije
 {
@@ -626,7 +626,16 @@ class CalcKonstrukcije
                 $labelX = $gridLeft - $labelWidth - $labelMargin;
                 $labelY = $y + $fontSize / 2;
 
-                imagettftext($chart, $fontSize, 0, (int)$labelX, (int)$labelY, $labelColor, $font, strval($yGridLineValue));
+                imagettftext(
+                    $chart,
+                    $fontSize,
+                    0,
+                    (int)$labelX,
+                    (int)$labelY,
+                    $labelColor,
+                    $font,
+                    strval($yGridLineValue)
+                );
             }
         }
 
