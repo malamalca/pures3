@@ -5,6 +5,7 @@ namespace App\Calc\TSS\OgrevalniSistemi;
 
 use App\Calc\GF\Cone\Cona;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\ElektricnoOgrevalo;
+use App\Calc\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
 
 class NeposredniElektricniOgrevalniSistem extends OgrevalniSistem
@@ -101,5 +102,15 @@ class NeposredniElektricniOgrevalniSistem extends OgrevalniSistem
             // upoštevam še izkoristek sistema
             $this->potrebnaEnergija = array_map(fn($mesec) => $mesec / $this->izkoristek, $this->potrebnaEnergija);
         }
+
+        $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] =
+            array_sum($this->potrebnaEnergija);
+
+        $this->letnaUcinkovitostOgrHlaTsv =
+            $cona->skupnaEnergijaOgrevanje /
+            ($this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] *
+            TSSVrstaEnergenta::Elektrika->utezniFaktor('tot'));
+
+        $this->minLetnaUcinkovitostOgrHlaTsv = TSSVrstaEnergenta::Elektrika->minimalniIzkoristekOgrHlaTsv();
     }
 }

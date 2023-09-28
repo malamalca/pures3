@@ -95,7 +95,7 @@ class CentralniPrezracevalniSistem extends PrezracevalniSistem
         $ret->idCone = $this->idCone;
         $ret->razredH1H2 = $this->razredH1H2;
 
-        $ret->vrsta = 'naravno';
+        $ret->vrsta = $this->vrsta;
 
         $ret->faktorKrmiljenja = $this->krmiljenje->faktorSistemaKrmiljenja();
 

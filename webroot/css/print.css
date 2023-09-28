@@ -4,9 +4,25 @@
 
 #container {
     margin: auto;
-    width: 100%;
+    width: 90%;
 }
 
-p.actions {
+body {
+    width: 18cm !important;
+}
+
+h1 {
+    font-size: 22px;
+}
+
+td, th {
+    font-size: 13px;
+}
+
+table, tr, td, th, tbody, thead, tfoot {
+    page-break-inside: avoid !important;
+}
+
+.actions {
     display: none;
 }

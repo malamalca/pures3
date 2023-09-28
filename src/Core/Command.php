@@ -12,20 +12,6 @@ class Command
      */
     public function run()
     {
-        $logger = Log::getLogger();
-        $logger->pushProcessor(function ($entry) {
-            $msg = $entry['message'];
-            switch ($entry['level_name']) {
-                case 'ERROR':
-                    $entry['message'] = "\033[31m$msg \033[0m\n";
-                    break;
-                case 'WARNING': //warning
-                    $entry['message'] = "\033[33m$msg \033[0m\n";
-                    break;
-            }
-
-            return $entry;
-        });
     }
 
     /**

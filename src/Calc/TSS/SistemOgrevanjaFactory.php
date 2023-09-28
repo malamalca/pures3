@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS;
 
+use App\Calc\TSS\OgrevalniSistemi\LokalniOgrevalniSistemNaBiomaso;
 use App\Calc\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
 
 class SistemOgrevanjaFactory
@@ -18,6 +19,9 @@ class SistemOgrevanjaFactory
     {
         if ($type == 'toplovodni') {
             return new ToplovodniOgrevalniSistem($options);
+        }
+        if ($type == 'lokalniBiomasa') {
+            return new LokalniOgrevalniSistemNaBiomaso($options);
         }
 
         return null;

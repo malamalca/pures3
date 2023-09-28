@@ -15,8 +15,7 @@
     <link rel="stylesheet" media="print" href="<?= $this->url("/css/print.css") ?>" />
 </head>
 
-<body>
-<body translate="no" >
+<body translate="no">
   <div id="container">
       <?php include TEMPLATES . 'elements' . DS . 'header.php'; ?>
       <div id="content">
@@ -37,7 +36,7 @@
 			  </div>
 
         <div id="footer">
-          &copy; Pures 3 2023
+          &copy; <a href="https://github.com/malamalca/pures3">PHPures3</a> 2023
         </div>
       </div>
 		</div>

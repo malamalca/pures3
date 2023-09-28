@@ -36,14 +36,18 @@ class TransparentenElementOvoja extends ElementOvoja
         }
 
         /** @var \stdClass $config */
+        if (!empty($config->dolzinaStekla)) {
+            $config->visinaStekla = $config->dolzinaStekla;
+        }
+
         if (!empty($config->A) && !empty($config->B) && !empty($config->sirinaOkvirja)) {
             $config->sirinaStekla = $config->A - $config->sirinaOkvirja;
-            $config->dolzinaStekla = $config->B - $config->sirinaOkvirja;
+            $config->visinaStekla = $config->B - $config->sirinaOkvirja;
             $config->dolzinaOkvirja = 2 * $config->A + 2 * $config->B;
         }
 
-        if (empty($config->delezOkvirja) && !empty($config->dolzinaStekla) && !empty($config->sirinaStekla)) {
-            $this->delezOkvirja = 1 - ($config->sirinaStekla * $config->dolzinaStekla / $this->povrsina);
+        if (empty($config->delezOkvirja) && !empty($config->visinaStekla) && !empty($config->sirinaStekla)) {
+            $this->delezOkvirja = 1 - ($config->sirinaStekla * $config->visinaStekla / $this->povrsina);
         } else {
             $this->delezOkvirja = $config->delezOkvirja ?? 1;
         }
@@ -251,10 +255,6 @@ class TransparentenElementOvoja extends ElementOvoja
 
             $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol_ogrevanje - $Qsky) / 1000 * $this->stevilo;
             $this->solarniDobitkiHlajenje[$mesec] = ($Qsol_hlajenje - $Qsky) / 1000 * $this->stevilo;
-
-            if ($this->idKonstrukcije == 'O1') {
-                //var_dump( $g_sh_ogrevanje); die;
-            }
 
             // transmisijske izgube
             $this->transIzgubeOgrevanje[$mesec] = $this->H_ogrevanje * 24 / 1000 *

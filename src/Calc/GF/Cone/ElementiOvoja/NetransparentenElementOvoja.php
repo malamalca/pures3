@@ -5,6 +5,7 @@ namespace App\Calc\GF\Cone\ElementiOvoja;
 
 use App\Calc\GF\Cone\ElementiOvoja\Izbire\BarvaElementaOvoja;
 use App\Calc\GF\Cone\ElementiOvoja\Izbire\VrstaTal;
+use App\Core\Log;
 use App\Lib\Calc;
 use App\Lib\EvalMath;
 
@@ -45,6 +46,9 @@ class NetransparentenElementOvoja extends ElementOvoja
         $this->tla = VrstaTal::from($config->tla ?? 'pesek');
 
         $this->barva = BarvaElementaOvoja::from($config->barva ?? 'brez');
+        if (empty($config->barva) && $this->protiZraku) {
+            Log::warn(sprintf('Netransparenten element ovoja "%s" nima določene barve.', $this->idKonstrukcije));
+        }
 
         $obseg = $config->obseg ?? 0;
         if (gettype($obseg) == 'string') {

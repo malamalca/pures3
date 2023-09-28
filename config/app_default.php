@@ -17,7 +17,17 @@ return [
                 'className' => \Monolog\Formatter\LineFormatter::class,
                 'format' => "%message%\n",
             ],
-            'file' => /*'php://stderr', */LOGS . 'debug.log',
+            'file' => 'php://stderr', /*LOGS . 'debug.log',*/
+            'level' => \Monolog\Logger::INFO,
+            'cli' => true,
+        ],
+        'error' => [
+            'className' => \Monolog\Handler\StreamHandler::class,
+            'formatter' => [
+                'className' => \Monolog\Formatter\LineFormatter::class,
+                'format' => "%datetime% > %level_name% > %message% %context% %extra%\n%context.exception%\n",
+            ],
+            'file' => LOGS . 'error.log',
             'level' => \Monolog\Logger::ERROR,
         ],
     ],

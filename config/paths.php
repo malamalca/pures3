@@ -55,3 +55,8 @@ define('PROJECTS', ROOT . DS . 'projects' . DS);
  * Path to the schemas directory.
  */
 define('SCHEMAS', ROOT . DS . 'schemas' . DS);
+
+/**
+ * Path to the resources directory.
+ */
+define('RESOURCES', ROOT . DS . 'resources' . DS);

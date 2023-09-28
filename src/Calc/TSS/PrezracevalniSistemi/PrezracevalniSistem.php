@@ -7,6 +7,7 @@ abstract class PrezracevalniSistem
 {
     public string $id;
     public string $idCone;
+    public string $vrsta;
 
     public int $stevilo;
 
@@ -41,6 +42,7 @@ abstract class PrezracevalniSistem
 
         $this->id = $config->id;
         $this->idCone = $config->idCone;
+        $this->vrsta = $config->vrsta;
         $this->stevilo = $config->stevilo ?? 1;
     }
 
