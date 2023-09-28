@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\TSS\OgrevalniSistemi\Podsistemi;
 
-use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZemljaVoda;
+//use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZemljaVoda;
 use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZrakVoda;
 
 class GeneratorFactory
@@ -19,10 +19,10 @@ class GeneratorFactory
     {
         switch ($type) {
             case 'TC_zrakvoda':
-            //case 'TC_zrakvodaSTV':
-            //    return new ToplotnaCrpalkaZrakVoda($options);
-            case 'TC_zemljavoda':
-                return new ToplotnaCrpalkaZemljaVoda($options);
+            case 'TC_zrakvodaSTV':
+                return new ToplotnaCrpalkaZrakVoda($options);
+            //case 'TC_zemljavoda':
+            //    return new ToplotnaCrpalkaZemljaVoda($options);
             default:
                 throw new \Exception(sprintf('Generator : Vrsta "%s" ne obstaja', $type));
         }
