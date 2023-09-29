@@ -88,7 +88,6 @@ class IzracunTSS extends Command
                     throw new \Exception(sprintf('TSS Ogrevanje: Sistem "%s" ne obstaja.', $sistem->id));
                 }
 
-
                 $sistemOgrevanja->vracljiveIzgubeVOgrevanje = $vracljiveIzgubeVOgrevanje;
                 $sistemOgrevanja->analiza($cona, $okolje);
 

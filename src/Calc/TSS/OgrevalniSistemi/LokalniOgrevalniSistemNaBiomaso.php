@@ -10,7 +10,7 @@ use App\Lib\Calc;
 
 class LokalniOgrevalniSistemNaBiomaso extends OgrevalniSistem
 {
-    private const STEVILO_ITERACIJ = 1;
+    private const STEVILO_ITERACIJ = 0;
 
     public float $nazivnaMoc;
     public float $izkoristek;
