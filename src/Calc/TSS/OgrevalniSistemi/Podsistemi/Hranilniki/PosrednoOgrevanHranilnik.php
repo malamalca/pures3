@@ -8,7 +8,7 @@ use App\Lib\Calc;
 class PosrednoOgrevanHranilnik extends Hranilnik
 {
     public bool $istiProstorKotGrelnik;
-    public bool $vOgrevanemProstoru;
+    public bool $znotrajOvoja;
 
     /**
      * Class Constructor
@@ -38,7 +38,7 @@ class PosrednoOgrevanHranilnik extends Hranilnik
         }
 
         $this->istiProstorKotGrelnik = !empty($config->istiProstorKotGrelnik);
-        $this->vOgrevanemProstoru = !empty($config->vOgrevanemProstoru);
+        $this->znotrajOvoja = !empty($config->znotrajOvoja);
     }
 
     /**
@@ -74,7 +74,7 @@ class PosrednoOgrevanHranilnik extends Hranilnik
         // se prištejejo enačbi 122.
         $f_povezava = $this->istiProstorKotGrelnik ? 1.2 : 1;
 
-        $temperaturaOkolice = $this->vOgrevanemProstoru ? $cona->notranjaTOgrevanje : 13;
+        $temperaturaOkolice = $this->znotrajOvoja ? $cona->notranjaTOgrevanje : 13;
 
         // q w,s,l - dnevne toplotne izgube hranilnika v stanju obratovalne pripravljenosti [kWh]. Podatek
         // proizvajalca ali enačba 123a ali 123b.

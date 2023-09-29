@@ -68,7 +68,7 @@ final class ToplovodniOgrevalniSistemSamoTSV extends TestCase
                     "vrsta": "posrednoOgrevan",
                     "volumen": 250,
                     "istiProstorKotGrelnik": true,
-                    "vOgrevanemProstoru": true
+                    "znotrajOvoja": true
                 }
             ]
         }

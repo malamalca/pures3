@@ -76,6 +76,7 @@ class IzracunTSS extends Command
         $TSSSistemiOgrevanje = App::loadProjectData($projectId, 'TSS' . DS . 'ogrevanje') ?? [];
         if (count($TSSSistemiOgrevanje) > 0) {
             $TSSSistemiOgrevanjeOut = [];
+            $vracljiveIzgubeVOgrevanje = [];
             foreach ($TSSSistemiOgrevanje as $sistem) {
                 $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
@@ -86,7 +87,12 @@ class IzracunTSS extends Command
                 if (!$sistemOgrevanja) {
                     throw new \Exception(sprintf('TSS Ogrevanje: Sistem "%s" ne obstaja.', $sistem->id));
                 }
+
+
+                $sistemOgrevanja->vracljiveIzgubeVOgrevanje = $vracljiveIzgubeVOgrevanje;
                 $sistemOgrevanja->analiza($cona, $okolje);
+
+                $vracljiveIzgubeVOgrevanje = $sistemOgrevanja->vracljiveIzgubeVOgrevanje;
 
                 $elektrikaPoConah[$sistemOgrevanja->idCone] = array_sum_values(
                     $elektrikaPoConah[$sistemOgrevanja->idCone],

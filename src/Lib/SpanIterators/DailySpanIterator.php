@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Lib\SpanIterators;
 
+/**
+ * @template-implements \Iterator<int>
+ */
 class DailySpanIterator implements \Iterator
 {
     private array $months = [0];

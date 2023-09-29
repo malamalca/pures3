@@ -70,13 +70,13 @@ class LokalniOgrevalniSistemNaBiomaso extends OgrevalniSistem
      */
     public function analiza($cona, $okolje)
     {
-        $vracljiveIzgube = [];
+        $vracljiveIzgube = $this->vracljiveIzgubeVOgrevanje;
 
         // iteracija za vračljive izgube
         for ($i = 0; $i <= self::STEVILO_ITERACIJ; $i++) {
             // ponovno poračunam potrebno energijo za ogrevanje
             $spremembaCone = new Cona(null, $cona);
-            //$spremembaCone->vracljiveIzgube = $vracljiveIzgube;
+            $spremembaCone->vracljiveIzgube = $vracljiveIzgube;
             $spremembaCone->izracunFaktorjaIzkoristka();
             $spremembaCone->izracunEnergijeOgrevanjeHlajanje();
             $cona = $spremembaCone->export();

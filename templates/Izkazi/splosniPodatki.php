@@ -82,17 +82,19 @@
     <?php
         foreach ($sistemi as $slug => $naziv) {
             $energenti = '';
-            if ($slug == 'ogrevanje') {
-                $energenti = 'elektrika, okolje';
-            }
-            if ($slug == 'razsvetljava') {
-                $energenti = 'elektrika';
-            }
-            if ($slug == 'razsvetljava') {
-                $energenti = 'elektrika';
-            }
-            if ($slug == 'fotovoltaika') {
-                $energenti = 'sončna energija';
+            if (in_array($slug, $vgrajeniSistemi)) {
+                if ($slug == 'ogrevanje') {
+                    $energenti = 'elektrika, okolje';
+                }
+                if ($slug == 'razsvetljava') {
+                    $energenti = 'elektrika';
+                }
+                if ($slug == 'razsvetljava') {
+                    $energenti = 'elektrika';
+                }
+                if ($slug == 'fotovoltaika') {
+                    $energenti = 'sončna energija';
+                }
             }
     ?>
     <tr>

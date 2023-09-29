@@ -43,6 +43,9 @@ abstract class OgrevalniSistem
 
     public array $energijaPoEnergentih = [];
 
+    // array namenjen da se vnaša vračljiva energija iz drugih sistemov
+    public array $vracljiveIzgubeVOgrevanje = [];
+
     public float $letnaUcinkovitostOgrHlaTsv = 0;
     public float $minLetnaUcinkovitostOgrHlaTsv = 0;
 

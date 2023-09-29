@@ -75,7 +75,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         $this->tsv->potrebnaEnergija = $cona->energijaTSV;
         $this->tsv->potrebnaElektricnaEnergija = [];
         $this->tsv->obnovljivaEnergija = [];
-        $this->tsv->vracljiveIzgubeVOgrevanje = [];
+        $this->vracljiveIzgubeVOgrevanje = [];
         $this->tsv->vneseneIzgube = [];
 
         if (isset($this->tsv->razvodi)) {
@@ -91,12 +91,11 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 $this->tsv->potrebnaElektricnaEnergija =
                     array_sum_values($this->tsv->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
 
-                $this->tsv->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
-                $this->tsv->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
+                $this->vracljiveIzgubeVOgrevanje =
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
+                $this->vracljiveIzgubeVOgrevanje =
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
 
-                // TODO: vračljive izgube v sistem morajo imeti svoj property v classu
                 $this->tsv->potrebnaEnergija =
                     array_subtract_values($this->tsv->potrebnaEnergija, $razvod->vracljiveIzgubeAux);
             }
@@ -113,8 +112,8 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
                 $this->tsv->potrebnaEnergija =
                     array_sum_values($this->tsv->potrebnaEnergija, $hranilnik->toplotneIzgube);
-                $this->tsv->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->tsv->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
+                $this->vracljiveIzgubeVOgrevanje =
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
             }
         }
 
@@ -148,7 +147,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
      */
     public function analizaOgrevanja($cona, $okolje)
     {
-        $vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje ?? [];
+        $vracljiveIzgube = $this->vracljiveIzgubeVOgrevanje;
 
         // iteracija za vračljive izgube
         for ($i = 0; $i < self::STEVILO_ITERACIJ; $i++) {
@@ -160,7 +159,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             $cona = $spremembaCone->export();
             $this->init($cona, $okolje);
 
-            $vracljiveIzgube = $this->tsv->vracljiveIzgubeVOgrevanje ?? [];
+            $vracljiveIzgube = $this->vracljiveIzgubeVOgrevanje;
 
             $this->ogrevanje->potrebnaEnergija = $cona->energijaOgrevanje;
             $this->ogrevanje->potrebnaElektricnaEnergija = [];

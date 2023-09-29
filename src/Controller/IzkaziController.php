@@ -56,28 +56,4 @@ class IzkaziController
         App::set('sistemiRazsvetljave', App::loadProjectCalculation($projectId, 'TSS' . DS . 'razsvetljava'));
         App::set('sistemiPrezracevanja', App::loadProjectCalculation($projectId, 'TSS' . DS . 'prezracevanje'));
     }
-
-    /**
-     * Display graph
-     *
-     * @return void
-     */
-    public function graf()
-    {
-        //$compareWithKI = true;
-        $primerFilename = 'TSG004.php';
-        //$primerFilename = 'ISO13788_C2.php';
-        //$primerFilename = 'KondVConi.php';
-
-        $konstrukcijaJson = '{}';
-        $okolje = new \stdClass();
-        require dirname(__FILE__) . DS . 'primeri' . DS . $primerFilename;
-
-        $konstrukcija = json_decode($konstrukcijaJson);
-
-        $kons = \App\Lib\CalcKonstrukcije::konstrukcija($konstrukcija, $okolje, ['izracunKondenzacije' => true]);
-
-        App::set('kons', $kons);
-        App::set('okolje', $okolje);
-    }
 }

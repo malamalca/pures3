@@ -88,6 +88,5 @@ class KonstrukcijeController
 
         header('Content-Type: image/png');
         echo $png;
-        die;
     }
 }

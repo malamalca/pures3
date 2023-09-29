@@ -1,8 +1,9 @@
 parameters:
-    level: 5
+    level: 7
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
     bootstrapFiles:
         - config/paths.php
         - config/funcs.php
     excludePaths:
+        - src/Calc/TSS/OgrevalniSistemi/Podsistemi/Generatorji/ToplotnaCrpalkaZemljaVoda.php

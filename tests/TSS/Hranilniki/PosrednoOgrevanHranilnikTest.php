@@ -17,7 +17,7 @@ final class PosrednoOgrevanHranilnikTest extends TestCase
             "vrsta": "posrednoogrevan",
             "volumen": 250,
             "istiProstorKotGrelnik": true,
-            "vOgrevanemProstoru": true
+            "znotrajOvoja": true
         }
         EOT;
 
