@@ -93,7 +93,7 @@ class NetransparentenElementOvoja extends ElementOvoja
             if (empty($this->soncnoObsevanje)) {
                 throw new \Exception(sprintf('Sončno obsevanje za element %s ne obstaja', $this->opis));
             }
-            
+
             $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
             $this->H_hlajenje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
         }
@@ -199,8 +199,8 @@ class NetransparentenElementOvoja extends ElementOvoja
             // za tla z obodno izolacijo
             if (
                 (!empty($this->dodatnaIzolacija) && $this->dodatnaIzolacija->tip == 'horizontalna') ||
-                !empty($this->obodniPsi))
-            {
+                !empty($this->obodniPsi)
+            ) {
                 $this->U = $U0 + 2 * $this->obodniPsi / $B;
             } else {
                 $this->U = $U0;
