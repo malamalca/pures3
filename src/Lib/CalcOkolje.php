@@ -63,13 +63,7 @@ class CalcOkolje
     {
         $ret = [];
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            if ($temperatura[$mesec] < 0) {
-                $ret[$mesec] = 610.5 * pow(M_E, 21.875 * $temperatura[$mesec] / (265.5 + $temperatura[$mesec]));
-            } else {
-                $ret[$mesec] = 610.5 * pow(M_E, 17.269 * $temperatura[$mesec] / (237.3 + $temperatura[$mesec]));
-            }
-
-            $ret[$mesec] = $ret[$mesec] * $vlaga[$mesec] / 100;
+            $ret[$mesec] = Calc::nasicenTlak($temperatura[$mesec]) * $vlaga[$mesec] / 100;
         }
 
         return $ret;

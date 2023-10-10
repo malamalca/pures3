@@ -22,8 +22,8 @@ class NetransparentenElementOvoja extends ElementOvoja
     public float $obodniPsi = 0;
     public float $vertPsi = 0;
 
-    private float $Lpi = 0;
-    private float $Lpe = 0;
+    public float $Lpi = 0;
+    public float $Lpe = 0;
 
     private ?\stdClass $dodatnaIzolacija;
 
@@ -42,7 +42,7 @@ class NetransparentenElementOvoja extends ElementOvoja
 
         $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
 
-        $this->protiZraku = $this->konstrukcija->TSG->tip == 'zunanja';
+        $this->protiZraku = (bool)($config->protiZraku ?? $this->konstrukcija->TSG->tip == 'zunanja');
         $this->tla = VrstaTal::from($config->tla ?? 'pesek');
 
         $this->barva = BarvaElementaOvoja::from($config->barva ?? 'brez');
@@ -79,21 +79,21 @@ class NetransparentenElementOvoja extends ElementOvoja
             ($this->konstrukcija->ogrRazvodT - $okolje->projektnaZunanjaT) /
             ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
 
-        // faktor sončnega sevanja
-        foreach ($okolje->obsevanje as $line) {
-            if ($line->orientacija == $this->orientacija && $line->naklon == $this->naklon) {
-                $this->soncnoObsevanje = $line->obsevanje;
-                break;
-            }
-        }
-        if (empty($this->soncnoObsevanje)) {
-            throw new \Exception(sprintf('Sončno obsevanje za element %s ne obstaja', $this->opis));
-        }
-
         // napolni podatke o vplivu zemljine
         if ($this->konstrukcija->TSG->tip != 'zunanja') {
             $this->vplivZemljine();
         } else {
+            // faktor sončnega sevanja
+            foreach ($okolje->obsevanje as $line) {
+                if ($line->orientacija == $this->orientacija && $line->naklon == $this->naklon) {
+                    $this->soncnoObsevanje = $line->obsevanje;
+                    break;
+                }
+            }
+            if (empty($this->soncnoObsevanje)) {
+                throw new \Exception(sprintf('Sončno obsevanje za element %s ne obstaja', $this->opis));
+            }
+            
             $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
             $this->H_hlajenje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
         }
@@ -149,13 +149,11 @@ class NetransparentenElementOvoja extends ElementOvoja
         }
 
         if ($this->konstrukcija->TSG->tip != 'zunanja') {
-            $this->H_ogrevanje = $this->H_ogrevanje /
-                $temperature['stMesecevOgrevanja'] / ($temperature['povprecnaTOgrevanja'] -
-                $okolje->povprecnaLetnaTemp);
+            $this->H_ogrevanje = $this->H_ogrevanje / $temperature['stMesecevOgrevanja'] /
+                ($temperature['povprecnaTOgrevanja'] - $okolje->povprecnaLetnaTemp);
 
-            $this->H_hlajenje = $this->H_hlajenje /
-                (12 - $temperature['stMesecevOgrevanja']) / ($temperature['povprecnaTHlajenja'] -
-                $okolje->povprecnaLetnaTemp);
+            $this->H_hlajenje = $this->H_hlajenje / (12 - $temperature['stMesecevOgrevanja']) /
+                ($temperature['povprecnaTHlajenja'] - $okolje->povprecnaLetnaTemp);
         }
     }
 
@@ -199,7 +197,10 @@ class NetransparentenElementOvoja extends ElementOvoja
             }
 
             // za tla z obodno izolacijo
-            if (!empty($this->dodatnaIzolacija) && $this->dodatnaIzolacija->tip == 'horizontalna') {
+            if (
+                (!empty($this->dodatnaIzolacija) && $this->dodatnaIzolacija->tip == 'horizontalna') ||
+                !empty($this->obodniPsi))
+            {
                 $this->U = $U0 + 2 * $this->obodniPsi / $B;
             } else {
                 $this->U = $U0;
@@ -286,7 +287,7 @@ class NetransparentenElementOvoja extends ElementOvoja
 
         $povprecnaTHlajenja = $povprecnaTHlajenja / (12 - $stMesecevOgrevanja);
         $povprecnaTOgrevanja = $povprecnaTOgrevanja / $stMesecevOgrevanja;
-        $povprecnaNotranjaT = ($povprecnaTOgrevanja + $cona->notranjaTHlajenje) / 2;
+        $povprecnaNotranjaT = ($povprecnaTOgrevanja + $povprecnaTHlajenja) / 2;
 
         return ['notranjaT' => $notranjaT, 'zunanjaT' => $zunanjaT, 'povprecnaTHlajenja' => $povprecnaTHlajenja,
             'povprecnaTOgrevanja' => $povprecnaTOgrevanja, 'povprecnaNotranjaT' => $povprecnaNotranjaT,

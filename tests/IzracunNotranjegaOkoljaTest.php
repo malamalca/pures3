@@ -5,14 +5,6 @@ use PHPUnit\Framework\TestCase;
 
 class IzracunNotranjegaOkoljaTest extends TestCase
 {
-    /**
-     * @inheritDoc
-     */
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
-
     public function testValidacijaTSG(): void
     {
         $inputZunanjaT = [-1, 1, 6, 10, 15, 18, 20, 19, 15, 10, 4, 1];
