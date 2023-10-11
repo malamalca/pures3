@@ -42,6 +42,14 @@ class CalcKonstrukcije
             }
         }
 
+        if (!empty($options['referencnaStavba'])) {
+            $referencnaKons = Configure::read('lookups.referencneKonstrukcije.' . $kons->TSG->idReferencneKonstrukcije);
+            if (empty($referencnaKons)) {
+                Log::error(sprintf('Referenčna konstrukcija "%s" ne obstaja.', $kons->vrsta));
+            }
+            $kons->materiali = $referencnaKons->materiali;
+        }
+
         // 8.1.1. TSG stran 58
         $totalR = $kons->Rsi + $kons->Rse;
         $totalSd = 0;
@@ -72,7 +80,7 @@ class CalcKonstrukcije
             }
             $totalR += $material->R;
 
-            $material->Sd = $material->Sd ?? $material->debelina * $material->difuzijskaUpornost;
+            $material->Sd = $material->Sd ?? $material->debelina * ($material->difuzijskaUpornost ?? 0);
             $totalSd += $material->Sd;
         }
         $kons->U = 1 / $totalR;
@@ -141,14 +149,15 @@ class CalcKonstrukcije
 
             foreach (self::$spanIterator as $mesec) {
                 $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
-                $material->T[$mesec] =
-                    $okolje->notranjaT[$mesec] - $Rt * $toplotniTok;
+                $material->T[$mesec] = $okolje->notranjaT[$mesec] - $Rt * $toplotniTok;
             }
         }
 
         if (
             !isset($kons->TSG->kontrolaKond) ||
             $kons->TSG->kontrolaKond !== false ||
+            !isset($options['referencnaStavba']) ||
+            !$options['referencnaStavba'] ||
             !empty($options['izracunKondenzacije'])
         ) {
             self::izracunKondenzacije($kons);

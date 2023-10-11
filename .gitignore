@@ -6,6 +6,7 @@
 /resources/*
 /projects/*
 !/projects/TestniProjekt
+!/projects/TestniProjekt2
 /vendor/*
 /.phpunit.cache/*
 

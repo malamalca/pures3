@@ -20,6 +20,9 @@ class IzracunKonstrukcij extends Command
     {
         parent::run();
 
+        /** @var \stdClass $splosniPodatki */
+        $splosniPodatki = App::loadProjectData($projectId, 'splosniPodatki');
+
         /** @var \stdClass $okolje */
         $okolje = App::loadProjectCalculation($projectId, 'okolje');
 
@@ -39,16 +42,25 @@ class IzracunKonstrukcij extends Command
                 return;
             }
 
+            /** Knjižnica predefiniranih konstrukcij */
             $libraryArray = json_decode((string)file_get_contents(CONFIG . 'TSGKonstrukcije.json'));
             foreach ($libraryArray as $item) {
                 CalcKonstrukcije::$library[$item->sifra] = $item;
             }
 
+            /** Konstrukcije stavbe */
             $netransparentneKonsOut = [];
             foreach ($netransparentneKonstrukcije as $konstrukcija) {
                 $netransparentneKonsOut[] = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
             }
             App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne', $netransparentneKonsOut);
+
+            /** Konstrukcije referenčne stavbe */
+            $netransparentneKonsOut = [];
+            foreach ($netransparentneKonstrukcije as $konstrukcija) {
+                $netransparentneKonsOut[] = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje, ['referencnaStavba' => true]);
+            }
+            App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne_ref', $netransparentneKonsOut);
         }
 
         /** @var array $transparentneKonstrukcije */

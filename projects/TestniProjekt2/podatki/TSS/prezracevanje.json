@@ -1,0 +1,16 @@
+[
+    {
+        "id": "Prezracevanje",
+        "idCone": "Cona1",
+        "vrsta": "centralni",
+        "razredH1H2": true,
+        "mocSenzorjev": 1,
+        "odvod": {
+            "filter": "hepa"
+        },
+        "dovod": {
+            "filter": "hepa"
+        },
+        "volumenProjekt": 200
+    }
+]

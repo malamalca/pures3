@@ -2,6 +2,7 @@
 
 $lookups = [];
 $lookups['konstrukcije'] = json_decode(file_get_contents(dirname(__FILE__) . DS . 'lookupKonstrukcije.json'));
+$lookups['referencneKonstrukcije'] = json_decode(file_get_contents(dirname(__FILE__) . DS . 'lookupReferencneKonstrukcije.json'));
 $lookups['transparentneKonstrukcije'] = json_decode(file_get_contents(dirname(__FILE__) . DS . 'lookupTransparentneKonstrukcije.json'));
 $lookups['transparentne']['pomozniFaktorji']['nadstresek'] = [
     'A1' => ['J' => -3.020, 'JV' => -1.260, 'JZ' => -1.260, 'V'=> -0.684, 'Z' => -0.684, 'SV' => -0.654, 'SZ' => -0.654, 'S' => -0.726],

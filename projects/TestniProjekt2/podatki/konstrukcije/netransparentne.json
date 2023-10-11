@@ -1,0 +1,110 @@
+[
+    {
+        "id": "Z1",
+        "naziv": "Fasadni Zid",
+        "vrsta": 0,
+        "Rsi": 0.13,
+        "Rse": 0.04,
+        "materiali": [
+            {
+                "opis": "Zid",
+                "debelina": 0.25,
+                "lambda": 0.61,
+                "gostota": 1400,
+                "specificnaToplota": 920,
+                "difuzijskaUpornost": 6
+            },
+            {
+                "opis": "EPS Grafit",
+                "debelina": 0.20,
+                "lambda": 0.031,
+                "gostota": 15,
+                "specificnaToplota": 1260,
+                "difuzijskaUpornost": 25
+            },
+            {
+                "opis": "Fasada",
+                "debelina": 0.01,
+                "lambda": 0.7,
+                "gostota": 1850,
+                "specificnaToplota": 1050,
+                "difuzijskaUpornost": 15
+            }
+        ]
+    },
+    {
+        "id": "Tp1",
+        "naziv": "Temeljna plošča",
+        "vrsta": 12,
+        "Rsi": 0,
+        "Rse": 0.04,
+        "ogrRazvodT": 30,
+        "materiali": [
+            {
+                "opis": "Les",
+                "debelina": 0.01,
+                "lambda": 0.21,
+                "gostota": 800,
+                "specificnaToplota": 2510,
+                "difuzijskaUpornost": 60
+            },
+            {
+                "opis": "Estrih",
+                "debelina": 0.05,
+                "lambda": 0.93,
+                "gostota": 1800,
+                "specificnaToplota": 960,
+                "difuzijskaUpornost": 15
+            },
+            {
+                "opis": "EPS 100",
+                "debelina": 0.08,
+                "lambda": 0.039,
+                "gostota": 15,
+                "specificnaToplota": 1260,
+                "difuzijskaUpornost": 25
+            },
+            {
+                "opis": "Beton",
+                "debelina": 0.3,
+                "lambda": 2.04,
+                "gostota": 2400,
+                "specificnaToplota": 960,
+                "difuzijskaUpornost": 60
+            },
+            {
+                "opis": "XPS",
+                "debelina": 0.12,
+                "lambda": 0.038,
+                "gostota": 33,
+                "specificnaToplota": 1500,
+                "difuzijskaUpornost": 120
+            }
+        ]
+    },
+    {
+        "id": "Ts1",
+        "naziv": "Strop",
+        "vrsta": 15,
+        "Rsi": 0.1,
+        "Rse": 0.04,
+        "materiali": [
+            {
+                "opis": "Beton",
+                "debelina": 0.15,
+                "lambda": 2.04,
+                "gostota": 2400,
+                "specificnaToplota": 960,
+                "difuzijskaUpornost": 60
+            },
+            {
+                "opis": "Steklena volna",
+                "debelina": 0.3,
+                "lambda": 0.034,
+                "gostota": 23,
+                "specificnaToplota": 1030,
+                "difuzijskaUpornost": 1
+            }
+        ]
+    }
+]

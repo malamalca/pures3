@@ -1,0 +1,8 @@
+[
+    {
+        "id": "Razsvetljava",
+        "idCone": "Cona1",
+        "faktorDnevneSvetlobe": 0.05,
+        "mocSvetilk": 4
+    }
+]

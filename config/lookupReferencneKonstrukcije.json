@@ -1,0 +1,65 @@
+[
+    {
+        "id": 0,
+        "opis": "Zunanji zid (i/e)",
+        "materiali": [
+            {"opis": "beton", "debelina": 0.20, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 960},
+            {"opis": "toplotna izolacija", "debelina": 0.18, "lambda": 0.04, "gostota": 50, "specificnaToplota": 840},
+            {"opis": "zaključni sloj", "debelina": 0.02, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 1050}
+        ]
+    },
+    {
+        "id": 1,
+        "opis": "Tla proti zraku (i/e)",
+        "materiali": [
+            {"opis": "beton", "debelina": 0.20, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 960},
+            {"opis": "toplotna izolacija", "debelina": 0.12, "lambda": 0.04, "gostota": 50, "specificnaToplota": 840},
+            {"opis": "zaključni sloj", "debelina": 0.02, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 1050}
+        ]
+    },
+    {
+        "id": 2,
+        "opis": "Tla, stene v stiku z zemljino",
+        "materiali": [
+            {"opis": "beton", "debelina": 0.20, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 960},
+            {"opis": "toplotna izolacija", "debelina": 0.1, "lambda": 0.04, "gostota": 50, "specificnaToplota": 840},
+            {"opis": "hidroizolacija", "debelina": 0.01, "lambda": 0.17, "gostota": 1400, "specificnaToplota": 1050}
+        ]
+    },
+    {
+        "id": 3,
+        "opis": "Strehe (i/e)",
+        "materiali": [
+            {"opis": "beton", "debelina": 0.15, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 960},
+            {"opis": "toplotna izolacija", "debelina": 0.21, "lambda": 0.04, "gostota": 50, "specificnaToplota": 840}
+        ]
+    },
+    {
+        "id": 4,
+        "opis": "Notranji zidovi proti neogrevani coni (i/e)",
+        "materiali": [
+            {"opis": "beton", "debelina": 0.1, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 960},
+            {"opis": "toplotna izolacija", "debelina": 0.13, "lambda": 0.04, "gostota": 50, "specificnaToplota": 840},
+            {"opis": "zaključni sloj", "debelina": 0.02, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 1050}
+        ]
+    },
+    {
+        "id": 5,
+        "opis": "Notranji zidovi v coni (i/e)",
+        "materiali": [
+            {"opis": "beton", "debelina": 0.1, "lambda": 1.5, "gostota": 2200, "specificnaToplota": 960},
+            {"opis": "toplotna izolacija", "debelina": 0.03, "lambda": 0.04, "gostota": 50, "specificnaToplota": 840},
+            {"opis": "mavčne plošče", "debelina": 0.015, "lambda": 1.2, "gostota": 900, "specificnaToplota": 840}
+        ]
+    },
+    {
+        "id": 6,
+        "opis": "Okno",
+        "lastnosti": {"Uw": 1, "g": 0.5}
+    },
+    {
+        "id": 7,
+        "opis": "Vrata",
+        "lastnosti": {"Ud": 1}
+    }
+]
