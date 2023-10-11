@@ -56,11 +56,18 @@ class IzracunKonstrukcij extends Command
             App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne', $netransparentneKonsOut);
 
             /** Konstrukcije referenčne stavbe */
-            $netransparentneKonsOut = [];
-            foreach ($netransparentneKonstrukcije as $konstrukcija) {
-                $netransparentneKonsOut[] = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje, ['referencnaStavba' => true]);
+            if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
+                $netransparentneKonsOut = [];
+                foreach ($netransparentneKonstrukcije as $konstrukcija) {
+                    $netransparentneKonsOut[] =
+                        CalcKonstrukcije::konstrukcija($konstrukcija, $okolje, ['referencnaStavba' => true]);
+                }
+                App::saveProjectCalculation(
+                    $projectId,
+                    'konstrukcije' . DS . 'netransparentne_ref',
+                    $netransparentneKonsOut
+                );
             }
-            App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne_ref', $netransparentneKonsOut);
         }
 
         /** @var array $transparentneKonstrukcije */
@@ -79,12 +86,26 @@ class IzracunKonstrukcij extends Command
                 return;
             }
 
+            /** Konstrukcije stavbe */
             $transparentneKonsOut = [];
             foreach ($transparentneKonstrukcije as $konstrukcija) {
                 $transparentneKonsOut[] = CalcKonstrukcije::transparentne($konstrukcija, $okolje);
             }
-
             App::saveProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne', $transparentneKonsOut);
+
+            /** Konstrukcije referenčne stavbe */
+            if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
+                $transparentneKonsOut = [];
+                foreach ($transparentneKonstrukcije as $konstrukcija) {
+                    $transparentneKonsOut[] =
+                        CalcKonstrukcije::transparentne($konstrukcija, $okolje, ['referencnaStavba' => true]);
+                }
+                App::saveProjectCalculation(
+                    $projectId,
+                    'konstrukcije' . DS . 'transparentne_ref',
+                    $transparentneKonsOut
+                );
+            }
         }
     }
 }

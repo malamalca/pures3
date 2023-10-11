@@ -15,6 +15,8 @@ class Cona
     public string $id;
     public string $naziv;
     public string $klasifikacija;
+    public bool $referencnaStavba = false;
+
     public float $brutoProstornina = 0;
     public float $netoProstornina = 0;
     public float $ogrevanaPovrsina = 0;
@@ -103,10 +105,12 @@ class Cona
      *
      * @param \stdClass|null $konstrukcije Seznam konstrukcij
      * @param \stdClass|string $config Configuration
+     * @param array $options Možnosti izračuna
      * @return void
      */
-    public function __construct($konstrukcije = null, $config = null)
+    public function __construct($konstrukcije = null, $config = null, $options = [])
     {
+        $this->referencnaStavba = empty($options['referencnaStavba']);
         if ($konstrukcije) {
             $this->konstrukcije = $konstrukcije;
         } else {

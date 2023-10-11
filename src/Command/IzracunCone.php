@@ -20,6 +20,9 @@ class IzracunCone extends Command
     {
         parent::run();
 
+        /** @var \stdClass $splosniPodatki */
+        $splosniPodatki = App::loadProjectData($projectId, 'splosniPodatki');
+
         /** @var \stdClass $okolje */
         $okolje = App::loadProjectCalculation($projectId, 'okolje');
 
@@ -57,5 +60,20 @@ class IzracunCone extends Command
         }
 
         App::saveProjectCalculation($projectId, 'cone', $coneOut);
+
+        if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
+            $referencneKonstrukcije = new \stdClass();
+            $referencneKonstrukcije->netransparentne =
+                App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'netransparentne_ref');
+            $referencneKonstrukcije->transparentne =
+                App::loadProjectCalculation($projectId, 'konstrukcije' . DS . 'transparentne_ref');
+
+            $coneOut = [];
+            foreach ($coneIn as $conaConfig) {
+                $cona = new Cona($referencneKonstrukcije, $conaConfig, ['referencnaStavba' => true]);
+                $cona->analiza($okolje);
+                $coneOut[] = $cona->export();
+            }
+        }
     }
 }

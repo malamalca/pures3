@@ -101,7 +101,6 @@ class CalcKonstrukcije
         }
 
         $Rt = $kons->Rsi;
-        $Sdt = 0;
         foreach ($kons->materiali as $material) {
             // določitev računskih slojev - sloj se razdeli, če je lambda < 0.25 W/mK
             $material->racunskiSloji = [];
@@ -122,14 +121,6 @@ class CalcKonstrukcije
 
                 $sloj->Rn = $Rt;
 
-                if (isset($material->Sd)) {
-                    $sloj->Sd = $material->Sd / $steviloRacunskihSlojev;
-                } else {
-                    $sloj->Sd = $sloj->debelina * $sloj->difuzijskaUpornost;
-                }
-                $Sdt += $sloj->Sd;
-                $sloj->Sdn = $Sdt;
-
                 $material->racunskiSloji[] = $sloj;
             }
             // konec določitve računskih slojev
@@ -138,12 +129,6 @@ class CalcKonstrukcije
                 foreach (self::$spanIterator as $mesec) {
                     $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
                     $sloj->T[$mesec] = $okolje->notranjaT[$mesec] - $sloj->Rn * $toplotniTok;
-
-                    $deltaDejanskegaTlaka = $kons->dejanskiTlakSi[$mesec] - $kons->dejanskiTlakSe[$mesec];
-
-                    $sloj->nasicenTlak[$mesec] = Calc::nasicenTlak($sloj->T[$mesec]);
-                    $sloj->dejanskiTlak[$mesec] = $kons->dejanskiTlakSi[$mesec] -
-                        $deltaDejanskegaTlaka * $sloj->Sdn / $kons->Sd;
                 }
             }
 
@@ -153,16 +138,35 @@ class CalcKonstrukcije
             }
         }
 
-        if (
-            !isset($kons->TSG->kontrolaKond) ||
-            $kons->TSG->kontrolaKond !== false ||
-            !isset($options['referencnaStavba']) ||
-            !$options['referencnaStavba'] ||
-            !empty($options['izracunKondenzacije'])
-        ) {
+        $izracunKondentacije = !isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false;
+        $izracunKondentacije = !isset($options['referencnaStavba']) || !$options['referencnaStavba'];
+        $izracunKondentacije = $izracunKondentacije || !empty($options['izracunKondenzacije']);
+
+        if ($izracunKondentacije) {
+            $Sdt = 0;
+            foreach ($kons->materiali as $material) {
+                foreach ($material->racunskiSloji as $sloj) {
+                    if (isset($material->Sd)) {
+                        $sloj->Sd = $material->Sd / count($material->racunskiSloji);
+                    } else {
+                        $sloj->Sd = $sloj->debelina * $sloj->difuzijskaUpornost;
+                    }
+                    $Sdt += $sloj->Sd;
+                    $sloj->Sdn = $Sdt;
+
+                    foreach (self::$spanIterator as $mesec) {
+                        $deltaDejanskegaTlaka = $kons->dejanskiTlakSi[$mesec] - $kons->dejanskiTlakSe[$mesec];
+
+                        $sloj->nasicenTlak[$mesec] = Calc::nasicenTlak($sloj->T[$mesec]);
+                        $sloj->dejanskiTlak[$mesec] = $kons->dejanskiTlakSi[$mesec] -
+                            $deltaDejanskegaTlaka * $sloj->Sdn / $kons->Sd;
+                    }
+                }
+            }
+
             self::izracunKondenzacije($kons);
 
-            // sestej kolicino vlage po materialu
+            // odstrani odvečne podatke
             foreach ($kons->materiali as $material) {
                 foreach ($material->racunskiSloji as $sloj) {
                     if (isset($sloj->material)) {
@@ -456,13 +460,37 @@ class CalcKonstrukcije
      *
      * @param \stdClass $kons Podatki konstrukcije
      * @param \stdClass $okolje Podatki okolja
+     * @param array $options Dodatne možnosti
      * @return \stdClass
      */
-    public static function transparentne($kons, $okolje)
+    public static function transparentne($kons, $okolje, $options = [])
     {
         // parametri za posamezno konstrukcijo po TSG
         if (isset($kons->vrsta)) {
             $kons->TSG = Configure::read('lookups.transparentneKonstrukcije.' . $kons->vrsta);
+        }
+
+        if (!empty($options['referencnaStavba'])) {
+            $referencnaKons = Configure::read('lookups.referencneKonstrukcije.' . $kons->TSG->idReferencneKonstrukcije);
+            if (empty($referencnaKons)) {
+                Log::error(sprintf('Referenčna konstrukcija "%s" ne obstaja.', $kons->vrsta));
+            }
+
+            unset($kons->Ud);
+            unset($kons->Uf);
+            unset($kons->Ug);
+            unset($kons->g);
+            unset($kons->Psi);
+
+            if (isset($referencnaKons->lastnosti->Ud)) {
+                $kons->Ud = $referencnaKons->lastnosti->Ud;
+            }
+            if (isset($referencnaKons->lastnosti->Uw)) {
+                $kons->Uw = $referencnaKons->lastnosti->Uw;
+            }
+            if (isset($referencnaKons->lastnosti->g)) {
+                $kons->g = $referencnaKons->lastnosti->g;
+            }
         }
 
         return $kons;

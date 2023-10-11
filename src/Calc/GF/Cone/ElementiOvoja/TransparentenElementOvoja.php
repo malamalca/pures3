@@ -76,11 +76,15 @@ class TransparentenElementOvoja extends ElementOvoja
             case '1':
                 // 0 - okna
                 // 1 - strešna okna
-                $this->U = (
-                    $this->povrsina * $this->konstrukcija->Ug * (1 - $this->delezOkvirja) +
-                    $this->povrsina * $this->konstrukcija->Uf * $this->delezOkvirja +
-                    $this->dolzinaOkvirja * $this->konstrukcija->Psi
-                    ) / $this->povrsina;
+                if (!empty($this->konstrukcija->Uw)) {
+                    $this->U = $this->povrsina * $this->konstrukcija->Uw;
+                } else {
+                    $this->U = (
+                        $this->povrsina * $this->konstrukcija->Ug * (1 - $this->delezOkvirja) +
+                        $this->povrsina * $this->konstrukcija->Uf * $this->delezOkvirja +
+                        $this->dolzinaOkvirja * $this->konstrukcija->Psi
+                        ) / $this->povrsina;
+                }
                 break;
             case '2':
             case '3':
