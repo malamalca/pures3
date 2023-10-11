@@ -56,51 +56,6 @@ class ManjzahtevnaStavba extends Stavba
     public float $dovoljenaKorigiranaSpecificnaPrimarnaEnergija = 75;
 
     /**
-     * tabela 4: 1. korekcijski faktor specifičnega koeficienta transmisijskih toplotnih izgub
-     *
-     * @var float
-     */
-    public float $X_Htr = 1;
-    /**
-     * tabela 4: 2. korekcijski faktor potrebne toplote za ogrevanje stavbe
-     *
-     * @var float
-     */
-    public float $X_Hnd = 1;
-    /**
-     * tabela 4: 3. korekcijski faktor dovoljene potrebne primarne energije za delovanje TSS glede na vrsto stavbe
-     *
-     * @var float
-     */
-    public float $X_s = 1;
-    /**
-     * 20. člen pravilnika
-     * mejne vrednosti učinkovite rabe energije v prihodnjem obdobju
-     *
-     * @var float
-     */
-    public float $X_OVE = 1;
-    /**
-     * 20. člen pravilnika
-     * mejne vrednosti učinkovite rabe energije v prihodnjem obdobju
-     *
-     * @var float
-     */
-    public float $X_p = 1;
-    /**
-     * tabela 4: 4. kompenzacijski faktor primarne energije, potrebne za ogrevanje stavbe
-     *
-     * @var float
-     */
-    public float $Y_Hnd = 1;
-    /**
-     * tabela 4: 5. kompenzacijski faktor primarne energije
-     *
-     * @var float
-     */
-    public float $Y_ROVE = 1;
-
-    /**
      * Analiza stavbe
      *
      * @param \stdClass $okolje Podatki okolja
@@ -148,11 +103,7 @@ class ManjzahtevnaStavba extends Stavba
         $this->specEnergijaNavlazevanje = $this->skupnaEnergijaNavlazevanje / $this->ogrevanaPovrsina;
         $this->specEnergijaRazvlazevanje = $this->skupnaEnergijaRazvlazevanje / $this->ogrevanaPovrsina;
 
-        $this->dovoljenaSpecLetnaToplota = 25 * $this->X_Htr;
-
-        if ($this->specLetnaToplota > $this->dovoljenaSpecLetnaToplota) {
-            $this->Y_Hnd = 1.2;
-        }
+        $this->dovoljenaSpecLetnaToplota = 25 * $this->X_Hnd();
 
         $povprecnaLetnaTemp = $okolje->povprecnaLetnaTemp < 7 ? 7 :
             ($okolje->povprecnaLetnaTemp > 11 ? 11 : $okolje->povprecnaLetnaTemp);
@@ -247,19 +198,14 @@ class ManjzahtevnaStavba extends Stavba
         $this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
 
         $this->ROVE = $this->obnovljivaPrimarnaEnergija / $this->skupnaPrimarnaEnergija * 100;
-        $this->minROVE = 50 * $this->X_OVE;
+        $this->minROVE = 50 * $this->X_OVE();
 
-        if ($this->ROVE < $this->minROVE) {
-            $this->Y_ROVE = 1.2;
-        }
-        if ($this->ROVE > $this->minROVE) {
-            // TODO: uporablja se do leta 2026
-            $this->Y_ROVE = 0.8;
-        }
-
-        $this->specificnaPrimarnaEnergija = $this->skupnaPrimarnaEnergija / $this->ogrevanaPovrsina;
-        $this->korigiranaSpecificnaPrimarnaEnergija = $this->specificnaPrimarnaEnergija * $this->Y_Hnd * $this->Y_ROVE;
-        $this->dovoljenaKorigiranaSpecificnaPrimarnaEnergija = 75 * $this->X_p * $this->X_s;
+        $this->specificnaPrimarnaEnergija =
+            $this->skupnaPrimarnaEnergija / $this->ogrevanaPovrsina;
+        $this->korigiranaSpecificnaPrimarnaEnergija =
+            $this->specificnaPrimarnaEnergija * $this->Y_Hnd() * $this->Y_ROVE();
+        $this->dovoljenaKorigiranaSpecificnaPrimarnaEnergija =
+            75 * $this->X_p() * $this->X_s();
     }
 
     /**
@@ -277,6 +223,178 @@ class ManjzahtevnaStavba extends Stavba
             $stavba->{$prop->getName()} = $prop->getValue($this);
         }
 
+        $stavba->X_Htr = $this->X_Htr();
+        $stavba->X_Hnd = $this->X_Hnd();
+        $stavba->X_s = $this->X_s();
+        $stavba->Y_Hnd = $this->Y_Hnd();
+        $stavba->Y_ROVE = $this->Y_ROVE();
+
+        $stavba->X_OVE = $this->X_OVE();
+        $stavba->X_p = $this->X_p();
+
         return $stavba;
+    }
+
+    /**
+     * tabela 4: 1. korekcijski faktor specifičnega koeficienta transmisijskih toplotnih izgub
+     *
+     * @return float
+     */
+    // phpcs:ignore
+    public function X_Htr()
+    {
+        $ret = 1;
+        if ($this->tip == 'celovitaObnova') {
+            $ret = 1.2;
+        } elseif ($this->javna) {
+            $ret = 0.9;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * tabela 4: 2. korekcijski faktor potrebne toplote za ogrevanje stavbe
+     *
+     * @return float
+     */
+    // phpcs:ignore
+    public function X_Hnd()
+    {
+        if ($this->tip == 'celovitaObnova') {
+            if ($this->javna) {
+                $ret = 1.25;
+            } else {
+                $ret = 1.4;
+            }
+        } else {
+            if ($this->javna) {
+                $ret = 0.9;
+            } else {
+                $ret = 1.0;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * tabela 4: 3. korekcijski faktor dovoljene potrebne primarne energije za delovanje TSS glede na vrsto stavbe
+     *
+     * @return float
+     */
+    // phpcs:ignore
+    public function X_s()
+    {
+        $ret = 1;
+        if ($this->tip == 'celovitaObnova') {
+            $ret = 1.2;
+        } elseif ($this->javna) {
+            $ret = 0.9;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * tabela 4: 4. kompenzacijski faktor primarne energije, potrebne za ogrevanje stavbe
+     *
+     * @return float
+     */
+    // phpcs:ignore
+    public function Y_Hnd()
+    {
+        if ($this->tip == 'celovitaObnova') {
+            if ($this->specLetnaToplota > $this->dovoljenaSpecLetnaToplota) {
+                $ret = 1.2;
+            } else {
+                $ret = 1.0;
+            }
+        } else {
+            // nove
+            if ($this->specLetnaToplota > $this->dovoljenaSpecLetnaToplota) {
+                $ret = 1.2;
+            } else {
+                $ret = 1.0;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * tabela 4: 5. kompenzacijski faktor primarne energije
+     *
+     * @return float
+     */
+    // phpcs:ignore
+    public function Y_ROVE()
+    {
+        $ret = 1;
+        if ($this->ROVE < $this->minROVE) {
+            $razmerjeTranspCelota = 1.2;
+        }
+        if ($this->ROVE > $this->minROVE) {
+            // TODO: uporablja se do leta 2026
+            $ret = 0.8;
+        }
+
+        return $ret;
+    }
+
+    /**
+     * 20. člen pravilnika
+     * mejne vrednosti učinkovite rabe energije v prihodnjem obdobju
+     *
+     * @return float
+     */
+    // phpcs:ignore
+    public function X_OVE()
+    {
+        $year = 2023;
+
+        if ($this->javna) {
+            if ($year > 2025) {
+                $ret = 1.44;
+            } else {
+                $ret = 1.1;
+            }
+        } else {
+            if ($year > 2025) {
+                $ret = 1.3;
+            } else {
+                $ret = 1.0;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * 20. člen pravilnika
+     * mejne vrednosti učinkovite rabe energije v prihodnjem obdobju
+     *
+     * @return float
+     */
+    // phpcs:ignore
+    public function X_p()
+    {
+        $year = 2023;
+
+        if ($this->javna) {
+            if ($year > 2025) {
+                $ret = 0.72;
+            } else {
+                $ret = 0.9;
+            }
+        } else {
+            if ($year > 2025) {
+                $ret = 0.8;
+            } else {
+                $ret = 1.0;
+            }
+        }
+
+        return $ret;
     }
 }

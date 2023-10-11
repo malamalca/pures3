@@ -59,7 +59,6 @@
             {
                 "id": "TALNO",
                 "vrsta": "Ploskovna ogrevala",
-                "hidravlicnoUravnotezenje": "Statično uravnoteženje dvižnih vodov",
                 "regulacijaTemperature": "S temperaturo referenčnega prostora",
                 "toplotneIzgube": [
                     96.59291823924566,
@@ -102,7 +101,8 @@
                     0.744,
                     0.72,
                     0.744
-                ]
+                ],
+                "hidravlicnoUravnotezenje": "Statično uravnoteženje dvižnih vodov"
             }
         ],
         "razvodi": [

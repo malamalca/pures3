@@ -145,7 +145,7 @@ za področje gradbene fizike</h1>
     <tr>
         <td class="w-5 center"></td>
         <td class="w-55">STAVBA</td>
-        <td class="w-10 center"><?= $this->numFormat($stavba->X_Htr ?? 0, 1)  ?></td>
+        <td class="w-10 center"><?= $this->numFormat($stavba->X_Htr)  ?></td>
         <td class="w-10 center"><?= $this->numFormat($stavba->specKoeficientTransmisijskihIzgub, 3) ?></td>
         <td class="w-10 center"><?= $this->numFormat($stavba->dovoljenSpecKoeficientTransmisijskihIzgub, 3) ?></td>
         <td class="w-10 center">
@@ -161,7 +161,7 @@ za področje gradbene fizike</h1>
     <tr>
         <td class="w-5 center"><?= $i+1 ?></td>
         <td class="w-55">→ <?= h($cona->naziv) ?></td>
-        <td class="w-10 center"><?= $this->numFormat($stavba->X_Htr ?? 0, 1)  ?></td>
+        <td class="w-10 center"><?= $this->numFormat($stavba->X_Htr)  ?></td>
         <td class="w-10 center"><?= $this->numFormat($cona->specKoeficientTransmisijskihIzgub, 3) ?></td>
         <td class="w-10 center"><?= $this->numFormat($cona->dovoljenSpecKoeficientTransmisijskihIzgub, 3) ?></td>
         <td class="w-10 center">

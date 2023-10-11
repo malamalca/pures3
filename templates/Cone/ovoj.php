@@ -99,7 +99,7 @@
             <td colspan="2"></td>
             <td class="center"><?= Calc::MESECI[$mesec] ?></td>
             <td class="center"><?= $daysInMonth ?></td>
-            <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->soncnoObsevanje[$mesec] * $daysInMonth, 0) . '</td>', $elementiOvoja)) ?>
+            <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat(($elementOvoja->soncnoObsevanje[$mesec] ?? 0) * $daysInMonth, 0) . '</td>', $elementiOvoja)) ?>
         </tr>
     <?php
         }

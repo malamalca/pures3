@@ -481,11 +481,11 @@ za področje TSS</h1>
     </tr>
     <tr>
         <td colspan="3">faktor ujemanja f<sub>match,m</sub></td>
-        <td class="w-20 center">1.0</td>
+        <td class="w-20 center">1,0</td>
     </tr>
     <tr>
         <td colspan="3">faktor k<sub>exp</sub></td>
-        <td class="w-20 center"></td>
+        <td class="w-20 center">1,0</td>
     </tr>
 </table>
 <!-- NEW PAGE -->
