@@ -46,7 +46,7 @@ class NetransparentenElementOvoja extends ElementOvoja
         $this->tla = VrstaTal::from($config->tla ?? 'pesek');
 
         $this->barva = BarvaElementaOvoja::from($config->barva ?? 'brez');
-        if (empty($config->barva) && $this->protiZraku) {
+        if (empty($config->barva) && !empty($this->konstrukcija->TSG->dobitekSS)) {
             Log::warn(sprintf('Netransparenten element ovoja "%s" nima določene barve.', $this->idKonstrukcije));
         }
 

@@ -346,13 +346,12 @@ class ManjzahtevnaStavba extends Stavba
      * 20. člen pravilnika
      * mejne vrednosti učinkovite rabe energije v prihodnjem obdobju
      *
+     * @param int $year Current year
      * @return float
      */
     // phpcs:ignore
-    public function X_OVE()
+    public function X_OVE($year = 2023)
     {
-        $year = 2023;
-
         if ($this->javna) {
             if ($year > 2025) {
                 $ret = 1.44;
@@ -374,13 +373,12 @@ class ManjzahtevnaStavba extends Stavba
      * 20. člen pravilnika
      * mejne vrednosti učinkovite rabe energije v prihodnjem obdobju
      *
+     * @param int $year Current year
      * @return float
      */
     // phpcs:ignore
-    public function X_p()
+    public function X_p($year = 2023)
     {
-        $year = 2023;
-
         if ($this->javna) {
             if ($year > 2025) {
                 $ret = 0.72;
