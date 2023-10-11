@@ -74,6 +74,8 @@ class IzracunCone extends Command
                 $cona->analiza($okolje);
                 $coneOut[] = $cona->export();
             }
+
+            App::saveProjectCalculation($projectId, 'cone_ref', $coneOut);
         }
     }
 }

@@ -52,11 +52,13 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->delezOkvirja = $config->delezOkvirja ?? 1;
         }
 
+        $this->delezOkvirja = $this->referencnaStavba ? 0.25 : $this->delezOkvirja;
+
         $this->dolzinaOkvirja = $config->dolzinaOkvirja ?? 1;
 
         // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
-        $this->g = $this->konstrukcija->g ?? 0.5;
-        $this->faktorSencil = $config->faktorSencil ?? 1;
+        $this->g = $this->referencnaStavba ? 0.5 : ($this->konstrukcija->g ?? 0.5);
+        $this->faktorSencil = $this->referencnaStavba ? 0.3 : ($config->faktorSencil ?? 1);
 
         $this->g_sh = $this->g * $this->faktorSencil;
 

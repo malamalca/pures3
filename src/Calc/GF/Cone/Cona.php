@@ -15,7 +15,7 @@ class Cona
     public string $id;
     public string $naziv;
     public string $klasifikacija;
-    public bool $referencnaStavba = false;
+    private bool $referencnaStavba = false;
 
     public float $brutoProstornina = 0;
     public float $netoProstornina = 0;
@@ -110,7 +110,8 @@ class Cona
      */
     public function __construct($konstrukcije = null, $config = null, $options = [])
     {
-        $this->referencnaStavba = empty($options['referencnaStavba']);
+        $this->referencnaStavba = !empty($options['referencnaStavba']);
+
         if ($konstrukcije) {
             $this->konstrukcije = $konstrukcije;
         } else {
@@ -136,6 +137,12 @@ class Cona
             $config = json_decode($config);
         }
 
+        if ($this->referencnaStavba) {
+            $config->infiltracija->n50 = 2;
+            $config->toplotnaKapaciteta = 260000;
+            $config->deltaPsi = 0;
+        }
+
         $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
 
         $reflect = new \ReflectionClass(Cona::class);
@@ -147,6 +154,11 @@ class Cona
                     $this->ovoj->netransparentneKonstrukcije = [];
                     $this->ovoj->transparentneKonstrukcije = [];
 
+                    $options = [];
+                    if ($this->referencnaStavba) {
+                        $options['referencnaStavba'] = true;
+                    }
+
                     if (!empty($config->ovoj->netransparentneKonstrukcije)) {
                         foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
                             $kons = array_first(
@@ -154,7 +166,7 @@ class Cona
                                 fn($k) => $k->id == $konsConfig->idKonstrukcije
                             );
                             $this->ovoj->netransparentneKonstrukcije[] =
-                                new NetransparentenElementOvoja($kons, $konsConfig);
+                                new NetransparentenElementOvoja($kons, $konsConfig, $options);
                         }
                     }
                     if (!empty($config->ovoj->transparentneKonstrukcije)) {
@@ -164,7 +176,7 @@ class Cona
                                 fn($k) => $k->id == $konsConfig->idKonstrukcije
                             );
                             $this->ovoj->transparentneKonstrukcije[] =
-                                new TransparentenElementOvoja($kons, $konsConfig);
+                                new TransparentenElementOvoja($kons, $konsConfig, $options);
                         }
                     }
                     break;

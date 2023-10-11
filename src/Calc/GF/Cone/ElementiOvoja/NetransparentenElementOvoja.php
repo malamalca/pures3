@@ -113,7 +113,7 @@ class NetransparentenElementOvoja extends ElementOvoja
                     $cona->deltaTHlajenje[$mesec] * $stDni * $this->stevilo;
 
                 // svetla barva 0.3, srednja barva 0.6, temna barva 0.9
-                $alphaSr = /*0.3;*/ $this->barva->koeficientAlphaSr();
+                $alphaSr = $this->referencnaStavba ? 0.5 : $this->barva->koeficientAlphaSr();
                 $Fsky = $this->naklon < 45 ? 1 : 0.5;
                 $hri = 4.14;
                 $dTsky = 11;
