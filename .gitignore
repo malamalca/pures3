@@ -3,10 +3,14 @@
 /logs/*
 /tmp/*
 /vendor/*
+
 /resources/*
+!/resources/OpenSans-Regular.ttf
+
 /projects/*
 !/projects/TestniProjekt
 !/projects/TestniProjekt2
+
 /vendor/*
 /.phpunit.cache/*
 
