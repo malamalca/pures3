@@ -54,6 +54,15 @@
         "difuzijskaUpornost": 9
     },
     {
+        "id": "32",
+        "sifra": "kamen",
+        "opis": "Gosti apnenec, dolomit, marmor",
+        "lambda": 2.3,
+        "gostota": 2600,
+        "specificnaToplota": 920,
+        "difuzijskaUpornost": 65
+    },
+    {
         "id": "37",
         "sifra": "tampon",
         "opis": "Gramoz, suh",
@@ -161,7 +170,15 @@
         "specificnaToplota": 1030,
         "difuzijskaUpornost": 1
     },
-
+    {
+        "id": "131.3",
+        "sifra": "poliuretan",
+        "opis": "Poliuretanska pena",
+        "lambda": 0.025,
+        "gostota": 15,
+        "specificnaToplota": 1500,
+        "difuzijskaUpornost": 30
+    },
     {
         "id": "00.1",
         "sifra": "paropropustnaFolija",

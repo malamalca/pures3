@@ -5,6 +5,8 @@ namespace App\Core;
 
 class View
 {
+    public string $area = 'Pures';
+
     /**
      * @var array $_vars
      */
@@ -38,7 +40,7 @@ class View
     {
         $App = App::getInstance();
 
-        $templatePath = TEMPLATES . $controllerName . DS;
+        $templatePath = TEMPLATES . $this->area . DS . $controllerName . DS;
 
         $templateName = $methodName;
         if (isset($this->_options['template'])) {
@@ -124,13 +126,7 @@ class View
      */
     public function url($params)
     {
-        if (defined('CLI')) {
-            $url_base = WWW_ROOT;
-        } else {
-            $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
-        }
-
-        return $url_base . substr($params, 1);
+        return App::url($params);
     }
 
     /**

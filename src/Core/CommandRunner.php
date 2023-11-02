@@ -9,15 +9,16 @@ class CommandRunner
      * Default run routine
      *
      * @param array $args List of arguments
+     * @param string $area Area of command to execute
      * @return void
      */
-    public function run($args)
+    public function run($args, $area = 'Pures')
     {
         if (empty($args[1])) {
             die('Specify Command!');
         }
 
-        $className = '\\App\\Command\\' . $args[1];
+        $className = '\\App\\Command\\' . $area . '\\' . $args[1];
 
         $commandClass = new $className();
 

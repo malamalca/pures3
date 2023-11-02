@@ -77,7 +77,7 @@ final class IzracunKonstrukcijeTSG004Test extends TestCase
             "obseg": 200,
             "povrsina": 550,
             "debelinaStene": 0.5,
-            "vertPsi": 0.1,
+            "obodniPsi": 0.1,
             "konstrukcija": {
                 "id": "T1",
                 "TSG": {"tip": "tla-teren"},

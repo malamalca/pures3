@@ -8,8 +8,8 @@
 !/resources/OpenSans-Regular.ttf
 
 /projects/*
-!/projects/TestniProjekt
-!/projects/TestniProjekt2
+!/projects/Pures/TestniProjekt
+!/projects/Pures/TestniProjekt2
 
 /vendor/*
 /.phpunit.cache/*

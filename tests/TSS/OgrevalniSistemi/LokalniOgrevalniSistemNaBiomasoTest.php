@@ -9,7 +9,7 @@ final class LokalniOgrevalniSistemNaBiomasoTest extends TestCase
     public function testToplotneIzgube(): void
     {
         /** @var array $coneIn */
-        $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
+        $coneIn = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
         $cona = $coneIn[0];
 
         $okolje = new \stdClass();

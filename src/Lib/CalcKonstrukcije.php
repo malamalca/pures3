@@ -53,6 +53,7 @@ class CalcKonstrukcije
         // 8.1.1. TSG stran 58
         $totalR = $kons->Rsi + $kons->Rse;
         $totalSd = 0;
+        $debelina = 0;
         foreach ($kons->materiali as $material) {
             $material->R = 0;
             if (!empty($material->sifra)) {
@@ -80,11 +81,14 @@ class CalcKonstrukcije
             }
             $totalR += $material->R;
 
+            $debelina += ($material->debelina ?? 0);
+
             $material->Sd = $material->Sd ?? $material->debelina * ($material->difuzijskaUpornost ?? 0);
             $totalSd += $material->Sd;
         }
         $kons->U = 1 / $totalR;
         $kons->Sd = $totalSd;
+        $kons->debelina = $debelina;
 
         foreach (self::$spanIterator as $mesec) {
             $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;

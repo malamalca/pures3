@@ -15,7 +15,7 @@ class Cona
     public string $id;
     public string $naziv;
     public string $klasifikacija;
-    private bool $referencnaStavba = false;
+    protected array $options = [];
 
     public float $brutoProstornina = 0;
     public float $netoProstornina = 0;
@@ -110,7 +110,7 @@ class Cona
      */
     public function __construct($konstrukcije = null, $config = null, $options = [])
     {
-        $this->referencnaStavba = !empty($options['referencnaStavba']);
+        $this->options = $options;
 
         if ($konstrukcije) {
             $this->konstrukcije = $konstrukcije;
@@ -137,7 +137,7 @@ class Cona
             $config = json_decode($config);
         }
 
-        if ($this->referencnaStavba) {
+        if (!empty($this->options['referencnaStavba'])) {
             $config->infiltracija->n50 = 2;
             $config->toplotnaKapaciteta = 260000;
             $config->deltaPsi = 0;
@@ -155,18 +155,37 @@ class Cona
                     $this->ovoj->transparentneKonstrukcije = [];
 
                     $options = [];
-                    if ($this->referencnaStavba) {
+                    if (!empty($this->options['referencnaStavba'])) {
                         $options['referencnaStavba'] = true;
                     }
 
                     if (!empty($config->ovoj->netransparentneKonstrukcije)) {
                         foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
+                            // poišči konstrukcijo v knjižnici
                             $kons = array_first(
                                 $this->konstrukcije->netransparentne,
                                 fn($k) => $k->id == $konsConfig->idKonstrukcije
                             );
+
+                            $additionalOptions = [];
+                            if (isset($konsConfig->idKonstrukcijeTla)) {
+                                $additionalOptions['idKonstrukcijeTla'] = array_first(
+                                    $this->konstrukcije->netransparentne,
+                                    fn($k) => $k->id == $konsConfig->idKonstrukcijeTla
+                                );
+                            }
+                            if (isset($konsConfig->idKonstrukcijeStene)) {
+                                $additionalOptions['idKonstrukcijeStene'] = array_first(
+                                    $this->konstrukcije->netransparentne,
+                                    fn($k) => $k->id == $konsConfig->idKonstrukcijeStene
+                                );
+                            }
                             $this->ovoj->netransparentneKonstrukcije[] =
-                                new NetransparentenElementOvoja($kons, $konsConfig, $options);
+                                new NetransparentenElementOvoja(
+                                    $kons,
+                                    $konsConfig,
+                                    array_merge($options, $additionalOptions)
+                                );
                         }
                     }
                     if (!empty($config->ovoj->transparentneKonstrukcije)) {
@@ -309,17 +328,6 @@ class Cona
                 array_sum_values($this->solarniDobitkiOgrevanje, $elementOvoja->solarniDobitkiOgrevanje);
             $this->solarniDobitkiHlajenje =
                 array_sum_values($this->solarniDobitkiHlajenje, $elementOvoja->solarniDobitkiHlajenje);
-        }
-
-        foreach ($this->solarniDobitkiOgrevanje as $k => $mesec) {
-            if ($this->solarniDobitkiOgrevanje[$k] < 0) {
-                $this->solarniDobitkiOgrevanje[$k] = 0;
-            }
-        }
-        foreach ($this->solarniDobitkiHlajenje as $k => $mesec) {
-            if ($this->solarniDobitkiHlajenje[$k] < 0) {
-                $this->solarniDobitkiHlajenje[$k] = 0;
-            }
         }
     }
 
@@ -685,7 +693,7 @@ class Cona
     {
         $cona = new \stdClass();
 
-        $reflect = new \ReflectionClass(Cona::class);
+        $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             if ($prop->getName() == 'ovoj') {

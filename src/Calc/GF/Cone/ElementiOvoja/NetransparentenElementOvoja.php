@@ -17,15 +17,17 @@ class NetransparentenElementOvoja extends ElementOvoja
     public BarvaElementaOvoja $barva;
 
     // velja za konstrukcije v stiku z zemljino
-    public float $obseg = 0;
-    public float $debelinaStene = 0;
-    public float $obodniPsi = 0;
-    public float $vertPsi = 0;
+    public ?float $obseg;
+    public ?float $debelinaStene;
+    public ?float $obodniPsi;
+    public ?float $Lpi;
+    public ?float $Lpe;
+    public ?\stdClass $dodatnaIzolacija;
 
-    public float $Lpi = 0;
-    public float $Lpe = 0;
-
-    private ?\stdClass $dodatnaIzolacija;
+    // velja za vert. konstrukcije v stiku z zemljino
+    public ?float $globina;
+    public ?float $U_tla;
+    public ?float $U_zid;
 
     /**
      * Loads configuration from json|stdClass
@@ -50,15 +52,29 @@ class NetransparentenElementOvoja extends ElementOvoja
             Log::warn(sprintf('Netransparenten element ovoja "%s" nima določene barve.', $this->idKonstrukcije));
         }
 
-        $obseg = $config->obseg ?? 0;
-        if (gettype($obseg) == 'string') {
-            $obseg = (float)$EvalMath->e($obseg);
+        if (!empty($config->obseg)) {
+            $obseg = $config->obseg;
+            if (gettype($obseg) == 'string') {
+                $obseg = (float)$EvalMath->e($obseg);
+            }
+            $this->obseg = $obseg;
         }
-        $this->obseg = $obseg;
 
-        $this->debelinaStene = $config->debelinaStene ?? 0;
-        $this->obodniPsi = $config->obodniPsi ?? 0;
-        $this->vertPsi = $config->vertPsi ?? 0;
+        if (!empty($config->debelinaStene)) {
+            $this->debelinaStene = $config->debelinaStene;
+        }
+
+        if (!empty($config->globina)) {
+            $this->globina = $config->globina;
+        }
+
+        if (!empty($config->obodniPsi)) {
+            $this->obodniPsi = $config->obodniPsi;
+        }
+
+        if (!empty($config->U_tla)) {
+            $this->U_tla = $config->U_tla;
+        }
 
         if (!empty($config->dodatnaIzolacija)) {
             $this->dodatnaIzolacija = $config->dodatnaIzolacija;
@@ -113,7 +129,7 @@ class NetransparentenElementOvoja extends ElementOvoja
                     $cona->deltaTHlajenje[$mesec] * $stDni * $this->stevilo;
 
                 // svetla barva 0.3, srednja barva 0.6, temna barva 0.9
-                $alphaSr = $this->referencnaStavba ? 0.5 : $this->barva->koeficientAlphaSr();
+                $alphaSr = !empty($this->options['referencnaStavba']) ? 0.5 : $this->barva->koeficientAlphaSr();
                 $Fsky = $this->naklon < 45 ? 1 : 0.5;
                 $hri = 4.14;
                 $dTsky = 11;
@@ -167,14 +183,17 @@ class NetransparentenElementOvoja extends ElementOvoja
         // proti terenu
         if ($this->konstrukcija->TSG->tip == 'tla-teren') {
             $B = $this->povrsina / (0.5 * $this->obseg);
+
+            // ekvivalentna debelina konstrukcije - TLA
             $dt = $this->debelinaStene + $this->tla->lambda() * 1 / $this->konstrukcija->U;
 
             if ($dt < $B) {
                 // neizolirana ali srednje izolirana tla
-                $U0 = 2 * $this->tla->lambda() / (Pi() * $B + $dt) * log(Pi() * $B / $dt + 1);
+                $this->U = 2 * $this->tla->lambda() / (Pi() * $B + $dt + 0.5 * ($this->globina ?? 0)) *
+                    log(Pi() * $B / ($dt + 0.5 * ($this->globina ?? 0)) + 1);
             } else {
                 // dobro izolirana tla
-                $U0 = $this->tla->lambda() / (0.457 * $B + $dt);
+                $this->U = $this->tla->lambda() / (0.457 * $B + $dt + 0.5 * ($this->globina ?? 0));
             }
 
             $d_ = 0;
@@ -184,32 +203,27 @@ class NetransparentenElementOvoja extends ElementOvoja
                 $d_ = $R_ * $this->tla->lambda();
 
                 if ($this->dodatnaIzolacija->tip == 'horizontalna') {
-                    $this->obodniPsi = -$this->tla->lambda() / Pi() * (
+                    $horizontalniPsi = -$this->tla->lambda() / Pi() * (
                         log($this->dodatnaIzolacija->dolzina / $dt + 1) -
                         log($this->dodatnaIzolacija->dolzina / ($dt + $d_) + 1)
                     );
+
+                    $this->U = $this->U + 2 * $horizontalniPsi / $B;
                 } elseif ($this->dodatnaIzolacija->tip == 'vertikalna') {
-                    $this->vertPsi = -$this->tla->lambda() / Pi() * (
+                    $this->obodniPsi = -$this->tla->lambda() / Pi() * (
                         log(2 * $this->dodatnaIzolacija->dolzina / $dt + 1) -
                         log(2 * $this->dodatnaIzolacija->dolzina / ($dt + $d_) + 1)
                     );
                 }
             }
 
-            // za tla z obodno izolacijo
-            if (
-                (!empty($this->dodatnaIzolacija) && $this->dodatnaIzolacija->tip == 'horizontalna') ||
-                !empty($this->obodniPsi)
-            ) {
-                $this->U = $U0 + 2 * $this->obodniPsi / $B;
-            } else {
-                $this->U = $U0;
-            }
-
+            // periodic heat transfer coefficients Annex H
             // variacija notranje temperature
             // ISO 13370, C.3.1
             $this->Lpi = $this->povrsina * $this->tla->lambda() / $dt *
-                sqrt(2 / (pow(1 + $this->tla->sigma() / $dt, 2) + 1));
+                sqrt(2 / (pow(1 + $this->tla->sigma() / $dt, 2) + 1));/* +
+                ($this->globina ?? 0) * $this->obseg * $this->tla->lambda() / $dw *
+                sqrt(2 / (pow(1 + $this->tla->sigma() / $dw, 2) + 1));*/
 
             if (!empty($this->dodatnaIzolacija)) {
                 if ($this->dodatnaIzolacija->tip == 'horizontalna') {
@@ -238,17 +252,55 @@ class NetransparentenElementOvoja extends ElementOvoja
                     );
                 }
             } else {
-                // neizolirana
-                // ??
-                $this->Lpe = 0.37 * $this->obseg * $this->tla->lambda() * (
-                    (1 - exp(-0 / $this->tla->sigma())) * log($this->tla->sigma() / ($dt + $d_) + 1)
-                    +
-                    (exp(-0 / $this->tla->sigma()) * log($this->tla->sigma() / $dt + 1))
-                );
+                // tla na terenu brez obodne izolacije, neizolirana tla, vkopana tla
+                if (!empty($this->globina)) {
+                    // tla vkopane kleti
+                    // =0,37*U!B31*C33*                                              (EXP(-U!B33/E33)    *LN((E33/F82)+1))
+                    $this->Lpe = 0.37 * $this->obseg * $this->tla->lambda() *
+                        exp(-$this->globina / $this->tla->sigma()) * log($this->tla->sigma() / $dt + 1);
+                } else {
+                    //=0,37*U!B31*C33*((1-EXP(-C45*U!B39/E33))*LN((E33/(F82+F87))+1)+EXP(-C45*U!B39/E33)*LN((E33/F82)+1))
+                    $this->Lpe = 0.37 * $this->obseg * $this->tla->lambda() *
+                        ((1 - exp(-0 / $this->tla->sigma())) *
+                        log($this->tla->sigma() / ($dt + $d_) + 1) +
+                        (exp(-0 / $this->tla->sigma()) *
+                        log($this->tla->sigma() / $dt + 1)));
+                }
             }
         }
 
-        if (in_array($this->konstrukcija->TSG->tip, ['stena-teren', 'tla-neogrevano'])) {
+        if ($this->konstrukcija->TSG->tip == 'stena-teren') {
+            // ekvivalentna debelina stene
+            // enačba 15 v standardu; TODO: v standardu je brez debelineStene, XLS pa jo upošteva
+            $d_wb = $this->debelinaStene + $this->tla->lambda() * 1 / $this->konstrukcija->U;
+
+            // ekvivalentna debelina tal (floor)
+            // enačba 12 v standard
+            $d_f = $this->debelinaStene + $this->tla->lambda() * 1 / $this->U_tla;
+            //$d_f = 9.7;
+
+            if ($d_wb < $d_f) {
+                $d_f = $d_wb;
+            }
+
+            $z = $this->globina ?? 0;
+
+            /** enačba 16 v standardu */
+            $this->U = 2 * $this->tla->lambda() / (Pi() * $z) *
+                (1 + 0.5 * $d_f / ($d_f + $z)) * log($z / $d_wb + 1);
+
+            // enačba H.8 v standardu, SAMO DESNI DEL ZA STENE
+            $this->Lpi = $this->obseg * $this->globina *
+                $this->tla->lambda() / $d_wb *
+                sqrt(2 / (pow(1 + $this->tla->sigma() / $d_wb, 2) + 1));
+
+            // enačba H.9 v standardu, SAMO DESNI DEL ZA STENE
+            $this->Lpe = 0.37 * $this->obseg * $this->tla->lambda() * (
+                2 * (1 - exp(-$this->globina / $this->tla->sigma())) * log(($this->tla->sigma() / $d_wb) + 1)
+            );
+        }
+
+        if (in_array($this->konstrukcija->TSG->tip, ['tla-neogrevano'])) {
             die('Izračun ni podprt.');
         }
     }
@@ -279,8 +331,8 @@ class NetransparentenElementOvoja extends ElementOvoja
                 } else {
                     $notranjaT[$mesec] = $okolje->zunanjaT[$mesec] +
                         $this->b * ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
-                    $povprecnaTOgrevanja += $notranjaT[$mesec];
                 }
+                $povprecnaTOgrevanja += $notranjaT[$mesec];
                 $stMesecevOgrevanja++;
             }
         }
@@ -313,7 +365,7 @@ class NetransparentenElementOvoja extends ElementOvoja
 
         $urniToplotniTok = $this->U *
             $this->povrsina * ($povprecnaNotranjaT - $okolje->povprecnaLetnaTemp) +
-            $this->obseg * $this->vertPsi * ($notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) -
+            $this->obseg * ($this->obodniPsi ?? 0) * ($notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) -
             $this->Lpi * ($povprecnaNotranjaT - $notranjaT[$mesec]) +
             $this->Lpe * ($okolje->povprecnaLetnaTemp - $okolje->zunanjaT[$mesec]);
 
@@ -336,17 +388,18 @@ class NetransparentenElementOvoja extends ElementOvoja
     {
         $elementOvoja = parent::export();
 
-        $elementOvoja->protiZraku = $this->protiZraku;
-        $elementOvoja->tla = $this->tla->value;
-        $elementOvoja->barva = $this->barva->value;
+        $reflect = new \ReflectionClass(self::class);
+        $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
+        foreach ($props as $prop) {
+            if ($prop->isInitialized($this)) {
+                $elementOvoja->{$prop->getName()} = $prop->getValue($this);
 
-        $elementOvoja->obseg = $this->obseg;
-        $elementOvoja->debelinaStene = $this->debelinaStene;
-        $elementOvoja->obodniPsi = $this->obodniPsi;
-        $elementOvoja->vertPsi = $this->vertPsi;
-
-        if (isset($this->dodatnaIzolacija)) {
-            $elementOvoja->dodatnaIzolacija = $this->dodatnaIzolacija;
+                // pretvori enum v string
+                if ($elementOvoja->{$prop->getName()} instanceof \UnitEnum) {
+                    /* @phpstan-ignore-next-line */
+                    $elementOvoja->{$prop->getName()} = $elementOvoja->{$prop->getName()}->value;
+                }
+            }
         }
 
         return $elementOvoja;

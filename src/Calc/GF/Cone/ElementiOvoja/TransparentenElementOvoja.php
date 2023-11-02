@@ -41,8 +41,8 @@ class TransparentenElementOvoja extends ElementOvoja
         }
 
         if (!empty($config->A) && !empty($config->B) && !empty($config->sirinaOkvirja)) {
-            $config->sirinaStekla = $config->A - $config->sirinaOkvirja;
-            $config->visinaStekla = $config->B - $config->sirinaOkvirja;
+            $config->sirinaStekla = $config->A - $config->sirinaOkvirja * 2;
+            $config->visinaStekla = $config->B - $config->sirinaOkvirja * 2;
             $config->dolzinaOkvirja = 2 * $config->A + 2 * $config->B;
         }
 
@@ -52,13 +52,13 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->delezOkvirja = $config->delezOkvirja ?? 1;
         }
 
-        $this->delezOkvirja = $this->referencnaStavba ? 0.25 : $this->delezOkvirja;
+        $this->delezOkvirja = !empty($this->options['referencnaStavba']) ? 0.25 : $this->delezOkvirja;
 
         $this->dolzinaOkvirja = $config->dolzinaOkvirja ?? 1;
 
         // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
-        $this->g = $this->referencnaStavba ? 0.5 : ($this->konstrukcija->g ?? 0.5);
-        $this->faktorSencil = $this->referencnaStavba ? 0.3 : ($config->faktorSencil ?? 1);
+        $this->g = !empty($this->options['referencnaStavba']) ? 0.5 : ($this->konstrukcija->g ?? 0.5);
+        $this->faktorSencil = !empty($this->options['referencnaStavba']) ? 0.3 : ($config->faktorSencil ?? 1);
 
         $this->g_sh = $this->g * $this->faktorSencil;
 

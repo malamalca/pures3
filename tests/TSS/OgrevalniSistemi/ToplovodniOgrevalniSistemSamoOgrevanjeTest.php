@@ -9,7 +9,7 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
     public function testTCZrakVoda(): void
     {
         /** @var array $coneIn */
-        $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
+        $coneIn = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
         $cona = $coneIn[0];
 
         $okolje = new \stdClass();
@@ -124,7 +124,7 @@ final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
 
     /*public function testTCZemljaVoda(): void
     {
-        $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
+        $coneIn = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
         $cona = $coneIn[0];
 
         $okolje = new \stdClass();

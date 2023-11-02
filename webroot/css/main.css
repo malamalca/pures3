@@ -503,6 +503,10 @@ template {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+h2 {
+  font-size: 22px;
+}
+
 .center {
   text-align: center !important;
 }

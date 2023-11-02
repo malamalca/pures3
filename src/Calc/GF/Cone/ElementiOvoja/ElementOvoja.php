@@ -11,7 +11,7 @@ abstract class ElementOvoja
     public string $idKonstrukcije = '';
     public \stdClass $konstrukcija;
 
-    protected bool $referencnaStavba = false;
+    protected array $options = [];
 
     public string $opis = '';
     public int $stevilo = 1;
@@ -47,7 +47,7 @@ abstract class ElementOvoja
      */
     public function __construct($konstrukcija, $config = null, $options = [])
     {
-        $this->referencnaStavba = !empty($options['referencnaStavba']);
+        $this->options = $options;
 
         if (empty($konstrukcija)) {
             if (isset($config->konstrukcija)) {

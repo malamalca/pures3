@@ -18,16 +18,16 @@ class IzracunConeTest extends TestCase
     public function testValidacijaIzracunaCone(): void
     {
         /** @var \stdClass $okolje */
-        $okolje = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'okolje.json'));
+        $okolje = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'okolje.json'));
 
         /** @var array $netransparentneKonstrukcije */
-        $netransparentneKonstrukcije = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'netransparentne.json'));
+        $netransparentneKonstrukcije = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'netransparentne.json'));
 
         /** @var array $transparentneKonstrukcije */
-        $transparentneKonstrukcije = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'transparentne.json'));
+        $transparentneKonstrukcije = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'transparentne.json'));
 
         /** @var array $coneIn */
-        $coneIn = json_decode(file_get_contents(PROJECTS . 'TestniProjekt' . DS . 'podatki' . DS . 'cone.json'));
+        $coneIn = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'podatki' . DS . 'cone.json'));
 
         $konstrukcije = new \stdClass();
         $konstrukcije->transparentne = $transparentneKonstrukcije;
@@ -85,7 +85,7 @@ class IzracunConeTest extends TestCase
 
         // dobitki sončnega obsevanja
         $roundedResult = array_map(fn($el) => round($el, 2), $cona->solarniDobitkiHlajenje);
-        $expected = [8.72, 53.84, 83.48, 98.24, 100.08, 92.89, 99.24, 104.62, 88.25, 45.49, 0.00, 0.00];
+        $expected = [8.72, 53.84, 83.48, 98.24, 100.08, 92.89, 99.24, 104.62, 88.25, 45.49, -5.01, -17.37];
         $this->assertEquals($expected, $roundedResult);
 
         // faktor izkoristljivosti dobitkov

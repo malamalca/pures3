@@ -5,7 +5,8 @@ use App\Core\App;
 use App\Core\Configure;
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-    $r->addRoute(['GET', 'POST'], '/{controller}[/{action}[/{param1}[/{param2}]]]', 'htaccess');
+    $r->addRoute(['GET', 'POST'], '/pures/{controller}[/{action}[/{param1}[/{param2}]]]', 'Pures');
+    $r->addRoute(['GET', 'POST'], '/hrup/{controller}[/{action}[/{param1}[/{param2}]]]', 'Hrup');
 });
 
 // Fetch method and URI from somewhere
@@ -44,13 +45,13 @@ switch ($routeInfo[0]) {
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
         $controllerName = $vars['controller'];
-        
+
         // convert to CamelCase
         $controllerName = str_replace('-', '', ucwords($controllerName, '-'));
 
         unset($vars['controller']);
 
-        App::dispatch($controllerName, $vars);
+        App::dispatch($controllerName, $vars, $handler);
 
         break;
 }

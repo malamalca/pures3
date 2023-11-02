@@ -5,6 +5,7 @@ namespace App\Core;
 
 class App
 {
+    public string $area = 'Pures';
     public static array $allowedActions = [];
 
     private static ?\App\Core\App $instance = null;
@@ -31,9 +32,10 @@ class App
      *
      * @param string $controllerName Controller name
      * @param array $vars Variables
+     * @param string $area Area - Pures or Hrup
      * @return void
      */
-    public static function dispatch($controllerName, $vars)
+    public static function dispatch($controllerName, $vars, $area = 'Pures')
     {
         $methodName = $vars['action'] ?? 'index';
         if (isset($vars['action'])) {
@@ -51,7 +53,7 @@ class App
             $methodName = substr($methodName, 0, -(strlen($extension) + 1));
         }
 
-        $controllerClass = 'App\Controller\\' . $controllerName . 'Controller';
+        $controllerClass = 'App\Controller\\' . $area . '\\' . $controllerName . 'Controller';
 
         // check if action exists
         if (!method_exists($controllerClass, $methodName)) {
@@ -60,7 +62,9 @@ class App
             die;
         }
 
+        /** @var \stdClass $controller */
         $controller = new $controllerClass();
+        $controller->area = $area;
         /** @var \stdClass $controller->request */
         $controller->request = new \stdClass();
         $controller->request->action = $methodName;
@@ -73,6 +77,7 @@ class App
 
         if (empty($ret)) {
             $view = new View(self::getInstance()->_vars, $controller->viewOptions ?? []);
+            $view->area = $area;
 
             $contents = $view->render($controllerName, $methodName);
 
@@ -107,7 +112,11 @@ class App
      */
     public static function url($params)
     {
-        $url_base = Configure::read('App.baseUrl', '/') . '/';
+        if (defined('CLI')) {
+            $url_base = WWW_ROOT;
+        } else {
+            $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
+        }
 
         return $url_base . substr($params, 1);
     }
@@ -134,7 +143,7 @@ class App
     public static function isAjax()
     {
         return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            in_array(strtolower($_SERVER['HTTP_X_REQUESTED_WITH']), ['xmlhttprequest', 'thorbell']);
+            in_array(strtolower($_SERVER['HTTP_X_REQUESTED_WITH']), ['xmlhttprequest']);
     }
 
     /**
@@ -181,20 +190,21 @@ class App
     /**
      * Vrne lokacijo projekta
      *
+     * @param string $area Področje izračuna
      * @param string $projectId Id projekta
      * @param string|null $subfolder Podmapa s podaki ali z izračuni
      * @return string
      */
-    public static function getProjectFolder($projectId, $subfolder = null)
+    public static function getProjectFolder($area, $projectId, $subfolder = null)
     {
         if (defined('CLI')) {
             if (empty($projectId)) {
                 $destFolder = getcwd() . DS;
             } else {
-                $destFolder = PROJECTS . $projectId . DS;
+                $destFolder = PROJECTS . $area . DS . $projectId . DS;
             }
         } else {
-            $destFolder = PROJECTS . $projectId . DS;
+            $destFolder = PROJECTS . $area . DS . $projectId . DS;
         }
 
         if ($subfolder) {
@@ -207,14 +217,15 @@ class App
     /**
      * Vrne datoteko z izvodnimi podatki za izračun.
      *
+     * @param string $area Področje izračuna
      * @param string $projectId Id projekta
      * @param string $projectFile Datoteka json
      * @param string $subfolder Podmapa s podaki ali z izračuni
      * @return mixed|null
      */
-    public static function loadProjectData($projectId, $projectFile, $subfolder = 'podatki')
+    public static function loadProjectData($area, $projectId, $projectFile, $subfolder = 'podatki')
     {
-        $sourceFolder = self::getProjectFolder($projectId, $subfolder);
+        $sourceFolder = self::getProjectFolder($area, $projectId, $subfolder);
         if (!is_dir($sourceFolder)) {
             throw new \Exception(sprintf('Projekt "%s" ne obstaja.', $projectId));
         }
@@ -243,14 +254,15 @@ class App
     /**
      * Vrne datoteko z izračunom
      *
+     * @param string $area Področje izračuna
      * @param string $projectId Id projekta
      * @param string $projectFile Datoteka json
      * @return mixed|null
      */
-    public static function loadProjectCalculation($projectId, $projectFile)
+    public static function loadProjectCalculation($area, $projectId, $projectFile)
     {
         if (substr($projectFile, -1, 1) == DS) {
-            $sourceFolder = self::getProjectFolder($projectId, 'izracuni') . $projectFile;
+            $sourceFolder = self::getProjectFolder($area, $projectId, 'izracuni') . $projectFile;
             $sistemi = [];
             $iterator = new \DirectoryIterator($sourceFolder);
             foreach ($iterator as $info) {
@@ -275,21 +287,22 @@ class App
             return $sistemi;
         }
 
-        return self::loadProjectData($projectId, $projectFile, 'izracuni');
+        return self::loadProjectData($area, $projectId, $projectFile, 'izracuni');
     }
 
     /**
      * Shrani datoteko z izračunanimi podatki
      *
+     * @param string $area Področje izračuna
      * @param string $projectId Id projekta
      * @param string $projectFile Datoteka json
      * @param string|mixed $data Datoteka json
      * @param string $subfolder Podmapa s podaki ali z izračuni
      * @return int<0, max>|false
      */
-    public static function saveProjectCalculation($projectId, $projectFile, $data, $subfolder = 'izracuni')
+    public static function saveProjectCalculation($area, $projectId, $projectFile, $data, $subfolder = 'izracuni')
     {
-        $destFolder = self::getProjectFolder($projectId, $subfolder);
+        $destFolder = self::getProjectFolder($area, $projectId, $subfolder);
         $destFilename = $destFolder . $projectFile . '.json';
 
         if (!is_dir(dirname($destFilename))) {
