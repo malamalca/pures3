@@ -67,7 +67,5 @@ enum OblikaFasade: string
 
                 return $factors[$koeficientStropa->getOrdinal()][$visinaLinijePogleda->getOrdinal()];
         }
-
-        return 0;
     }
 }

@@ -315,8 +315,6 @@ class RazvodTSV extends Razvod
                     return 0.075 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz;
                 }
         }
-
-        return 0;
     }
 
     /**
@@ -337,7 +335,5 @@ class RazvodTSV extends Razvod
             case RazvodAbstractProperties::f_sch:
                 return 1;
         }
-
-        return 0;
     }
 }

@@ -28,8 +28,6 @@ class EnocevniRazvod extends RazvodOgrevanje
             case VrstaRazvodnihCevi::PrikljucniVod:
                 return 0.1 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz;
         }
-
-        return 0;
     }
 
     /**
@@ -52,7 +50,5 @@ class EnocevniRazvod extends RazvodOgrevanje
             case RazvodAbstractProperties::f_sch:
                 return 2.3;
         }
-
-        return 0;
     }
 }

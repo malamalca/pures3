@@ -27,8 +27,6 @@ class DvocevniZunajRazvod extends RazvodOgrevanje
             case VrstaRazvodnihCevi::PrikljucniVod:
                 return 0.55 * $cona->dolzina * $cona->sirina * $cona->steviloEtaz;
         }
-
-        return 0;
     }
 
     /**
@@ -50,7 +48,5 @@ class DvocevniZunajRazvod extends RazvodOgrevanje
             case RazvodAbstractProperties::f_sch:
                 return 1;
         }
-
-        return 0;
     }
 }

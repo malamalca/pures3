@@ -8,7 +8,7 @@
 !/resources/OpenSans-Regular.ttf
 
 /projects/*
-!/projects/Pures/TestniProjekt
+!/projects/Pures/TestniProjekt/*
 !/projects/Pures/TestniProjekt2
 
 /vendor/*
