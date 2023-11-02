@@ -7,9 +7,10 @@
 /resources/*
 !/resources/OpenSans-Regular.ttf
 
-/projects/*
-!/projects/Pures/TestniProjekt/*
-!/projects/Pures/TestniProjekt2
+/projects/Pures/*
+!/projects/Pures/TestniProjekt
+#!/projects/Pures/TestniProjekt2
+/projects/Hrup/*
 
 /vendor/*
 /.phpunit.cache/*
