@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>PURES 3</title>
+    <title>PURES3 + HRUP13</title>
     <meta name="description" content="PHPures 3">
     <meta name="author" content="ARHIM d.o.o.">
 
