@@ -107,10 +107,14 @@ class Fasada
                     $this->oblikaFasade = OblikaFasade::from($config->oblikaFasade ?? 'ravna');
                     break;
                 case 'koeficientStropa':
-                    $this->koeficientStropa = KoeficientStropa::from($config->koeficientStropa);
+                    $this->koeficientStropa =
+                        empty($config->koeficientStropa) ? null : KoeficientStropa::from($config->koeficientStropa);
                     break;
                 case 'visinaLinijePogleda':
-                    $this->visinaLinijePogleda = VisinaLinijePogleda::from($config->visinaLinijePogleda);
+                    $this->visinaLinijePogleda =
+                        empty($config->visinaLinijePogleda) ?
+                            null :
+                            VisinaLinijePogleda::from($config->visinaLinijePogleda ?? null);
                     break;
                 default:
                     if (isset($config->{$prop->getName()})) {

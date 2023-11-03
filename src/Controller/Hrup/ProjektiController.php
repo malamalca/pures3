@@ -61,4 +61,28 @@ class ProjektiController
         App::set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
         App::set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
     }
+
+    /**
+     * Prikaz naslovnice
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
+    public function naslovnica($projectId)
+    {
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
+    }
+
+    /**
+     * Prikaz izjave
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
+    public function izjava($projectId)
+    {
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
+    }
 }
