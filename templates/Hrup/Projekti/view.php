@@ -6,6 +6,7 @@
 
 <p class="actions">
     <a class="button" href="<?= App::url('/hrup/projekti/izkaz/' . $projectId) ?>">Izkaz</a>
+    <a class="button" href="<?= App::url('/hrup/projekti/konstrukcije/' . $projectId) ?>">Konstrukcije</a>
 </p>
 <?php
     if (!empty($prostori)) {

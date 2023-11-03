@@ -101,8 +101,8 @@
                                 + <?= h($dodatniSloj->naziv) ?>
                                 (
                                     m'=<?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m2
-                                    <?php if ($dodatniSloj->vrsta == 'elasticen' ) echo ', s<sub>D</sub>=' . $this->numFormat($dodatniSloj->dinamicnaTogost, 1) . ' MN/m<sup>3</sup>'; ?>
-                                    <?php if ($dodatniSloj->vrsta == 'nepritrjen' ) echo ', d=' . $this->numFormat($dodatniSloj->sirinaMedprostora, 1) . ' m'; ?>
+                                    <?php if ($dodatniSloj->vrsta == 'elasticen') echo ', s<sub>D</sub>=' . $this->numFormat($dodatniSloj->dinamicnaTogost, 1) . ' MN/m<sup>3</sup>'; ?>
+                                    <?php if ($dodatniSloj->vrsta == 'nepritrjen') echo ', d=' . $this->numFormat($dodatniSloj->sirinaMedprostora, 1) . ' m'; ?>
                                 )
                             </div>
                         <?php

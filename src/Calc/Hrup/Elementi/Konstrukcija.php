@@ -56,7 +56,7 @@ class Konstrukcija
         foreach ($props as $prop) {
             switch ($prop->getName()) {
                 case 'dodatniSloji':
-                    $dodatniSlojiNazivi = ['znotaj', 'zgoraj', 'zunaj', 'spodaj'];
+                    $dodatniSlojiNazivi = ['znotraj', 'zgoraj', 'zunaj', 'spodaj'];
                     foreach ($dodatniSlojiNazivi as $dodatniSlojNaziv) {
                         if (isset($config->dodatniSloji->$dodatniSlojNaziv)) {
                             $config->dodatniSloji->$dodatniSlojNaziv->vrsta =
@@ -107,7 +107,7 @@ class Konstrukcija
         foreach ($this->dodatniSloji as $dodatniSloj) {
             switch ($dodatniSloj->vrsta) {
                 case VrstaDodatnegaSloja::Elasticen:
-                    $this->dRw[] = $dodatniSloj->vrsta->dRw(
+                    $this->dRw[] = $dodatniSloj->dR ?? $dodatniSloj->vrsta->dRw(
                         povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
                         RwKonstrukcije: $this->Rw,
                         povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
@@ -115,13 +115,15 @@ class Konstrukcija
                     );
                     break;
                 case VrstaDodatnegaSloja::Nepritrjen:
-                    $this->dRw[] = $dodatniSloj->vrsta->dRw(
+                    $this->dRw[] = $dodatniSloj->dR ?? $dodatniSloj->vrsta->dRw(
                         povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
                         RwKonstrukcije: $this->Rw,
                         povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
                         sirinaMedprostora: $dodatniSloj->sirinaMedprostora
                     );
                     break;
+                default:
+                    $this->dRw[] = $dodatniSloj->dR ?? 0;
             }
         }
     }

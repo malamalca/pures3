@@ -83,4 +83,16 @@ enum VrstaDodatnegaSloja: string
 
         return $ret;
     }
+
+    /**
+     * Vrne naziv dodatnega sloja
+     *
+     * @return string
+     */
+    public function naziv()
+    {
+        $nazivi = ['Dodatek masivni konstrukciji', 'Sloj na elastični podlagi', 'Sloj z medprostorom'];
+
+        return $nazivi[$this->getOrdinal()];
+    }
 }

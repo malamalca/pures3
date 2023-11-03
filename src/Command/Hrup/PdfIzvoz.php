@@ -51,6 +51,12 @@ class PdfIzvoz extends Command
 
         $pdf->newPage((string)$view->render('Projekti', 'naslovnica'));
         $pdf->newPage((string)$view->render('Projekti', 'izjava'));
+        $pdf->newPage((string)$view->render('Projekti', 'konstrukcije'));
+
+        foreach ($view->get('prostori') as $prostor) {
+            $view->set('prostor', $prostor);
+            $pdf->newPage((string)$view->render('ZunanjiHrup', 'view'));
+        }
 
         $pdfFolder = App::getProjectFolder('Hrup', $projectId, 'pdf');
         if (!is_dir($pdfFolder)) {
