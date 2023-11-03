@@ -5,7 +5,7 @@ namespace App\Calc\GF\Cone;
 
 use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
 use App\Calc\GF\Cone\ElementiOvoja\TransparentenElementOvoja;
-use App\Calc\TSS\Razsvetljava\Razsvetljava;
+use App\Calc\GF\TSS\Razsvetljava\Razsvetljava;
 use App\Core\Log;
 use App\Lib\Calc;
 use App\Lib\EvalMath;

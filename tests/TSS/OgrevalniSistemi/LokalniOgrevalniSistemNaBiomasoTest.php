@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\OgrevalniSistemi\LokalniOgrevalniSistemNaBiomaso;
+use App\Calc\GF\TSS\OgrevalniSistemi\LokalniOgrevalniSistemNaBiomaso;
 
 final class LokalniOgrevalniSistemNaBiomasoTest extends TestCase
 {

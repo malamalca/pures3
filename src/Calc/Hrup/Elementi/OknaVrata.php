@@ -14,6 +14,7 @@ class OknaVrata
     public float $Rw = 0;
     public float $C = 0;
     public float $Ctr = 0;
+    public float $dR = 0;
 
     public array $options = [];
 
@@ -30,6 +31,13 @@ class OknaVrata
 
         if ($config) {
             $this->parseConfig($config);
+        }
+
+        if ($this->vrsta == 'okno') {
+            $this->dR = -2;
+        }
+        if ($this->vrsta == 'vrata') {
+            $this->dR = -5;
         }
     }
 

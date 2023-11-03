@@ -35,7 +35,7 @@ class ZunanjaKonstrukcija
         $this->options = $options;
         $this->konstrukcija = $konstrukcija;
 
-        $this->Rw = $this->konstrukcija->Rw + $this->konstrukcija->dRw;
+        $this->Rw = $this->konstrukcija->Rw + array_sum($this->konstrukcija->dRw);
         $this->C = $this->konstrukcija->C;
         $this->Ctr = $this->konstrukcija->Ctr;
 

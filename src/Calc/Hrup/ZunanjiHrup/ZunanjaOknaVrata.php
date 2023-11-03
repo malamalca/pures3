@@ -35,16 +35,9 @@ class ZunanjaOknaVrata
         $this->options = $options;
         $this->oknaVrata = $oknaVrata;
 
-        $this->Rw = $this->oknaVrata->Rw;
+        $this->Rw = $this->oknaVrata->Rw + $this->oknaVrata->dR;
         $this->C = $this->oknaVrata->C;
         $this->Ctr = $this->oknaVrata->Ctr;
-
-        if ($this->oknaVrata->vrsta == 'okno') {
-            $this->Rw -= 2;
-        }
-        if ($this->oknaVrata->vrsta == 'vrata') {
-            $this->Rw -= 5;
-        }
 
         if ($config) {
             $this->parseConfig($config);

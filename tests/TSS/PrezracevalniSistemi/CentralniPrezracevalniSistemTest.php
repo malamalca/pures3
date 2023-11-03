@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\PrezracevalniSistemi\CentralniPrezracevalniSistem;
+use App\Calc\GF\TSS\PrezracevalniSistemi\CentralniPrezracevalniSistem;
 
 final class CentralniPrezracevalniSistemTest extends TestCase
 {

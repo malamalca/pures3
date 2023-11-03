@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
 
 final class ToplovodniOgrevalniSistemSamoTSV extends TestCase
 {

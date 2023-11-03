@@ -24,7 +24,7 @@ za področje gradbene fizike</h1>
     ?>
     <tr>
         <td class="w-5 center"><?= $i+1 ?></td>
-        <td class="w-65"><?= h($konstrukcija->naziv) ?></td>
+        <td class="w-65"><?= h($konstrukcija->id) ?> - <?= h($konstrukcija->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->U, 2) ?></td>
         <td class="w-10 center">
             <span title="U < <?= $this->numFormat($konstrukcija->TSG->Umax, 2) ?>">
@@ -42,7 +42,7 @@ za področje gradbene fizike</h1>
     ?>
     <tr>
         <td class="w-5 center"><?= $i+1 ?></td>
-        <td class="w-65"><?= h($konstrukcija->naziv) ?></td>
+        <td class="w-65"><?= h($konstrukcija->id) ?> - <?= h($konstrukcija->naziv) ?></td>
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->U, 2) ?></td>
         <td class="w-10 center">
             <span title="U < <?= $this->numFormat($konstrukcija->TSG->Umax, 2) ?>">

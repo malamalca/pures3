@@ -21,5 +21,8 @@ class ZunanjiHrupController
 
         $prostori = App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup');
         App::set('prostor', array_first($prostori, fn($p) => $prostorId == $p->id));
+
+        App::set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
+        App::set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
     }
 }

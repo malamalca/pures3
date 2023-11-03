@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
-use App\Calc\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
-use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Razvodi\DvocevniRazvod;
-use App\Calc\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
-use App\Calc\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
+use App\Calc\GF\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\DvocevniRazvod;
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
+use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
 
 final class DvocevniRazvodTest extends TestCase
 {

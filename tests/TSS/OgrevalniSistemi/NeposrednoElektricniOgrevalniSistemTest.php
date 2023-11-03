@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\OgrevalniSistemi\NeposredniElektricniOgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\NeposredniElektricniOgrevalniSistem;
 
 final class NeposrednoElektricniOgrevalniSistemTest extends TestCase
 {

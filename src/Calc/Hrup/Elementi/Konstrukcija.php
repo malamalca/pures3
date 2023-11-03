@@ -16,7 +16,7 @@ class Konstrukcija
     public float $C = 0;
     public float $Ctr = 0;
 
-    public float $dRw = 0;
+    public array $dRw = [];
     public array $dodatniSloji = [];
 
     private array $options = [];
@@ -104,11 +104,10 @@ class Konstrukcija
             $this->Ctr = -7;
         }
 
-        $this->dRw = 0;
         foreach ($this->dodatniSloji as $dodatniSloj) {
             switch ($dodatniSloj->vrsta) {
                 case VrstaDodatnegaSloja::Elasticen:
-                    $this->dRw = $dodatniSloj->vrsta->dRw(
+                    $this->dRw[] = $dodatniSloj->vrsta->dRw(
                         povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
                         RwKonstrukcije: $this->Rw,
                         povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
@@ -116,7 +115,7 @@ class Konstrukcija
                     );
                     break;
                 case VrstaDodatnegaSloja::Nepritrjen:
-                    $this->dRw = $dodatniSloj->vrsta->dRw(
+                    $this->dRw[] = $dodatniSloj->vrsta->dRw(
                         povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
                         RwKonstrukcije: $this->Rw,
                         povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,

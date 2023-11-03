@@ -13,7 +13,7 @@ use App\Lib\EvalMath;
 class Fasada
 {
     public float $Rw = 0;
-    public float $dRw_fasada = 0;
+    public float $deltaL_fasada = 0;
     public float $povrsina = 0;
     public bool $vplivPrometa = false;
 
@@ -155,11 +155,11 @@ class Fasada
         }
 
         $this->Rw = -10 * log10($sumTau);
-        $this->dRw_fasada = $this->oblikaFasade->faktorOblike(
+        $this->deltaL_fasada = $this->oblikaFasade->faktorOblike(
             $this->koeficientStropa ?? null,
             $this->visinaLinijePogleda ?? null
         );
-        $this->Rw = $this->Rw + $this->dRw_fasada;
+        $this->Rw = $this->Rw + $this->deltaL_fasada;
     }
 
     /**

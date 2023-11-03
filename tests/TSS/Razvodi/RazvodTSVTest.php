@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
-use App\Calc\TSS\OgrevalniSistemi\Podsistemi\Razvodi\RazvodTSV;
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\RazvodTSV;
 
 final class RazvodTSVTest extends TestCase
 {

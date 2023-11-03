@@ -523,6 +523,10 @@ h2 {
   font-size: 120% !important;
 }
 
+.small {
+  font-size: 70% !important;
+}
+
 .strong {
   font-weight: bold;
 }

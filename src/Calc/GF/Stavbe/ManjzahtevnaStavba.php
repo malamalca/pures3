@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\Stavbe;
 
-use App\Calc\TSS\TSSVrstaEnergenta;
+use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
 class ManjzahtevnaStavba extends Stavba
 {

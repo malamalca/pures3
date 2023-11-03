@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Command\Pures;
 
-use App\Calc\TSS\FotonapetostniSistemi\FotonapetostniSistem;
-use App\Calc\TSS\Razsvetljava\Razsvetljava;
-use App\Calc\TSS\SistemOgrevanjaFactory;
-use App\Calc\TSS\SistemPrezracevanjaFactory;
+use App\Calc\GF\TSS\FotonapetostniSistemi\FotonapetostniSistem;
+use App\Calc\GF\TSS\Razsvetljava\Razsvetljava;
+use App\Calc\GF\TSS\SistemOgrevanjaFactory;
+use App\Calc\GF\TSS\SistemPrezracevanjaFactory;
 use App\Core\App;
 use App\Core\Command;
 
