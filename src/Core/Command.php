@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use JsonSchema\Validator;
+
 class Command
 {
     /**
@@ -42,5 +44,30 @@ class Command
         }
 
         return $ret;
+    }
+
+    /**
+     * Validate json object to schema
+     *
+     * @param \stdClass|array $json Json object
+     * @param string $schema Schema name
+     * @param string $area Pures or Hrup
+     * @return bool
+     */
+    public function validateSchema(\stdClass|array $json, string $schema, string $area = 'Pures')
+    {
+        $validator = new Validator();
+        $schemaContents = (string)file_get_contents(SCHEMAS . $area . DS . $schema . 'Schema.json');
+        $validator->validate($json, json_decode($schemaContents));
+        if (!$validator->isValid()) {
+            $this->out($schema . 'Schema.json vsebuje napake:', 'error');
+            foreach ($validator->getErrors() as $error) {
+                $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
+            }
+
+            return false;
+        } else {
+            return true;
+        }
     }
 }

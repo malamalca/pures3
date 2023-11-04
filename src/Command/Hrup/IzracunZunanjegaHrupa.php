@@ -21,12 +21,18 @@ class IzracunZunanjegaHrupa extends Command
 
         /** @var \stdClass $splosniPodatki */
         $splosniPodatki = App::loadProjectData('Hrup', $projectId, 'splosniPodatki');
+        if (!$this->validateSchema(json: $splosniPodatki, schema: 'splosniPodatki', area: 'Hrup')) {
+            return;
+        }
 
         $konstrukcije = App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije');
         $oknaVrata = App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata');
 
         /** @var array $prostoriIn */
         $prostoriIn = App::loadProjectData('Hrup', $projectId, 'zunanjiHrup');
+        if (!$this->validateSchema(json: $prostoriIn, schema: 'zunanjiHrup', area: 'Hrup')) {
+            return;
+        }
 
         $elementi = new \stdClass();
         $elementi->konstrukcije = $konstrukcije;

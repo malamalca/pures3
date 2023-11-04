@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items" : {
+        "type" : "object",
+        "required": ["id", "naziv", "vrsta", "Rw"],
+        "properties" : {
+            "id": {"type": "string"},
+            "naziv": {"type": "string"},
+            "vrsta": {"enum": ["okno", "vrata"]},
+            "Rw" : {"type": "number"},
+            "C" : {"type": "number"},
+            "Ctr" : {"type": "number"}
+        }
+    }
+}

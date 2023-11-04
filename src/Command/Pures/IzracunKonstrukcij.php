@@ -6,7 +6,6 @@ namespace App\Command\Pures;
 use App\Core\App;
 use App\Core\Command;
 use App\Lib\CalcKonstrukcije;
-use JsonSchema\Validator;
 
 class IzracunKonstrukcij extends Command
 {
@@ -33,16 +32,7 @@ class IzracunKonstrukcij extends Command
             'konstrukcije' . DS . 'netransparentne'
         );
         if (!empty($netransparentneKonstrukcije)) {
-            // validate input json
-            $schema = (string)file_get_contents(SCHEMAS . 'netransparentneSchema.json');
-            $validator = new Validator();
-            $validator->validate($netransparentneKonstrukcije, json_decode($schema));
-            if (!$validator->isValid()) {
-                $this->out('netransparentne.json vsebuje napake:', 'error');
-                foreach ($validator->getErrors() as $error) {
-                    $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
-                }
-
+            if (!$this->validateSchema(json: $netransparentneKonstrukcije, schema: 'netransparentne', area: 'Pures')) {
                 return;
             }
 
@@ -83,16 +73,7 @@ class IzracunKonstrukcij extends Command
         /** @var array $transparentneKonstrukcije */
         $transparentneKonstrukcije = App::loadProjectData('Pures', $projectId, 'konstrukcije' . DS . 'transparentne');
         if (!empty($transparentneKonstrukcije)) {
-            // validate input json
-            $validator = new Validator();
-            $schema = (string)file_get_contents(SCHEMAS . 'oknavrataSchema.json');
-            $validator->validate($transparentneKonstrukcije, json_decode($schema));
-            if (!$validator->isValid()) {
-                $this->out('oknavrata.json vsebuje napake:', 'error');
-                foreach ($validator->getErrors() as $error) {
-                    $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
-                }
-
+            if (!$this->validateSchema(json: $transparentneKonstrukcije, schema: 'oknavrata', area: 'Pures')) {
                 return;
             }
 

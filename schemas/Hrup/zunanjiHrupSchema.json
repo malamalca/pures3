@@ -1,0 +1,61 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": ["id", "naziv", "prostornina", "odmevniCas", "Lzunaj", "Lmax"],
+        "properties": {
+            "id": {"type": "string"},
+            "naziv": {"type": "string"},
+            "prostornina" : {"type": "number"},
+            "odmevniCas" : {"type": "number"},
+            "Lzunaj" : {"type": "number"},
+            "Lmax" : {"type": "number"},
+            "fasade": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["oblika"],
+                    "anyOf": [
+                        {"required": ["konstrukcije"]},
+                        {"required": ["oknaVrata"]}
+                    ],
+                    "properties": {
+                        "vplivPrometa": {"type": "boolean"},
+                        "oblika": {"enum": [
+                            "ravnaFasada", "konzolaZgoraj", "balkon", "balkonZOgrajo", 
+                            "balkonZOgrajoInSteklom", "loggiaSKonzolo", "loggiaSKonzoloInOgrajo", "loggia",
+                            "terasa", "terasaZOgrajo"
+                        ]},
+                        "koeficientStropa": {"enum": ["<=0.3", "=0.6", ">=0.9"]},
+                        "visinaLinijePogleda": {"enum": ["<1.5m", "1.5-2.5m", ">2.5m"]},
+                        "konstrukcije": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": ["idKonstrukcije", "povrsina"],
+                                "properties": {
+                                    "idKonstrukcije": {"type": "string"},
+                                    "stevilo": {"type": "integer"},
+                                    "povrsina": {"type": "number"}
+                                }
+                            }
+                        },
+                        "oknaVrata": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "required": ["idOknaVrata", "povrsina"],
+                                "properties": {
+                                    "idOknaVrata": {"type": "string"},
+                                    "stevilo": {"type": "integer"},
+                                    "povrsina": {"type": "number"}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

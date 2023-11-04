@@ -1,0 +1,87 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items" : {
+        "type" : "object",
+        "required": ["id", "naziv", "povrsinskaMasa"],
+        "properties" : {
+            "id": {"type": "string"},
+            "naziv": {"type": "string"},
+            "povrsinskaMasa" : {"type": "number"},
+            "dodatniSloji": {
+                "type": "object",
+                "properties": {
+                    "zunaj": {
+                        "anyOf": [
+                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
+                            { "$ref": "#/definitions/dodatniSlojElasticen" },
+                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
+                        ]
+                    },
+                    "znotraj": {
+                        "anyOf": [
+                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
+                            { "$ref": "#/definitions/dodatniSlojElasticen" },
+                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
+                        ]
+                    },
+                    "zgoraj": {
+                        "anyOf": [
+                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
+                            { "$ref": "#/definitions/dodatniSlojElasticen" },
+                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
+                        ]
+                    },
+                    "spodaj": {
+                        "anyOf": [
+                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
+                            { "$ref": "#/definitions/dodatniSlojElasticen" },
+                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dodatniSlojPritrjen": {
+            "type": "object",
+            "required": ["vrsta", "naziv", "povrsinskaMasa"],
+            "properties": {
+                "vrsta": {"const": "pritrjen"},
+                "naziv": {"type": "string"},
+                "povrsinskaMasa": {"type": "number"}
+            }
+        },
+        "dodatniSlojElasticen": {
+            "type": "object",
+            "required": ["vrsta", "naziv", "povrsinskaMasa"],
+            "oneOf": [
+                {"required": ["dinamicnaTogost"]},
+                {"required": ["dR"]}
+            ],
+            "properties": {
+                "vrsta": {"const": "elasticen"},
+                "naziv": {"type": "string"},
+                "povrsinskaMasa": {"type": "number"},
+                "dinamicnaTogost": {"type": "number"},
+                "dR": {"type": "number"}
+            }
+        },
+        "dodatniSlojNepritrjen": {
+            "type": "object",
+            "required": ["vrsta", "naziv", "povrsinskaMasa"],
+            "oneOf": [
+                {"required": ["sirinaMedprostora"]},
+                {"required": ["dR"]}
+            ],
+            "properties": {
+                "vrsta": {"const": "nepritrjen"},
+                "naziv": {"type": "string"},
+                "povrsinskaMasa": {"type": "number"},
+                "sirinaMedprostora": {"type": "number"},
+                "dR": {"type": "number"}
+            }
+        }
+    }
+}
