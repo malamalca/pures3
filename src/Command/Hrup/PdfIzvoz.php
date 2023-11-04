@@ -52,6 +52,16 @@ class PdfIzvoz extends Command
         $pdf->newPage((string)$view->render('Projekti', 'naslovnica'));
         $pdf->newPage((string)$view->render('Projekti', 'izjava'));
 
+        $sourceFilename = App::getProjectFolder('Hrup', $projectId, 'podatki') . 'tehnicnoPorocilo.txt';
+        if (file_exists($sourceFilename)) {
+            $porocilo = file_get_contents($sourceFilename);
+            if (!empty($porocilo)) {
+                $view->set('porocilo', $porocilo);
+                $porocilo = (string)$view->render('Projekti', 'porocilo');
+                $pdf->newPage($porocilo);
+            }
+        }
+
         $pdfFolder = App::getProjectFolder('Hrup', $projectId, 'pdf');
         if (!is_dir($pdfFolder)) {
             mkdir($pdfFolder, 0777, true);

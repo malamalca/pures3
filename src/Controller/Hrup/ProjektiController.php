@@ -45,6 +45,16 @@ class ProjektiController
         App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
         App::set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
         App::set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
+
+        $porocilo = '';
+
+        $sourceFolder = App::getProjectFolder('Hrup', $projectId, 'podatki');
+        $sourceFilename = $sourceFolder . 'tehnicnoPorocilo.txt';
+        if (file_exists($sourceFilename)) {
+            $porocilo = file_get_contents($sourceFilename);
+        }
+
+        App::set('porocilo', $porocilo);
     }
 
     /**

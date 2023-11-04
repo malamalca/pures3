@@ -16,7 +16,8 @@
         "monolog/monolog": "^2.3",
         "tecnickcom/tcpdf": "^6.6",
         "justinrainbow/json-schema": "^5.2",
-        "mikehaertl/phpwkhtmltopdf": "^2.5"
+        "mikehaertl/phpwkhtmltopdf": "^2.5",
+        "michelf/php-markdown": "^2.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "*",
