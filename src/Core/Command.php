@@ -57,10 +57,11 @@ class Command
     public function validateSchema(\stdClass|array $json, string $schema, string $area = 'Pures')
     {
         $validator = new Validator();
-        $schemaContents = (string)file_get_contents(SCHEMAS . $area . DS . $schema . 'Schema.json');
+        $schemaFile = SCHEMAS . $area . DS . $schema . 'Schema.json';
+        $schemaContents = (string)file_get_contents($schemaFile);
         $validator->validate($json, json_decode($schemaContents));
         if (!$validator->isValid()) {
-            $this->out($schema . 'Schema.json vsebuje napake:', 'error');
+            $this->out(sprintf('PREVERJANJE SHEME :: Datoteka "%s" vsebuje napake.', $schema), 'error');
             foreach ($validator->getErrors() as $error) {
                 $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
             }

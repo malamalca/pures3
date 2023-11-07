@@ -36,7 +36,7 @@
     "dovoljenaSpecLetnaToplota": 25,
     "dovoljenSpecKoeficientTransmisijskihIzgub": 0.3262248338564675,
     "energijaPoEnergentih": {
-        "elektrika": 2239.8618052586908,
+        "elektrika": 1892.549333333333,
         "okolje": 3809.781300385621
     },
     "neutezenaDovedenaEnergija": 9179.69343711463,
@@ -46,7 +46,7 @@
     "obnovljivaPrimarnaEnergija": 9179.69343711463,
     "izpustCO2": 2255.363097426184,
     "skupnaOddanaElektricnaEnergija": 0,
-    "letnaUcinkovitostOgrHlaTsv": 32.6242110226598,
+    "letnaUcinkovitostOgrHlaTsv": 0,
     "ROVE": 53.26328355595182,
     "minROVE": 50,
     "specificnaPrimarnaEnergija": 107.7160102638009,
@@ -5064,7 +5064,7 @@
                                                 761.6847465171074,
                                                 853.2526039639015,
                                                 1065.953794123886,
-                                                1324.0099184729993,
+                                                1324.0099184729995,
                                                 1766.1774858796227,
                                                 2097.1611010588063,
                                                 2346.8812812515644,
@@ -6539,10 +6539,60 @@
     ],
     "sistemi": [
         {
+            "id": "Prezracevanje",
+            "idCone": "Cona1",
+            "razredH1H2": true,
+            "vrsta": "centralni",
+            "faktorKrmiljenja": 1,
+            "odvod": {
+                "volumen": 200,
+                "mocVentilatorja": 0.10062222222222221,
+                "filter": "hepa"
+            },
+            "dovod": {
+                "volumen": 200,
+                "mocVentilatorja": 0.11442222222222223,
+                "filter": "hepa"
+            },
+            "potrebnaEnergija": [
+                160.73706666666666,
+                145.18186666666665,
+                160.73706666666666,
+                155.552,
+                160.73706666666666,
+                155.552,
+                160.73706666666666,
+                160.73706666666666,
+                155.552,
+                160.73706666666666,
+                155.552,
+                160.73706666666666
+            ],
+            "potrebnaElektricnaEnergija": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "skupnaPotrebnaEnergija": 1892.549333333333,
+            "energijaPoEnergentih": {
+                "elektrika": 1892.549333333333
+            }
+        },
+        {
             "id": "TC",
             "idCone": "Cona1",
             "vrsta": "toplovodni",
             "energent": "elektrika",
+            "jeOgrevalniSistem": true,
             "potrebnaEnergija": [
                 1419.5794116055595,
                 920.3134296932972,
@@ -6587,10 +6637,8 @@
             ],
             "vracljiveIzgube": [],
             "energijaPoEnergentih": {
-                "ogrevanje": {
-                    "elektrika": 2239.8618052586908,
-                    "okolje": 3809.781300385621
-                }
+                "elektrika": 2239.8618052586908,
+                "okolje": 3809.781300385621
             },
             "letnaUcinkovitostOgrHlaTsv": 0.5434645666644838,
             "minLetnaUcinkovitostOgrHlaTsv": 0.5,
@@ -6828,55 +6876,6 @@
                     "elektricnaMocNaSekundarnemKrogu": 3
                 }
             ]
-        },
-        {
-            "id": "Prezracevanje",
-            "idCone": "Cona1",
-            "razredH1H2": true,
-            "vrsta": "centralni",
-            "faktorKrmiljenja": 1,
-            "odvod": {
-                "volumen": 200,
-                "mocVentilatorja": 0.10062222222222221,
-                "filter": "hepa"
-            },
-            "dovod": {
-                "volumen": 200,
-                "mocVentilatorja": 0.11442222222222223,
-                "filter": "hepa"
-            },
-            "potrebnaEnergija": [
-                160.73706666666666,
-                145.18186666666665,
-                160.73706666666666,
-                155.552,
-                160.73706666666666,
-                155.552,
-                160.73706666666666,
-                160.73706666666666,
-                155.552,
-                160.73706666666666,
-                155.552,
-                160.73706666666666
-            ],
-            "potrebnaElektricnaEnergija": [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-            ],
-            "skupnaPotrebnaEnergija": 1892.549333333333,
-            "energijaPoEnergentih": {
-                "elektrika": 1892.549333333333
-            }
         },
         {
             "id": "Razsvetljava",

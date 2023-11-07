@@ -14,6 +14,7 @@ abstract class OgrevalniSistem
     public ?string $id;
     public ?string $idCone;
     public string $vrsta;
+    public bool $jeOgrevalniSistem = true;
     public TSSVrstaEnergenta $energent;
 
     /**
@@ -126,6 +127,7 @@ abstract class OgrevalniSistem
         $sistem->idCone = $this->idCone;
         $sistem->vrsta = $this->vrsta;
         $sistem->energent = $this->energent;
+        $sistem->jeOgrevalniSistem = $this->jeOgrevalniSistem;
 
         $sistem->potrebnaEnergija = $this->potrebnaEnergija;
         $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;

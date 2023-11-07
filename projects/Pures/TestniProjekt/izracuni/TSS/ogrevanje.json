@@ -4,6 +4,7 @@
         "idCone": "Cona1",
         "vrsta": "toplovodni",
         "energent": "elektrika",
+        "jeOgrevalniSistem": true,
         "potrebnaEnergija": [
             1419.5794116055595,
             920.3134296932972,
@@ -48,10 +49,8 @@
         ],
         "vracljiveIzgube": [],
         "energijaPoEnergentih": {
-            "ogrevanje": {
-                "elektrika": 2239.8618052586908,
-                "okolje": 3809.781300385621
-            }
+            "elektrika": 2239.8618052586908,
+            "okolje": 3809.781300385621
         },
         "letnaUcinkovitostOgrHlaTsv": 0.5434645666644838,
         "minLetnaUcinkovitostOgrHlaTsv": 0.5,

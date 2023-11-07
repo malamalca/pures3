@@ -267,7 +267,10 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
     {
         $this->init($cona, $okolje);
 
-        $this->energijaPoEnergentih = [];
+        $this->energijaPoEnergentih = [
+            TSSVrstaEnergenta::Elektrika->value => 0,
+            TSSVrstaEnergenta::Okolje->value => 0,
+        ];
         $this->potrebnaEnergija = [];
         $this->potrebnaElektricnaEnergija = [];
         $this->obnovljivaEnergija = [];
@@ -292,17 +295,17 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
 
             $dejanskaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $this->tsv->obnovljivaEnergija);
 
-            $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Elektrika->value] =
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
                 array_sum($dejanskaEnergija) +
                 array_sum($this->tsv->potrebnaElektricnaEnergija);
-
-            $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Okolje->value] =
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] +=
                 array_sum($this->tsv->obnovljivaEnergija);
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=
-                $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Elektrika->value] *
+                (array_sum($dejanskaEnergija) +
+                array_sum($this->tsv->potrebnaElektricnaEnergija)) *
                 TSSVrstaEnergenta::Elektrika->utezniFaktor('tot') +
-                $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Okolje->value] *
+                array_sum($this->tsv->obnovljivaEnergija) *
                 TSSVrstaEnergenta::Okolje->utezniFaktor('tot');
         }
 
@@ -323,25 +326,21 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 $this->ogrevanje->potrebnaEnergija,
                 $this->ogrevanje->obnovljivaEnergija
             );
-            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] =
-                array_sum($dejanskaEnergija) +
-                array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
 
-            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Okolje->value] =
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
+                array_sum($dejanskaEnergija) + array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
+
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] =
                 array_sum($this->ogrevanje->obnovljivaEnergija);
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=
-                $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] *
+                (array_sum($dejanskaEnergija) + array_sum($this->ogrevanje->potrebnaElektricnaEnergija)) *
                 TSSVrstaEnergenta::Elektrika->utezniFaktor('tot') +
-                $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Okolje->value] *
+                array_sum($this->ogrevanje->obnovljivaEnergija) *
                 TSSVrstaEnergenta::Okolje->utezniFaktor('tot');
         }
 
         $this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
-        /*$this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / (
-            $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Elektrika->value] +
-            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value]
-        );*/
         $this->minLetnaUcinkovitostOgrHlaTsv = $this->energent->minimalniIzkoristekOgrHlaTsv();
     }
 }
