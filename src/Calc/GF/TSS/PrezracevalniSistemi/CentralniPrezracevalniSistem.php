@@ -71,6 +71,7 @@ class CentralniPrezracevalniSistem extends PrezracevalniSistem
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = $stDni * 24;
 
+            $this->potrebnaElektricnaEnergija[$mesec] = 0;
             $this->potrebnaEnergija[$mesec] = $stUr *
                 (($this->dovod->mocVentilatorja + $this->odvod->mocVentilatorja) *
                 $this->krmiljenje->faktorSistemaKrmiljenja() + $this->mocSenzorjev / 1000) * $this->stevilo;
@@ -103,6 +104,7 @@ class CentralniPrezracevalniSistem extends PrezracevalniSistem
         $ret->dovod = $this->dovod->export();
 
         $ret->potrebnaEnergija = $this->potrebnaEnergija;
+        $ret->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
         $ret->skupnaPotrebnaEnergija = $this->skupnaPotrebnaEnergija;
         $ret->energijaPoEnergentih = $this->energijaPoEnergentih;
 

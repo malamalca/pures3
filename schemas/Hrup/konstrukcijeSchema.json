@@ -7,7 +7,12 @@
         "properties" : {
             "id": {"type": "string"},
             "naziv": {"type": "string"},
-            "povrsinskaMasa" : {"type": "number"},
+            "povrsinskaMasa" : {
+                "oneOf": [
+                    {"type": "number"},
+                    {"type": "string"}
+                ]
+            },
             "dodatniSloji": {
                 "type": "object",
                 "properties": {
@@ -50,7 +55,12 @@
             "properties": {
                 "vrsta": {"const": "pritrjen"},
                 "naziv": {"type": "string"},
-                "povrsinskaMasa": {"type": "number"}
+                "povrsinskaMasa": {
+                    "oneOf": [
+                        {"type": "number"},
+                        {"type": "string"}
+                    ]
+                }
             }
         },
         "dodatniSlojElasticen": {
@@ -63,7 +73,12 @@
             "properties": {
                 "vrsta": {"const": "elasticen"},
                 "naziv": {"type": "string"},
-                "povrsinskaMasa": {"type": "number"},
+                "povrsinskaMasa": {
+                    "oneOf": [
+                        {"type": "number"},
+                        {"type": "string"}
+                    ]
+                },
                 "dinamicnaTogost": {"type": "number"},
                 "dR": {"type": "number"}
             }
@@ -78,7 +93,12 @@
             "properties": {
                 "vrsta": {"const": "nepritrjen"},
                 "naziv": {"type": "string"},
-                "povrsinskaMasa": {"type": "number"},
+                "povrsinskaMasa": {
+                    "oneOf": [
+                        {"type": "number"},
+                        {"type": "string"}
+                    ]
+                },
                 "sirinaMedprostora": {"type": "number"},
                 "dR": {"type": "number"}
             }

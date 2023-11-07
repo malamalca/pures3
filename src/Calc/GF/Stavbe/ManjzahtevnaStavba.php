@@ -14,6 +14,7 @@ class ManjzahtevnaStavba extends Stavba
 
     public float $faktorOblike = 1;
     public float $razmerjeTranspCelota = 1;
+    public float $povprecnaLetnaTemp = 0;
 
     public float $specTransmisijskeIzgube = 0;
     public float $specVentilacijskeIzgube = 0;
@@ -105,14 +106,14 @@ class ManjzahtevnaStavba extends Stavba
 
         $this->dovoljenaSpecLetnaToplota = 25 * $this->X_Hnd();
 
-        $povprecnaLetnaTemp = $okolje->povprecnaLetnaTemp < 7 ? 7 :
+        $this->povprecnaLetnaTemp = $okolje->povprecnaLetnaTemp < 7 ? 7 :
             ($okolje->povprecnaLetnaTemp > 11 ? 11 : $okolje->povprecnaLetnaTemp);
 
         $faktorOblike = $this->faktorOblike < 0.2 ? 0.2 :
             ($this->faktorOblike > 1.2 ? 1.2 : $this->faktorOblike);
 
         $this->dovoljenSpecKoeficientTransmisijskihIzgub = 0.25 +
-            $povprecnaLetnaTemp / 300 +
+            $this->povprecnaLetnaTemp / 300 +
             0.04 / $faktorOblike +
             ($this->transparentnaPovrsina / $this->povrsinaOvoja) / 8;
     }
@@ -126,6 +127,7 @@ class ManjzahtevnaStavba extends Stavba
     {
         $utezenaDovedenaEnergijaOgrHlaTsv = 0;
         $skupnaDovedenaEnergijaOgrHlaTsv = 0;
+        $skupnaPotrebnaElektricnaEnergijaOgrHlaTsv = 0;
 
         foreach ($this->sistemi as $sistem) {
             $jeOgrevalniSistem = false;
@@ -152,8 +154,20 @@ class ManjzahtevnaStavba extends Stavba
                 $sistemEnergijaPoEnergentih = ['default' => $sistemEnergijaPoEnergentih];
             }
 
+            if ($jeOgrevalniSistem) {
+                if (!empty($sistem->potrebnaElektricnaEnergija)) {
+                    $skupnaPotrebnaElektricnaEnergijaOgrHlaTsv += array_sum($sistem->potrebnaElektricnaEnergija);
+                }
+                foreach ($podsistemi as $podsistem) {
+                    if (!empty($sistem->$podsistem->potrebnaElektricnaEnergija)) {
+                        $skupnaPotrebnaElektricnaEnergijaOgrHlaTsv += $sistem->$podsistem->potrebnaElektricnaEnergija;
+                    }
+                }
+            }
+
             foreach ($podsistemi as $podsistem) {
                 $this->energijaPoEnergentih += (array)$sistemEnergijaPoEnergentih[$podsistem];
+
                 foreach ((array)$sistemEnergijaPoEnergentih[$podsistem] as $energent => $energija) {
                     // za siseme, ki ne uporabljajo elektricne energije ampak jo proizvajajo
                     if (!empty($sistem->potrebnaEnergija) || !empty($sistem->potrebnaElektricnaEnergija)) {
@@ -169,7 +183,7 @@ class ManjzahtevnaStavba extends Stavba
                     }
 
                     $this->skupnaPrimarnaEnergija +=
-                            $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
 
                     $this->neobnovljivaPrimarnaEnergija +=
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('nren');
@@ -195,7 +209,10 @@ class ManjzahtevnaStavba extends Stavba
             return;
         }
 
-        $this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
+        //$this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
+        $this->letnaUcinkovitostOgrHlaTsv = ($this->skupnaEnergijaOgrevanje + $this->skupnaEnergijaHlajenje +
+            $this->skupnaEnergijaTSV + $this->skupnaEnergijaNavlazevanje + $this->skupnaEnergijaRazvlazevanje) /
+            $skupnaPotrebnaElektricnaEnergijaOgrHlaTsv;
 
         $this->ROVE = $this->obnovljivaPrimarnaEnergija / $this->skupnaPrimarnaEnergija * 100;
         $this->minROVE = 50 * $this->X_OVE();

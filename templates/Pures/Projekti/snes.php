@@ -20,6 +20,9 @@
         <td>E<sub>del,an</sub></td>
         <td class="center"><?= $this->numFormat($stavba->neutezenaDovedenaEnergija, 0) ?></td>
     </tr>
+    <tr class="noprint">
+        <td colspan="4" class="math">`E_(de l,an)=sum_(i=1)^n E_(de l,an,i)=<?php foreach($stavba->sistemi as $i => $sistem) { if ($i > 0) echo '+';  echo $this->numFormat(array_sum($sistem->potrebnaEnergija), 0); echo '+'; echo $this->numFormat(array_sum($sistem->potrebnaElektricnaEnergija), 0);  } ?>`</td>
+    </tr>
     <tr>
         <td>Utežena dovedena energija za delovanje TSS</td>
         <td>E<sub>w,del,an</sub></td>

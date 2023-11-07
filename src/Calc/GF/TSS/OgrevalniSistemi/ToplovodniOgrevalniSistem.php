@@ -338,6 +338,10 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
         }
 
         $this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
+        /*$this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / (
+            $this->energijaPoEnergentih['tsv'][TSSVrstaEnergenta::Elektrika->value] +
+            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value]
+        );*/
         $this->minLetnaUcinkovitostOgrHlaTsv = $this->energent->minimalniIzkoristekOgrHlaTsv();
     }
 }

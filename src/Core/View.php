@@ -134,10 +134,11 @@ class View
      *
      * @param float $number Number to be formatted
      * @param int $places Number of decimal places
+     * @param string $decimalSeparator Decimal separator
      * @return string
      */
-    public function numFormat($number, $places = 2)
+    public function numFormat($number, $places = 2, $decimalSeparator = ',')
     {
-        return number_format($number, $places, ',', '');
+        return number_format($number, $places, $decimalSeparator, '');
     }
 }

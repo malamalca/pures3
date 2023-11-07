@@ -11,7 +11,8 @@
     <meta name="description" content="PHPures 3">
     <meta name="author" content="ARHIM d.o.o.">
 
-    <link rel="stylesheet" href="<?= $this->url("/css/main.css") ?>">
+    <script type="text/javascript" src="<?= $this->url("/js/ASCIIMathML.js") ?>"></script>
+    <link rel="stylesheet" href="<?= $this->url("/css/main.css") ?>" />
     <link rel="stylesheet" media="print" href="<?= $this->url("/css/print.css") ?>" />
 </head>
 

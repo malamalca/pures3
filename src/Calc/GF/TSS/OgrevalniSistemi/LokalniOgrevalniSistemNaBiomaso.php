@@ -109,8 +109,7 @@ class LokalniOgrevalniSistemNaBiomaso extends OgrevalniSistem
 
         $this->letnaUcinkovitostOgrHlaTsv =
             $cona->skupnaEnergijaOgrevanje /
-            ($this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Biomasa->value] *
-            TSSVrstaEnergenta::Biomasa->utezniFaktor('tot'));
+            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Biomasa->value];
 
         $this->minLetnaUcinkovitostOgrHlaTsv = TSSVrstaEnergenta::Biomasa->minimalniIzkoristekOgrHlaTsv();
     }

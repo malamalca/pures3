@@ -13,6 +13,7 @@ abstract class PrezracevalniSistem
 
     public float $skupnaPotrebnaEnergija = 0;
     public array $potrebnaEnergija = [];
+    public array $potrebnaElektricnaEnergija = [];
     public array $energijaPoEnergentih = [];
 
     /**

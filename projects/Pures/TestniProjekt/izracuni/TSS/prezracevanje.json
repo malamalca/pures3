@@ -29,6 +29,20 @@
             155.552,
             160.73706666666666
         ],
+        "potrebnaElektricnaEnergija": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
         "skupnaPotrebnaEnergija": 1892.549333333333,
         "energijaPoEnergentih": {
             "elektrika": 1892.549333333333

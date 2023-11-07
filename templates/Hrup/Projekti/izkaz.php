@@ -198,7 +198,7 @@
     <tr>
         <td class="w-10">Oznaka / pozicija</td>
         <td class="w-30">Element ali sklop elementov</td>
-        <td class="w-10 center" style="border-right: dashed 1px">Oznaka veličine (enota)</td>
+        <td class="w-10 center" style="border-right: dashed 1px">Oznaka veličine</td>
         <td class="w-10 center">&nbsp;</td>
         <td class="w-20 center">&nbsp;</td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
@@ -248,7 +248,7 @@
     <tr>
         <td class="w-10">Oznaka / pozicija</td>
         <td class="w-30">Element ali sklop elementov</td>
-        <td class="w-10 center" style="border-right: dashed 1px">Oznaka veličine (enota)</td>
+        <td class="w-10 center" style="border-right: dashed 1px">Oznaka veličine</td>
         <td class="w-10 center">&nbsp;</td>
         <td class="w-20 center">&nbsp;</td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
@@ -282,7 +282,7 @@
     <tr>
         <td class="w-10">Oznaka / pozicija</td>
         <td class="w-30">Element ali sklop elementov</td>
-        <td class="w-10 center" style="border-right: dashed 1px">Oznaka veličine (enota)</td>
+        <td class="w-10 center" style="border-right: dashed 1px">Oznaka veličine</td>
         <td class="w-10 center">&nbsp;</td>
         <td class="w-20 center">&nbsp;</td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
@@ -299,32 +299,22 @@
     </tr>
 </table>
 
-
-
-
-<h2>&nbsp;</h2>
+<br />
 <table border="2" cellpadding="3" width="100%">
     <tr>
         <td class="w-100"><h2 style="margin: 0">Opombe</h2>(izdelovalca izkaza in merilca)</td>
     </tr>
     <tr>
-        <td class="w-100"><br /><br /><br /><br /></td>
+        <td class="w-100"><br /><br /><br /></td>
     </tr>
 </table>
 
-
-<br />
-<p>Podpis izdelovalca elaborata:</p>
-<br /><br /><br />
-
-<p>Podpis pooblaščenca akreditirane (pravne ali fizične) osebe:</p>
+<p>Podpis izdelovalca elaborata:<br /></p>
 <br /><br />
+<p>Podpis pooblaščenca akreditirane (pravne ali fizične) osebe:</p>
 
 <p>Datum opravljanja meritev:</p>
-<br /><br />
 
 <p>Podpis osebe, ki je opravljala meritve:</p>
-<br /><br />
 
 <p>Podpis odgovornega nadzornika:</p>
-<br /><br />

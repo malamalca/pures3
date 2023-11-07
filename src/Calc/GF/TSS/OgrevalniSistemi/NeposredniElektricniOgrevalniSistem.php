@@ -108,8 +108,7 @@ class NeposredniElektricniOgrevalniSistem extends OgrevalniSistem
 
         $this->letnaUcinkovitostOgrHlaTsv =
             $cona->skupnaEnergijaOgrevanje /
-            ($this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] *
-            TSSVrstaEnergenta::Elektrika->utezniFaktor('tot'));
+            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value];
 
         $this->minLetnaUcinkovitostOgrHlaTsv = TSSVrstaEnergenta::Elektrika->minimalniIzkoristekOgrHlaTsv();
     }

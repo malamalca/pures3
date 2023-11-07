@@ -117,7 +117,7 @@ class PdfIzvoz extends Command
 
         $pdf->newPage((string)$view->render('Projekti', 'snes'));
 
-        $pdf->saveAs($pdfFolder . 'elaborat.pdf');
+        $pdf->saveAs($pdfFolder . 'PuresElaborat.pdf');
     }
 
     /**
@@ -145,6 +145,6 @@ class PdfIzvoz extends Command
             mkdir($pdfFolder, 0777, true);
         }
 
-        $pdf->saveAs($pdfFolder . 'izkaz.pdf');
+        $pdf->saveAs($pdfFolder . 'PuresIzkaz.pdf');
     }
 }

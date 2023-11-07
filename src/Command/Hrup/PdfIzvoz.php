@@ -51,12 +51,6 @@ class PdfIzvoz extends Command
 
         $pdf->newPage((string)$view->render('Projekti', 'naslovnica'));
         $pdf->newPage((string)$view->render('Projekti', 'izjava'));
-        $pdf->newPage((string)$view->render('Projekti', 'konstrukcije'));
-
-        foreach ($view->get('prostori') as $prostor) {
-            $view->set('prostor', $prostor);
-            $pdf->newPage((string)$view->render('ZunanjiHrup', 'view'));
-        }
 
         $sourceFilename = App::getProjectFolder('Hrup', $projectId, 'podatki') . 'tehnicnoPorocilo.txt';
         if (file_exists($sourceFilename)) {
@@ -68,12 +62,19 @@ class PdfIzvoz extends Command
             }
         }
 
+        $pdf->newPage((string)$view->render('Projekti', 'konstrukcije'));
+
+        foreach ($view->get('prostori') as $prostor) {
+            $view->set('prostor', $prostor);
+            $pdf->newPage((string)$view->render('ZunanjiHrup', 'view'));
+        }
+
         $pdfFolder = App::getProjectFolder('Hrup', $projectId, 'pdf');
         if (!is_dir($pdfFolder)) {
             mkdir($pdfFolder, 0777, true);
         }
 
-        $pdf->saveAs($pdfFolder . 'elaborat.pdf');
+        $pdf->saveAs($pdfFolder . 'HrupElaborat.pdf');
     }
 
     /**
@@ -95,6 +96,6 @@ class PdfIzvoz extends Command
             mkdir($pdfFolder, 0777, true);
         }
 
-        $pdf->saveAs($pdfFolder . 'izkaz.pdf');
+        $pdf->saveAs($pdfFolder . 'HrupIzkaz.pdf');
     }
 }

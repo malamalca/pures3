@@ -59,8 +59,10 @@ class Konstrukcija
                     $dodatniSlojiNazivi = ['znotraj', 'zgoraj', 'zunaj', 'spodaj'];
                     foreach ($dodatniSlojiNazivi as $dodatniSlojNaziv) {
                         if (isset($config->dodatniSloji->$dodatniSlojNaziv)) {
-                            $config->dodatniSloji->$dodatniSlojNaziv->vrsta =
-                                VrstaDodatnegaSloja::from($config->dodatniSloji->$dodatniSlojNaziv->vrsta);
+                            if (is_string($config->dodatniSloji->$dodatniSlojNaziv->vrsta)) {
+                                $config->dodatniSloji->$dodatniSlojNaziv->vrsta =
+                                    VrstaDodatnegaSloja::from($config->dodatniSloji->$dodatniSlojNaziv->vrsta);
+                            }
                             $this->dodatniSloji[$dodatniSlojNaziv] = $config->dodatniSloji->$dodatniSlojNaziv;
                         }
                     }
@@ -141,7 +143,12 @@ class Konstrukcija
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             if ($prop->isInitialized($this)) {
-                if ($prop->getName() == 'ovoj') {
+                if ($prop->getName() == 'dodatniSloji') {
+                    $konstrukcija->dodatniSloji = [];
+                    foreach ($prop->getValue($this) as $dodatniSlojVrsta => $dodatniSloj) {
+                        $dodatniSloj->vrsta = (string)$dodatniSloj->vrsta->value;
+                        $konstrukcija->dodatniSloji[$dodatniSlojVrsta] = $dodatniSloj;
+                    }
                 } else {
                     $konstrukcija->{$prop->getName()} = $prop->getValue($this);
                 }

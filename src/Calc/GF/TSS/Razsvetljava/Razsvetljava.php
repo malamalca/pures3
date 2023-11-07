@@ -30,6 +30,7 @@ class Razsvetljava
 
     public float $skupnaPotrebnaEnergija = 0;
     public array $potrebnaEnergija = [];
+    public array $potrebnaElektricnaEnergija = [];
     public array $energijaPoEnergentih = [];
 
     /**
@@ -133,6 +134,7 @@ class Razsvetljava
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = $stDni * 24;
 
+            $this->potrebnaElektricnaEnergija[$mesec] = 0;
             $this->potrebnaEnergija[$mesec] = $letnaDovedenaEnergija * $stDni / 365 * $mesecniUtezniFaktor[$mesec];
 
             $this->skupnaPotrebnaEnergija += $this->potrebnaEnergija[$mesec];
@@ -172,6 +174,7 @@ class Razsvetljava
         $ret->mocSvetilk = $this->mocSvetilk;
 
         $ret->potrebnaEnergija = $this->potrebnaEnergija;
+        $ret->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
         $ret->skupnaPotrebnaEnergija = $this->skupnaPotrebnaEnergija;
         $ret->energijaPoEnergentih = $this->energijaPoEnergentih;
 

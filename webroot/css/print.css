@@ -19,6 +19,9 @@ h2 {
     font-size: 20px;
 }
 
+h3 {
+    margin-bottom: 0;
+}
 
 td, th {
     font-size: 13px;
@@ -29,5 +32,9 @@ table, tr, td, th, tbody, thead, tfoot {
 }
 
 .actions {
+    display: none;
+}
+
+.noprint {
     display: none;
 }
