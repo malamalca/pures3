@@ -55,17 +55,17 @@ class IzracunConeTest extends TestCase
         // vrednosti se razlikujejo od Excela V150 za ca 0.04
         // razlog je v tem, ker excel upošteva in računa negativne solarne dobitke, kar ni ok
         $roundedResult = array_map(fn($el) => round($el, 2), $cona->solarniDobitkiOgrevanje);
-        $expected = [317.05, 490.27, 713.61, 841.52, 922.59, 796.64, 842.98, 843.43, 701.68, 510.91, 271.25, 217.71];
+        $expected = [357.89, 527.16, 754.44, 881.03, 963.43, 836.16, 883.81, 884.27, 741.20, 551.75, 310.76, 258.55];
         $this->assertEquals($expected, $roundedResult);
 
         // faktor izkoristljivosti dobitkov
         $roundedResult = array_map(fn($el) => round($el ?? 0, 3), $cona->ucinekDobitkov);
-        $expected = [0.992, 0.971, 0.903, 0.771, 0.534, 0.0, 0.0, 0.0, 0.549, 0.844, 0.982, 0.994];
+        $expected = [0.990, 0.967, 0.894, 0.757, 0.521, 0.0, 0.0, 0.0, 0.534, 0.828, 0.978, 0.993];
         $this->assertEquals($expected, $roundedResult);
 
         // skupna energija v času ogrevanja
         $roundedResult = array_map(fn($el) => round($el ?? 0, 2), $cona->energijaOgrevanje);
-        $expected = [1292.64, 815.56, 443.82, 160.83, 24.01, 0.0, 0.0, 0.0, 23.09, 217.84, 840.08, 1295.84];
+        $expected = [1253.58, 783.88, 418.84, 148.94, 21.69, 0.0, 0.0, 0.0, 20.56, 199.63, 804.21, 1256.30];
         $this->assertEquals($expected, $roundedResult);
 
         // transmisijske izgube hlajenja
@@ -85,17 +85,17 @@ class IzracunConeTest extends TestCase
 
         // dobitki sončnega obsevanja
         $roundedResult = array_map(fn($el) => round($el, 2), $cona->solarniDobitkiHlajenje);
-        $expected = [8.72, 53.84, 83.48, 98.24, 100.08, 92.89, 99.24, 104.62, 88.25, 45.49, -5.01, -17.37];
+        $expected = [49.55, 90.72, 124.31, 137.76, 140.92, 132.41, 140.07, 145.46, 127.77, 86.32, 34.51, 23.46];
         $this->assertEquals($expected, $roundedResult);
 
         // faktor izkoristljivosti dobitkov
         $roundedResult = array_map(fn($el) => round($el ?? 0, 3), $cona->ucinekPonorov);
-        $expected = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.487, 0.490, 0.0, 0.0, 0.0, 0.0];
+        $expected = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.515, 0.519, 0.0, 0.0, 0.0, 0.0];
         $this->assertEquals($expected, $roundedResult);
 
         // faktor izkoristljivosti dobitkov
         $roundedResult = array_map(fn($el) => round($el ?? 0, 2), $cona->energijaHlajenje);
-        $expected = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 28.15, 29.12, 0.0, 0.0, 0.0, 0.0];
+        $expected = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 36.05, 37.18, 0.0, 0.0, 0.0, 0.0];
         $this->assertEquals($expected, $roundedResult);
 
         // tsv
@@ -109,15 +109,15 @@ class IzracunConeTest extends TestCase
         $this->assertEquals($expected, $roundedResult);
 
         // končne vrednosti
-        $this->assertEquals(5113.69, round($cona->skupnaEnergijaOgrevanje, 2));
-        $this->assertEquals(57.27, round($cona->skupnaEnergijaHlajenje, 2));
+        $this->assertEquals(4907.63, round($cona->skupnaEnergijaOgrevanje, 2));
+        $this->assertEquals(73.23, round($cona->skupnaEnergijaHlajenje, 2));
         $this->assertEquals(1345.25, round($cona->skupnaEnergijaTSV, 2));
         $this->assertEquals(1237.50, round($cona->skupnaEnergijaRazsvetljava, 2));
 
         $this->assertEquals(143.88, round($cona->specTransmisijskeIzgube, 2));
         $this->assertEquals(8.18, round($cona->specVentilacijskeIzgube, 2));
         $this->assertEquals(0.212, round($cona->specKoeficientTransmisijskihIzgub, 3));
-        $this->assertEquals(31.96, round($cona->specLetnaToplota, 2));
-        $this->assertEquals(0.36, round($cona->specLetniHlad, 2));
+        $this->assertEquals(30.67, round($cona->specLetnaToplota, 2));
+        $this->assertEquals(0.46, round($cona->specLetniHlad, 2));
     }
 }

@@ -24,13 +24,19 @@ class FotonapetostniSistem
     public float $koeficientMoci;
     public float $koeficientVgradnje;
 
+    public bool $vplivUjemanja = false;
+
     public float $nazivnaMoc;
 
-    public array $energijaPoEnergentih = [];
     public array $porabljenaEnergija = [];
     public array $oddanaElektricnaEnergija = [];
     public array $potrebnaEnergija = [];
-    public array $celotnaEnergijaObsevanja = [];
+    public array $proizvedenaElektricnaEnergija = [];
+    public array $faktorUjemanja = [];
+
+    public array $energijaPoEnergentih = [];
+    public array $proizvedenaEnergijaPoEnergentih = [];
+    public array $oddanaEnergijaPoEnergentih = [];
 
     /**
      * Class Constructor
@@ -72,6 +78,8 @@ class FotonapetostniSistem
         $this->vgradnja = VrstaVgradnje::from($config->vgradnja);
         $this->koeficientVgradnje = $this->vgradnja->koeficientVgradnje();
         $this->nazivnaMoc = $this->povrsina * $this->koeficientMoci;
+
+        $this->vplivUjemanja = (bool)($config->vplivUjemanja ?? false);
     }
 
     /**
@@ -87,7 +95,7 @@ class FotonapetostniSistem
     {
         $this->potrebnaEnergija = $potrebnaEnergija;
 
-        $celotnaEnergijaObsevanja = [];
+        $proizvedenaElektricnaEnergija = [];
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
@@ -101,18 +109,36 @@ class FotonapetostniSistem
             }
             $solarnoObsevanje = $stDni * $solarnoObsevanje[$mesec] / 1000;
 
-            $this->celotnaEnergijaObsevanja[$mesec] = $this->povrsina * $solarnoObsevanje *
+            $this->proizvedenaElektricnaEnergija[$mesec] = $this->povrsina * $solarnoObsevanje *
                 $this->vrsta->koeficientMoci() * $this->vgradnja->koeficientVgradnje();
 
-            $this->porabljenaEnergija[$mesec] = $this->kontrolniFaktor *
-                min($this->celotnaEnergijaObsevanja[$mesec], $potrebnaEnergija[$mesec]);
+            if ($this->vplivUjemanja) {
+                $this->faktorUjemanja[$mesec] = (
+                    $this->proizvedenaElektricnaEnergija[$mesec] / $this->potrebnaEnergija[$mesec] +
+                    $this->potrebnaEnergija[$mesec] / $this->proizvedenaElektricnaEnergija[$mesec] - 1
+                ) / (
+                    $this->proizvedenaElektricnaEnergija[$mesec] / $this->potrebnaEnergija[$mesec] +
+                    $this->potrebnaEnergija[$mesec] / $this->proizvedenaElektricnaEnergija[$mesec]
+                );
+            } else {
+                $this->faktorUjemanja[$mesec] = 1;
+            }
 
-            $this->oddanaElektricnaEnergija[$mesec] = $this->kontrolniFaktor *
-                ($this->celotnaEnergijaObsevanja[$mesec] - $this->porabljenaEnergija[$mesec]);
+            $this->porabljenaEnergija[$mesec] = $this->faktorUjemanja[$mesec] *
+                min($this->proizvedenaElektricnaEnergija[$mesec], $potrebnaEnergija[$mesec]);
+
+            if ($this->vplivUjemanja) {
+                $this->oddanaElektricnaEnergija[$mesec] = 0;
+            } else {
+                $this->oddanaElektricnaEnergija[$mesec] = $this->kontrolniFaktor *
+                    ($this->proizvedenaElektricnaEnergija[$mesec] - $this->porabljenaEnergija[$mesec]);
+            }
         }
 
         $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = -array_sum($this->porabljenaEnergija);
-        $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] =
+        $this->proizvedenaEnergijaPoEnergentih[TSSVrstaEnergenta::Sonce->value] =
             array_sum($this->oddanaElektricnaEnergija) + array_sum($this->porabljenaEnergija);
+        $this->oddanaEnergijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
+            array_sum($this->oddanaElektricnaEnergija);
     }
 }

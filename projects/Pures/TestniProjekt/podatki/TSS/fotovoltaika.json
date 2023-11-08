@@ -1,0 +1,14 @@
+[
+    {
+        "id": "SSE",
+        "idCone": "Cona1",
+        "vrsta": "monokristalne",
+        "povrsina": 50,
+        "orientacija": "Z",
+        "naklon": 30,
+        "sencenje": false,
+        "vgradnja": "zmernoPrezracevani",
+        "kontrolniFaktor": 1,
+        "vplivUjemanja": false
+    }
+]

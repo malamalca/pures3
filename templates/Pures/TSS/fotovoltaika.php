@@ -60,22 +60,27 @@
         </tr>
     </thead>
     <tr>
-        <td><span title="Skupna potrebna električna energija za delovanje TSS stavbe">E<sub>B,us,tot,m</sub>; E<sub>B,us,tot,m,an</sub><span></td>
+        <td><span title="Skupna potrebna električna energija za delovanje TSS stavbe">E<sub>B,us,tot,m</sub>; E<sub>B,us,tot,m,an</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->potrebnaEnergija)) ?>
         <th class="right"><?= $this->numFormat(array_sum($sistem->potrebnaEnergija), 0) ?></th>
     </tr>
     <tr>
-        <td><span title="Celotna energija sončnega obsevanja">E<sub>PV,pr,m</sub>; E<sub>PV,pr,m,an</sub><span></td>
-        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->celotnaEnergijaObsevanja)) ?>
-        <th class="right"><?= $this->numFormat(array_sum($sistem->celotnaEnergijaObsevanja), 0) ?></th>
+        <td><span title="Celotna energija sončnega obsevanja">E<sub>PV,pr,m</sub>; E<sub>PV,pr,m,an</sub></td>
+        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->proizvedenaElektricnaEnergija)) ?>
+        <th class="right"><?= $this->numFormat(array_sum($sistem->proizvedenaElektricnaEnergija), 0) ?></th>
     </tr>
     <tr>
-        <td><span title="Porabljena energija v objektu">E<sub>PV,used,m</sub>; E<sub>PV,used,m,an</sub><span></td>
+        <td><span title="Celotna energija sončnega obsevanja">f<sub>match,m</sub></td>
+        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 2) . '</td>', $sistem->faktorUjemanja)) ?>
+        <th class="right">-</th>
+    </tr>
+    <tr>
+        <td><span title="Porabljena energija v objektu">E<sub>PV,used,m</sub>; E<sub>PV,used,m,an</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->porabljenaEnergija)) ?>
         <th class="right"><?= $this->numFormat(array_sum($sistem->porabljenaEnergija), 0) ?></th>
     </tr>
     <tr>
-        <td><span title="Oddana energija v omrežje">E<sub>PV,exp,m</sub>; E<sub>PV,exp,m,an</sub><span></td>
+        <td><span title="Oddana energija v omrežje">E<sub>PV,exp,m</sub>; E<sub>PV,exp,m,an</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $sistem->oddanaElektricnaEnergija)) ?>
         <th class="right"><?= $this->numFormat(array_sum($sistem->oddanaElektricnaEnergija), 0) ?></th>
     </tr>

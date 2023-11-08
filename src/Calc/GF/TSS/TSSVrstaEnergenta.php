@@ -14,6 +14,7 @@ enum TSSVrstaEnergenta: string
     case ZP = 'zemeljskiPlin';
     case Daljinsko = 'daljinsko';
     case UNP = 'UNP';
+    case Sonce = 'sonce';
 
     /**
      * Vrne utezni faktor za vrsto energenta
@@ -23,9 +24,9 @@ enum TSSVrstaEnergenta: string
      */
     public function utezniFaktor($faktor)
     {
-        $utezniFaktorjiF_Pnren = [0, 1.5, 0.2, 1.1, 1.1, 1.12, 1.1];
-        $utezniFaktorjiF_Pren = [1, 1, 1, 0, 0, 0.06, 0];
-        $utezniFaktorjiF_Ptot = [1, 2.5, 1.2, 1.1, 1.1, 1.18, 1.1];
+        $utezniFaktorjiF_Pnren = [0, 1.5, 0.2, 1.1, 1.1, 1.12, 1.1, 0];
+        $utezniFaktorjiF_Pren = [1, 1, 1, 0, 0, 0.06, 0, 1];
+        $utezniFaktorjiF_Ptot = [1, 2.5, 1.2, 1.1, 1.1, 1.18, 1.1, 1];
 
         switch ($faktor) {
             case 'tot':
@@ -46,7 +47,7 @@ enum TSSVrstaEnergenta: string
      */
     public function faktorIzpustaCO2()
     {
-        $faktorjiIzpusta = [0, 0.42, 0.04, 0.29, 0.22, 0.396, 0,22];
+        $faktorjiIzpusta = [0, 0.42, 0.04, 0.29, 0.22, 0.396, 0.22, 0];
 
         return $faktorjiIzpusta[$this->getOrdinal()];
     }
@@ -62,6 +63,7 @@ enum TSSVrstaEnergenta: string
             TSSVrstaEnergenta::Elektrika => 0.5,
             TSSVrstaEnergenta::Biomasa => 0.65,
             // vsi ostali energenti
+            TSSVrstaEnergenta::Sonce,
             TSSVrstaEnergenta::Okolje,
             TSSVrstaEnergenta::UNP,
             TSSVrstaEnergenta::ZP,
@@ -85,6 +87,7 @@ enum TSSVrstaEnergenta: string
             'Zemeljski plin',
             'Daljinsko ogrevanje',
             'UNP',
+            'Sončna energija',
         ];
 
         return $naziviEnergentov[$this->getOrdinal()];

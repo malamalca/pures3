@@ -330,7 +330,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
                 array_sum($dejanskaEnergija) + array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
 
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] =
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] +=
                 array_sum($this->ogrevanje->obnovljivaEnergija);
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=
@@ -339,6 +339,8 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 array_sum($this->ogrevanje->obnovljivaEnergija) *
                 TSSVrstaEnergenta::Okolje->utezniFaktor('tot');
         }
+
+        
 
         $this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
         $this->minLetnaUcinkovitostOgrHlaTsv = $this->energent->minimalniIzkoristekOgrHlaTsv();

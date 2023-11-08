@@ -1,0 +1,102 @@
+[
+    {
+        "id": "TC_TSV",
+        "idCone": "Cona1",
+        "vrsta": "toplovodni",
+        "energent": "elektrika",
+
+        "tsv": {
+            "rezim": "55/45",
+            "generatorji": ["TC"],
+            "razvodi": ["TSV"],
+            "hranilniki": ["TSV"]
+        },
+
+        "generatorji": [
+            {
+                "id": "TC",
+                "vrsta": "TC_zrakvoda",
+                "podnebje": "celinsko",
+                "nazivnaMoc": 6,
+                "nazivniCOP": 3,
+                "elektricnaMocNaPrimarnemKrogu": 6,
+                "elektricnaMocNaSekundarnemKrogu": 3
+            }
+        ],
+        "razvodi": [
+            {
+                "id": "TSV",
+                "vrsta": "toplavoda",
+                "idPrenosnika": "TALNO",
+                "crpalka": {},
+                "ceviHorizontaliVodi": {},
+                "ceviDvizniVodi": {},
+                "ceviPrikljucniVodi": {}
+            }
+        ],
+        "hranilniki": [
+            {
+                "id": "TSV",
+                "vrsta": "posrednoOgrevan",
+                "volumen": 250,
+                "istiProstorKotGrelnik": true,
+                "vOgrevanemProstoru": true
+            }
+        ]
+    },
+    {
+        "id": "TC",
+        "idCone": "Cona1",
+        "vrsta": "toplovodni",
+        "energent": "elektrika",
+
+        "ogrevanje": {
+            "rezim": "40/30",
+            "generatorji": ["TC"],
+            "razvodi": ["ogrevanje"],
+            "prenosniki": ["TALNO"]
+        },
+
+        "generatorji": [
+            {
+                "id": "TC",
+                "vrsta": "TC_zrakvoda",
+                "podnebje": "celinsko",
+                "nazivnaMoc": 6,
+                "nazivniCOP": 3,
+                "elektricnaMocNaPrimarnemKrogu": 6,
+                "elektricnaMocNaSekundarnemKrogu": 3
+            }
+        ],
+
+        "razvodi": [
+            {
+                "vrsta": "dvocevni",
+                "id": "ogrevanje",
+                "idPrenosnika": "TALNO",
+                "crpalka": {},
+                "ceviHorizontaliVodi": {
+                    "delezVOgrevaniConi": 0.8
+                },
+                "ceviDvizniVodi": {
+                    "delezVOgrevaniConi": 0.8
+                },
+                "ceviPrikljucniVodi": {
+                }
+            }
+        ],
+
+        "prenosniki": [
+            {
+                "id": "TALNO",
+                "vrsta": "ploskovnaOgrevala",
+                "sistem": "talno_mokri",
+                "izolacija": "100%",
+                "hidravlicnoUravnotezenje": "staticnoDviznihVodov",
+                "regulacijaTemperature": "referencniProstor",
+                "mocRegulatorja": 1,
+                "steviloRegulatorjev": 1
+            }
+        ]
+    }
+]

@@ -26,14 +26,34 @@
         $energijeFaktorjiTot = [];
         $energijeFaktorjiRen = [];
         $energijeFaktorjiNren = [];
+        $energijeFaktorjiPrim = [];
         $energijeFaktorjiCO2 = [];
         foreach($stavba->sistemi as $i => $sistem) {
             foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                $energije[] = $this->numFormat($energija, 0, '.');
-                $energijeFaktorjiTot[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
+                if ($energija > 0) {
+                    $energije[] = $this->numFormat($energija, 0, '.');
+                    $energijeFaktorjiTot[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
+                }
+                $energijeFaktorjiPrim[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
                 $energijeFaktorjiRen[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.');
                 $energijeFaktorjiNren[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('nren'), 2, '.');
                 $energijeFaktorjiCO2[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.');
+            }
+        
+            if (isset($sistem->proizvedenaEnergijaPoEnergentih)) {
+                foreach ((array)$sistem->proizvedenaEnergijaPoEnergentih as $energent => $energija) {
+                    $energijeFaktorjiPrim[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
+                    $energijeFaktorjiRen[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.');
+                    $energijeFaktorjiNren[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('nren'), 2, '.');
+                    $energijeFaktorjiCO2[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.');
+                }
+            }
+
+            if (isset($sistem->oddanaEnergijaPoEnergentih)) {
+                foreach ((array)$sistem->oddanaEnergijaPoEnergentih as $energent => $energija) {
+                    $energijeFaktorjiPrim[] = '-(' . $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat($stavba->k_exp, 2, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.') . ')';
+                    $energijeFaktorjiCO2[] = '-(' . $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.'). ')';
+                }
             }
         };
     ?>
@@ -54,7 +74,7 @@
         <td class="center"><?= $this->numFormat($stavba->obnovljivaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`P_(ren,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"ren")=<?= implode(' + ', $energijeFaktorjiRen) ?>=<?= $this->numFormat($stavba->obnovljivaPrimarnaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">`E_(P_(ren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"ren")=<?= implode(' + ', $energijeFaktorjiRen) ?>=<?= $this->numFormat($stavba->obnovljivaPrimarnaEnergija, 0) ?>`</td>
     </tr>
     <tr>
         <td>Neobnovljiva primarna energija dovedene energije</td>
@@ -62,14 +82,16 @@
         <td class="center"><?= $this->numFormat($stavba->neobnovljivaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`P_(nren,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"nren")=<?= implode(' + ', $energijeFaktorjiNren) ?>=<?= $this->numFormat($stavba->neobnovljivaPrimarnaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">`E_(P_(nren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"nren")=<?= implode(' + ', $energijeFaktorjiNren) ?>=<?= $this->numFormat($stavba->neobnovljivaPrimarnaEnergija, 0) ?>`</td>
     </tr>
     <tr>
         <td>Skupna primarna energija</td>
         <td>E<sub>Ptot,an</sub></td>
         <td class="center"><?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 0) ?></td>
     </tr>
-
+    <tr class="noprint">
+        <td colspan="4" class="math">`E_(P_(t ot,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=<?= implode(' + ', $energijeFaktorjiPrim) ?>=<?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 0) ?>`</td>
+    </tr>
     <tr><td colspan="3"></td></tr>
 
     <tr>
@@ -189,5 +211,40 @@
     </tr>
     <tr class="noprint">
         <td colspan="4" class="math">`M_("CO2,an)=sum_(i=1)^n E_(de l,i,an) * k_(CO2,i) + sum_(j=1)^m E_(pr,on-site,j,an) * k_(CO2,j) - sum_(k=1)^l k_(exp) * E_(exp,k,an) * k_(CO2,exp,k)=<?= implode(' + ', $energijeFaktorjiCO2) ?>=<?= $this->numFormat($stavba->izpustCO2, 0) ?>`</td>
+    </tr>
+</table>
+<br />
+<table border="1">
+    <tr>
+        <td colspan="4"><h2>V/na/ob stavbi proizveden energent in energent oddan v omrežje</h2></td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td class="center">Količina (kWh/an)</td>
+    </tr>
+    <tr>
+        <td>Proizvedena električna energija</td>
+        <td>E<sub>PV,pr,an</sub></td>
+        <td class="center"><?= $this->numFormat($stavba->skupnaProizvedenaElektricnaEnergija, 0) ?></td>
+    </tr>
+    <tr>
+        <td>Proizvedena električna energija porabljena na stavbi</td>
+        <td>E<sub>PV,used,an</sub></td>
+        <td class="center"><?= $this->numFormat($stavba->skupnaProizvedenaPorabljenaElektricnaEnergija, 0) ?></td>
+    </tr>
+    <tr>
+        <td>Oddana elekrična energija iz stavbe</td>
+        <td>E<sub>PV,exp,an</sub></td>
+        <td class="center"><?= $this->numFormat($stavba->skupnaOddanaElektricnaEnergija, 0) ?></td>
+    </tr>
+    <tr>
+        <td>Faktor ujemanja na stavbi proizvedene in porabljene električne energije</td>
+        <td>f<sub>match,avg,an</sub></td>
+        <td class="center"><?= $this->numFormat($stavba->faktorUjemanja, 2) ?></td>
+    </tr>
+    <tr>
+        <td>Kontrolni faktor oddane električne energije</td>
+        <td>k<sub>exp</sub></td>
+        <td class="center"><?= $this->numFormat($stavba->k_exp, 1) ?></td>
     </tr>
 </table>

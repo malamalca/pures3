@@ -40,17 +40,17 @@ final class LokalniOgrevalniSistemNaBiomasoTest extends TestCase
 
         $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube;
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov);
-        $expected = [240.06, 167.40, 115.39, 57.02, 15.61, 0.00, 0.00, 0.00, 18.01, 84.96, 204.77, 252.69];
+        $expected = [232.81, 160.9, 108.9, 52.81, 14.1, 0.00, 0.00, 0.00, 16.03, 77.86, 196.03, 244.98];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergija = $sistem->koncniPrenosniki[0]->potrebnaElektricnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
-        $expected = [2.23, 2.02, 2.23, 1.92, 0.29, 0.00, 0.00, 0.00, 0.28, 2.23, 2.16, 2.23];
+        $expected = [2.23, 2.02, 2.23, 1.78, 0.26, 0.00, 0.00, 0.00, 0.25, 2.23, 2.16, 2.23];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaEnergija = $sistem->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaEnergija);
-        $expected = [1576.85, 1011.28, 575.32, 224.13, 40.75, 0.00, 0.00, 0.00, 42.29, 311.51, 1074.94, 1593.13];
+        $expected = [1529.21, 972.0, 542.94, 207.56, 36.82, 0.00, 0.00, 0.00, 37.64, 285.48, 1029.05, 1544.53];
         $this->assertEquals($expected, $roundedResult);
     }
 }
