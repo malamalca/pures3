@@ -58,7 +58,7 @@
 </table>
 
 <?php
-    $sistemi = [
+    $sistemiLib = [
         'ogrevanje' => 'ogrevanje',
         'hlajenje' => 'hlajenje',
         'prezracevanje' => 'prezračevanje',
@@ -80,21 +80,10 @@
         <td class="w-30 strong center" style="border: 1px solid black;">OVE:</td>
     </tr>
     <?php
-        foreach ($sistemi as $slug => $naziv) {
+        foreach ($sistemiLib as $slug => $naziv) {
             $energenti = '';
             if (in_array($slug, $vgrajeniSistemi)) {
-                if ($slug == 'ogrevanje') {
-                    $energenti = 'elektrika, okolje';
-                }
-                if ($slug == 'razsvetljava') {
-                    $energenti = 'elektrika';
-                }
-                if ($slug == 'razsvetljava') {
-                    $energenti = 'elektrika';
-                }
-                if ($slug == 'fotovoltaika') {
-                    $energenti = 'sončna energija';
-                }
+                $energenti = implode(', ', $energentiSistema[$slug]);
             }
     ?>
     <tr>

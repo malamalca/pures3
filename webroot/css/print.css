@@ -9,6 +9,7 @@
 
 body {
     width: 18cm !important;
+    font-size: 12px;
 }
 
 h1 {
@@ -24,7 +25,7 @@ h3 {
 }
 
 td, th {
-    font-size: 13px;
+    font-size: 12px;
 }
 
 table, tr, td, th, tbody, thead, tfoot {

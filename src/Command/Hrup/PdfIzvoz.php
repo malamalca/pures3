@@ -28,10 +28,11 @@ class PdfIzvoz extends Command
         $view->area = 'Hrup';
         $view->set('projectId', $projectId);
         $view->set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
-        $view->set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
-
         $view->set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
         $view->set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
+        $view->set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
+        $view->set('udarniHrup', App::loadProjectCalculation('Hrup', $projectId, 'udarniHrup'));
+        $view->set('zracniHrup', App::loadProjectCalculation('Hrup', $projectId, 'zracniHrup'));
 
         $this->izkaz($projectId, $view);
         $this->elaborat($projectId, $view);
@@ -52,7 +53,7 @@ class PdfIzvoz extends Command
         $pdf->newPage((string)$view->render('Projekti', 'naslovnica'));
         $pdf->newPage((string)$view->render('Projekti', 'izjava'));
 
-        $sourceFilename = App::getProjectFolder('Hrup', $projectId, 'podatki') . 'tehnicnoPorocilo.txt';
+        $sourceFilename = App::getProjectFolder('Hrup', $projectId, 'podatki') . 'tehnicnoPorocilo.md';
         if (file_exists($sourceFilename)) {
             $porocilo = file_get_contents($sourceFilename);
             if (!empty($porocilo)) {
@@ -67,6 +68,16 @@ class PdfIzvoz extends Command
         foreach ($view->get('prostori') as $prostor) {
             $view->set('prostor', $prostor);
             $pdf->newPage((string)$view->render('ZunanjiHrup', 'view'));
+        }
+
+        foreach ($view->get('zracniHrup') as $locilnaKonstrukcija) {
+            $view->set('locilnaKonstrukcija', $locilnaKonstrukcija);
+            $pdf->newPage((string)$view->render('ZracniHrup', 'view'));
+        }
+
+        foreach ($view->get('udarniHrup') as $locilnaKonstrukcija) {
+            $view->set('locilnaKonstrukcija', $locilnaKonstrukcija);
+            $pdf->newPage((string)$view->render('UdarniHrup', 'view'));
         }
 
         $pdfFolder = App::getProjectFolder('Hrup', $projectId, 'pdf');

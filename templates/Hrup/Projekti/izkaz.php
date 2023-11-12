@@ -126,8 +126,8 @@
         <td class="w-10"><?= h($prostor->id) ?></td>
         <td class="w-30"><?= h($prostor->naziv) ?></td>
         <td class="w-10 center" style="border-right: dashed 1px">R'<sub>w,min</sub> [dBA]</td>
-        <td class="w-10 center strong"><?= $this->numFormat($prostor->minRw, 1) ?></td>
-        <td class="w-20 center strong"><?= $this->numFormat($prostor->Rw, 1) ?></td>
+        <td class="w-10 center strong"><?= $this->numFormat($prostor->minRw, 0) ?></td>
+        <td class="w-20 center strong"><?= $this->numFormat($prostor->Rw, 0) ?></td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
@@ -145,9 +145,9 @@
     <tr>
         <td class="w-10"><?= h($element->id) ?></td>
         <td class="w-30"><?= h($element->naziv) ?></td>
-        <td class="w-10 center" style="border-right: dashed 1px">R'<sub>w</sub> [dBA]</td>
-        <td class="w-10 center strong"><?= $this->numFormat($element->Rw, 1) ?></td>
-        <td class="w-20 center strong"><?= $this->numFormat($element->Rw, 1) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px">R'<sub>w</sub> [dB]</td>
+        <td class="w-10 center strong"><?= $this->numFormat($element->Rw, 0) ?></td>
+        <td class="w-20 center strong"><?= $this->numFormat($element->Rw, 0) ?></td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
@@ -166,8 +166,8 @@
         <td class="w-10"><?= h($element->id) ?></td>
         <td class="w-30"><?= h($element->naziv) ?></td>
         <td class="w-10 center" style="border-right: dashed 1px">R'<sub>w</sub> [dBA]</td>
-        <td class="w-10 center strong"><?= $this->numFormat($element->Rw, 1) ?></td>
-        <td class="w-20 center strong"><?= $this->numFormat($element->Rw, 1) ?></td>
+        <td class="w-10 center strong"><?= $this->numFormat($element->Rw, 0) ?></td>
+        <td class="w-20 center strong"><?= $this->numFormat($element->Rw, 0) ?></td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
@@ -207,6 +207,23 @@
     <tr>
         <td class="w-100 strong" colspan="7">NOTRANJI POKONČNI LOČILNI ELEMENT (stene, stene z vrati ipd.)</td>
     </tr>
+    <?php
+        if (!empty($zracniHrup)) {
+            foreach ($zracniHrup as $locilnaKonstrukcija) {
+    ?>
+    <tr>
+        <td class="w-10"><?= h($locilnaKonstrukcija->id) ?></td>
+        <td class="w-30"><?= h($locilnaKonstrukcija->naziv) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px">R'<sub>w</sub> [dB]</td>
+        <td class="w-10 center strong"><?= $this->numFormat($locilnaKonstrukcija->minRw, 0) ?></td>
+        <td class="w-20 center strong"><?= $this->numFormat($locilnaKonstrukcija->Rw, 0) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
+        <td class="w-10 center">&nbsp;</td>
+    </tr>
+    <?php
+            }
+        } else {
+    ?>
     <tr>
         <td class="w-10">&nbsp;</td>
         <td class="w-30">&nbsp;</td>
@@ -216,9 +233,29 @@
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
+    <?php
+        }
+    ?>
     <tr>
         <td class="w-100 strong" colspan="7">NOTRANJI VODORAVNI LOČILNI ELEMENT (medetažne konstrukcije, podesti, stopnice)</td>
     </tr>
+    <?php
+        if (!empty($udarniHrup)) {
+            foreach ($udarniHrup as $locilnaKonstrukcija) {
+    ?>
+    <tr>
+        <td class="w-10"><?= h($locilnaKonstrukcija->id) ?></td>
+        <td class="w-30"><?= h($locilnaKonstrukcija->naziv) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px">L<sub>n,w</sub> [dB]</td>
+        <td class="w-10 center strong"><?= $this->numFormat($locilnaKonstrukcija->minLnw, 0) ?></td>
+        <td class="w-20 center strong"><?= $this->numFormat($locilnaKonstrukcija->Lnw, 0) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
+        <td class="w-10 center">&nbsp;</td>
+    </tr>
+    <?php
+            }
+        } else {
+    ?>
     <tr>
         <td class="w-10">&nbsp;</td>
         <td class="w-30">&nbsp;</td>
@@ -228,6 +265,9 @@
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
+    <?php
+        }
+    ?>
 </table>
 
 

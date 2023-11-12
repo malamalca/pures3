@@ -115,10 +115,10 @@
                         <?= $this->numFormat($libKons->Rw, 1) ?> 
                         (<?= $this->numFormat($libKons->C, 0) ?>; <?= $this->numFormat($libKons->Ctr, 0) ?>)
                         <?php
-                            foreach ($libKons->dRw as $slojIx => $dRwSloja) {
+                            foreach ($libKons->dodatniSloji as $slojIx => $dodatniSloj) {
                         ?>
                             <div class="small">
-                                &Delta;R<sub>sloj <?= ($slojIx+1) ?></sub> =<?= $this->numFormat($dRwSloja, 1) ?> dB
+                                &Delta;R<sub>sloj <?= ($slojIx+1) ?></sub> =<?= $this->numFormat($dodatniSloj->dR, 1) ?> dB
                             </div>
                         <?php
                             }

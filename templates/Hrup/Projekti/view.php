@@ -23,6 +23,36 @@
 <?php
     }
 ?>
+<?php
+    if (!empty($udarniHrup)) {
+?>
+<p class="actions">
+<?php
+        foreach ($udarniHrup as $locilnaKonstrukcija) {
+?>
+    <a class="button" href="<?= App::url('/hrup/udarniHrup/view/' . $projectId . '/' . $locilnaKonstrukcija->id) ?>"><?= h($locilnaKonstrukcija->naziv) ?></a>
+<?php
+        }
+?>
+</p>
+<?php
+    }
+?>
+<?php
+    if (!empty($zracniHrup)) {
+?>
+<p class="actions">
+<?php
+        foreach ($zracniHrup as $locilnaKonstrukcija) {
+?>
+    <a class="button" href="<?= App::url('/hrup/zracniHrup/view/' . $projectId . '/' . $locilnaKonstrukcija->id) ?>"><?= h($locilnaKonstrukcija->naziv) ?></a>
+<?php
+        }
+?>
+</p>
+<?php
+    }
+?>
 <table>
     <tr>
         <td colspan="2">Naziv projekta</td>

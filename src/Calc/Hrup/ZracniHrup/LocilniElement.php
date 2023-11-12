@@ -1,26 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Calc\Hrup\ZunanjiHrup;
+namespace App\Calc\Hrup\ZracniHrup;
 
 use App\Calc\Hrup\Elementi\Konstrukcija;
+use App\Lib\Calc;
 use App\Lib\EvalMath;
 
-class ZunanjaKonstrukcija
+class LocilniElement
 {
     public string $idKonstrukcije;
+    public ?string $idDodatnegaSloja1 = null;
+    public ?string $idDodatnegaSloja2 = null;
     public float $povrsina = 0;
-    public int $stevilo = 1;
+    public float $povrsinskaMasa = 0;
     public float $Rw = 0;
-    public float $C = 0;
-    public float $Ctr = 0;
 
     private array $options = [];
 
     /**
      * @var \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija
      */
-    private Konstrukcija $konstrukcija;
+    public Konstrukcija $konstrukcija;
 
     /**
      * Class Constructor
@@ -32,16 +33,15 @@ class ZunanjaKonstrukcija
      */
     public function __construct($konstrukcija, $config = null, $options = [])
     {
-        $this->options = $options;
         $this->konstrukcija = $konstrukcija;
-
-        $this->Rw = $this->konstrukcija->Rw;
-        $this->C = $this->konstrukcija->C;
-        $this->Ctr = $this->konstrukcija->Ctr;
+        $this->povrsinskaMasa = $konstrukcija->povrsinskaMasa;
+        $this->options = $options;
 
         if ($config) {
             $this->parseConfig($config);
         }
+
+        $this->analiza();
     }
 
     /**
@@ -61,16 +61,21 @@ class ZunanjaKonstrukcija
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
-            if (isset($config->{$prop->getName()})) {
-                $configValue = $config->{$prop->getName()};
-                if (
-                    $prop->isInitialized($this) &&
-                    in_array(gettype($this->{$prop->getName()}), ['double', 'int']) &&
-                    gettype($configValue) == 'string'
-                ) {
-                    $configValue = (float)$EvalMath->e($configValue);
-                }
-                $this->{$prop->getName()} = $configValue;
+            switch ($prop->getName()) {
+                case 'konstrukcija':
+                    break;
+                default:
+                    if (isset($config->{$prop->getName()})) {
+                        $configValue = $config->{$prop->getName()};
+                        if (
+                            $prop->isInitialized($this) &&
+                            in_array(gettype($this->{$prop->getName()}), ['double', 'int']) &&
+                            gettype($configValue) == 'string'
+                        ) {
+                            $configValue = (float)$EvalMath->e($configValue);
+                        }
+                        $this->{$prop->getName()} = $configValue;
+                    }
             }
         }
     }
@@ -82,6 +87,12 @@ class ZunanjaKonstrukcija
      */
     public function analiza()
     {
+        $this->Rw = $this->konstrukcija->Rw + Calc::combineDeltaR(
+            $this->konstrukcija,
+            $this->idDodatnegaSloja1,
+            $this->konstrukcija,
+            $this->idDodatnegaSloja2
+        );
     }
 
     /**
@@ -91,16 +102,16 @@ class ZunanjaKonstrukcija
      */
     public function export()
     {
-        $zunanjaKonstrukcija = new \stdClass();
+        $locilniElement = new \stdClass();
 
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
-            if ($prop->isInitialized($this)) {
-                $zunanjaKonstrukcija->{$prop->getName()} = $prop->getValue($this);
+            if ($prop->isInitialized($this) && !is_null($prop->getValue($this))) {
+                $locilniElement->{$prop->getName()} = $prop->getValue($this);
             }
         }
 
-        return $zunanjaKonstrukcija;
+        return $locilniElement;
     }
 }

@@ -14,36 +14,13 @@
                 ]
             },
             "dodatniSloji": {
-                "type": "object",
-                "properties": {
-                    "zunaj": {
-                        "anyOf": [
-                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
-                            { "$ref": "#/definitions/dodatniSlojElasticen" },
-                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
-                        ]
-                    },
-                    "znotraj": {
-                        "anyOf": [
-                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
-                            { "$ref": "#/definitions/dodatniSlojElasticen" },
-                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
-                        ]
-                    },
-                    "zgoraj": {
-                        "anyOf": [
-                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
-                            { "$ref": "#/definitions/dodatniSlojElasticen" },
-                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
-                        ]
-                    },
-                    "spodaj": {
-                        "anyOf": [
-                            { "$ref": "#/definitions/dodatniSlojPritrjen" },
-                            { "$ref": "#/definitions/dodatniSlojElasticen" },
-                            { "$ref": "#/definitions/dodatniSlojNepritrjen" }
-                        ]
-                    }
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        { "$ref": "#/definitions/dodatniSlojPritrjen" },
+                        { "$ref": "#/definitions/dodatniSlojElasticen" },
+                        { "$ref": "#/definitions/dodatniSlojNepritrjen" }
+                    ]
                 }
             }
         }
@@ -53,6 +30,7 @@
             "type": "object",
             "required": ["vrsta", "naziv", "povrsinskaMasa"],
             "properties": {
+                "id": {"type": "string"},
                 "vrsta": {"const": "pritrjen"},
                 "naziv": {"type": "string"},
                 "povrsinskaMasa": {
@@ -71,6 +49,7 @@
                 {"required": ["dR"]}
             ],
             "properties": {
+                "id": {"type": "string"},
                 "vrsta": {"const": "elasticen"},
                 "naziv": {"type": "string"},
                 "povrsinskaMasa": {
@@ -91,6 +70,7 @@
                 {"required": ["dR"]}
             ],
             "properties": {
+                "id": {"type": "string"},
                 "vrsta": {"const": "nepritrjen"},
                 "naziv": {"type": "string"},
                 "povrsinskaMasa": {

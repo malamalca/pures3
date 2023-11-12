@@ -20,6 +20,8 @@ class IzracunProjekta extends Command
 
         (new IzracunElementov())->run($projectId);
         (new IzracunZunanjegaHrupa())->run($projectId);
+        (new IzracunZracnegaHrupa())->run($projectId);
+        (new IzracunUdarnegaHrupa())->run($projectId);
         (new PdfIzvoz())->run($projectId);
     }
 }

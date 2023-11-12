@@ -42,7 +42,7 @@
         <tr>
             <td>Izolativnost:</td>
             <td class="right">&Delta;R=</td>
-            <td><?= $this->numFormat($konstrukcija->dRw[$i-1], 1) ?> dB</td>
+            <td><?= $this->numFormat($dodatniSloj->dR, 1) ?> dB</td>
         </tr>
         <?php
             if ($dodatniSloj->vrsta == 'elasticen') {

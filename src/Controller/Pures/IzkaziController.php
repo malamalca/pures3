@@ -20,11 +20,82 @@ class IzkaziController
         App::set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
         App::set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
 
-        $tssFolder = App::getProjectFolder('Pures', $projectId, 'izracuni') . 'TSS' . DS;
-        App::set('vgrajeniSistemi', array_map(
-            fn($s) => substr((string)$s, 0, (int)strrpos((string)$s, '.')),
-            array_filter((array)scandir($tssFolder), fn($d) => is_file($tssFolder . $d))
-        ));
+        $vgrajeniSistemi = [];
+
+        $tssOgrevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
+        $tssRazsvetljava = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
+        $tssPrezracevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
+        $tssFotovoltaika = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
+
+        $energentiSistema = [];
+        if ($tssOgrevanje) {
+            foreach ($tssOgrevanje as $sistem) {
+                /** @var \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem */
+                if (isset($sistem->ogrevanje)) {
+                    $vgrajeniSistemi[] = 'ogrevanje';
+                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                        $energentiSistema['ogrevanje'][] = $energent;
+                    }
+                }
+                if (isset($sistem->tsv)) {
+                    $vgrajeniSistemi[] = 'tsv';
+                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                        $energentiSistema['tsv'][] = $energent;
+                    }
+                }
+                if (isset($sistem->hlajenje)) {
+                    $vgrajeniSistemi[] = 'hlajenje';
+                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                        $energentiSistema['hlajenje'][] = $energent;
+                    }
+                }
+            }
+            if (isset($energentiSistema['ogrevanje'])) {
+                $energentiSistema['ogrevanje'] = array_unique($energentiSistema['ogrevanje']);
+            }
+            if (isset($energentiSistema['tsv'])) {
+                $energentiSistema['tsv'] = array_unique($energentiSistema['tsv']);
+            }
+            if (isset($energentiSistema['hlajenje'])) {
+                $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
+            }
+        }
+
+        if ($tssRazsvetljava) {
+            $vgrajeniSistemi[] = 'razsvetljava';
+            $energentiSistema['razsvetljava'] = [];
+            foreach ($tssRazsvetljava as $sistem) {
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    $energentiSistema['razsvetljava'][] = $energent;
+                }
+            }
+            $energentiSistema['razsvetljava'] = array_unique($energentiSistema['razsvetljava']);
+        }
+
+        if ($tssPrezracevanje) {
+            $vgrajeniSistemi[] = 'prezracevanje';
+            $energentiSistema['prezracevanje'] = [];
+            foreach ($tssPrezracevanje as $sistem) {
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    $energentiSistema['prezracevanje'][] = $energent;
+                }
+            }
+            $energentiSistema['prezracevanje'] = array_unique($energentiSistema['prezracevanje']);
+        }
+
+        if ($tssFotovoltaika) {
+            $vgrajeniSistemi[] = 'fotovoltaika';
+            $energentiSistema['fotovoltaika'] = [];
+            foreach ($tssFotovoltaika as $sistem) {
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    $energentiSistema['fotovoltaika'][] = $energent;
+                }
+            }
+            $energentiSistema['fotovoltaika'] = array_unique($energentiSistema['fotovoltaika']);
+        }
+
+        App::set('energentiSistema', $energentiSistema);
+        App::set('vgrajeniSistemi', $vgrajeniSistemi);
     }
 
     /**

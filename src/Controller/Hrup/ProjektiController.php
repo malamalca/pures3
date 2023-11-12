@@ -30,6 +30,8 @@ class ProjektiController
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
         App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
+        App::set('udarniHrup', App::loadProjectCalculation('Hrup', $projectId, 'udarniHrup'));
+        App::set('zracniHrup', App::loadProjectCalculation('Hrup', $projectId, 'zracniHrup'));
     }
 
     /**
@@ -42,14 +44,15 @@ class ProjektiController
     {
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
-        App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
         App::set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
         App::set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
+
+        App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
 
         $porocilo = '';
 
         $sourceFolder = App::getProjectFolder('Hrup', $projectId, 'podatki');
-        $sourceFilename = $sourceFolder . 'tehnicnoPorocilo.txt';
+        $sourceFilename = $sourceFolder . 'tehnicnoPorocilo.md';
         if (file_exists($sourceFilename)) {
             $porocilo = file_get_contents($sourceFilename);
         }
@@ -67,9 +70,12 @@ class ProjektiController
     {
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
-        App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
         App::set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
         App::set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
+
+        App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
+        App::set('udarniHrup', App::loadProjectCalculation('Hrup', $projectId, 'udarniHrup'));
+        App::set('zracniHrup', App::loadProjectCalculation('Hrup', $projectId, 'zracniHrup'));
     }
 
     /**

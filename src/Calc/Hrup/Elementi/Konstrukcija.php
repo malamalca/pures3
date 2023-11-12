@@ -13,10 +13,10 @@ class Konstrukcija
     public string $tip = 'vertikalna';
     public float $povrsinskaMasa = 0;
     public float $Rw = 0;
+    public float $dR = 0;
     public float $C = 0;
     public float $Ctr = 0;
 
-    public array $dRw = [];
     public array $dodatniSloji = [];
 
     private array $options = [];
@@ -56,14 +56,12 @@ class Konstrukcija
         foreach ($props as $prop) {
             switch ($prop->getName()) {
                 case 'dodatniSloji':
-                    $dodatniSlojiNazivi = ['znotraj', 'zgoraj', 'zunaj', 'spodaj'];
-                    foreach ($dodatniSlojiNazivi as $dodatniSlojNaziv) {
-                        if (isset($config->dodatniSloji->$dodatniSlojNaziv)) {
-                            if (is_string($config->dodatniSloji->$dodatniSlojNaziv->vrsta)) {
-                                $config->dodatniSloji->$dodatniSlojNaziv->vrsta =
-                                    VrstaDodatnegaSloja::from($config->dodatniSloji->$dodatniSlojNaziv->vrsta);
+                    if (isset($config->dodatniSloji)) {
+                        foreach ($config->dodatniSloji as $dodatniSloj) {
+                            if (is_string($dodatniSloj->vrsta)) {
+                                $dodatniSloj->vrsta = VrstaDodatnegaSloja::from($dodatniSloj->vrsta);
                             }
-                            $this->dodatniSloji[$dodatniSlojNaziv] = $config->dodatniSloji->$dodatniSlojNaziv;
+                            $this->dodatniSloji[] = $dodatniSloj;
                         }
                     }
                     break;
@@ -96,38 +94,49 @@ class Konstrukcija
             }
         }
 
-        $this->Rw = 37.5 * log10($this->povrsinskaMasa) - 42;
-        $this->C = $this->povrsinskaMasa > 100 ? -2 : -1;
-        $this->Ctr = 16 - 9 * log10($this->povrsinskaMasa);
-        if ($this->Ctr > -1) {
-            $this->Ctr = -1;
+        if (empty($this->Rw)) {
+            $this->Rw = round(37.5 * log10($this->povrsinskaMasa) - 42, 0);
         }
-        if ($this->Ctr < -7) {
-            $this->Ctr = -7;
+        if (empty($this->C)) {
+            $this->C = $this->povrsinskaMasa > 200 ? -2 : -1;
+        }
+        if (empty($this->Ctr)) {
+            $this->Ctr = round(16 - 9 * log10($this->povrsinskaMasa), 0);
+            if ($this->Ctr > -1) {
+                $this->Ctr = -1;
+            }
+            if ($this->Ctr < -7) {
+                $this->Ctr = -7;
+            }
         }
 
         foreach ($this->dodatniSloji as $dodatniSloj) {
-            switch ($dodatniSloj->vrsta) {
-                case VrstaDodatnegaSloja::Elasticen:
-                    $this->dRw[] = $dodatniSloj->dR ?? $dodatniSloj->vrsta->dRw(
-                        povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
-                        RwKonstrukcije: $this->Rw,
-                        povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
-                        dinamicnaTogost: $dodatniSloj->dinamicnaTogost
-                    );
-                    break;
-                case VrstaDodatnegaSloja::Nepritrjen:
-                    $this->dRw[] = $dodatniSloj->dR ?? $dodatniSloj->vrsta->dRw(
-                        povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
-                        RwKonstrukcije: $this->Rw,
-                        povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
-                        sirinaMedprostora: $dodatniSloj->sirinaMedprostora
-                    );
-                    break;
-                default:
-                    $this->dRw[] = $dodatniSloj->dR ?? 0;
+            if (empty($dodatniSloj->dR)) {
+                switch ($dodatniSloj->vrsta) {
+                    case VrstaDodatnegaSloja::Elasticen:
+                        $dodatniSloj->dR = $dodatniSloj->vrsta->dR(
+                            povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
+                            RwKonstrukcije: $this->Rw,
+                            povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
+                            dinamicnaTogost: $dodatniSloj->dinamicnaTogost
+                        );
+                        break;
+                    case VrstaDodatnegaSloja::Nepritrjen:
+                        $dodatniSloj->dR = $dodatniSloj->vrsta->dR(
+                            povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
+                            RwKonstrukcije: $this->Rw,
+                            povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
+                            sirinaMedprostora: $dodatniSloj->sirinaMedprostora
+                        );
+                        break;
+                    default:
+                        $dodatniSloj->dR = 0;
+                }
             }
+            $this->dR += $dodatniSloj->dR ?? 0;
         }
+
+        $this->Rw += $this->dR;
     }
 
     /**
@@ -145,9 +154,9 @@ class Konstrukcija
             if ($prop->isInitialized($this)) {
                 if ($prop->getName() == 'dodatniSloji') {
                     $konstrukcija->dodatniSloji = [];
-                    foreach ($prop->getValue($this) as $dodatniSlojVrsta => $dodatniSloj) {
+                    foreach ($prop->getValue($this) as $dodatniSloj) {
                         $dodatniSloj->vrsta = (string)$dodatniSloj->vrsta->value;
-                        $konstrukcija->dodatniSloji[$dodatniSlojVrsta] = $dodatniSloj;
+                        $konstrukcija->dodatniSloji[] = $dodatniSloj;
                     }
                 } else {
                     $konstrukcija->{$prop->getName()} = $prop->getValue($this);

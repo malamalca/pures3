@@ -94,3 +94,22 @@ function array_first($haystack, callable $callback = null, $default = null) {
 
     return $default;
 }
+
+/**
+ * Določi najbližjo vrednost
+ *
+ * @param array $haystack Zaloga vrednosti
+ * @param float $num Vrednost
+ * @return mixed
+ */
+function array_nearest($haystack, $num)
+{
+    $closest = null;
+    foreach ($haystack as $item) {
+        if ($closest === null || abs($num - $closest) > abs($item - $num)) {
+            $closest = $item;
+        }
+    }
+
+    return $closest;
+}

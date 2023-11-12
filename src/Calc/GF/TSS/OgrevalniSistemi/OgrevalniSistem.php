@@ -42,6 +42,10 @@ abstract class OgrevalniSistem
     public array $obnovljivaEnergija = [];
     public array $vracljiveIzgube = [];
 
+    public ?\stdClass $ogrevanje;
+    public ?\stdClass $tsv;
+    public ?\stdClass $hlajenje;
+
     public array $energijaPoEnergentih = [];
 
     // array namenjen da se vnaša vračljiva energija iz drugih sistemov
@@ -80,6 +84,17 @@ abstract class OgrevalniSistem
         $this->idCone = $config->idCone ?? null;
         $this->vrsta = $config->vrsta;
         $this->energent = TSSVrstaEnergenta::from($config->energent ?? 'elektrika');
+
+        // nameni TSS
+        if (!empty($config->ogrevanje)) {
+            $this->ogrevanje = $config->ogrevanje;
+        }
+        if (!empty($config->tsv)) {
+            $this->ogrevanje = $config->tsv;
+        }
+        if (!empty($config->hlajenje)) {
+            $this->ogrevanje = $config->hlajenje;
+        }
 
         if (!empty($config->razvodi)) {
             foreach ($config->razvodi as $razvod) {
@@ -138,6 +153,16 @@ abstract class OgrevalniSistem
 
         $sistem->letnaUcinkovitostOgrHlaTsv = $this->letnaUcinkovitostOgrHlaTsv;
         $sistem->minLetnaUcinkovitostOgrHlaTsv = $this->minLetnaUcinkovitostOgrHlaTsv;
+
+        if (!empty($this->ogrevanje)) {
+            $sistem->ogrevanje = $this->ogrevanje;
+        }
+        if (!empty($this->tsv)) {
+            $sistem->tsv = $this->tsv;
+        }
+        if (!empty($this->hlajenje)) {
+            $sistem->hlajenje = $this->hlajenje;
+        }
 
         if (!empty($this->koncniPrenosniki)) {
             $sistem->prenosniki = [];

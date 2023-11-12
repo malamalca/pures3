@@ -33,4 +33,35 @@ class Calc
     {
         return $mesec > 2 && $mesec < 9;
     }
+
+    /**
+     * Funkcija združi dve dR vrednosti
+     *
+     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija1 Prva konstrukcija
+     * @param string $idSloja1 Id sloja 1
+     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija2 Druga konstrukcija
+     * @param string $idSloja2 Id sloja 2
+     * @return float
+     */
+    public static function combineDeltaR($konstrukcija1, $idSloja1, $konstrukcija2, $idSloja2)
+    {
+        $sloj1 = array_first($konstrukcija1->dodatniSloji, fn($sloj) => $sloj->id == $idSloja1);
+        $sloj2 = array_first($konstrukcija2->dodatniSloji, fn($sloj) => $sloj->id == $idSloja2);
+
+        if (empty($sloj1->dR) && empty($sloj2->dR)) {
+            return 0;
+        }
+        if (empty($sloj1->dR) && !empty($sloj2->dR)) {
+            return $sloj2->dR;
+        }
+        if (!empty($sloj1->dR) && empty($sloj2->dR)) {
+            return $sloj1->dR;
+        }
+
+        if ($sloj1->dR > $sloj2->dR) {
+            return $sloj1->dR + $sloj2->dR / 2;
+        } else {
+            return $sloj2->dR + $sloj1->dR / 2;
+        }
+    }
 }

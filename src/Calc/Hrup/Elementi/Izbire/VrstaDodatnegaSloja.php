@@ -12,7 +12,7 @@ enum VrstaDodatnegaSloja: string
     case Nepritrjen = 'nepritrjen';
 
     /**
-     * Izračun dRw
+     * Izračun dR
      *
      * @param float $povrsinskaMasaKonstrukcije Površina osnovne konstrukcije
      * @param float $RwKonstrukcije Rw osnovne konstrukcije
@@ -21,7 +21,7 @@ enum VrstaDodatnegaSloja: string
      * @param float $sirinaMedprostora Sirina medprostora pri vrsti "Nepritrjen"
      * @return float
      */
-    public function dRw(
+    public function dR(
         float $povrsinskaMasaKonstrukcije = 0,
         float $RwKonstrukcije = 0,
         float $povrsinskaMasaSloja = 0,
