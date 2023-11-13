@@ -49,6 +49,12 @@ class IzkaziController
                         $energentiSistema['hlajenje'][] = $energent;
                     }
                 }
+                if (!isset($sistem->ogrevanje) && !isset($sistem->tsv) && !isset($sistem->hlajenje)) {
+                    $vgrajeniSistemi[] = 'ogrevanje';
+                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                        $energentiSistema['ogrevanje'][] = $energent;
+                    }
+                }
             }
             if (isset($energentiSistema['ogrevanje'])) {
                 $energentiSistema['ogrevanje'] = array_unique($energentiSistema['ogrevanje']);

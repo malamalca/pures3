@@ -104,12 +104,12 @@ class LokalniOgrevalniSistemNaBiomaso extends OgrevalniSistem
             $this->potrebnaEnergija = array_map(fn($mesec) => $mesec / $this->izkoristek / $f, $this->potrebnaEnergija);
         }
 
-        $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Biomasa->value] =
+        $this->energijaPoEnergentih[TSSVrstaEnergenta::Biomasa->value] =
             array_sum($this->potrebnaEnergija);
 
         $this->letnaUcinkovitostOgrHlaTsv =
             $cona->skupnaEnergijaOgrevanje /
-            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Biomasa->value];
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Biomasa->value];
 
         $this->minLetnaUcinkovitostOgrHlaTsv = TSSVrstaEnergenta::Biomasa->minimalniIzkoristekOgrHlaTsv();
     }
