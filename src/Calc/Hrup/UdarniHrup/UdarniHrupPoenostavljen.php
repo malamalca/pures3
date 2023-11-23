@@ -89,6 +89,12 @@ class UdarniHrupPoenostavljen
                         $this->konstrukcijeLib,
                         fn($k) => $k->id == $config->idKonstrukcije
                     );
+                    if (!$this->konstrukcija) {
+                        throw new \Exception(sprintf(
+                            'Ločilna konstrukcija za izračun udarnega hrupa "%s" v knjižnici ne obstaja.',
+                            $config->idKonstrukcije
+                        ));
+                    }
                     break;
                 default:
                     if (isset($config->{$prop->getName()})) {
@@ -123,7 +129,6 @@ class UdarniHrupPoenostavljen
                 fn($ds) => (!empty($ds->id) && $ds->id == $this->idDodatnegaSloja)
             );
         }
-
         if ($dodatniSloj) {
             $this->f0 = 160 * sqrt($dodatniSloj->dinamicnaTogost / $dodatniSloj->povrsinskaMasa);
 
@@ -131,27 +136,31 @@ class UdarniHrupPoenostavljen
             $refFloor = [67, 67.5, 68, 68.5, 69, 69.5, 70, 70.5, 71, 71, 72, 72, 72, 72, 72, 72];
             $refDelta = [62, 62, 62, 62, 62, 62, 61, 60, 59, 58, 57, 54, 51, 48, 45, 42];
 
-            $dL = [];
-            foreach ($fqs as $fq) {
-                $dL[] = 30 * log10($fq / $this->f0);
-            }
-            $devDelta = array_subtract_values($refFloor, $dL);
+            if (isset($dodatniSloj->dLw)) {
+                $this->deltaL = $dodatniSloj->dLw;
+            } else {
+                $dL = [];
+                foreach ($fqs as $fq) {
+                    $dL[] = 30 * log10($fq / $this->f0);
+                }
+                $devDelta = array_subtract_values($refFloor, $dL);
 
-            $startDeviation = -20;
-            $sumDeviation = 100;
-            $prevSumDeviation = 0;
-            while ($sumDeviation > 32 && $startDeviation < 20) {
-                // prestavim celoten spekter za $startDeviation
-                $refDeltaDev = array_map(fn($fq) => $fq + $startDeviation, $refDelta);
-                // odštejem delte od vrednosti referenčne konstrukcije, da dobim deviacije
-                $refDeviate = array_subtract_values($devDelta, $refDeltaDev);
-                // tiste deviacije, ki so manjše kot nič nastavim na 0 in seštejem
-                $refDevSum = array_map(fn($dev) => $dev < 0 ? 0 : $dev, $refDeviate);
-                $sumDeviation = array_sum($refDevSum);
+                $startDeviation = -20;
+                $sumDeviation = 100;
+                $prevSumDeviation = 0;
+                while ($sumDeviation > 32 && $startDeviation < 20) {
+                    // prestavim celoten spekter za $startDeviation
+                    $refDeltaDev = array_map(fn($fq) => $fq + $startDeviation, $refDelta);
+                    // odštejem delte od vrednosti referenčne konstrukcije, da dobim deviacije
+                    $refDeviate = array_subtract_values($devDelta, $refDeltaDev);
+                    // tiste deviacije, ki so manjše kot nič nastavim na 0 in seštejem
+                    $refDevSum = array_map(fn($dev) => $dev < 0 ? 0 : $dev, $refDeviate);
+                    $sumDeviation = array_sum($refDevSum);
 
-                $startDeviation += 1;
+                    $startDeviation += 1;
+                }
+                $this->deltaL = 78 - $refDeltaDev[7];
             }
-            $this->deltaL = 78 - $refDeltaDev[7];
 
             $nearestMStranski = array_nearest(
                 array_keys($this->KLibMDodatnegaSloja),

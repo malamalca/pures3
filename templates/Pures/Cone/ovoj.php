@@ -10,6 +10,22 @@
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
 
+<?php
+    $vsiElementiOvoja = $elementiOvoja;
+    $maxSteviloElementov = 12;
+    $pozicijaGrupe = 0;
+    $steviloSkupin = ceil($stElementov / $maxSteviloElementov);
+
+    for ($stKoraka = 0; $stKoraka < $steviloSkupin; $stKoraka++) {
+        $elementiOvoja = array_slice($vsiElementiOvoja, $stKoraka * $maxSteviloElementov, $maxSteviloElementov);
+        $jeZadnjaGrupa = $stKoraka == $steviloSkupin - 1;
+        if ($steviloSkupin > 1) {
+            $stElementov = $maxSteviloElementov;
+            if ($jeZadnjaGrupa) {
+                $stElementov = count($vsiElementiOvoja) % $maxSteviloElementov;
+            }
+        }
+?>
 
 <table border="1">
     <tr>
@@ -52,7 +68,7 @@
         <td class="right">&nbsp;</td>
         <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->b, 2) . '</td>', $elementiOvoja)) ?>
     </tr>
-    <tr><td colspan="<?= 5 + $stElementov ?>">&nbsp;</td></tr>
+    <tr><td colspan="<?= ($jeZadnjaGrupa ? 5 : 4)  + $stElementov ?>">&nbsp;</td></tr>
 
     <tr>
         <td colspan="2">&nbsp;</td>
@@ -66,11 +82,11 @@
         <td class="right">m</td>
         <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . (isset($elementOvoja->df) ? $this->numFormat($elementOvoja->df, 1) : '') . '</td>', $elementiOvoja)) ?>
     </tr>
-    <tr><td colspan="<?= 5 + $stElementov ?>">&nbsp;</td></tr>
+    <tr><td colspan="<?= ($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
     <tr>
         <th colspan="4">Faktor senčenja okoliških ovir F<sub>sh,glob,ov,m</sub></th>
-        <th colspan="<?= $stElementov + 1 ?>"></th>
+        <th colspan="<?= $stElementov + ($jeZadnjaGrupa ? 1 : 0) ?>"></th>
     </tr>
     <?php
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -83,13 +99,13 @@
     <?php
         }
     ?>
-    <tr><td colspan="<?= 5 + $stElementov ?>">&nbsp;</td></tr>
+    <tr><td colspan="<?= ($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
 
     <tr>
         <th colspan="3">Mesečno sončno obsevanje H<sub>sol,m</sub> (Wh/m²m)</th>
         <th>št. dni</th>
-        <th colspan="<?= $stElementov + 1 ?>"></th>
+        <th colspan="<?= $stElementov + ($jeZadnjaGrupa ? 1 : 0) ?>"></th>
     </tr>
     <?php
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -104,7 +120,7 @@
     <?php
         }
     ?>
-    <tr><td colspan="<?= 5 + $stElementov ?>">&nbsp;</td></tr>
+    <tr><td colspan="<?= ($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
 
     <tr>
@@ -112,7 +128,13 @@
         <th class="center">&Delta;T</th>
         <th class="center">št. dni</th>
         <th colspan="<?= $stElementov ?>">OGREVANJE</th>
+        <?php
+            if ($jeZadnjaGrupa) {
+        ?>
         <th class="center">Skupaj</th>
+        <?php
+            }
+        ?>
     </tr>
     <?php
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -124,12 +146,19 @@
             <td class="center"><?= $cona->deltaTOgrevanje[$mesec] ?></td>
             <td class="center"><?= $daysInMonth ?></td>
             <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->transIzgubeOgrevanje[$mesec], 1) . '</td>', $elementiOvoja)) ?>
+
+            <?php
+                if ($jeZadnjaGrupa) {
+            ?>
             <td class="center"><?= $this->numFormat($cona->transIzgubeOgrevanje[$mesec], 1) ?></td>
+            <?php
+                }
+            ?>
         </tr>
     <?php
         }
     ?>
-    <tr><td colspan="<?= 5 + $stElementov ?>">&nbsp;</td></tr>
+    <tr><td colspan="<?= ($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
 
     <tr>
@@ -137,7 +166,13 @@
         <th class="center">&Delta;T</th>
         <th class="center">št. dni</th>
         <th colspan="<?= $stElementov ?>">HLAJENJE</th>
+        <?php
+            if ($jeZadnjaGrupa) {
+        ?>
         <th class="center">Skupaj</th>
+        <?php
+            }
+        ?>
     </tr>
     <?php
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -149,18 +184,30 @@
             <td class="center"><?= $cona->deltaTHlajenje[$mesec] ?></td>
             <td class="center"><?= $daysInMonth ?></td>
             <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->transIzgubeHlajenje[$mesec], 1) . '</td>', $elementiOvoja)) ?>
+            <?php
+                if ($jeZadnjaGrupa) {
+            ?>
             <td class="center"><?= $this->numFormat($cona->transIzgubeHlajenje[$mesec], 1) ?></td>
+            <?php
+                }
+            ?>
         </tr>
     <?php
         }
     ?>
-    <tr><td colspan="<?= 5 + $stElementov ?>">&nbsp;</td></tr>
+    <tr><td colspan="<?= ($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
     <tr>
         <th colspan="3">Dobitki sončnega obsevanja Qsol,m (kWh/m)</th>
         <th>št. dni</th>
         <th colspan="<?= $stElementov ?>">OGREVANJE</th>
+        <?php
+            if ($jeZadnjaGrupa) {
+        ?>
         <th class="center">Skupaj</th>
+        <?php
+            }
+        ?>
     </tr>
     <?php
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -171,18 +218,30 @@
             <td class="center"><?= Calc::MESECI[$mesec] ?></td>
             <td class="center"><?= $daysInMonth ?></td>
             <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->solarniDobitkiOgrevanje[$mesec], 2) . '</td>', $elementiOvoja)) ?>
+            <?php
+                if ($jeZadnjaGrupa) {
+            ?>
             <td class="center"><?= $this->numFormat($cona->solarniDobitkiOgrevanje[$mesec], 1) ?></td>
+            <?php
+                }
+            ?>
         </tr>
     <?php
         }
     ?>
-    <tr><td colspan="<?= 5 + $stElementov ?>">&nbsp;</td></tr>
+    <tr><td colspan="<?=($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
     <tr>
         <th colspan="3">Dobitki sončnega obsevanja Qsol,m (kWh/m)</th>
         <th>št. dni</td>
         <th colspan="<?= $stElementov ?>">HLAJENJE</th>
+        <?php
+            if ($jeZadnjaGrupa) {
+        ?>
         <th class="center">Skupaj</th>
+        <?php
+            }
+        ?>
     </tr>
     <?php
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -193,9 +252,19 @@
             <td class="center"><?= Calc::MESECI[$mesec] ?></td>
             <td class="center"><?= $daysInMonth ?></td>
             <?= implode(PHP_EOL, array_map(fn($elementOvoja) => '<td class="center">' . $this->numFormat($elementOvoja->solarniDobitkiHlajenje[$mesec], 2) . '</td>', $elementiOvoja)) ?>
+            <?php
+                if ($jeZadnjaGrupa) {
+            ?>
             <th class="center"><?= $this->numFormat($cona->solarniDobitkiHlajenje[$mesec], 1) ?></th>
+            <?php
+                }
+            ?>
         </tr>
     <?php
         }
     ?>
 </table>
+<br />
+<?php
+    }
+?>

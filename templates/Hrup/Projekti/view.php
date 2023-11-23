@@ -5,8 +5,9 @@
 <h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 
 <p class="actions">
-    <a class="button" href="<?= App::url('/hrup/projekti/izkaz/' . $projectId) ?>">Izkaz</a>
+    <a class="button" href="<?= App::url('/hrup/projekti/porocilo/' . $projectId) ?>">Tehnično poročilo</a>
     <a class="button" href="<?= App::url('/hrup/projekti/konstrukcije/' . $projectId) ?>">Konstrukcije</a>
+    <a class="button" href="<?= App::url('/hrup/projekti/izkaz/' . $projectId) ?>">Izkaz</a>
 </p>
 <?php
     if (!empty($prostori)) {
@@ -27,10 +28,11 @@
     if (!empty($udarniHrup)) {
 ?>
 <p class="actions">
+    Udarni hrup:
 <?php
         foreach ($udarniHrup as $locilnaKonstrukcija) {
 ?>
-    <a class="button" href="<?= App::url('/hrup/udarniHrup/view/' . $projectId . '/' . $locilnaKonstrukcija->id) ?>"><?= h($locilnaKonstrukcija->naziv) ?></a>
+    <a class="button" href="<?= App::url('/hrup/udarniHrup/view/' . $projectId . '/' . $locilnaKonstrukcija->id) ?>"><?= h($locilnaKonstrukcija->id . ' - ' . $locilnaKonstrukcija->naziv) ?></a>
 <?php
         }
 ?>
@@ -42,10 +44,11 @@
     if (!empty($zracniHrup)) {
 ?>
 <p class="actions">
+    Hrup v zraku: 
 <?php
         foreach ($zracniHrup as $locilnaKonstrukcija) {
 ?>
-    <a class="button" href="<?= App::url('/hrup/zracniHrup/view/' . $projectId . '/' . $locilnaKonstrukcija->id) ?>"><?= h($locilnaKonstrukcija->naziv) ?></a>
+    <a class="button" href="<?= App::url('/hrup/zracniHrup/view/' . $projectId . '/' . $locilnaKonstrukcija->id) ?>"><?= h($locilnaKonstrukcija->id . ' - ' . $locilnaKonstrukcija->naziv) ?></a>
 <?php
         }
 ?>

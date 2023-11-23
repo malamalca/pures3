@@ -271,6 +271,18 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             TSSVrstaEnergenta::Elektrika->value => 0,
             TSSVrstaEnergenta::Okolje->value => 0,
         ];
+        $this->energijaPoEnergentihOgrevanje = [
+            TSSVrstaEnergenta::Elektrika->value => 0,
+            TSSVrstaEnergenta::Okolje->value => 0,
+        ];
+        $this->energijaPoEnergentihTSV = [
+            TSSVrstaEnergenta::Elektrika->value => 0,
+            TSSVrstaEnergenta::Okolje->value => 0,
+        ];
+        $this->energijaPoEnergentihHlajenje = [
+            TSSVrstaEnergenta::Elektrika->value => 0,
+            TSSVrstaEnergenta::Okolje->value => 0,
+        ];
         $this->potrebnaEnergija = [];
         $this->potrebnaElektricnaEnergija = [];
         $this->obnovljivaEnergija = [];
@@ -294,6 +306,12 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 array_sum_values($this->obnovljivaEnergija, $this->tsv->obnovljivaEnergija);
 
             $dejanskaEnergija = array_subtract_values($this->tsv->potrebnaEnergija, $this->tsv->obnovljivaEnergija);
+
+            $this->energijaPoEnergentihTSV[TSSVrstaEnergenta::Elektrika->value] +=
+                array_sum($dejanskaEnergija) +
+                array_sum($this->tsv->potrebnaElektricnaEnergija);
+            $this->energijaPoEnergentihTSV[TSSVrstaEnergenta::Okolje->value] +=
+                array_sum($this->tsv->obnovljivaEnergija);
 
             $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
                 array_sum($dejanskaEnergija) +
@@ -331,6 +349,12 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                 array_sum($dejanskaEnergija) + array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
 
             $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] +=
+                array_sum($this->ogrevanje->obnovljivaEnergija);
+
+            $this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Elektrika->value] +=
+                array_sum($dejanskaEnergija) + array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
+
+            $this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Okolje->value] +=
                 array_sum($this->ogrevanje->obnovljivaEnergija);
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=

@@ -140,7 +140,7 @@
     <?php
         $elementi = array_merge($konstrukcije, $oknaVrata);
         foreach ($elementi as $element) {
-            if (empty($element->tip) || $element->tip == 'vertikalna') {
+            if (isset($element->tip) && $element->tip == 'vertikalna') {
     ?>
     <tr>
         <td class="w-10"><?= h($element->id) ?></td>
@@ -294,6 +294,23 @@
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">Ustreza (da/ne)</td>
     </tr>
+    <?php
+        if (!empty($odmevniHrup)) {
+            foreach ($odmevniHrup as $line) {
+    ?>
+    <tr>
+        <td class="w-10"><?= h($line->id) ?></td>
+        <td class="w-30"><?= h($line->naziv) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px"><?= $line->enota ?></td>
+        <td class="w-10 center strong"><?= $this->numFormat($line->projektnaVrednost, 1) ?></td>
+        <td class="w-20 center strong"><?= $this->numFormat($line->izracunanaVrednost, 1) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
+        <td class="w-10 center">&nbsp;</td>
+    </tr>
+    <?php
+            }
+        } else {
+    ?>
     <tr>
         <td class="w-10">&nbsp;</td>
         <td class="w-30">&nbsp;</td>
@@ -303,6 +320,9 @@
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
+    <?php
+        }
+    ?>
 </table>
 
 
@@ -328,6 +348,23 @@
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">Ustreza (da/ne)</td>
     </tr>
+    <?php
+        if (!empty($strojniHrup)) {
+            foreach ($strojniHrup as $line) {
+    ?>
+    <tr>
+        <td class="w-10"><?= h($line->id) ?></td>
+        <td class="w-30"><?= h($line->naziv) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px"><?= $line->enota ?></td>
+        <td class="w-10 center strong"><?= $this->numFormat($line->projektnaVrednost, 1) ?></td>
+        <td class="w-20 center strong"><?= $this->numFormat($line->izracunanaVrednost, 1) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
+        <td class="w-10 center">&nbsp;</td>
+    </tr>
+    <?php
+            }
+        } else {
+    ?>
     <tr>
         <td class="w-10">&nbsp;</td>
         <td class="w-30">&nbsp;</td>
@@ -337,6 +374,9 @@
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
+    <?php
+        }
+    ?>
 </table>
 
 <br />

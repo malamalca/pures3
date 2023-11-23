@@ -204,7 +204,9 @@
                                 "idKonstrukcije": {"type": "string"},
                                 "opis": {"type": "string"},
                                 "stevilo": {"type": "integer"},
-                                "povrsina": {"type": "number"},
+                                "povrsina": {
+                                    "oneOf": [{"type": "number"}, {"type": "string"}]
+                                },
                                 "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90]},
                                 "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]},
 

@@ -47,6 +47,9 @@ abstract class OgrevalniSistem
     public ?\stdClass $hlajenje;
 
     public array $energijaPoEnergentih = [];
+    public array $energijaPoEnergentihOgrevanje = [];
+    public array $energijaPoEnergentihTSV = [];
+    public array $energijaPoEnergentihHlajenje = [];
 
     // array namenjen da se vnaša vračljiva energija iz drugih sistemov
     public array $vracljiveIzgubeVOgrevanje = [];
@@ -62,7 +65,6 @@ abstract class OgrevalniSistem
      */
     public function __construct($config = null)
     {
-        $energijaPoEnergentih = [];
         if ($config) {
             $this->parseConfig($config);
         }
@@ -150,6 +152,9 @@ abstract class OgrevalniSistem
         $sistem->vracljiveIzgube = $this->vracljiveIzgube;
 
         $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
+        $sistem->energijaPoEnergentihOgrevanje = $this->energijaPoEnergentihOgrevanje;
+        $sistem->energijaPoEnergentihTSV = $this->energijaPoEnergentihTSV;
+        $sistem->energijaPoEnergentihHlajenje = $this->energijaPoEnergentihHlajenje;
 
         $sistem->letnaUcinkovitostOgrHlaTsv = $this->letnaUcinkovitostOgrHlaTsv;
         $sistem->minLetnaUcinkovitostOgrHlaTsv = $this->minLetnaUcinkovitostOgrHlaTsv;

@@ -112,26 +112,28 @@
                     </td>
                     <td class="center"><?= $this->numFormat($libKons->povrsinskaMasa, 1) ?> 
                     <td class="center">
-                        <?= $this->numFormat($libKons->Rw, 1) ?> 
+                        <span clas="nowrap">
+                        <?= $this->numFormat($libKons->Rw, 0) ?> 
                         (<?= $this->numFormat($libKons->C, 0) ?>; <?= $this->numFormat($libKons->Ctr, 0) ?>)
+                        </span>
                         <?php
                             foreach ($libKons->dodatniSloji as $slojIx => $dodatniSloj) {
                         ?>
                             <div class="small">
-                                &Delta;R<sub>sloj <?= ($slojIx+1) ?></sub> =<?= $this->numFormat($dodatniSloj->dR, 1) ?> dB
+                                &Delta;R<sub>sloj <?= ($slojIx+1) ?></sub> =<?= $this->numFormat($dodatniSloj->dR, 0) ?> dB
                             </div>
                         <?php
                             }
                         ?>
                     </td>
-                    <td class="center">
-                        <?= $this->numFormat($konstrukcija->Rw, 1) ?> 
+                    <td class="center nowrap">
+                        <?= $this->numFormat($konstrukcija->Rw, 0) ?> 
                         (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>)
                     </td>
                     <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?> 
                     <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 1) ?> 
                     <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 1) ?> dB</td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB</td>
                 </tr>
             <?php
                         $k++;
@@ -149,20 +151,20 @@
                     <td class="left"><?= h($libOknaVrata->naziv) ?></td>
                     <td class="left">&nbsp;</td>
                     <td class="center">
-                        <?= $this->numFormat($libOknaVrata->Rw, 1) ?> 
-                        (<?= $this->numFormat($libOknaVrata->C, 0) ?>; <?= $this->numFormat($libOknaVrata->Ctr, 0) ?>)<br />
+                        <span class="nowrap"><?= $this->numFormat($libOknaVrata->Rw, 0) ?> 
+                        (<?= $this->numFormat($libOknaVrata->C, 0) ?>; <?= $this->numFormat($libOknaVrata->Ctr, 0) ?>)</span><br />
                         <div class="small">
-                            &Delta;R<sub>TSG</sub> =<?= $this->numFormat($libOknaVrata->dR, 1) ?> dB
+                            &Delta;R<sub>TSG</sub> =<?= $this->numFormat($libOknaVrata->dR, 0) ?> dB
                         </div>
                     </td>
-                    <td class="center">
-                        <?= $this->numFormat($konstrukcija->Rw, 1) ?> 
+                    <td class="center nowrap">
+                        <?= $this->numFormat($konstrukcija->Rw, 0) ?> 
                         (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>)
                     </td>
                     <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?> 
                     <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 1) ?> 
                     <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 1) ?> dB</td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB</td>
                 </tr>
             <?php
                         $k++;
@@ -173,7 +175,7 @@
                     <td class="center">&nbsp;</td>
                     <td class="right strong" colspan="7">Skupaj:</td>
                     <td class="right strong">R'<sub>w</sub> = </td>
-                    <td class="center strong"><?= $this->numFormat($fasada->Rw, 1) ?> dB</td>
+                    <td class="center strong"><?= $this->numFormat($fasada->Rw, 0) ?> dB</td>
                 </tr>
             <table>
         </td>
@@ -199,7 +201,7 @@
         <td>Fasada <?= $i ?>.</td>
         <td class="center"><?= $this->numFormat($fasada->povrsina) ?></td>
         <td class="center"><?= $this->numFormat($fasada->povrsina / $prostor->Sf, 2) ?> 
-        <td class="center"><?= $this->numFormat($fasada->Rw, 1) ?> dB</td>
+        <td class="center"><?= $this->numFormat($fasada->Rw, 0) ?> dB</td>
     </tr>
 <?php
     }
@@ -207,12 +209,12 @@
     <tr>
         <td class="right strong" colspan="2">Skupaj:</td>
         <td class="right strong">R'<sub>s,w</sub> = </td>
-        <td class="center strong"><?= $this->numFormat($prostor->Rw, 1) ?> dB</td>
+        <td class="center strong"><?= $this->numFormat($prostor->Rw, 0) ?> dB</td>
     </tr>
     <tr>
         <td class="right strong" colspan="2">Min. zahteva:</td>
         <td class="right strong">R'<sub>min,w</sub> = </td>
-        <td class="center strong"><?= $this->numFormat($prostor->minRw, 1) ?> dB</td>
+        <td class="center strong"><?= $this->numFormat($prostor->minRw, 0) ?> dB</td>
     </tr>
     <tr>
         <td class="right strong" colspan="3">USTREZNOST:</td>

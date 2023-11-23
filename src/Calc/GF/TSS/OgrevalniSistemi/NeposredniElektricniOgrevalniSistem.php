@@ -103,12 +103,14 @@ class NeposredniElektricniOgrevalniSistem extends OgrevalniSistem
             $this->potrebnaEnergija = array_map(fn($mesec) => $mesec / $this->izkoristek, $this->potrebnaEnergija);
         }
 
-        $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value] =
+        $this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Elektrika->value] =
+            array_sum($this->potrebnaEnergija);
+        $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
             array_sum($this->potrebnaEnergija);
 
         $this->letnaUcinkovitostOgrHlaTsv =
             $cona->skupnaEnergijaOgrevanje /
-            $this->energijaPoEnergentih['ogrevanje'][TSSVrstaEnergenta::Elektrika->value];
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value];
 
         $this->minLetnaUcinkovitostOgrHlaTsv = TSSVrstaEnergenta::Elektrika->minimalniIzkoristekOgrHlaTsv();
     }

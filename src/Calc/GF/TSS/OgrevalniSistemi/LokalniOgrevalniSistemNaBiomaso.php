@@ -104,6 +104,8 @@ class LokalniOgrevalniSistemNaBiomaso extends OgrevalniSistem
             $this->potrebnaEnergija = array_map(fn($mesec) => $mesec / $this->izkoristek / $f, $this->potrebnaEnergija);
         }
 
+        $this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Biomasa->value] =
+            array_sum($this->potrebnaEnergija);
         $this->energijaPoEnergentih[TSSVrstaEnergenta::Biomasa->value] =
             array_sum($this->potrebnaEnergija);
 

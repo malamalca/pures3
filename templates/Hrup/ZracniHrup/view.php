@@ -46,6 +46,7 @@
 </table>
 
     <?php
+        if (isset($locilnaKonstrukcija->stranskiElementi)) {
         foreach ($locilnaKonstrukcija->stranskiElementi as $i => $stranskiElement) {
     ?>
 <table border="1" width="100%">
@@ -80,11 +81,23 @@
         <td class="w-30">Spoj:</td>
         <td class="center w-15"><img src="<?= App::url('/img/zracni-hrup/spoj_' . VrstaSpoja::from($stranskiElement->vrstaSpoja)->getOrdinal() . '.png') ?>" /></td>
         <td colspan="2" class="left strong">
-            <?= h(VrstaSpoja::from($stranskiElement->vrstaSpoja)->naziv()) ?>
+            <div><?= h(VrstaSpoja::from($stranskiElement->vrstaSpoja)->naziv()) ?></div>
+            <div>R<sub>Df</sub> = R<sub><?= $stranskiElement->pozicijeElementov->locilni ?><?= $stranskiElement->pozicijeElementov->oddajni ?></sub> = 
+                <?= $this->numFormat($stranskiElement->R_Df, 0) ?> dB</div>
+            <div>R<sub>Ff</sub> = R<sub><?= $stranskiElement->pozicijeElementov->izvorni ?><?= $stranskiElement->pozicijeElementov->oddajni ?></sub> = 
+                <?= $this->numFormat($stranskiElement->R_Ff, 0) ?> dB</div>
+            <div>R<sub>Fd</sub> = R<sub><?= $stranskiElement->pozicijeElementov->izvorni ?><?= $stranskiElement->pozicijeElementov->locilni ?></sub> = 
+                <?= $this->numFormat($stranskiElement->R_Fd, 0) ?> dB</div>
+            <?php
+                foreach ($stranskiElement->pozicijeElementov as $pozicija) {
+
+                }
+            ?>
         </td>
     </tr>
 </table>
     <?php
+            }
         }
     ?>
 
@@ -106,8 +119,8 @@
     </tr>
     <tr>
         <td class="right strong w-45" colspan="2">USTREZNOST:</td>
-        <td class="left strong <?= $locilnaKonstrukcija->Rw > $locilnaKonstrukcija->minRw ? 'green' : 'red' ?>">
-            <?= $locilnaKonstrukcija->Rw > $locilnaKonstrukcija->minRw ? 'DA' : 'NE' ?>
+        <td class="left strong <?= $locilnaKonstrukcija->Rw >= $locilnaKonstrukcija->minRw ? 'green' : 'red' ?>">
+            <?= $locilnaKonstrukcija->Rw >= $locilnaKonstrukcija->minRw ? 'DA' : 'NE' ?>
         </td>
     </tr>
 </table>

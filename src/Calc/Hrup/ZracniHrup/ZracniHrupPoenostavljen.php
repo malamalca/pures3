@@ -41,6 +41,12 @@ class ZracniHrupPoenostavljen
                 $this->konstrukcijeLib,
                 fn($k) => $k->id == $config->locilniElement->idKonstrukcije
             );
+            if (!$konstrukcijaConfig) {
+                throw new \Exception(sprintf(
+                    'Ločilna konstrukcija za izračun zračnega hrupa "%s" v knjižnici ne obstaja.',
+                    $config->locilniElement->idKonstrukcije
+                ));
+            }
             $this->locilniElement = new LocilniElement(new Konstrukcija($konstrukcijaConfig), $config->locilniElement);
         }
 
@@ -66,23 +72,25 @@ class ZracniHrupPoenostavljen
                 case 'locilniElement':
                     break;
                 case 'stranskiElementi':
-                    foreach ($config->stranskiElementi as $stranskiElementiConfig) {
-                        $libKonstrukcijaConfig = array_first(
-                            $this->konstrukcijeLib,
-                            fn($kons) => $stranskiElementiConfig->idKonstrukcije == $kons->id
-                        );
-                        if (!$libKonstrukcijaConfig) {
-                            throw new \Exception(sprintf(
-                                'Konstrukcija stranskega elementa "%s" v knjižnici ne obstaja.',
-                                $stranskiElementiConfig->idKonstrukcije
-                            ));
+                    if (isset($config->stranskiElementi)) {
+                        foreach ($config->stranskiElementi as $stranskiElementiConfig) {
+                            $libKonstrukcijaConfig = array_first(
+                                $this->konstrukcijeLib,
+                                fn($kons) => $stranskiElementiConfig->idKonstrukcije == $kons->id
+                            );
+                            if (!$libKonstrukcijaConfig) {
+                                throw new \Exception(sprintf(
+                                    'Konstrukcija stranskega elementa "%s" v knjižnici ne obstaja.',
+                                    $stranskiElementiConfig->idKonstrukcije
+                                ));
+                            }
+                            $stranskiElement = new StranskiElementPoenostavljen(
+                                new Konstrukcija($libKonstrukcijaConfig),
+                                $this->locilniElement,
+                                $stranskiElementiConfig
+                            );
+                            $this->stranskiElementi[] = $stranskiElement;
                         }
-                        $stranskiElement = new StranskiElementPoenostavljen(
-                            new Konstrukcija($libKonstrukcijaConfig),
-                            $this->locilniElement,
-                            $stranskiElementiConfig
-                        );
-                        $this->stranskiElementi[] = $stranskiElement;
                     }
                     break;
                 default:
@@ -111,13 +119,15 @@ class ZracniHrupPoenostavljen
     {
         $tau = pow(10, -$this->locilniElement->Rw / 10);
 
-        foreach ($this->stranskiElementi as $stranskiElement) {
-            $tau += pow(10, -$stranskiElement->R_Df / 10);
-            $tau += pow(10, -$stranskiElement->R_Ff / 10);
-            $tau += pow(10, -$stranskiElement->R_Fd / 10);
+        if (!empty($this->stranskiElementi)) {
+            foreach ($this->stranskiElementi as $stranskiElement) {
+                $tau += pow(10, -$stranskiElement->R_Df / 10);
+                $tau += pow(10, -$stranskiElement->R_Ff / 10);
+                $tau += pow(10, -$stranskiElement->R_Fd / 10);
+            }
         }
 
-        $this->Rw = -10 * log10($tau);
+        $this->Rw = round(-10 * log10($tau), 0);
     }
 
     /**

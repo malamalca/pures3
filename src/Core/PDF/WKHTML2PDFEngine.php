@@ -23,7 +23,7 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
         'margin-top' => 10,
         'margin-right' => 10,
         'margin-bottom' => 10,
-        'margin-left' => 25,
+        'margin-left' => 10,
 
         // Default page options
         'disable-smart-shrinking',

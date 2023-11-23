@@ -194,6 +194,7 @@ class Cona
                                 $this->konstrukcije->transparentne,
                                 fn($k) => $k->id == $konsConfig->idKonstrukcije
                             );
+
                             $this->ovoj->transparentneKonstrukcije[] =
                                 new TransparentenElementOvoja($kons, $konsConfig, $options);
                         }

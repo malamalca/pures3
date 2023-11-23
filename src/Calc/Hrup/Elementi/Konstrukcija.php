@@ -10,10 +10,11 @@ class Konstrukcija
 {
     public string $id;
     public string $naziv;
-    public string $tip = 'vertikalna';
+    public ?string $tip;
     public float $povrsinskaMasa = 0;
     public float $Rw = 0;
     public float $dR = 0;
+    public ?float $dLw;
     public float $C = 0;
     public float $Ctr = 0;
 
@@ -58,6 +59,9 @@ class Konstrukcija
                 case 'dodatniSloji':
                     if (isset($config->dodatniSloji)) {
                         foreach ($config->dodatniSloji as $dodatniSloj) {
+                            if (isset($dodatniSloj->povrsinskaMasa) && is_string($dodatniSloj->povrsinskaMasa)) {
+                                $dodatniSloj->povrsinskaMasa = (float)$EvalMath->e($dodatniSloj->povrsinskaMasa);
+                            }
                             if (is_string($dodatniSloj->vrsta)) {
                                 $dodatniSloj->vrsta = VrstaDodatnegaSloja::from($dodatniSloj->vrsta);
                             }
@@ -111,7 +115,7 @@ class Konstrukcija
         }
 
         foreach ($this->dodatniSloji as $dodatniSloj) {
-            if (empty($dodatniSloj->dR)) {
+            if (!isset($dodatniSloj->dR)) {
                 switch ($dodatniSloj->vrsta) {
                     case VrstaDodatnegaSloja::Elasticen:
                         $dodatniSloj->dR = $dodatniSloj->vrsta->dR(
@@ -134,6 +138,9 @@ class Konstrukcija
                 }
             }
             $this->dR += $dodatniSloj->dR ?? 0;
+            if (!empty($dodatniSloj->dLw)) {
+                $this->dLw = $dodatniSloj->dLw;
+            }
         }
 
         $this->Rw += $this->dR;

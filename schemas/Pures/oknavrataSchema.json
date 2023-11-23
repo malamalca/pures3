@@ -15,7 +15,18 @@
                     "Uf": {"type": "number"},
                     "Ug": {"type": "number"},
                     "g": {"type": "number"},
-                    "Psi": {"type": "number"}
+                    "Psi": {"type": "number"},
+                    "stranskoSencenje": {
+                        "type": "object",
+                        "properties": {
+                            "zgorajDolzina": {"type": "number"},
+                            "zgorajRazdalja": {"type": "number"},
+                            "levoDolzina": {"type": "number"},
+                            "levoRazdalja": {"type": "number"},
+                            "desnoDolzina": {"type": "number"},
+                            "desnoRazdalja": {"type": "number"}
+                        }
+                    }
                 }
             },
             {

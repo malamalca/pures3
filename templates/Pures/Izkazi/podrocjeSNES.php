@@ -193,8 +193,7 @@ za področje TSS</h1>
     <?php
         $i = 1;
         foreach ($sistemiOgrevanja as $sistem) {
-            if (isset($sistem->energijaPoEnergentih->ogrevanje)) {
-                $sistemEnergijaPoEnergentih = $sistem->energijaPoEnergentih->ogrevanje;
+            if (isset($sistem->energijaPoEnergentihOgrevanje)) {
     ?>
 
     <tr>
@@ -202,7 +201,7 @@ za področje TSS</h1>
         <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
         <td class="w-10 center">vrsta</td>
         <?php
-            foreach ($sistemEnergijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->energijaPoEnergentihOgrevanje as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
         <?php
@@ -213,7 +212,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-10 center">količina</td>
         <?php
-            foreach ($sistemEnergijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->energijaPoEnergentihOgrevanje  as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
         <?php
@@ -257,8 +256,7 @@ za področje TSS</h1>
     <?php
         $i = 1;
         foreach ($sistemiOgrevanja as $sistem) {
-            if (isset($sistem->energijaPoEnergentih->tsv)) {
-                $sistemEnergijaPoEnergentih = $sistem->energijaPoEnergentih->tsv;
+            if (isset($sistem->energijaPoEnergentihTSV)) {
     ?>
 
     <tr>
@@ -266,7 +264,7 @@ za področje TSS</h1>
         <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
         <td class="w-10 center">vrsta</td>
         <?php
-            foreach ($sistemEnergijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->energijaPoEnergentihTSV as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
         <?php
@@ -277,7 +275,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-10 center">količina</td>
         <?php
-            foreach ($sistemEnergijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->energijaPoEnergentihTSV  as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
         <?php
@@ -309,9 +307,9 @@ za področje TSS</h1>
         <td class="w-20 center"><?= $this->numFormat($sistem->letnaUcinkovitostOgrHlaTsv * 100, 1) ?> %</td>
         <td class="w-20 center">
             <span title="&#951; > <?= $this->numFormat($sistem->minLetnaUcinkovitostOgrHlaTsv, 1) ?>">
-            <b class="<?= $sistem->letnaUcinkovitostOgrHlaTsv > $sistem->minLetnaUcinkovitostOgrHlaTsv ? 'green' : 'red' ?>">
+            <!--<b class="<?= $sistem->letnaUcinkovitostOgrHlaTsv > $sistem->minLetnaUcinkovitostOgrHlaTsv ? 'green' : 'red' ?>">
             <?= $sistem->letnaUcinkovitostOgrHlaTsv > $sistem->minLetnaUcinkovitostOgrHlaTsv ? '&#10003;' : '&#10006;' ?>
-            </b></span>
+            </b>--></span>
         </td>
     </tr>
     <?php

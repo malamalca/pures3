@@ -204,7 +204,7 @@ class ManjzahtevnaStavba extends Stavba
                     $this->izpustCO2 -= $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
 
                     if ($energent == TSSVrstaEnergenta::Elektrika->value) {
-                        $this->skupnaOddanaElektricnaEnergija += $energent;
+                        $this->skupnaOddanaElektricnaEnergija += $energija;
                     }
                 }
             }

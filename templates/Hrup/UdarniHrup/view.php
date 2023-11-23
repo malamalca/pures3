@@ -17,11 +17,11 @@
         <td colspan="2" class="w-30">Naziv ločilne konstrukcije:</td>
         <td colspan="2" class="left strong"><?= h($locilnaKonstrukcija->naziv) ?></td>
     </tr>
-    <tr>
+    <!--<tr>
         <td class="w-20">Prostornina sprejemnega prostora:</td>
         <td class="w-10 right strong">V=</td>
         <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->prostorninaSprejemnegaProstora, 1) ?> m3</td>
-    </tr>
+    </tr>-->
     <tr>
         <td class="w-20">Ekvivalentna ovrednotena normirana raven zvočnega tlaka:</td>
         <td class="w-10 right strong">L<sub>n,w,eq</sub>=</td>
@@ -37,7 +37,7 @@
         <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->K, 0) ?> dB</td>
     </tr>
     <tr>
-        <td class="w-20">Ovrednoteno izboljšanje izolacije:</td>
+        <td class="w-20">Ovrednoteno izboljšanje izolacije zaradi dodatnih slojev:</td>
         <td class="w-10 right strong">&Delta;L<sub>w</sub>=</td>
         <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->deltaL, 0) ?> dB</td>
     </tr>
@@ -53,13 +53,13 @@
     </tr>
     <tr>
         <td class="right strong" colspan="1">Min. zahteva:</td>
-        <td class="right strong">R'<sub>min,w</sub> = </td>
+        <td class="right strong nowrap">L'<sub>n,w,min</sub> = </td>
         <td class="left strong"><?= $this->numFormat($locilnaKonstrukcija->minLnw, 0) ?> dB</td>
     </tr>
     <tr>
         <td class="right strong" colspan="2">USTREZNOST:</td>
-        <td class="left strong <?= $locilnaKonstrukcija->Lnw > $locilnaKonstrukcija->minLnw ? 'green' : 'red' ?>">
-            <?= $locilnaKonstrukcija->Lnw > $locilnaKonstrukcija->minLnw ? 'DA' : 'NE' ?>
+        <td class="left strong <?= $locilnaKonstrukcija->Lnw <= $locilnaKonstrukcija->minLnw ? 'green' : 'red' ?>">
+            <?= $locilnaKonstrukcija->Lnw <= $locilnaKonstrukcija->minLnw ? 'DA' : 'NE' ?>
         </td>
     </tr>
 </table>

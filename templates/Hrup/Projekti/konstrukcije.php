@@ -19,7 +19,7 @@
         <td>Izolativnost:</td>
         <td class="right">Rw (C; C<sub>tr</sub>)=</td>
         <td>
-            <?= $this->numFormat($konstrukcija->Rw, 1) ?>
+            <?= $this->numFormat($konstrukcija->Rw, 0) ?>
             (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>) dB
         </td>
     </tr>
@@ -31,6 +31,10 @@
             <td class="left strong" colspan="3">Dodatni sloj <?= $i ?></td>
         </tr>
         <tr>
+            <td colspan="2">Opis:</td>
+            <td class="strong"><?= h($dodatniSloj->naziv) ?></td>
+        </tr>
+        <tr>
             <td colspan="2">Vrsta:</td>
             <td class="strong"><?= h(VrstaDodatnegaSloja::from($dodatniSloj->vrsta)->naziv()) ?></td>
         </tr>
@@ -40,10 +44,21 @@
             <td><?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m<sup>2</sup></td>
         </tr>
         <tr>
-            <td>Izolativnost:</td>
+            <td>Vpliv na hrup v zraku:</td>
             <td class="right">&Delta;R=</td>
-            <td><?= $this->numFormat($dodatniSloj->dR, 1) ?> dB</td>
+            <td><?= $this->numFormat($dodatniSloj->dR, 0) ?> dB</td>
         </tr>
+        <?php
+            if (isset($dodatniSloj->dLw)) {
+        ?>
+        <tr>
+            <td>Vpliv na udarni hrup:</td>
+            <td class="right">&Delta;L<sub>w</sub>=</td>
+            <td><?= $this->numFormat($dodatniSloj->dLw, 0) ?> dB</td>
+        </tr>
+        <?php
+            }
+        ?>
         <?php
             if ($dodatniSloj->vrsta == 'elasticen') {
         ?>
@@ -61,7 +76,7 @@
         <tr>
             <td>Širina medprostora:</td>
             <td class="right">d=</td>
-            <td><?= $this->numFormat($dodatniSloj->sirinaMedprostora, 1) ?> m</td>
+            <td><?= $this->numFormat($dodatniSloj->sirinaMedprostora, 3) ?> m</td>
         </tr>
         <?php
             }
