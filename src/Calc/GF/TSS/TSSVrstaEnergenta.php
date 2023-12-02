@@ -41,6 +41,19 @@ enum TSSVrstaEnergenta: string
     }
 
     /**
+     * Maksimalni izkoristek fHs/Hi
+     * Stolpec AI:238 - AI:244
+     *
+     * @return float
+     */
+    public function maksimalniIzkoristek()
+    {
+        $faktorjiIzkoristka = [0, 1, 1.08, 1.06, 1.11, 1, 1.09, 0];
+
+        return $faktorjiIzkoristka[$this->getOrdinal()];
+    }
+
+    /**
      * Vrne faktor izpustov CO2
      *
      * @return float

@@ -15,6 +15,18 @@ enum VrstaRezima: string
     case Rezim_55_45 = '55/45';
 
     /**
+     * θh,n,d – standardna (projektna) temperatura razvodnega podsistema. Vrednosti so podane v Tabeli 11
+     *
+     * @return float
+     */
+    public function projektnaTemperatura()
+    {
+        $temperature = [35, 35, 50];
+
+        return $temperature[$this->getOrdinal()];
+    }
+
+    /**
      * Vrne srednjo temperaturo režima
      *
      * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema

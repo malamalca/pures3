@@ -7,7 +7,7 @@ use App\Core\App;
 use App\Core\Command;
 use App\Core\Configure;
 use App\Core\PDF\PdfFactory;
-use App\Core\View;
+use App\Core\PdfView;
 
 class PdfIzvoz extends Command
 {
@@ -24,7 +24,7 @@ class PdfIzvoz extends Command
         $pdfEngine = Configure::read('PDF.engine');
         $pdfLayout = Configure::read('PDF.' . $pdfEngine . '.layout');
 
-        $view = new View([], ['layout' => $pdfLayout]);
+        $view = new PdfView([], ['layout' => $pdfLayout]);
         $view->set('projectId', $projectId);
         $view->set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
         $view->set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));

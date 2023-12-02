@@ -4,7 +4,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
 
-final class ToplovodniOgrevalniSistemSamoOgrevanjeTest extends TestCase
+final class ToplovodniOgrevalniSistemOgrevanjeTCTest extends TestCase
 {
     public function testTCZrakVoda(): void
     {

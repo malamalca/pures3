@@ -11,8 +11,10 @@
 </p>
 
 <?php
+    // prelom po listih - maksimalno število elementov v tabeli (podatki elementa so v vertikalo)
+    $maxSteviloElementov = $this instanceof \App\Core\PdfView ? 8 : 100;
+
     $vsiElementiOvoja = $elementiOvoja;
-    $maxSteviloElementov = 12;
     $pozicijaGrupe = 0;
     $steviloSkupin = ceil($stElementov / $maxSteviloElementov);
 

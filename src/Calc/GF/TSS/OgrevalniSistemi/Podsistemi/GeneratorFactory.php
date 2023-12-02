@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi;
 
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\PlinskiKotel;
 //use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZemljaVoda;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZrakVoda;
 
@@ -23,6 +24,8 @@ class GeneratorFactory
                 return new ToplotnaCrpalkaZrakVoda($options);
             //case 'TC_zemljavoda':
             //    return new ToplotnaCrpalkaZemljaVoda($options);
+            case 'plinskiKotel':
+                return new PlinskiKotel($options);
             default:
                 throw new \Exception(sprintf('Generator : Vrsta "%s" ne obstaja', $type));
         }

@@ -10,6 +10,7 @@ use App\Lib\Calc;
 
 class ToplovodniOgrevalniSistem extends OgrevalniSistem
 {
+    // Excel ima 4 iteracije
     private const STEVILO_ITERACIJ = 4;
 
     public string $namen;
@@ -231,28 +232,46 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
                     $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux);
                 }
             }
+
+            foreach ($this->ogrevanje->generatorji as $generatorId) {
+                $generator = array_first($this->generatorji, fn($g) => $g->id == $generatorId);
+                if (!$generator) {
+                    throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
+                }
+
+                $generator->analiza(
+                    $this->ogrevanje->potrebnaEnergija,
+                    $this,
+                    $cona,
+                    $okolje,
+                    ['namen' => 'ogrevanje', 'rezim' => $this->ogrevanje->rezim]
+                );
+
+                //$this->ogrevanje->potrebnaEnergija =
+                //    array_sum_values($this->ogrevanje->potrebnaEnergija, $generator->toplotneIzgube);
+
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgube ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgubeAux ?? []);
+            }
         }
 
+        // seštejem še obnovljivo energijo in skupno potrebno električno energijo
         foreach ($this->ogrevanje->generatorji as $generatorId) {
             $generator = array_first($this->generatorji, fn($g) => $g->id == $generatorId);
             if (!$generator) {
                 throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
             }
 
-            $generator->analiza(
-                $this->ogrevanje->potrebnaEnergija,
-                $this,
-                $cona,
-                $okolje,
-                ['namen' => 'ogrevanje', 'rezim' => $this->ogrevanje->rezim]
-            );
-
-            $this->ogrevanje->obnovljivaEnergija =
-                array_sum_values($this->ogrevanje->obnovljivaEnergija, $generator->obnovljivaEnergija['ogrevanje']);
-            $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values(
-                $this->ogrevanje->potrebnaElektricnaEnergija,
-                $generator->potrebnaElektricnaEnergija['ogrevanje']
-            );
+            if (!empty($generator->obnovljivaEnergija['ogrevanje'])) {
+                $this->ogrevanje->obnovljivaEnergija =
+                    array_sum_values($this->ogrevanje->obnovljivaEnergija, $generator->obnovljivaEnergija['ogrevanje']);
+            }
+            if (!empty($generator->potrebnaElektricnaEnergija['ogrevanje'])) {
+                $this->ogrevanje->potrebnaElektricnaEnergija = array_sum_values(
+                    $this->ogrevanje->potrebnaElektricnaEnergija,
+                    $generator->potrebnaElektricnaEnergija['ogrevanje']
+                );
+            }
         }
     }
 
@@ -334,6 +353,7 @@ class ToplovodniOgrevalniSistem extends OgrevalniSistem
             $this->analizaOgrevanja($cona, $okolje);
 
             $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $this->ogrevanje->potrebnaEnergija);
+
             $this->potrebnaElektricnaEnergija =
                 array_sum_values($this->potrebnaElektricnaEnergija, $this->ogrevanje->potrebnaElektricnaEnergija);
 

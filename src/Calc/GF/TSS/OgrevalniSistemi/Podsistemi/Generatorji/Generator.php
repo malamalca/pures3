@@ -14,6 +14,8 @@ abstract class Generator
     public array $potrebnaElektricnaEnergija;
     public array $obnovljivaEnergija;
     public array $vracljiveIzgube;
+    public array $vracljiveIzgubeAux;
+    public array $toplotneIzgube;
 
     /**
      * Class Constructor
@@ -56,6 +58,12 @@ abstract class Generator
      */
     public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
     {
+        $this->potrebnaEnergija = [];
+        $this->potrebnaElektricnaEnergija = [];
+        $this->obnovljivaEnergija = [];
+        $this->vracljiveIzgube = [];
+        $this->vracljiveIzgubeAux = [];
+
         $this->potrebnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
         $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
         $this->obnovljivaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
