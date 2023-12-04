@@ -11,17 +11,6 @@
             "razvodi": ["ogrevanje"],
             "prenosniki": ["TALNO"]
         },
-        "_tsv": {
-            "rezim": "55/45",
-            "generatorji": ["TC"],
-            "razvodi": ["TSV"],
-            "hranilniki": ["TSV"]
-        },
-        "_hlajenje": {
-            "generatorji": ["TC"],
-            "razvodi": ["ogrevanje"],
-            "prenosniki": ["TALNO"]
-        },
 
         "generatorji": [
             {
@@ -49,17 +38,6 @@
                 },
                 "ceviPrikljucniVodi": {
                 }
-            },
-            {
-                "vrsta": "toplavoda",
-                "id": "TSV",
-                "crpalka": {},
-                "ceviHorizontaliVodi": {
-                },
-                "ceviDvizniVodi": {
-                },
-                "ceviPrikljucniVodi": {
-                }
             }
         ],
 
@@ -76,16 +54,6 @@
 
                 "mocRegulatorja": 1,
                 "steviloRegulatorjev": 1
-            }
-        ],
-
-        "hranilniki": [
-            {
-                "id": "TSV",
-                "vrsta": "posrednoOgrevan",
-                "volumen": 250,
-                "istiProstorKotGrelnik": true,
-                "znotrajOvoja": true
             }
         ]
     }

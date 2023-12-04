@@ -6,6 +6,8 @@ namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire\TipPlinskegaKotla;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire\VrstaLokacijeNamestitve;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire\VrstaRegulacijePlinskegaKotla;
+use App\Calc\GF\TSS\TSSPorociloNiz;
+use App\Calc\GF\TSS\TSSPorociloPodatek;
 use App\Lib\Calc;
 
 class PlinskiKotel extends Generator
@@ -45,6 +47,7 @@ class PlinskiKotel extends Generator
      */
     public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
         $rezimRazvoda = $params['rezim'];
 
         $izk100 = $this->tip->izkoristekPolneObremenitve($this->nazivnaMoc);
@@ -114,7 +117,7 @@ class PlinskiKotel extends Generator
 
             // Skupne toplotne izgube v času opazovanega časovnega intervala; enačba 99
             $Qh_g_l = $Q_h_g_l * $steviloUr;
-            $this->toplotneIzgube[$mesec] = $Qh_g_l;
+            $toplotneIzgube = $Qh_g_l;
 
             // Toplotne izgube skozi ovoj generatorja toplote
             // enačba 106
@@ -122,7 +125,11 @@ class PlinskiKotel extends Generator
                 (1 - $this->tip->delezVrnjenihIzgubSkoziOvoj($this->lokacija)) *
                 $this->tip->faktorIzgubSkoziOvoj() * $steviloUr;
 
-            $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + $this->toplotneIzgube[$mesec];
+            if (empty($namen)) {
+                $this->potrebnaEnergija[$mesec] = $toplotneIzgube;
+            } else {
+                $this->potrebnaEnergija[$namen][$mesec] = $toplotneIzgube;
+            }
         }
     }
 
@@ -138,6 +145,8 @@ class PlinskiKotel extends Generator
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         // velja za kotle na tekoča in plinasta  goriva; za trda goriva 0.4 (iz excela)
         $beta_h_g_test_Pint = 0.3;
 
@@ -164,10 +173,17 @@ class PlinskiKotel extends Generator
                     ($Paux_g_Pn - $Paux_g_Pint) + $Paux_g_Pint;
             }
 
-            $this->potrebnaElektricnaEnergija['ogrevanje'][$mesec] =
-                $Paux_g_i * $steviloUr + $Paux_g_P0 * (24 * $stDni - $steviloUr);
+            $potrebnaElektricnaEnergija = $Paux_g_i * $steviloUr + $Paux_g_P0 * (24 * $stDni - $steviloUr);
 
-            $this->vracljiveIzgubeAux[$mesec] = $this->potrebnaElektricnaEnergija['ogrevanje'][$mesec] *
+            if (empty($namen)) {
+                $this->vneseneIzgube[$mesec] = $vneseneIzgube[$mesec];
+                $this->potrebnaElektricnaEnergija[$mesec] = $potrebnaElektricnaEnergija;
+            } else {
+                $this->vneseneIzgube[$namen][$mesec] = $vneseneIzgube[$mesec];
+                $this->potrebnaElektricnaEnergija[$namen][$mesec] = $potrebnaElektricnaEnergija;
+            }
+
+            $this->vracljiveIzgubeAux[$mesec] = $potrebnaElektricnaEnergija *
                 (1 - $this->tip->faktorRedukcijeVrnjeneEnergije($this->lokacija)) * 0.6;
         }
     }
@@ -195,6 +211,33 @@ class PlinskiKotel extends Generator
     {
         $sistem = parent::export();
         $sistem->lokacija = $this->lokacija->value;
+        $sistem->nazivnaMoc = $this->nazivnaMoc;
+
+        $sistem->porociloNizi = [
+            new TSSPorociloNiz(
+                '&beta;<sub>H,gen</sub>',
+                'Razmerje toplotne obremenitve posameznega (i-tega) generatorja toplote.',
+                $this->beta_h_g,
+                2
+            ),
+        ];
+
+        $sistem->porociloPodatki = [
+            new TSSPorociloPodatek(
+                'η<sub>H,gen,Pn</sub>',
+                'Izkoristek polne obremenitve',
+                $this->tip->izkoristekPolneObremenitve($this->nazivnaMoc),
+                '-',
+                3
+            ),
+            new TSSPorociloPodatek(
+                'η<sub>H,gen,Pint</sub>',
+                'Izkoristek vmesne obremenitve',
+                $this->tip->izkoristekVmesneObremenitve($this->nazivnaMoc),
+                '-',
+                3
+            ),
+        ];
 
         return $sistem;
     }

@@ -6887,44 +6887,6 @@
                         "regulacija": "brezRegulacije",
                         "moc": 6.737259993559786
                     }
-                },
-                {
-                    "id": "TSV",
-                    "sistem": "toplavoda",
-                    "toplotneIzgube": [],
-                    "potrebnaElektricnaEnergija": [],
-                    "vracljiveIzgube": [],
-                    "vracljiveIzgubeAux": [],
-                    "vodi": [
-                        {
-                            "vrsta": "ceviHorizontaliVodi",
-                            "namen": "TSV",
-                            "dolzina": 0,
-                            "toplotnaPrevodnost": null,
-                            "delezVOgrevaniConi": 1
-                        },
-                        {
-                            "vrsta": "ceviDvizniVodi",
-                            "namen": "TSV",
-                            "dolzina": 0,
-                            "toplotnaPrevodnost": null,
-                            "delezVOgrevaniConi": 1
-                        },
-                        {
-                            "vrsta": "ceviPrikljucniVodi",
-                            "namen": "TSV",
-                            "dolzina": 0,
-                            "toplotnaPrevodnost": null,
-                            "delezVOgrevaniConi": 1
-                        }
-                    ]
-                }
-            ],
-            "hranilniki": [
-                {
-                    "id": "TSV",
-                    "volumen": 250,
-                    "toplotneIzgube": []
                 }
             ],
             "generatorji": [
@@ -6932,18 +6894,18 @@
                     "id": "TC",
                     "potrebnaEnergija": {
                         "ogrevanje": [
-                            513.2790423362418,
-                            321.0543881007011,
-                            169.75626343496384,
-                            63.50357144507514,
-                            10.232939021013351,
                             0,
                             0,
                             0,
-                            10.199280377869172,
-                            82.46494534039765,
-                            302.8804438626002,
-                            490.3451576422575
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0
                         ]
                     },
                     "potrebnaElektricnaEnergija": {
@@ -6981,7 +6943,51 @@
                     "podnebje": "celinsko",
                     "nazivnaMoc": 6,
                     "elektricnaMocNaPrimarnemKrogu": 6,
-                    "elektricnaMocNaSekundarnemKrogu": 3
+                    "elektricnaMocNaSekundarnemKrogu": 3,
+                    "porociloNizi": [
+                        {
+                            "naziv": "E<sub>TČ<\/sub>",
+                            "opis": "Energija za delovanje TČ",
+                            "vrednosti": [
+                                513.2790423362418,
+                                321.0543881007011,
+                                169.75626343496384,
+                                63.50357144507514,
+                                10.232939021013351,
+                                0,
+                                0,
+                                0,
+                                10.199280377869172,
+                                82.46494534039765,
+                                302.8804438626002,
+                                490.3451576422575
+                            ],
+                            "decimalke": 1
+                        }
+                    ],
+                    "porociloPodatki": [
+                        {
+                            "naziv": "",
+                            "opis": "Podnebje",
+                            "vrednost": "celinsko",
+                            "enota": "-",
+                            "decimalke": 1
+                        },
+                        {
+                            "naziv": "P<sub>prim,aux<\/sub>",
+                            "opis": "El. moč na primarnem krogu",
+                            "vrednost": 6,
+                            "enota": "W",
+                            "decimalke": 1
+                        },
+                        {
+                            "naziv": "P<sub>sek,aux<\/sub>",
+                            "opis": "El. moč na sekundarnem krogu",
+                            "vrednost": 3,
+                            "enota": "W",
+                            "decimalke": 1
+                        }
+                    ]
                 }
             ]
         },

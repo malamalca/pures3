@@ -96,7 +96,7 @@ final class ToplovodniOgrevalniSistemOgrevanjeTCTest extends TestCase
         $expected = [27.79, 24.41, 26.12, 19.06, 2.94, 0.00, 0.00, 0.00, 2.79, 24.73, 26.08, 27.79];
         $this->assertEquals($expected, $roundedResult);
 
-        $potrebnaEnergija = $sistem->generatorji[0]->potrebnaEnergija['ogrevanje'];
+        $potrebnaEnergija = $sistem->generatorji[0]->E_tc['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaEnergija);
         $expected = [513.28, 321.05, 169.76, 63.50, 10.23, 0.00, 0.00, 0.00, 10.20, 82.46, 302.88, 490.35];
         $this->assertEquals($expected, $roundedResult);

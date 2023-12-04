@@ -153,7 +153,7 @@ class ManjzahtevnaStavba extends Stavba
                     // če je energija manjška kot nič pomeni, da je proizvedena in se je porabila v stavbi
                     $this->neutezenaDovedenaEnergija += $energija;
                     $this->utezenaDovedenaEnergija +=
-                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg');
                 } else {
                     if ($energent == TSSVrstaEnergenta::Elektrika->value) {
                         $this->skupnaProizvedenaPorabljenaElektricnaEnergija += $energija * -1;
@@ -359,7 +359,7 @@ class ManjzahtevnaStavba extends Stavba
     {
         $ret = 1;
         if ($this->ROVE < $this->minROVE) {
-            $razmerjeTranspCelota = 1.2;
+            $ret = 1.2;
         }
         if ($this->ROVE > 50 * $this->X_OVE(2026)) {
             // TODO: uporablja se do leta 2026

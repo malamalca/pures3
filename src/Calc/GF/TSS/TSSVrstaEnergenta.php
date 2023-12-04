@@ -27,6 +27,7 @@ enum TSSVrstaEnergenta: string
         $utezniFaktorjiF_Pnren = [0, 1.5, 0.2, 1.1, 1.1, 1.12, 1.1, 0];
         $utezniFaktorjiF_Pren = [1, 1, 1, 0, 0, 0.06, 0, 1];
         $utezniFaktorjiF_Ptot = [1, 2.5, 1.2, 1.1, 1.1, 1.18, 1.1, 1];
+        $utezniFaktorjiF_TSG = [1, 2.5, 1, 1, 1, 1, 1, 1];
 
         switch ($faktor) {
             case 'tot':
@@ -35,6 +36,8 @@ enum TSSVrstaEnergenta: string
                 return $utezniFaktorjiF_Pnren[$this->getOrdinal()];
             case 'ren':
                 return $utezniFaktorjiF_Pren[$this->getOrdinal()];
+            case 'tsg':
+                return $utezniFaktorjiF_TSG[$this->getOrdinal()];
             default:
                 throw new \Exception('Utezni faktor ne obstaja');
         }

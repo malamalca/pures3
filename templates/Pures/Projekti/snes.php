@@ -23,6 +23,7 @@
     </tr>
     <?php
         $energije = [];
+        $energijeFaktorjiTsg = [];
         $energijeFaktorjiTot = [];
         $energijeFaktorjiRen = [];
         $energijeFaktorjiNren = [];
@@ -34,6 +35,7 @@
                     $energije[] = $this->numFormat($energija, 0, '.');
                     $energijeFaktorjiTot[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
                 }
+                $energijeFaktorjiTsg[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg'), 2, '.');
                 $energijeFaktorjiPrim[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
                 $energijeFaktorjiRen[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.');
                 $energijeFaktorjiNren[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('nren'), 2, '.');
@@ -66,7 +68,7 @@
         <td class="center"><?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=<?= implode(' + ', $energijeFaktorjiTot) ?>=<?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">`E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=<?= implode(' + ', $energijeFaktorjiTsg) ?>=<?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?>`</td>
     </tr>
     <tr>
         <td>Obnovljiva primarna energija dovedene energije</td>
@@ -161,7 +163,7 @@
     <tr>
         <td>Specifična potrebna skupna primarna energija</td>
         <td>E'<sub>Ptot,an</sub></td>
-        <td class="center"><?= $this->numFormat($stavba->specificnaPrimarnaEnergija, 0) ?></td>
+        <td class="center"><?= $this->numFormat($stavba->specificnaPrimarnaEnergija, 1) ?></td>
     </tr>
     <tr class="noprint">
         <td colspan="4" class="math">`E'_(P_(t ot,an))=E_(P_(t ot,an))/A_(use)=<?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 1, '.') ?>/<?= $this->numFormat($stavba->ogrevanaPovrsina, 1, '.') ?>=<?= $this->numFormat($stavba->specificnaPrimarnaEnergija, 3, '.') ?>`</td>
@@ -169,7 +171,7 @@
     <tr>
         <td>Korigirana specifična potrebna primarna energija</td>
         <td>E'<sub>Ptot,kor,an</sub></td>
-        <td class="center"><?= $this->numFormat($stavba->korigiranaSpecificnaPrimarnaEnergija, 0) ?></td>
+        <td class="center"><?= $this->numFormat($stavba->korigiranaSpecificnaPrimarnaEnergija, 1) ?></td>
     </tr>
     <tr class="noprint">
         <td colspan="4" class="math">`E'_(P_("tot,kor,an"))=Y_(H,nd) * Y_(ROVE) * E'_(P_(t ot,an))=<?= $this->numFormat($stavba->Y_Hnd, 1, '.') ?>*<?= $this->numFormat($stavba->Y_ROVE, 1, '.') ?>*<?= $this->numFormat($stavba->specificnaPrimarnaEnergija, 3, '.') ?>=<?= $this->numFormat($stavba->korigiranaSpecificnaPrimarnaEnergija, 3, '.') ?>`</td>

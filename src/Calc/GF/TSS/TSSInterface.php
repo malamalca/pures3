@@ -1,56 +1,36 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Calc;
+namespace App\Calc\GF\TSS;
 
 use App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem;
 
-interface TSSInterface
+abstract class TSSInterface
 {
-    /**
-     * Vračljive izgube
-     *
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
-     * @param array $params Dodatni parametri za izračun
-     * @return array
-     */
-    public function vracljiveIzgube(OgrevalniSistem $sistem, $cona, $okolje, $params = []);
+    public string $id;
+    public array $vneseneIzgube = [];
+    public array $potrebnaEnergija = [];
+    public array $potrebnaElektricnaEnergija = [];
+    public array $obnovljivaEnergija = [];
+    public array $vracljiveIzgube = [];
+    public array $vracljiveIzgubeAux = [];
 
     /**
-     * Toplotne izgube TSS
+     * Analiza podsistema
      *
-     * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
+     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
      * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return void
      */
-    //public function toplotneIzgube($vneseneIzgube, OgrevalniSistem $sistem, $cona, $okolje, $params = []);
+    abstract public function analiza($potrebnaEnergija, OgrevalniSistem $sistem, $cona, $okolje, $params = []);
 
     /**
-     * Potrebna električna energija za pomožne sisteme TSS
+     * Export v json
      *
-     * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
-     * @param array $params Dodatni parametri za izračun
-     * @return array
+     * @return \stdClass
      */
-    //public function potrebnaElektricnaEnergija($vneseneIzgube, OgrevalniSistem $sistem, $cona, $okolje, $params = []);
-
-    /**
-     * Vnesena obnovljiva energija iz okolja
-     *
-     * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
-     * @param array $params Dodatni parametri za izračun
-     * @return array
-     */
-    //public function obnovljivaEnergija($vneseneIzgube, OgrevalniSistem $sistem, $cona, $okolje, $params = []);
+    abstract public function export();
 }

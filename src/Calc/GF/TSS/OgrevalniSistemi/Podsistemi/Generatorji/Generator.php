@@ -3,19 +3,11 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji;
 
-abstract class Generator
+use App\Calc\GF\TSS\TSSInterface;
+
+abstract class Generator extends TSSInterface
 {
-    public string $id;
-
     public float $nazivnaMoc;
-
-    public array $vneseneIzgube;
-    public array $potrebnaEnergija;
-    public array $potrebnaElektricnaEnergija;
-    public array $obnovljivaEnergija;
-    public array $vracljiveIzgube;
-    public array $vracljiveIzgubeAux;
-    public array $toplotneIzgube;
 
     /**
      * Class Constructor
@@ -117,7 +109,7 @@ abstract class Generator
 
         $sistem->potrebnaEnergija = $this->potrebnaEnergija;
         $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
-        $sistem->vneseneIzgube = $this->vneseneIzgube;
+        $sistem->vneseneIzgube = $this->vneseneIzgube ?? [];
 
         return $sistem;
     }

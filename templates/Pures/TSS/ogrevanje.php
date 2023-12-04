@@ -221,27 +221,25 @@
         <th colspan="2"><?= $generator->id ?></th>
     </tr>
     <tr>
-        <td colspan="2">Podnebje:</td>
-        <td colspan="2"><?= $generator->podnebje ?></td>
-    </tr>
-    <tr>
-        <td>Nazivna moč TČ:</td>
+        <td>Nazivna moč:</td>
         <td>P<sub>n,gen</sub></td>
         <td><?= $this->numFormat($generator->nazivnaMoc, 1) ?></td>
         <td>kW</td>
     </tr>
+    <?php
+        if (!empty($generator->porociloPodatki)) {
+            foreach ($generator->porociloPodatki as $podatek) {
+    ?>
     <tr>
-        <td>El. moč na primarnem krogu:</td>
-        <td>P<sub>prim,aux</sub></td>
-        <td><?= $this->numFormat($generator->elektricnaMocNaPrimarnemKrogu, 1) ?></td>
-        <td>W</td>
+        <td><?= h($podatek->opis) ?>:</td>
+        <td><?= $podatek->naziv ?></td>
+        <td><?= is_string($podatek->vrednost) ? h($podatek->vrednost) : $this->numFormat($podatek->vrednost, $podatek->decimalke ?? 1) ?></td>
+        <td><?= $podatek->enota ?></td>
     </tr>
-    <tr>
-        <td>El. moč na sekundarnem krogu:</td>
-        <td>P<sub>sek,aux</sub></td>
-        <td><?= $this->numFormat($generator->elektricnaMocNaSekundarnemKrogu, 1) ?></td>
-        <td>W</td>
-    </tr>
+    <?php
+            }
+        }
+    ?>
 </table>
 <br />
 <table border="1">
@@ -255,27 +253,34 @@
     </thead>
 
     <?php
-
         foreach ($podsistemi as $podsistem) {
     ?>
-    
     <tr>
         <td rowspan="3"><?= h($generator->id ?? '') ?> <?= $podsistem ?></td>
-        <td>QH,del,m; QH,del,an</td>
+        <td>Q<sub>H,del,m</sub>; Q<sub>H,del,an</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $generator->vneseneIzgube->$podsistem)) ?>
         <th class="right w-6"><?= $this->numFormat(array_sum($generator->vneseneIzgube->$podsistem), 0) ?></th>
     </tr>
     <tr>
-        <td>E<sub>TČ</sub></td>
-        <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $generator->potrebnaEnergija->$podsistem)) ?>
-        <th class="right w-6"><?= $this->numFormat(array_sum($generator->potrebnaEnergija->$podsistem), 0) ?></th>
-    </tr>
-    <tr>
-        <td>W<sub>TČ,aux</sub></td>
+        <td>W<sub>H,gen,aux</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $generator->potrebnaElektricnaEnergija->$podsistem)) ?>
         <th class="right w-6"><?= $this->numFormat(array_sum($generator->potrebnaElektricnaEnergija->$podsistem), 0) ?></th>
     </tr>
     <?php
+        }
+    ?>
+
+    <?php
+        if (!empty($generator->porociloNizi)) {
+            foreach ($generator->porociloNizi as $niz) {
+    ?>
+    <tr>
+        <td><?= $niz->naziv ?></td>
+        <?= implode(PHP_EOL, array_map(fn($v) => '<td class="center w-6">' . $this->numFormat($v, $niz->decimalke ?? 1) . '</td>', $niz->vrednosti)) ?>
+        <th class="right w-6"><?= $this->numFormat(array_sum($niz->vrednosti), $niz->decimalke ?? 1) ?></th>
+    </tr>
+    <?php
+            }
         }
     ?>
 </table>
