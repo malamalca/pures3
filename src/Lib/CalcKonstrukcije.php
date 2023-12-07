@@ -38,7 +38,7 @@ class CalcKonstrukcije
         if (isset($kons->vrsta)) {
             $kons->TSG = Configure::read('lookups.konstrukcije.' . $kons->vrsta);
             if (empty($kons->TSG)) {
-                Log::warn(sprintf('Vrsta konstrukcije "%s" po TSG ne obstaja.', $kons->vrsta));
+                throw new \Exception(sprintf('Vrsta konstrukcije "%s" po TSG ne obstaja.', $kons->vrsta));
             }
         }
 
@@ -472,6 +472,9 @@ class CalcKonstrukcije
         // parametri za posamezno konstrukcijo po TSG
         if (isset($kons->vrsta)) {
             $kons->TSG = Configure::read('lookups.transparentneKonstrukcije.' . $kons->vrsta);
+            if (empty($kons->TSG)) {
+                Log::error(sprintf('TSG konstrukcija "%s" ne obstaja.', $kons->vrsta));
+            }
         }
 
         if (!empty($options['referencnaStavba'])) {
@@ -521,6 +524,8 @@ class CalcKonstrukcije
         if (!empty($data['data2'])) {
             $data2 = $data['data2'];
         }
+
+        $colors = $data['color'] ?? null;
 
         // podatki o slojih konstrukcije: naziv | debelina | lambda
         $thicknesses = $data['thickness'];
@@ -631,6 +636,13 @@ class CalcKonstrukcije
         $dataLineColor = imagecolorallocate($chart, 255, 0, 0);
         $data2LineColor = imagecolorallocate($chart, 64, 64, 255);
 
+        $colorPalette = [
+            '1' => imagecolorallocate($chart, 235, 189, 52),
+            '2' => imagecolorallocate($chart, 235, 125, 52),
+            '3' => imagecolorallocate($chart, 138, 127, 120),
+            '4' => imagecolorallocate($chart, 110, 100, 100),
+        ];
+
         if (
             $backgroundColor === false ||
             $axisColor === false ||
@@ -708,7 +720,14 @@ class CalcKonstrukcije
             $x2 = $offsetX + $debelinaSloja / $debelinaKonstrukcije * $sirinaGrafa;
             $y2 = $gridBottom - 1;
 
-            imagefilledrectangle($chart, (int)$x1, (int)$y1, (int)$x2, (int)$y2, $barColor);
+            imagefilledrectangle(
+                $chart,
+                (int)$x1,
+                (int)$y1,
+                (int)$x2,
+                (int)$y2,
+                $colors ? (int)$colorPalette[$colors[$ix]] : $barColor
+            );
 
             /* Linija med sloji */
             imageline($chart, (int)$x1, (int)$y1, (int)$x1, (int)$y2, $separatorLineColor);

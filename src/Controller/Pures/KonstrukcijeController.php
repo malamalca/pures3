@@ -5,7 +5,6 @@ namespace App\Controller\Pures;
 
 use App\Core\App;
 use App\Lib\CalcKonstrukcije;
-use App\Lib\SpanIterators\DailySpanIterator;
 
 class KonstrukcijeController
 {
@@ -38,40 +37,38 @@ class KonstrukcijeController
      */
     public function u($konsId = null)
     {
-        $data = <<<EOT
+        $kons = <<<EOT
         {
             "id": "F6",
-            "naziv": "fasada / mansarda / kontaktna fasada / južna stena ob ganku",
+            "naziv": "streha",
             "vrsta": 0,
             "Rsi": 0.13,
             "Rse": 0.04,
             "materiali": [
-                {"sifra": "MKplosce", "debelina": 0.025},
-                {"sifra": "kamenaVolna", "debelina": 0.05},
-                {"sifra": "opeka", "debelina": 0.205},
-                {"sifra": "kamenaVolna", "debelina": 0.16},
-                {"sifra": "cementnoLepilo", "debelina": 0.005},
+                {"sifra": "beton", "debelina": 0.16},
+                {"sifra": "kamenaVolna", "debelina": 0.1},
+                {"sifra": "XPS", "debelina": 0.03},
+                {"sifra": "cementnoLepilo", "debelina": 0.002},
                 {"sifra": "fasadniSloj", "debelina": 0.002}
             ]
         }
         EOT;
-        App::set('data', $data);
+        App::set('kons', $kons);
 
         if (!empty($_POST['data'])) {
             $okolje = new \stdClass();
-            $okolje->notranjaT = [20];
-            $okolje->zunanjaT = [-13];
-            $okolje->notranjaVlaga = [50];
-            $okolje->zunanjaVlaga = [90];
+            $okolje->notranjaT = [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22];
+            $okolje->zunanjaT = [-10, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40];
+            $okolje->notranjaVlaga = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50];
+            $okolje->zunanjaVlaga = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
+            $okolje->minfRsi = [1];
 
             $libraryArray = json_decode((string)file_get_contents(CONFIG . 'TSGKonstrukcije.json'));
             foreach ($libraryArray as $item) {
                 CalcKonstrukcije::$library[$item->sifra] = $item;
             }
 
-            CalcKonstrukcije::$spanIterator = new DailySpanIterator();
-
-            $kons = CalcKonstrukcije::konstrukcija(json_decode($data), $okolje, ['izracunKondenzacije' => false]);
+            $kons = CalcKonstrukcije::konstrukcija(json_decode($kons), $okolje, ['izracunKondenzacije' => true]);
             App::set('kons', $kons);
             App::set('okolje', $okolje);
         }

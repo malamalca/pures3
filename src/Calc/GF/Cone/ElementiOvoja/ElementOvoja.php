@@ -8,6 +8,7 @@ use App\Lib\EvalMath;
 
 abstract class ElementOvoja
 {
+    public string $id;
     public string $idKonstrukcije = '';
     public \stdClass $konstrukcija;
 
@@ -118,6 +119,9 @@ abstract class ElementOvoja
     public function export()
     {
         $elementOvoja = new \stdClass();
+        if (isset($this->id)) {
+            $elementOvoja->id = $this->id;
+        }
         $elementOvoja->idKonstrukcije = $this->idKonstrukcije;
         $elementOvoja->konstrukcija = $this->konstrukcija;
         $elementOvoja->opis = $this->opis;

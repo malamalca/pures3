@@ -2,12 +2,10 @@
     use App\Core\App;
     use App\Lib\Calc;
 ?>
-<h1>Udarni hrup</h1>
-
 <p class="actions">
     <a class="button" href="<?= App::url('/hrup/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
-
+<h1>Udarni hrup</h1>
 <table border="1">
     <tr>
         <td colspan="2" class="w-30">Št.:</td>

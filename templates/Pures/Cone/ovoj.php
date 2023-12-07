@@ -5,14 +5,13 @@
     $elementiOvoja = array_merge($cona->ovoj->netransparentneKonstrukcije, $cona->ovoj->transparentneKonstrukcije);
     $stElementov = count($elementiOvoja);
 ?>
-<h1>Ovoj cone "<?= h($cona->naziv) ?>"</h1>
 <p class="actions">
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
-
+<h1>Ovoj cone "<?= h($cona->naziv) ?>"</h1>
 <?php
     // prelom po listih - maksimalno število elementov v tabeli (podatki elementa so v vertikalo)
-    $maxSteviloElementov = $this instanceof \App\Core\PdfView ? 8 : 100;
+    $maxSteviloElementov = $this instanceof \App\Core\PdfView ? 9 : 100;
 
     $vsiElementiOvoja = $elementiOvoja;
     $pozicijaGrupe = 0;

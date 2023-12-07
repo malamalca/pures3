@@ -27,7 +27,14 @@ class NetransparentenElementOvoja extends ElementOvoja
     // velja za vert. konstrukcije v stiku z zemljino
     public ?float $globina;
     public ?float $U_tla;
+
+    // velja za tla proti neogrevani kleti
     public ?float $U_zid;
+    public ?float $U_zid_nadTerenom;
+    public ?float $visinaNadTerenom;
+    public ?float $prostorninaKleti;
+    public ?float $izmenjavaZraka;
+    public ?float $ekvivalentnaDebelinaTal;
 
     /**
      * Loads configuration from json|stdClass
@@ -44,7 +51,11 @@ class NetransparentenElementOvoja extends ElementOvoja
 
         $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
 
-        $this->protiZraku = (bool)($config->protiZraku ?? $this->konstrukcija->TSG->tip == 'zunanja');
+        if (isset($config->protiZraku)) {
+            $this->protiZraku = (bool)$config->protiZraku;
+        } elseif (isset($this->konstrukcija->TSG->tip)) {
+            $this->protiZraku = $this->konstrukcija->TSG->tip == 'zunanja';
+        }
         $this->tla = VrstaTal::from($config->tla ?? 'pesek');
 
         $this->barva = BarvaElementaOvoja::from($config->barva ?? 'brez');
@@ -79,6 +90,22 @@ class NetransparentenElementOvoja extends ElementOvoja
         if (!empty($config->dodatnaIzolacija)) {
             $this->dodatnaIzolacija = $config->dodatnaIzolacija;
         }
+
+        if (!empty($config->U_zid)) {
+            $this->U_zid = $config->U_zid;
+        }
+        if (!empty($config->U_zid_nadTerenom)) {
+            $this->U_zid_nadTerenom = $config->U_zid_nadTerenom;
+        }
+        if (!empty($config->visinaNadTerenom)) {
+            $this->visinaNadTerenom = $config->visinaNadTerenom;
+        }
+        if (!empty($config->prostorninaKleti)) {
+            $this->prostorninaKleti = $config->prostorninaKleti;
+        }
+        if (!empty($config->izmenjavaZraka)) {
+            $this->izmenjavaZraka = $config->izmenjavaZraka;
+        }
     }
 
     /**
@@ -94,6 +121,13 @@ class NetransparentenElementOvoja extends ElementOvoja
         $this->b = empty($this->konstrukcija->ogrRazvodT) ? 1 :
             ($this->konstrukcija->ogrRazvodT - $okolje->projektnaZunanjaT) /
             ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
+
+        if (empty($this->konstrukcija)) {
+            throw new \Exception(sprintf('Konstrukcija "%s" v ovoju ne obstaja.', $this->idKonstrukcije));
+        }
+        if (empty($this->konstrukcija->TSG)) {
+            throw new \Exception(sprintf('TSG podatki konstrukcije ovoja "%s" ne obstajajo.', $this->idKonstrukcije));
+        }
 
         // napolni podatke o vplivu zemljine
         if ($this->konstrukcija->TSG->tip != 'zunanja') {
@@ -301,7 +335,37 @@ class NetransparentenElementOvoja extends ElementOvoja
         }
 
         if (in_array($this->konstrukcija->TSG->tip, ['tla-neogrevano'])) {
-            die('Izračun ni podprt.');
+            // ekvivalentna debelina tal (floor)
+            // enačba 12 v standard
+            $d_f = $this->debelinaStene + $this->tla->lambda() * 1 / $this->U_tla;
+
+            /** enačba 16 v standardu */
+            $this->U = 1 / (1 / $this->konstrukcija->U + $this->povrsina / (($this->povrsina * $this->U_tla) +
+                ($this->visinaNadTerenom * $this->obseg * $this->U_zid_nadTerenom) +
+                ($this->globina * $this->obseg * $this->U_zid) +
+                (0.34 * $this->prostorninaKleti * $this->izmenjavaZraka)));
+
+            $this->Lpi = pow(
+                1 / ($this->povrsina * $this->konstrukcija->U) +
+                1 / (
+                    ($this->povrsina + $this->globina * $this->obseg) * $this->tla->lambda() / $this->tla->sigma() +
+                    $this->visinaNadTerenom * $this->obseg * $this->U_zid_nadTerenom +
+                    0.33 * $this->prostorninaKleti * $this->izmenjavaZraka
+                ),
+                -1
+            );
+
+            $this->Lpe = $this->povrsina * $this->konstrukcija->U * (
+                    0.37 * $this->obseg * $this->tla->lambda() * (2 - exp(-$this->globina / $this->tla->sigma())) *
+                    log($this->tla->sigma() / $d_f + 1) +
+                    $this->visinaNadTerenom * $this->obseg * $this->U_zid_nadTerenom +
+                    0.33 * $this->prostorninaKleti * $this->izmenjavaZraka
+                ) / (
+                    ($this->povrsina + $this->globina * $this->obseg) * $this->tla->lambda() / $this->tla->sigma() +
+                    $this->visinaNadTerenom * $this->obseg * $this->U_zid_nadTerenom +
+                    0.33 * $this->prostorninaKleti * $this->izmenjavaZraka +
+                    $this->povrsina * $this->konstrukcija->U
+                );
         }
     }
 

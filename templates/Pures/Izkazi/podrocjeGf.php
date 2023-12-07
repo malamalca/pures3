@@ -106,11 +106,11 @@ za področje gradbene fizike</h1>
         <td class="w-5 center"><?= $i+1 ?></td>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
         <td class="w-10 center">
-            <i class="<?= empty($elementOvoja->gm) ? 'green' : 'red' ?>">
-            <?= empty($elementOvoja->gm) ? '&#10006;' : '&#10003;'  ?>
-                </i>
+            <i class="<?= empty($konstrukcija->gm) ? 'green' : 'black' ?>">
+            <?= empty($konstrukcija->gm) ? '&#10006;' : '&#10003;'  ?>
+            </i>
         </td>
-        <td class="w-10 center"><?= $this->numFormat($elementOvoja->gm ?? 0, 1) ?></td>
+        <td class="w-10 center"><?= $this->numFormat($konstrukcija->maxGm ?? 0, 1) ?></td>
         <td class="w-10 center"><?= $this->numFormat($konstrukcija->fRsi[0], 3) ?></td>
         <td class="w-10 center">
             <span title="fRsi > <?= $this->numFormat($okolje->limitfRsi, 3) ?>">

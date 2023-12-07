@@ -152,6 +152,21 @@ class PdfIzvoz extends Command
         $pdf = PdfFactory::create($pdfEngine, Configure::read('PDF.' . $pdfEngine, []));
 
         $pdf->newPage((string)$view->render('Projekti', 'naslovnica'));
+
+        $sourceFilename = App::getProjectFolder('Pures', $projectId, 'podatki') . 'tehnicnoPorocilo.md';
+        if (file_exists($sourceFilename)) {
+            $porocilo = file_get_contents($sourceFilename);
+            if (!empty($porocilo)) {
+                $porociloPages = explode('<!-- NEW PAGE -->', $porocilo);
+                foreach ($porociloPages as $porociloPage) {
+                    $view->set('porocilo', $porociloPage);
+                    $porocilo = (string)$view->render('Projekti', 'porocilo');
+
+                    $pdf->newPage($porocilo);
+                }
+            }
+        }
+
         $pdf->newPage((string)$view->render('Projekti', 'view'));
         $pdf->newPage((string)$view->render('Projekti', 'analiza'));
 

@@ -49,10 +49,10 @@ class ProjektiController
 
         App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
 
-        $porocilo = '';
-
         $sourceFolder = App::getProjectFolder('Hrup', $projectId, 'podatki');
         $sourceFilename = $sourceFolder . 'tehnicnoPorocilo.md';
+
+        $porocilo = '';
         if (file_exists($sourceFilename)) {
             $porocilo = file_get_contents($sourceFilename);
         }

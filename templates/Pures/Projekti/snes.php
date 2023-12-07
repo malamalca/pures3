@@ -3,11 +3,11 @@
     use App\Core\App;
     use App\Lib\Calc;
 ?>
-<h1>Analiza sNES "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 <p class="actions">
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
 
+<h1>Analiza sNES "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 <table border="1">
     <tr>
         <td colspan="4"><h2>Kazalniki energijske učinkovitosti stavbe</h2></td>

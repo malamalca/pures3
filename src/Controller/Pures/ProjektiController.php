@@ -43,6 +43,27 @@ class ProjektiController
     }
 
     /**
+     * Prikaz tehničnega poročila
+     *
+     * @param string|null $projectId Building name
+     * @return void
+     */
+    public function porocilo($projectId = null)
+    {
+        $this->view($projectId);
+
+        $sourceFolder = App::getProjectFolder('Pures', $projectId, 'podatki');
+        $sourceFilename = $sourceFolder . 'tehnicnoPorocilo.md';
+
+        $porocilo = '';
+        if (file_exists($sourceFilename)) {
+            $porocilo = file_get_contents($sourceFilename);
+        }
+
+        App::set('porocilo', $porocilo);
+    }
+
+    /**
      * Prikaz analize projekta s področja gradbene fizike
      *
      * @param string $projectId Building name

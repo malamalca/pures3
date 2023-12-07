@@ -35,7 +35,8 @@
 <table border="1" width="100%">
     <thead>
         <tr>
-            <th></th>
+            <th class="center">Št.</th>
+            <th>Naziv</th>
             <th class="center">d<br />[m]</th>
             <th class="center w-10">&lambda;<br />[W/mK]</th>
             <th class="center w-10">&rho;<br />[kg/m<sup>3</sup>]</th>
@@ -46,9 +47,10 @@
         </tr>
     </thead>
 <?php
-    foreach ($kons->materiali as $material) {
+    foreach ($kons->materiali as $k => $material) {
 ?>
     <tr>
+        <td class="center"><?= $k+1 ?></td>
         <td class="left"><?= h($material->opis) ?></td>
         <td class="center"><?= number_format($material->debelina, 3, ',', '') ?></td>
         <td class="center"><?= number_format($material->lambda, 3, ',', '') ?></td>
@@ -78,17 +80,13 @@
         $temperatures[] = $material->T[$mesec];
         $thicknesses[] = $material->debelina;
         $layers[] = $material->opis;
-        //foreach ($material->racunskiSloji as $k => $sloj) {
-        //    $temperatures[] = $sloj->T[$mesec];
-        //    $thicknesses[] = $sloj->debelina;
-        //    $layers[] = $sloj->opis;
-        //}
+        $colors[] = $material->lambda < 0.05 ? 1 : ($material->lambda < 0.2 ? 2 : ($material->lambda < 0.7 ? 3 : 4));
     }
 
     $temperatures[] = $kons->Tse[$mesec];
     $temperatures[] = $okolje->zunanjaT[$mesec];
 
-    $data = ['data' => $temperatures, 'thickness' => $thicknesses, 'layer' => $layers];
+    $data = ['data' => $temperatures, 'thickness' => $thicknesses, 'layer' => $layers, 'color' => $colors];
     $png = CalcKonstrukcije::graf($data);
 ?>
 
@@ -102,6 +100,7 @@
     $layers = [];
     $nasicenTlak = [];
     $dejanskiTlak = [];
+    $colors = [];
 
     $nasicenTlak[] = Calc::nasicenTlak($okolje->notranjaT[$mesec]);
     $nasicenTlak[] = $kons->nasicenTlakSi[$mesec];
@@ -114,7 +113,8 @@
             $nasicenTlak[] = $sloj->nasicenTlak[$mesec];
             $dejanskiTlak[] = $sloj->dejanskiTlak[$mesec];
             $thicknesses[] = $sloj->Sd;
-            $layers[] = $sloj->opis;
+            $layers[] = /*$sloj->opis*/(string)($i+1);
+            $colors[] = $sloj->lambda < 0.05 ? 1 : ($sloj->lambda < 0.2 ? 2 : ($sloj->lambda < 0.7 ? 3 : 4));
         }
     }
 
@@ -124,7 +124,7 @@
     $dejanskiTlak[] = $kons->dejanskiTlakSe[$mesec];
     $dejanskiTlak[] = $kons->dejanskiTlakSe[$mesec];
 
-    $data = ['data' => $nasicenTlak, 'data2' => $dejanskiTlak, 'thickness' => $thicknesses, 'layer' => $layers];
+    $data = ['data' => $nasicenTlak, 'data2' => $dejanskiTlak, 'thickness' => $thicknesses, 'layer' => $layers, 'color' => $colors];
     $png = CalcKonstrukcije::graf($data);
 ?>
 
@@ -210,11 +210,11 @@
 </div>
 
 <?php
-    if (1 == 21) {
+    if (isset($kons->maxGm) && ($kons->maxGm == -1 || $kons->maxGm > 0)) {
 ?>
 <div>
     <h2>Kondenzacija</h2>
-    <table border="1">
+    <table border="1" class="small">
         <tr>
             <td>&nbsp;</td>
             <?php

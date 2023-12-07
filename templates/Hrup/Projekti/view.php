@@ -2,13 +2,12 @@
     use App\Core\App;
     use App\Lib\Calc;
 ?>
-<h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
-
 <p class="actions">
     <a class="button" href="<?= App::url('/hrup/projekti/porocilo/' . $projectId) ?>">Tehnično poročilo</a>
     <a class="button" href="<?= App::url('/hrup/projekti/konstrukcije/' . $projectId) ?>">Konstrukcije</a>
     <a class="button" href="<?= App::url('/hrup/projekti/izkaz/' . $projectId) ?>">Izkaz</a>
 </p>
+<h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 <?php
     if (!empty($prostori)) {
 ?>

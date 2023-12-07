@@ -2,10 +2,10 @@
     use App\Core\App;
     use App\Lib\Calc;
 ?>
-<h1>Elaborat zaščite pred hrupom</h1>
 <p class="actions">
 <a class="button" href="<?= App::url('/hrup/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
+<h1>Elaborat zaščite pred hrupom</h1>
 <p>Po Pravilniku o zaščiti pred hrupom v stavbah (Uradni list RS, št. 10/12 in 16/17) </p>
 <table width="100%">
     <tr><td colspan="2">&nbsp;</td></tr>

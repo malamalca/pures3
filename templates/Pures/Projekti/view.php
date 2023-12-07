@@ -5,6 +5,18 @@
 <h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 
 <p class="actions">
+    <a class="button" href="<?= App::url('/pures/projekti/naslovnica/' . $projectId) ?>">Naslovnica</a>
+<?php
+    $sourceFolder = App::getProjectFolder('Hrup', $projectId, 'podatki');
+    $sourceFilename = $sourceFolder . 'tehnicnoPorocilo.md';
+
+    $porocilo = '';
+    if (file_exists($sourceFilename)) {
+?>
+    <a class="button" href="<?= App::url('/pures/projekti/porocilo/' . $projectId) ?>">Tehn. poročilo</a>
+<?php
+    }
+?>
     <a class="button" href="<?= App::url('/pures/projekti/analiza/' . $projectId) ?>">Analiza GF</a>
     <a class="button" href="<?= App::url('/pures/izkazi/podrocjeGf/' . $projectId) ?>">Izkaz GF</a>
     <a class="button" href="<?= App::url('/pures/projekti/snes/' . $projectId) ?>">Analiza SNES</a>

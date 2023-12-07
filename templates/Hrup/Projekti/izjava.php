@@ -5,10 +5,10 @@
     use App\Calc\Hrup\ZunanjiHrup\Izbire\ObmocjeZascitePredHrupom;
     use App\Calc\Hrup\ZunanjiHrup\Izbire\VrstaKazalcevHrupa;
 ?>
-<h2>Izjava izdelovalca elaborata zaščite pred hrupom</h2>
 <p class="actions">
 <a class="button" href="<?= App::url('/hrup/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
+<h2>Izjava izdelovalca elaborata zaščite pred hrupom</h2>
 <p>Po Pravilniku o zaščiti pred hrupom v stavbah (Uradni list RS, št. 10/12) </p>
 <table width="100%">
     <tr>

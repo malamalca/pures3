@@ -12,6 +12,7 @@ body {
     font-size: 13px;
 }
 
+
 h1 {
     font-size: 22px;
 }
@@ -32,10 +33,29 @@ table, tr, td, th, tbody, thead, tfoot {
     page-break-inside: avoid !important;
 }
 
+.small * {
+    font-size: 6px !important;
+}
+
 .actions {
     display: none;
 }
 
 .noprint {
     display: none;
+}
+
+.button {
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    padding: 0;
+    background-color: inherit;
+    border: 0;
+    color: #000000;
+    font-weight: bold !important;
+    font-size: 13px;
+    line-height: inherit;
+    text-align: center;
+    text-decoration: none;
 }
