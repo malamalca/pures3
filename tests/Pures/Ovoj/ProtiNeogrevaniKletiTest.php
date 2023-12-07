@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
+use App\Lib\CalcKonstrukcije;
 use PHPUnit\Framework\TestCase;
 
 final class ProtiNeogrevaniKletiTest extends TestCase
@@ -17,11 +18,10 @@ final class ProtiNeogrevaniKletiTest extends TestCase
         $konstrukcije = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'konstrukcije' . DS . 'netransparentne.json'));
 
         $konstrukcija = $konstrukcije[1];
-        $konstrukcija->TSG->tip = 'tla-neogrevano';
         $konstrukcija->vrsta = 13;
         $konstrukcija->Rsi = 0.0;
         $konstrukcija->Rse = 0.1;
-        $konstrukcija->U = 0.17993320; // to je zaradi drugačnih Rsi/Rse
+        $konstrukcija = CalcKonstrukcije::konstrukcija($konstrukcija, $okolje); // to je zaradi drugačnih Rsi/Rse
 
         $elementOvoja = json_decode(<<<PRN
         {
