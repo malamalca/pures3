@@ -36,8 +36,7 @@ final class ProtiNeogrevaniKletiTest extends TestCase
             "U_zid_nadTerenom": 0.1,
             "visinaNadTerenom": 1,
             "prostorninaKleti": 400,
-            "izmenjavaZraka": 0.3,
-            "ekvivalentnaDebelinaTal": 0.5
+            "izmenjavaZraka": 0.3
         }
         PRN);
         $elementOvoja = new NetransparentenElementOvoja($konstrukcija, $elementOvoja);
