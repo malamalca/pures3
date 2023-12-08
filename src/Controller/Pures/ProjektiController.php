@@ -57,9 +57,14 @@ class ProjektiController
 
         $porocilo = '';
         if (file_exists($sourceFilename)) {
-            $porocilo = file_get_contents($sourceFilename);
+            //$porocilo = file_get_contents($sourceFilename);
+            ob_start();
+            require_once $sourceFilename;
+            $porocilo = ob_get_contents();
+            ob_end_clean();
         }
 
+        App::set('projectId', $projectId);
         App::set('porocilo', $porocilo);
     }
 

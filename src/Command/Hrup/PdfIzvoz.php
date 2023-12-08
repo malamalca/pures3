@@ -57,7 +57,11 @@ class PdfIzvoz extends Command
 
         $sourceFilename = App::getProjectFolder('Hrup', $projectId, 'podatki') . 'tehnicnoPorocilo.md';
         if (file_exists($sourceFilename)) {
-            $porocilo = file_get_contents($sourceFilename);
+            //$porocilo = file_get_contents($sourceFilename);
+            ob_start();
+            require_once $sourceFilename;
+            $porocilo = ob_get_contents();
+            ob_end_clean();
             if (!empty($porocilo)) {
                 $porociloPages = explode('<!-- NEW PAGE -->', $porocilo);
                 foreach ($porociloPages as $porociloPage) {

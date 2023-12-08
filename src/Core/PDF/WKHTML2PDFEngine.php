@@ -63,7 +63,7 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
     public function __destruct()
     {
         foreach ($this->_tempFiles as $fileName) {
-            unlink($fileName);
+            //unlink($fileName);
         }
         //parent::__destruct();
     }

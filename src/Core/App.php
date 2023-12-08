@@ -53,7 +53,11 @@ class App
             $methodName = substr($methodName, 0, -(strlen($extension) + 1));
         }
 
-        $controllerClass = 'App\Controller\\' . $area . '\\' . $controllerName . 'Controller';
+        if ($area) {
+            $controllerClass = 'App\Controller\\' . $area . '\\' . $controllerName . 'Controller';
+        } else {
+            $controllerClass = 'App\Controller\\' . $controllerName . 'Controller';
+        }
 
         // check if action exists
         if (!method_exists($controllerClass, $methodName)) {
@@ -119,6 +123,32 @@ class App
         }
 
         return $url_base . substr($params, 1);
+    }
+
+    /**
+     * Function to use in markdown files
+     *
+     * @param string $fileName Filename
+     * @param string $projectId ProjectId
+     * @param string $area Area
+     * @return string
+     */
+    public static function projectUrl($fileName, $projectId, $area = 'Pures')
+    {
+        if (defined('CLI')) {
+            if ($projectId) {
+                $dir = self::getProjectFolder($area, $projectId, 'podatki');
+            } else {
+                $dir = WWW_ROOT;
+            }
+
+            $fullPath = $dir . $fileName;
+
+            //return 'file:///' . str_replace(DS, '//', $fullPath);
+            return $fullPath;
+        } else {
+            return self::url('/project-image/' . $area . '/' . $projectId . '/' . $fileName);
+        }
     }
 
     /**

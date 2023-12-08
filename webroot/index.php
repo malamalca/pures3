@@ -7,6 +7,7 @@ use App\Core\Configure;
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute(['GET', 'POST'], '/pures/{controller}[/{action}[/{param1}[/{param2}]]]', 'Pures');
     $r->addRoute(['GET', 'POST'], '/hrup/{controller}[/{action}[/{param1}[/{param2}]]]', 'Hrup');
+    $r->addRoute(['GET'], '/project-image/{area}/{projectId}/{image}', 'ProjectImage');
 });
 
 // Fetch method and URI from somewhere
@@ -44,12 +45,18 @@ switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
-        $controllerName = $vars['controller'];
+        switch ($handler) {
+            case 'ProjectImage':
+                $controllerName = 'App';
+                $vars['action'] = 'projectImage';
+                $handler = null;
+                break;
+            default:
+                $controllerName = $vars['controller'];
+                $controllerName = str_replace('-', '', ucwords($controllerName, '-'));
 
-        // convert to CamelCase
-        $controllerName = str_replace('-', '', ucwords($controllerName, '-'));
-
-        unset($vars['controller']);
+                unset($vars['controller']);
+        }
 
         App::dispatch($controllerName, $vars, $handler);
 
