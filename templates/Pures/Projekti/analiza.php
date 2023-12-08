@@ -64,7 +64,6 @@
     <tr>
         <td class="right">X<sub>H'tr</sub> × H'<sub>tr,dov</sub></td>
         <td></td>
-        <!-- TODO: mogoče ne bi tukaj že zmnožil -->
         <td class="center"><?= $this->numFormat($stavba->dovoljenSpecKoeficientTransmisijskihIzgub * $stavba->X_Htr, 3) ?></td>
         <td>W/m²K</td>
     </tr>
