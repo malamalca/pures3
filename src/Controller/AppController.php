@@ -13,7 +13,7 @@ class AppController
      * @param string $conaId Id cone
      * @param string $projectId Building name
      * @param string $fileName Image filename
-     * @return never
+     * @return void
      */
     public function projectImage($conaId, $projectId, $fileName)
     {
