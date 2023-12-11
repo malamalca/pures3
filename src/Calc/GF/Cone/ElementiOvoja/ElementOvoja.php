@@ -8,9 +8,9 @@ use App\Lib\EvalMath;
 
 abstract class ElementOvoja
 {
-    public string $id;
+    public ?string $id;
     public string $idKonstrukcije = '';
-    public \stdClass $konstrukcija;
+    public ?\stdClass $konstrukcija;
 
     protected array $options = [];
 

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire;
 
-enum VrstaRegulacijePlinskegaKotla: string
+enum VrstaRegulacijeKotla: string
 {
     use \App\Lib\Traits\GetOrdinalTrait;
 
@@ -36,7 +36,7 @@ enum VrstaRegulacijePlinskegaKotla: string
      */
     public function faktorRegulacije($mesec, $cona, $okolje)
     {
-        if ($this == VrstaRegulacijePlinskegaKotla::KonstantnaTemperatura) {
+        if ($this == VrstaRegulacijeKotla::KonstantnaTemperatura) {
             return 0;
         } else {
             return ($okolje->zunanjaT[$mesec] - $okolje->projektnaZunanjaT) /

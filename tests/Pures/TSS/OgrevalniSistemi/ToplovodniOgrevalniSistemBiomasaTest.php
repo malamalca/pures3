@@ -4,7 +4,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
 
-final class ToplovodniOgrevalniSistemPlinskiKotelTest extends TestCase
+final class ToplovodniOgrevalniSistemBiomasaTest extends TestCase
 {
     public function testOgrevanje(): void
     {
@@ -21,7 +21,7 @@ final class ToplovodniOgrevalniSistemPlinskiKotelTest extends TestCase
             "id": "TC",
             "idCone": "Cona1",
             "vrsta": "toplovodni",
-            "energent": "zemeljskiPlin",
+            "energent": "biomasa",
             
             "ogrevanje": {
                 "rezim": "40/30",
@@ -33,9 +33,9 @@ final class ToplovodniOgrevalniSistemPlinskiKotelTest extends TestCase
             "generatorji": [
                 {
                     "id": "KOTEL",
-                    "vrsta": "plinskiKotel",
-                    "tip": "kondenzacijski",
+                    "vrsta": "biomasa",
                     "nazivnaMoc": 12,
+                    "tip": "standardniZAvtomatskimDodajanjemGoriva",
                     "regulacija": "konstantnaTemperatura"
                 }
             ],
@@ -76,42 +76,48 @@ final class ToplovodniOgrevalniSistemPlinskiKotelTest extends TestCase
         EOT;
 
         $sistem = new ToplovodniOgrevalniSistem($config);
-
         $sistem->analiza($cona, $okolje);
+        $data = $sistem->generatorji[0]->export();
+
+        // betah
+        $beta_h_gen = $data->porociloNizi[0]->vrednosti;
+        $roundedResult = array_map(fn($el) => round($el, 3), $beta_h_gen);
+        $expected = [0.144, 0.101, 0.051, 0.031, 0.035, 0.000, 0.000, 0.000, 0.036, 0.032, 0.096, 0.144];
+        $this->assertEquals($expected, $roundedResult);
 
         $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube;
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov);
-        $expected = [91.00, 63.32, 43.75, 22.38, 6.53, 0.00, 0.00, 0.00, 7.40, 31.43, 75.93, 95.41];
+        $expected = [87.09, 59.99, 40.56, 20.87, 6.34, 0.00, 0.00, 0.00, 7.16, 28.66, 71.46, 91.23];
         $this->assertEquals($expected, $roundedResult);
 
         $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube;
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubeRazvoda);
-        $expected = [215.34, 144.78, 92.79, 42.60, 7.34, 0.00, 0.00, 0.00, 7.16, 54.94, 149.75, 215.82];
+        $expected = [207.48, 138.47, 87.58, 39.74, 7.13, 0.00, 0.00, 0.00, 6.93, 50.10, 142.48, 207.79];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
-        $expected = [27.71, 24.35, 26.08, 18.30, 2.92, 0.00, 0.00, 0.00, 2.76, 23.37, 26.02, 27.72];
+        $expected = [27.60, 24.27, 26.01, 17.07, 2.83, 0.00, 0.00, 0.00, 2.67, 21.31, 25.92, 27.60];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaEnergija = $sistem->generatorji[0]->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaEnergija['ogrevanje']);
-        $expected = [110.76, 82.38, 68.12, 40.90, 6.69, 0.00, 0.00, 0.00, 6.39, 52.39, 86.38, 110.93];
+        $expected = [346.01, 250.87, 198.15, 110.40, 18.91, 0.00, 0.00, 0.00, 18.04, 138.37, 261.51, 346.40];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergija = $sistem->generatorji[0]->potrebnaElektricnaEnergija['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
-        $expected = [18.39, 11.79, 6.75, 2.72, 0.48, 0.00, 0.00, 0.00, 0.47, 3.52, 12.12, 18.44];
+        $expected = [32.92, 23.89, 18.91, 13.93, 11.74, 10.80, 11.16, 11.16, 11.37, 15.12, 24.91, 32.96];
         $this->assertEquals($expected, $roundedResult); 
 
         $potrebnaToplotaZaGenerator = $sistem->ogrevanje->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaToplotaZaGenerator);
-        $expected = [1306.38, 847.56, 503.99, 215.24, 37.59, 0.00, 0.00, 0.00, 36.88, 278.04, 872.75, 1309.61];
+        $expected = [1508.49, 986.49, 606.66, 273.23, 49.02, 0.00, 0.00, 0.00, 47.66, 344.47, 1012.53, 1510.88];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergijaSistema = $sistem->ogrevanje->potrebnaElektricnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergijaSistema);
-        $expected = [46.85, 36.81, 33.57, 21.55, 3.48, 0.00, 0.00, 0.00, 3.31, 27.56, 38.86, 46.90];
+        $expected = [61.26, 48.83, 45.67, 31.49, 14.65, 10.80, 11.16, 11.16, 14.11, 37.05, 51.55, 61.31];
         $this->assertEquals($expected, $roundedResult);
     }
 }

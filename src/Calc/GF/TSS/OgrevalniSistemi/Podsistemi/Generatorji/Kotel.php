@@ -3,21 +3,34 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire\TipPlinskegaKotla;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire\VrstaLokacijeNamestitve;
-use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire\VrstaRegulacijePlinskegaKotla;
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire\VrstaRegulacijeKotla;
 use App\Calc\GF\TSS\TSSPorociloNiz;
 use App\Calc\GF\TSS\TSSPorociloPodatek;
 use App\Lib\Calc;
 
-class PlinskiKotel extends Generator
+class Kotel extends Generator
 {
-    public TipPlinskegaKotla $tip;
+    public mixed $tip;
     public VrstaLokacijeNamestitve $lokacija;
-    public VrstaRegulacijePlinskegaKotla $regulacija;
+    public VrstaRegulacijeKotla $regulacija;
     public bool $znotrajOvoja = true;
 
     private array $beta_h_g;
+    private string $tipKotlaClass;
+
+    /**
+     * Class Constructor
+     *
+     * @param string $tipKotla Tip kotla
+     * @param \stdClass $config Configuration
+     * @return void
+     */
+    public function __construct($tipKotla, $config = null)
+    {
+        $this->tipKotlaClass = $tipKotla;
+        parent::__construct($config);
+    }
 
     /**
      * Loads configuration from json|stdClass
@@ -30,8 +43,9 @@ class PlinskiKotel extends Generator
         parent::parseConfig($config);
 
         /** @var \stdClass $config */
-        $this->tip = TipPlinskegaKotla::from($config->tip);
-        $this->regulacija = VrstaRegulacijePlinskegaKotla::from($config->regulacija);
+        $tip = '\\App\\Calc\\GF\\TSS\\OgrevalniSistemi\\Podsistemi\\Generatorji\\Izbire\\Tip' . $this->tipKotlaClass;
+        $this->tip = $tip::from($config->tip);
+        $this->regulacija = VrstaRegulacijeKotla::from($config->regulacija);
         $this->lokacija = VrstaLokacijeNamestitve::from($config->lokacija ?? 'ogrevanProstor');
     }
 
@@ -102,7 +116,7 @@ class PlinskiKotel extends Generator
             $this->beta_h_g[$mesec] = $steviloUr == 0 ? 0 : $vneseneIzgube[$mesec] / $steviloUr / $this->nazivnaMoc;
 
             // velja za kotle na tekoča in plinasta  goriva; za trda goriva 0.4 (iz excela)
-            $beta_h_g_test_Pint = 0.3;
+            $beta_h_g_test_Pint = $this->tip->vmesnaObremenitev();
 
             // Toplotne izgube generatorja toplote v odvisnosti od razmerja obremenitve
             if ($this->beta_h_g[$mesec] < $beta_h_g_test_Pint) {
@@ -147,8 +161,7 @@ class PlinskiKotel extends Generator
     {
         $namen = $params['namen'];
 
-        // velja za kotle na tekoča in plinasta  goriva; za trda goriva 0.4 (iz excela)
-        $beta_h_g_test_Pint = 0.3;
+        $beta_h_g_test_Pint = $this->tip->vmesnaObremenitev();
 
         $Paux_g_Pn = $this->tip->mocPomoznihElektricnihNaprav($this->nazivnaMoc, 'polna');
         $Paux_g_Pint = $this->tip->mocPomoznihElektricnihNaprav($this->nazivnaMoc, 'vmesna');

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Izbire;
 
-enum TipPlinskegaKotla: string
+enum TipPlinskiKotel: string
 {
     use \App\Lib\Traits\GetOrdinalTrait;
 
@@ -44,6 +44,17 @@ enum TipPlinskegaKotla: string
         $t = [45, 45, 45, 35, 35, 20];
 
         return $t[$this->getOrdinal()];
+    }
+
+    /**
+     * Obremenitev kotla pri testnih pogojih za vmesno obremenitev β_h, g, test, Pint
+     * Za enačbo 98
+     *
+     * @return float
+     */
+    public function vmesnaObremenitev()
+    {
+        return 0.3;
     }
 
     /**

@@ -109,7 +109,7 @@ abstract class Generator extends TSSInterface
 
         $sistem->potrebnaEnergija = $this->potrebnaEnergija;
         $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
-        $sistem->vneseneIzgube = $this->vneseneIzgube ?? [];
+        $sistem->vneseneIzgube = $this->vneseneIzgube;
 
         return $sistem;
     }
