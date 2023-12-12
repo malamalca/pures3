@@ -20,7 +20,7 @@ class GeneratorFactory
     {
         switch ($type) {
             case 'TC_zrakvoda':
-            case 'TC_zrakvodaSTV':
+            case 'TC_zrakvodaTSV':
                 return new ToplotnaCrpalkaZrakVoda($options);
             //case 'TC_zemljavoda':
             //    return new ToplotnaCrpalkaZemljaVoda($options);

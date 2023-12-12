@@ -190,7 +190,7 @@
     </thead>
     <tr>
         <td rowspan="4"><?= h($hranilnik->id ?? '') ?></td>
-        <td>Q<sub>W,dis,ls</sub></td>
+        <td>Q<sub>W,sto,ls</sub></td>
         <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center w-6">' . $this->numFormat($mesecnaVrednost, 1) . '</td>', $hranilnik->toplotneIzgube)) ?>
         <th class="right w-6"><?= $this->numFormat(array_sum($hranilnik->toplotneIzgube), 0) ?></th>
     </tr>
@@ -207,10 +207,10 @@
 <?php
     foreach ($sistem->generatorji as $generator) {
         $podsistemi = [];
-        if (isset($generator->potrebnaEnergija->tsv)) {
+        if (isset($generator->toplotneIzgube->tsv)) {
             $podsistemi[] = 'tsv';
         }
-        if (isset($generator->potrebnaEnergija->ogrevanje)) {
+        if (isset($generator->toplotneIzgube->ogrevanje)) {
             $podsistemi[] = 'ogrevanje';
         }
 ?>

@@ -58,7 +58,8 @@ class Cona
     public array $notranjiViriOgrevanje = [];
     public array $notranjiViriHlajenje = [];
 
-    public array $vracljiveIzgube = [];
+    public array $vrnjeneIzgubeVOgrevanje = [];
+    public array $vrnjeneIzgubeVTSV = [];
 
     public array $energijaOgrevanje = [];
     public float $skupnaEnergijaOgrevanje = 0;
@@ -436,7 +437,7 @@ class Cona
             $vsotaVirov_ogrevanje =
                 $this->notranjiViriOgrevanje[$mesec] +
                 $this->solarniDobitkiOgrevanje[$mesec] +
-                ($this->vracljiveIzgube[$mesec] ?? 0);
+                ($this->vrnjeneIzgubeVOgrevanje[$mesec] ?? 0);
             $vsotaPonorov_ogrevanje =
                 (float)($this->prezracevalneIzgubeOgrevanje[$mesec] + $this->transIzgubeOgrevanje[$mesec]);
 
@@ -505,7 +506,7 @@ class Cona
                 $this->energijaOgrevanje[$mesec] =
                     $this->transIzgubeOgrevanje[$mesec] + $this->prezracevalneIzgubeOgrevanje[$mesec] -
                     $this->ucinekDobitkov[$mesec] * ($this->notranjiViriOgrevanje[$mesec] +
-                    $this->solarniDobitkiOgrevanje[$mesec] + ($this->vracljiveIzgube[$mesec] ?? 0));
+                    $this->solarniDobitkiOgrevanje[$mesec] + ($this->vrnjeneIzgubeVOgrevanje[$mesec] ?? 0));
 
                 if ($this->energijaOgrevanje[$mesec] < 0) {
                     $this->energijaOgrevanje[$mesec] = 0;
@@ -569,7 +570,8 @@ class Cona
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
             $this->energijaTSV[$mesec] = 0.001 * $this->TSV->dnevnaKolicina * $this->TSV->steviloOseb * 4.2 / 3.6 *
-                ($this->TSV->toplaVodaT - $this->TSV->hladnaVodaT) * $stDni;
+                ($this->TSV->toplaVodaT - $this->TSV->hladnaVodaT) * $stDni -
+                ($this->vrnjeneIzgubeVTSV[$mesec] ?? 0);
 
             $this->skupnaEnergijaTSV += $this->energijaTSV[$mesec];
         }

@@ -40,7 +40,7 @@ final class ToplovodniOgrevalniSistemSamoTSV extends TestCase
             "generatorji": [
                 {
                     "id": "TC",
-                    "vrsta": "TC_zrakvodaSTV",
+                    "vrsta": "TC_zrakvodaTSV",
                     "nazivnaMoc": 6,
                     "nazivniCOP": 3,
                     "elektricnaMocNaPrimarnemKrogu": 6,

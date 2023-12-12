@@ -137,6 +137,20 @@ enum TipBiomasa: string
     }
 
     /**
+     * Specifične toplotne izgube kotla qw,g,70 [-] v odvisnosti od vrsta kotla in nazivne moči w g Pn Q , ,& [kW]
+     * Tabela 24
+     *
+     * @param float $nazivnaMoc Nazivna moč kotla v kW
+     * @return float
+     */
+    public function izgube70($nazivnaMoc)
+    {
+        return match ($this) {
+            self::StandardniZAvtomatskimDodajanjemGoriva => 14 * pow($nazivnaMoc, -0.28) / 100,
+        };
+    }
+
+    /**
      * Del toplotnih izgub skozi ovoj kotla v času obratovalne pripravljenosti pgn,env
      * Tabela 18
      *

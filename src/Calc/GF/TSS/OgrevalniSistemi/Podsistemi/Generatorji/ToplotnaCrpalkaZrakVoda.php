@@ -87,7 +87,7 @@ class ToplotnaCrpalkaZrakVoda extends Generator
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
-    public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         $relativnaMoc = [];
         $dejanskaMoc = [];
@@ -161,11 +161,11 @@ class ToplotnaCrpalkaZrakVoda extends Generator
                 $E_tc[$mesec][$rezim] = $potrebnaEnergija[$mesec][$rezim] / $COP_t;
 
                 if (empty($namen)) {
-                    $this->potrebnaEnergija[$mesec] = ($this->potrebnaEnergija[$mesec] ?? 0) + 0;
+                    $this->toplotneIzgube[$mesec] = ($this->toplotneIzgube[$mesec] ?? 0) + 0;
                     $this->E_tc[$mesec] = ($this->E_tc[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
                 } else {
-                    $this->potrebnaEnergija[$namen][$mesec] =
-                        ($this->potrebnaEnergija[$namen][$mesec] ?? 0) + 0;
+                    $this->toplotneIzgube[$namen][$mesec] =
+                        ($this->toplotneIzgube[$namen][$mesec] ?? 0) + 0;
                     $this->E_tc[$namen][$mesec] = ($this->E_tc[$namen][$mesec] ?? 0) + $E_tc[$mesec][$rezim];
                 }
             }
@@ -186,18 +186,15 @@ class ToplotnaCrpalkaZrakVoda extends Generator
     {
         $namen = $params['namen'];
 
-        if (empty($this->potrebnaEnergija)) {
-            $this->potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params);
+        if (empty($this->toplotneIzgube)) {
+            $this->toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params);
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             if (empty($namen)) {
-                //$this->obnovljivaEnergija[$mesec] = $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$mesec];
                 $this->obnovljivaEnergija[$mesec] = $vneseneIzgube[$mesec] - $this->E_tc[$mesec];
             } else {
                 $this->obnovljivaEnergija[$namen][$mesec] = $vneseneIzgube[$mesec] - $this->E_tc[$namen][$mesec];
-                //$this->obnovljivaEnergija[$namen][$mesec] =
-                //    $vneseneIzgube[$mesec] - $this->potrebnaEnergija[$namen][$mesec];
             }
         }
     }
@@ -264,11 +261,26 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         $sistem->elektricnaMocNaPrimarnemKrogu = $this->elektricnaMocNaPrimarnemKrogu;
         $sistem->elektricnaMocNaSekundarnemKrogu = $this->elektricnaMocNaSekundarnemKrogu;
 
+        $E_tc = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00];
+        if (isset($this->E_tc['ogrevanje']) || isset($this->E_tc['tsv']) || isset($this->E_tc['hlajenje'])) {
+            if (isset($this->E_tc['ogrevanje'])) {
+                $E_tc = array_sum_values($E_tc, $this->E_tc['ogrevanje']);
+            }
+            if (isset($this->E_tc['tsv'])) {
+                $E_tc = array_sum_values($E_tc, $this->E_tc['tsv']);
+            }
+            if (isset($this->E_tc['hlajenje'])) {
+                $E_tc = array_sum_values($E_tc, $this->E_tc['hlajenje']);
+            }
+        } else {
+            $E_tc = $this->E_tc;
+        }
+
         $sistem->porociloNizi = [
             new TSSPorociloNiz(
                 'E<sub>TČ</sub>',
                 'Energija za delovanje TČ',
-                $this->E_tc['ogrevanje'] ?? $this->E_tc,
+                $E_tc,
                 1
             ),
         ];

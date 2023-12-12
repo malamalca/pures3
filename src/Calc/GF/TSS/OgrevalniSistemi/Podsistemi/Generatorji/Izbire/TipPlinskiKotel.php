@@ -184,6 +184,27 @@ enum TipPlinskiKotel: string
     }
 
     /**
+     * Specifične toplotne izgube kotla qw,g,70 [-] v odvisnosti od vrsta kotla in nazivne moči w g Pn Q , ,& [kW]
+     * Tabela 24
+     *
+     * @param float $nazivnaMoc Nazivna moč kotla v kW
+     * @return float
+     */
+    public function izgube70($nazivnaMoc)
+    {
+        return match ($this) {
+            self::StandardniVentilatorski,
+            self::StandardniAtmosferski,
+            self::StandardniAtmosferskiNad250kW => 8.5 * pow($nazivnaMoc, -0.4) / 100,
+
+            self::NizkotemperaturniSpecialniAtmosferski => 4.5 * pow($nazivnaMoc, -0.4) / 100,
+            self::NizkotemperaturniVentilatorski => 4.25 * pow($nazivnaMoc, -0.4) / 100,
+
+            self::Kondenzacijski => 0.022,
+        };
+    }
+
+    /**
      * Del toplotnih izgub skozi ovoj kotla v času obratovalne pripravljenosti pgn,env
      * Tabela 18
      *
@@ -193,11 +214,11 @@ enum TipPlinskiKotel: string
     {
         return match ($this) {
             self::StandardniVentilatorski,
-            self::StandardniAtmosferski,
             self::StandardniAtmosferskiNad250kW,
             self::NizkotemperaturniVentilatorski,
             self::Kondenzacijski => 0.75,
 
+            self::StandardniAtmosferski,
             self::NizkotemperaturniSpecialniAtmosferski => 0.5,
         };
     }

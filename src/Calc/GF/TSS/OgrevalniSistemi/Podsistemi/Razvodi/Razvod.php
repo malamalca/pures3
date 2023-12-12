@@ -5,8 +5,9 @@ namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi;
 
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\RazvodAbstractProperties;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
+use App\Calc\GF\TSS\TSSInterface;
 
-abstract class Razvod
+abstract class Razvod extends TSSInterface
 {
     public string $sistem = 'razvod';
 
@@ -14,13 +15,7 @@ abstract class Razvod
     public ElementRazvoda $dvizniVod;
     public ElementRazvoda $prikljucniVod;
 
-    public ?string $id;
     public ?string $idPrenosnika;
-
-    public array $toplotneIzgube = [];
-    public array $vracljiveIzgube = [];
-    public array $vracljiveIzgubeAux = [];
-    public array $potrebnaElektricnaEnergija = [];
 
     /**
      * Class Constructor
@@ -100,14 +95,8 @@ abstract class Razvod
      */
     public function export()
     {
-        $sistem = new \stdClass();
-        $sistem->id = $this->id;
+        $sistem = parent::export();
         $sistem->sistem = $this->sistem;
-
-        $sistem->toplotneIzgube = $this->toplotneIzgube;
-        $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
-        $sistem->vracljiveIzgube = $this->vracljiveIzgube;
-        $sistem->vracljiveIzgubeAux = $this->vracljiveIzgubeAux;
 
         $sistem->vodi = [];
         $sistem->vodi[] = $this->horizontalniVod->export();

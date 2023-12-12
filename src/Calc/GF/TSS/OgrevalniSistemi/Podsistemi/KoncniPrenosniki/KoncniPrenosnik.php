@@ -4,15 +4,15 @@ declare(strict_types=1);
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki;
 
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaRegulacijeTemperature;
+use App\Calc\GF\TSS\TSSInterface;
 use App\Lib\Calc;
 
-abstract class KoncniPrenosnik
+abstract class KoncniPrenosnik extends TSSInterface
 {
     public const DELTAT_REGULACIJE_TEMPERATURE = [2.5, 1.6, 0.7, 0.7, 0.5];
     public const DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_DO_10 = [0.6, 0.3, 0.2, 0.1, 0];
     public const DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_NAD_10 = [0.6, 0.4, 0.3, 0.2, 0];
 
-    public string $id;
     public string $vrsta = 'Končni prenosnik';
 
     public float $exponentOgrevala;
@@ -36,11 +36,6 @@ abstract class KoncniPrenosnik
     protected float $mocRegulatorja = 0;
 
     public VrstaRegulacijeTemperature $regulacijaTemperature;
-
-    public array $toplotneIzgube = [];
-    public array $potrebnaElektricnaEnergija = [];
-    public array $vracljiveIzgube = [];
-    public array $vracljiveIzgubeAux = [];
 
     /**
      * Class Constructor
@@ -159,15 +154,9 @@ abstract class KoncniPrenosnik
      */
     public function export()
     {
-        $sistem = new \stdClass();
-        $sistem->id = $this->id;
+        $sistem = parent::export();
         $sistem->vrsta = $this->vrsta;
-
         $sistem->regulacijaTemperature = $this->regulacijaTemperature->toString();
-
-        $sistem->toplotneIzgube = $this->toplotneIzgube;
-        $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
-        $sistem->vracljiveIzgubeAux = $this->vracljiveIzgubeAux;
 
         return $sistem;
     }

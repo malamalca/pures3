@@ -76,7 +76,7 @@ class NeposredniElektricniOgrevalniSistem extends OgrevalniSistem
         for ($i = 0; $i <= self::STEVILO_ITERACIJ; $i++) {
             // ponovno poračunam potrebno energijo za ogrevanje
             $spremembaCone = new Cona(null, $cona);
-            $spremembaCone->vracljiveIzgube = $vracljiveIzgube;
+            $spremembaCone->vrnjeneIzgubeVOgrevanje = $vracljiveIzgube;
             $spremembaCone->izracunFaktorjaIzkoristka();
             $spremembaCone->izracunEnergijeOgrevanjeHlajanje();
             $cona = $spremembaCone->export();

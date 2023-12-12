@@ -44,7 +44,8 @@ enum TSSVrstaEnergenta: string
     }
 
     /**
-     * Maksimalni izkoristek fHs/Hi
+     * Razmerje zgorevalna toplota / kurilnost za različne energente fHs/Hi
+     * Tabela 23
      * Stolpec AI:238 - AI:244
      *
      * @return float

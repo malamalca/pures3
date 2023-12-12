@@ -3,16 +3,11 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Hranilniki;
 
-abstract class Hranilnik
+use App\Calc\GF\TSS\TSSInterface;
+
+abstract class Hranilnik extends TSSInterface
 {
-    public string $id;
-
     public float $volumen;
-
-    public array $toplotneIzgube = [];
-    public array $potrebnaElektricnaEnergija = [];
-    public array $vracljiveIzgube = [];
-    public array $vracljiveIzgubeAux = [];
 
     /**
      * Class Constructor
@@ -44,29 +39,14 @@ abstract class Hranilnik
     }
 
     /**
-     * Izračun toplotnih izgub
-     *
-     * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki cone
-     * @param array $params Dodatni parametri za izračun
-     * @return array
-     */
-    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
-
-    /**
      * Export v json
      *
      * @return \stdClass
      */
     public function export()
     {
-        $sistem = new \stdClass();
-        $sistem->id = $this->id;
+        $sistem = parent::export();
         $sistem->volumen = $this->volumen;
-
-        $sistem->toplotneIzgube = $this->toplotneIzgube;
 
         return $sistem;
     }

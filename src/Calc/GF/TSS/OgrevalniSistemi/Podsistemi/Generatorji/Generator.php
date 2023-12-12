@@ -8,6 +8,7 @@ use App\Calc\GF\TSS\TSSInterface;
 abstract class Generator extends TSSInterface
 {
     public float $nazivnaMoc;
+    public array $vneseneIzgube = [];
 
     /**
      * Class Constructor
@@ -41,24 +42,24 @@ abstract class Generator extends TSSInterface
     /**
      * Analiza podsistema
      *
-     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
+     * @param array $toplotneIzgube Potrebna energija predhodnih TSS
      * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
-    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    public function analiza($toplotneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $this->potrebnaEnergija = [];
+        $this->toplotneIzgube = [];
         $this->potrebnaElektricnaEnergija = [];
         $this->obnovljivaEnergija = [];
         $this->vracljiveIzgube = [];
         $this->vracljiveIzgubeAux = [];
 
-        $this->potrebnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
-        $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
-        $this->obnovljivaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->toplotneIzgube($toplotneIzgube, $sistem, $cona, $okolje, $params);
+        $this->potrebnaElektricnaEnergija($toplotneIzgube, $sistem, $cona, $okolje, $params);
+        $this->obnovljivaEnergija($toplotneIzgube, $sistem, $cona, $okolje, $params);
     }
 
     /**
@@ -71,7 +72,7 @@ abstract class Generator extends TSSInterface
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
-    abstract public function potrebnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
 
     /**
      * Izračun potrebne električne energije
@@ -104,11 +105,7 @@ abstract class Generator extends TSSInterface
      */
     public function export()
     {
-        $sistem = new \stdClass();
-        $sistem->id = $this->id;
-
-        $sistem->potrebnaEnergija = $this->potrebnaEnergija;
-        $sistem->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
+        $sistem = parent::export();
         $sistem->vneseneIzgube = $this->vneseneIzgube;
 
         return $sistem;

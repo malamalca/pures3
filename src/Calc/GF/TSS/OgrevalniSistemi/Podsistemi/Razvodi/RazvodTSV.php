@@ -81,13 +81,15 @@ class RazvodTSV extends Razvod
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         if (isset($this->crpalka) && empty($this->crpalka->casDelovanja)) {
+            // z – čas delovanja cirkulacijske črpalke (v urah na dan) [h]
+            // enačba (142)
             $this->crpalka->casDelovanja = $this->izracunCasaDelovanjaCrpalke($cona);
+            $steviloUrCrpalke = $this->crpalka->casDelovanja;
+        } else {
+            // todo: število ur kroženja vode glede na vrsto cone
+            $steviloUrCrpalke = 2;
         }
-
-        // z – čas delovanja cirkulacijske črpalke (v urah na dan) [h]
-        // enačba (142)
-        $steviloUrCrpalke = $this->izracunCasaDelovanjaCrpalke($cona);
-        $steviloUrBrezCrpalke = 24 - $steviloUrCrpalke;
+        $steviloUrBrezCirkulacije = 24 - $steviloUrCrpalke;
 
         $povprecniUCevi = ($this->horizontalniVod->toplotneIzgube($this, $cona) +
             $this->dvizniVod->toplotneIzgube($this, $cona) +
@@ -127,14 +129,14 @@ class RazvodTSV extends Razvod
                 ($this->horizontalniVod->toplotneIzgube($this, $cona, $this->horizontalniVod->delezVOgrevaniConi) +
                 $this->dvizniVod->toplotneIzgube($this, $cona, $this->dvizniVod->delezVOgrevaniConi) +
                 $this->prikljucniVod->toplotneIzgube($this, $cona, $this->prikljucniVod->delezVOgrevaniConi)) *
-                $stDni * $steviloUrBrezCrpalke *
+                $stDni * $steviloUrBrezCirkulacije *
                 ($temperaturaCevovodaBrezCirkulacije - $cona->notranjaTOgrevanje) / 1000;
 
             $izgubeZunajOvoja_BrezCirkulacije =
                 ($this->horizontalniVod->toplotneIzgube($this, $cona, 1 - $this->horizontalniVod->delezVOgrevaniConi) +
                 $this->dvizniVod->toplotneIzgube($this, $cona, 1 - $this->dvizniVod->delezVOgrevaniConi) +
                 $this->prikljucniVod->toplotneIzgube($this, $cona, 1 - $this->prikljucniVod->delezVOgrevaniConi)) *
-                $stDni * $steviloUrBrezCrpalke *
+                $stDni * $steviloUrBrezCirkulacije *
                 ($temperaturaCevovodaBrezCirkulacije - $temperaturaIzvenOvoja) / 1000;
 
             $this->toplotneIzgube[$mesec] = $izgubeZnotrajOvoja_Cirkulacija + $izgubeZunajOvoja_Cirkulacija +
@@ -192,7 +194,12 @@ class RazvodTSV extends Razvod
                 $this->potrebnaElektricnaEnergija[$mesec] =
                     $potrebnaHidravlicnaEnergija * $fe_crpalke * $faktorRabeEnergije;
 
+                // enačba (149)
+                // todo: excel tega ne upošteva
+                // $this->vracljiveIzgubeTSV[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
+
                 // Delež vrnjene energije v okoliški zrak
+                // todo: upoštevaj možnost, da črpalka ni v ogrevanem prostoru/coni
                 // enačba (150)
                 $this->vracljiveIzgubeAux[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
             }
@@ -300,7 +307,7 @@ class RazvodTSV extends Razvod
                 if (!empty($this->crpalka)) {
                     return 2 * $cona->dolzina + 0.0125 * $cona->dolzina * $cona->sirina;
                 } else {
-                    return $cona->dolzina + 0.0625 * $cona->dolzina * $cona->sirina + 6;
+                    return $cona->dolzina + 0.0625 * $cona->dolzina * $cona->sirina;
                 }
             case VrstaRazvodnihCevi::DvizniVod:
                 if (!empty($this->crpalka)) {

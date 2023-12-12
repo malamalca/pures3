@@ -94,7 +94,7 @@ final class ToplovodniOgrevalniSistemPlinskiKotelTest extends TestCase
         $expected = [27.71, 24.35, 26.08, 18.30, 2.92, 0.00, 0.00, 0.00, 2.76, 23.37, 26.02, 27.72];
         $this->assertEquals($expected, $roundedResult);
 
-        $potrebnaEnergija = $sistem->generatorji[0]->potrebnaEnergija;
+        $potrebnaEnergija = $sistem->generatorji[0]->toplotneIzgube;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaEnergija['ogrevanje']);
         $expected = [110.76, 82.38, 68.12, 40.90, 6.69, 0.00, 0.00, 0.00, 6.39, 52.39, 86.38, 110.93];
         $this->assertEquals($expected, $roundedResult);
