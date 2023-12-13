@@ -17,6 +17,9 @@ abstract class TSSInterface
     public array $vracljiveIzgubeTSV = [];
     public array $vracljiveIzgubeAux = [];
 
+    protected array $porociloNizi = [];
+    protected array $porociloPodatki = [];
+
     /**
      * Analiza podsistema
      *
@@ -48,6 +51,9 @@ abstract class TSSInterface
         $sistem->vracljiveIzgube = $this->vracljiveIzgube;
         $sistem->vracljiveIzgubeTSV = $this->vracljiveIzgubeTSV;
         $sistem->vracljiveIzgubeAux = $this->vracljiveIzgubeAux;
+
+        $sistem->porociloNizi = $this->porociloNizi;
+        $sistem->porociloPodatki = $this->porociloPodatki;
 
         return $sistem;
     }

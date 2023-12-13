@@ -20,8 +20,6 @@ class Kotel extends Generator
     private array $beta_h_g;
     private string $tipKotlaClass;
 
-    private array $porociloNizi = [];
-
     /**
      * Class Constructor
      *
@@ -99,50 +97,52 @@ class Kotel extends Generator
         // kombinirane kotle, obtočne grelnike in sisteme brez oziroma izklopljeno cirkulacijo 40°C.
         $temperaturaVode = 40;
 
+        // specifične toplotne izgube kotla pri srednji temperaturi vode v kotlu 70°C [-]
+        // tabela 24
+        $q_w_g_70 = $this->tip->izgube70($this->nazivnaMoc);
+
+        // toplotne izgube grelnika (kotla) pri temperaturi kotla θ [°C] [-]
+        // enačba 134
+        $q_w_g_T = $q_w_g_70 * ($temperaturaVode - $temperaturaOkolice) / (70 - 20);
+
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = $stDni * 24;
             $stDniTSV = $stDni;
             $stUrNaDanTSV = 24;
 
-            // izračunam čas, ki je potreben za pripravo TSV
-            // todo: excel ne upošteva
-            // enačba 152
-            $stUrTSV = $vneseneIzgube[$mesec] / ($this->nazivnaMoc * 24);
-            $stUrTSV = 0;
-
             // Mesečni računski obratovalni dnevi
             // enačba 46
             $d_h_rod = 0;
 
-            // enačba 116
+            // čas delovanja kotla pri nazivni moči za zagotavljanje toplote za toplo vodo [h]
+            // enačba 158
+            $t_w_100 = $vneseneIzgube[$mesec] / ($this->nazivnaMoc * $stDniTSV);
+
+            // Potrebna toplota grelnika (kotla) za toplo vodo [kWh] (enačba 114)
+            // enačba 114
             $Q_w_out_g = $vneseneIzgube[$mesec] * $stDni / $stDniTSV;
 
             // dnevne toplotne izgube grelnika (kotla) pri obratovanju z nazivno močjo [kWh]
             // enačba 132
             $Q_w_g_l_100 = ($sistem->energent->maksimalniIzkoristek() - $izk100) / $izk100 * $Q_w_out_g / $stDniTSV;
 
+            // dnevne toplotne izgube grelnika (kotla) v stanju obratovalne pripravljenosti [kWh]
+            // todo: to se v excelu ne upošteva, bi pa morali prišteti v enačbi 131
+            // enačba 133
+            $Q_w_g_l_P0 = $q_w_g_T * $this->nazivnaMoc / $izk100 * ($stUrNaDanTSV - $t_w_100) *
+                $sistem->energent->maksimalniIzkoristek();
+
+            // Toplotne izgube grelnika
             // enačba 131
             $Q_w_g_l = $Q_w_g_l_100 * $stDniTSV;
 
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             $this->toplotneIzgube['tsv'][$mesec] = $Q_w_g_l;
-
-            // Potrebna električna energija za delovanje kotla Ww,g,aux
-            // enačba 158
-            $t_w_100 = $vneseneIzgube[$mesec] / ($this->nazivnaMoc * $stDniTSV);
-
-            // specifične toplotne izgube kotla pri srednji temperaturi vode v kotlu 70°C [-]
-            // tabela 24
-            $q_w_g_70 = $this->tip->izgube70($this->nazivnaMoc);
-
-            // enačba 134
-            $q_w_g_T = $q_w_g_70 * ($temperaturaVode - $temperaturaOkolice) / (70 - 20);
-
-            $q_s = $this->tip->faktorIzgubSkoziOvoj() * $q_w_g_T;
 
             // iz excela
             // todo: nepoznana enačba
-            $Q_w_g_rwg_env = $q_s * $this->nazivnaMoc / $izk100 *
+            $Q_w_g_rwg_env = $this->tip->faktorIzgubSkoziOvoj() * $q_w_g_T * $this->nazivnaMoc / $izk100 *
                 ($t_w_100 * $stDniTSV + ($stUrNaDanTSV - $t_w_100) * ($stDniTSV - $d_h_rod));
 
             $this->vracljiveIzgube[$mesec] = ($this->vracljiveIzgube[$mesec] ?? 0) + $Q_w_g_rwg_env;
@@ -175,11 +175,12 @@ class Kotel extends Generator
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUr = $stDni * 24;
+            $stUrNaDanTSV = 24;
 
-            // izračunam čas, ki je potreben za pripravo TSV
+            // časovni interval potreben za pripravo tople vode [h]
             // todo: Excel ne upošteva
-            // enačba 152
-            $stUrTSV = $cona->energijaTSV[$mesec] / ($this->nazivnaMoc * 24);
+            // enačba 158
+            $stUrTSV = $cona->energijaTSV[$mesec] / ($this->nazivnaMoc * $stUrNaDanTSV);
             $stUrTSV = 0;
 
             // th – mesečne obratovalne ure – čas [h/M]
@@ -425,13 +426,7 @@ class Kotel extends Generator
      */
     public function export()
     {
-        $sistem = parent::export();
-        $sistem->lokacija = $this->lokacija->value;
-        $sistem->nazivnaMoc = $this->nazivnaMoc;
-
-        $sistem->porociloNizi = $this->porociloNizi;
-
-        $sistem->porociloPodatki = [
+        $this->porociloPodatki = [
             new TSSPorociloPodatek(
                 'η<sub>H,gen,Pn</sub>',
                 'Izkoristek polne obremenitve',
@@ -447,6 +442,10 @@ class Kotel extends Generator
                 3
             ),
         ];
+
+        $sistem = parent::export();
+        $sistem->lokacija = $this->lokacija->value;
+        $sistem->nazivnaMoc = $this->nazivnaMoc;
 
         return $sistem;
     }

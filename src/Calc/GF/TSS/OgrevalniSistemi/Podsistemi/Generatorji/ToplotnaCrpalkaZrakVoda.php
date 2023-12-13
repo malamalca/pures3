@@ -255,12 +255,6 @@ class ToplotnaCrpalkaZrakVoda extends Generator
      */
     public function export()
     {
-        $sistem = parent::export();
-        $sistem->podnebje = $this->podnebje;
-        $sistem->nazivnaMoc = $this->nazivnaMoc;
-        $sistem->elektricnaMocNaPrimarnemKrogu = $this->elektricnaMocNaPrimarnemKrogu;
-        $sistem->elektricnaMocNaSekundarnemKrogu = $this->elektricnaMocNaSekundarnemKrogu;
-
         $E_tc = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00];
         if (isset($this->E_tc['ogrevanje']) || isset($this->E_tc['tsv']) || isset($this->E_tc['hlajenje'])) {
             if (isset($this->E_tc['ogrevanje'])) {
@@ -276,30 +270,32 @@ class ToplotnaCrpalkaZrakVoda extends Generator
             $E_tc = $this->E_tc;
         }
 
-        $sistem->porociloNizi = [
-            new TSSPorociloNiz(
-                'E<sub>TČ</sub>',
-                'Energija za delovanje TČ',
-                $E_tc,
-                1
-            ),
-        ];
+        $this->porociloNizi[] = new TSSPorociloNiz(
+            'E<sub>TČ</sub>',
+            'Energija za delovanje TČ',
+            $E_tc,
+            1
+        );
 
-        $sistem->porociloPodatki = [
-            new TSSPorociloPodatek('', 'Podnebje', $this->podnebje, '-'),
-            new TSSPorociloPodatek(
-                'P<sub>prim,aux</sub>',
-                'El. moč na primarnem krogu',
-                $this->elektricnaMocNaPrimarnemKrogu,
-                'W'
-            ),
-            new TSSPorociloPodatek(
-                'P<sub>sek,aux</sub>',
-                'El. moč na sekundarnem krogu',
-                $this->elektricnaMocNaSekundarnemKrogu,
-                'W'
-            ),
-        ];
+        $this->porociloPodatki[] = new TSSPorociloPodatek('', 'Podnebje', $this->podnebje, '-');
+        $this->porociloPodatki[] = new TSSPorociloPodatek(
+            'P<sub>prim,aux</sub>',
+            'El. moč na primarnem krogu',
+            $this->elektricnaMocNaPrimarnemKrogu,
+            'W'
+        );
+        $this->porociloPodatki[] = new TSSPorociloPodatek(
+            'P<sub>sek,aux</sub>',
+            'El. moč na sekundarnem krogu',
+            $this->elektricnaMocNaSekundarnemKrogu,
+            'W'
+        );
+
+        $sistem = parent::export();
+        $sistem->podnebje = $this->podnebje;
+        $sistem->nazivnaMoc = $this->nazivnaMoc;
+        $sistem->elektricnaMocNaPrimarnemKrogu = $this->elektricnaMocNaPrimarnemKrogu;
+        $sistem->elektricnaMocNaSekundarnemKrogu = $this->elektricnaMocNaSekundarnemKrogu;
 
         return $sistem;
     }
