@@ -5,6 +5,8 @@ namespace App\Calc\GF\Cone;
 
 use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
 use App\Calc\GF\Cone\ElementiOvoja\TransparentenElementOvoja;
+use App\Calc\GF\Cone\Izbire\VrstaIzpostavljenostiFasad;
+use App\Calc\GF\Cone\Izbire\VrstaLegeStavbe;
 use App\Calc\GF\TSS\Razsvetljava\Razsvetljava;
 use App\Core\Log;
 use App\Lib\Calc;
@@ -150,6 +152,32 @@ class Cona
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             switch ($prop->getName()) {
+                case 'infiltracija':
+                    if (isset($config->infiltracija)) {
+                        $this->infiltracija = $config->infiltracija;
+
+                        if (isset($this->infiltracija->lega) && is_int($this->infiltracija->lega)) {
+                            // združljivosti za nazaj
+                            $vrsteLege = VrstaLegeStavbe::cases();
+                            $this->infiltracija->lega = $vrsteLege[$this->infiltracija->lega - 1];
+                        } else {
+                            $this->infiltracija->lega =
+                                VrstaLegeStavbe::from($config->infiltracija->lega ?? 'izpostavljena');
+                        }
+
+                        if (isset($this->infiltracija->zavetrovanost) && is_int($this->infiltracija->zavetrovanost)) {
+                            // združljivosti za nazaj
+                            $vrsteZavetrovanosti = VrstaIzpostavljenostiFasad::cases();
+                            $this->infiltracija->zavetrovanost =
+                                $vrsteZavetrovanosti[$this->infiltracija->zavetrovanost - 1];
+                        } else {
+                            $this->infiltracija->zavetrovanost =
+                                VrstaIzpostavljenostiFasad::from(
+                                    $config->infiltracija->zavetrovanost ?? 'izpostavljena'
+                                );
+                        }
+                    }
+                    break;
                 case 'ovoj':
                     $this->ovoj = new \stdClass();
                     $this->ovoj->netransparentneKonstrukcije = [];
@@ -341,13 +369,7 @@ class Cona
     public function izracunVentilacijskihIzgub()
     {
         // poračun ventilacijskih izgub
-        $faktorVetra = $this->infiltracija->zavetrovanost == 1 ? 15 : 20;
-
-        $faktorLokacijeLookup = [
-            0 => [0.1, 0.07, 0.04],
-            1 => [0.03, 0.02, 0.01],
-        ];
-        $faktorLokacije = $faktorLokacijeLookup[$this->infiltracija->zavetrovanost - 1][$this->infiltracija->lega - 1];
+        $faktorLokacije = $this->infiltracija->lega->koeficientVplivaVetra($this->infiltracija->zavetrovanost);
 
         $volumenZrakaOgrevanje = $this->prezracevanje->volumenDovedenegaZraka->ogrevanje ??
             $this->netoProstornina * $this->prezracevanje->izmenjava->ogrevanje;
@@ -361,10 +383,10 @@ class Cona
                 break;
             case 'mehansko':
                 $Vinf_ogrevanje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
-                    (1 + $faktorVetra / $faktorLokacije *
+                    (1 + $this->infiltracija->zavetrovanost->faktorVetra() / $faktorLokacije *
                     pow($volumenZrakaOgrevanje / ($this->netoProstornina * $this->infiltracija->n50), 2));
                 $Vinf_hlajenje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
-                    (1 + $faktorVetra / $faktorLokacije *
+                    (1 + $this->infiltracija->zavetrovanost->faktorVetra() / $faktorLokacije *
                     pow($volumenZrakaHlajenje / ($this->netoProstornina * $this->infiltracija->n50), 2));
 
                 $this->Hve_ogrevanje =
@@ -713,6 +735,10 @@ class Cona
                         $cona->ovoj->transparentneKonstrukcije[] = $elementOvoja->export();
                     }
                 }
+            } elseif ($prop->getName() == 'infiltracija') {
+                $cona->infiltracija = $prop->getValue($this);
+                $cona->infiltracija->lega = $this->infiltracija->lega->value;
+                $cona->infiltracija->zavetrovanost = $this->infiltracija->zavetrovanost->value;
             } else {
                 $cona->{$prop->getName()} = $prop->getValue($this);
             }

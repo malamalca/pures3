@@ -13,7 +13,6 @@
 
         "notranjaTOgrevanje": 20,
         "notranjaTHlajenje": 26,
-        "zunanjaT": -13,
         
         "infiltracija": {
             "n50": 0.6,

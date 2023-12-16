@@ -19,8 +19,8 @@
         "faktorOblike": 1.012,
         "infiltracija": {
             "n50": 0.6,
-            "lega": 2,
-            "zavetrovanost": 2
+            "lega": "delnoIzpostavljena",
+            "zavetrovanost": "enaFasada"
         },
         "notranjiViri": {
             "ogrevanje": 4.1,
@@ -6348,7 +6348,8 @@
             472.32,
             488.064
         ],
-        "vracljiveIzgube": [],
+        "vrnjeneIzgubeVOgrevanje": [],
+        "vrnjeneIzgubeVTSV": [],
         "energijaOgrevanje": [
             1253.5810103920794,
             783.8800833731727,

@@ -72,8 +72,8 @@
             "faktorOblike": 1.012,
             "infiltracija": {
                 "n50": 0.6,
-                "lega": 2,
-                "zavetrovanost": 2
+                "lega": "delnoIzpostavljena",
+                "zavetrovanost": "enaFasada"
             },
             "notranjiViri": {
                 "ogrevanje": 4.1,
@@ -6401,7 +6401,8 @@
                 472.32,
                 488.064
             ],
-            "vracljiveIzgube": [],
+            "vrnjeneIzgubeVOgrevanje": [],
+            "vrnjeneIzgubeVTSV": [],
             "energijaOgrevanje": [
                 1253.5810103920794,
                 783.8800833731727,
@@ -6687,12 +6688,10 @@
                 "okolje": 3662.515176362106
             },
             "energijaPoEnergentihTSV": {
-                "elektrika": 0,
-                "okolje": 0
+                "elektrika": 0
             },
             "energijaPoEnergentihHlajenje": {
-                "elektrika": 0,
-                "okolje": 0
+                "elektrika": 0
             },
             "letnaUcinkovitostOgrHlaTsv": 0.5415835898803257,
             "minLetnaUcinkovitostOgrHlaTsv": 0.5,
@@ -6753,8 +6752,6 @@
             "prenosniki": [
                 {
                     "id": "TALNO",
-                    "vrsta": "Ploskovna ogrevala",
-                    "regulacijaTemperature": "S temperaturo referenčnega prostora",
                     "toplotneIzgube": [
                         93.77514300538293,
                         65.54354817464903,
@@ -6783,6 +6780,9 @@
                         0.72,
                         0.744
                     ],
+                    "obnovljivaEnergija": [],
+                    "vracljiveIzgube": [],
+                    "vracljiveIzgubeTSV": [],
                     "vracljiveIzgubeAux": [
                         0.744,
                         0.672,
@@ -6797,13 +6797,16 @@
                         0.72,
                         0.744
                     ],
+                    "porociloNizi": [],
+                    "porociloPodatki": [],
+                    "vrsta": "Ploskovna ogrevala",
+                    "regulacijaTemperature": "S temperaturo referenčnega prostora",
                     "hidravlicnoUravnotezenje": "Statično uravnoteženje dvižnih vodov"
                 }
             ],
             "razvodi": [
                 {
                     "id": "ogrevanje",
-                    "sistem": "dvocevni",
                     "toplotneIzgube": [
                         220.89756723088223,
                         148.97639530812347,
@@ -6832,6 +6835,7 @@
                         26.081230719143537,
                         27.79458562661035
                     ],
+                    "obnovljivaEnergija": [],
                     "vracljiveIzgube": [
                         195.56863353753496,
                         128.73621855677013,
@@ -6846,6 +6850,7 @@
                         133.12860112972882,
                         196.13534309794773
                     ],
+                    "vracljiveIzgubeTSV": [],
                     "vracljiveIzgubeAux": [
                         6.94657088779158,
                         6.101496968633354,
@@ -6860,6 +6865,9 @@
                         6.520307679785884,
                         6.948646406652587
                     ],
+                    "porociloNizi": [],
+                    "porociloPodatki": [],
+                    "sistem": "dvocevni",
                     "vodi": [
                         {
                             "vrsta": "ceviHorizontaliVodi",
@@ -6892,7 +6900,7 @@
             "generatorji": [
                 {
                     "id": "TC",
-                    "potrebnaEnergija": {
+                    "toplotneIzgube": {
                         "ogrevanje": [
                             0,
                             0,
@@ -6924,26 +6932,25 @@
                             2.3030306319509153
                         ]
                     },
-                    "vneseneIzgube": {
+                    "obnovljivaEnergija": {
                         "ogrevanje": [
-                            1379.147306513585,
-                            887.6698977088977,
-                            512.5369791275906,
-                            206.27900291045944,
-                            35.34420865310225,
+                            865.8682641773431,
+                            566.6155096081966,
+                            342.78071569262676,
+                            142.77543146538432,
+                            25.1112696320889,
                             0,
                             0,
                             0,
-                            34.89009365819562,
-                            271.18145454131366,
-                            915.7445595175474,
-                            1383.4377052925347
+                            24.690813280326445,
+                            188.716509200916,
+                            612.8641156549472,
+                            893.0925476502772
                         ]
                     },
-                    "podnebje": "celinsko",
-                    "nazivnaMoc": 6,
-                    "elektricnaMocNaPrimarnemKrogu": 6,
-                    "elektricnaMocNaSekundarnemKrogu": 3,
+                    "vracljiveIzgube": [],
+                    "vracljiveIzgubeTSV": [],
+                    "vracljiveIzgubeAux": [],
                     "porociloNizi": [
                         {
                             "naziv": "E<sub>TČ<\/sub>",
@@ -6987,7 +6994,27 @@
                             "enota": "W",
                             "decimalke": 1
                         }
-                    ]
+                    ],
+                    "vneseneIzgube": {
+                        "ogrevanje": [
+                            1379.147306513585,
+                            887.6698977088977,
+                            512.5369791275906,
+                            206.27900291045944,
+                            35.34420865310225,
+                            0,
+                            0,
+                            0,
+                            34.89009365819562,
+                            271.18145454131366,
+                            915.7445595175474,
+                            1383.4377052925347
+                        ]
+                    },
+                    "podnebje": "celinsko",
+                    "nazivnaMoc": 6,
+                    "elektricnaMocNaPrimarnemKrogu": 6,
+                    "elektricnaMocNaSekundarnemKrogu": 3
                 }
             ]
         },
