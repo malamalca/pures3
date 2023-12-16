@@ -9,17 +9,31 @@ use App\Lib\CalcKonstrukcije;
 class KonstrukcijeController
 {
     /**
+     * Prikaz seznama
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
+    public function index($projectId)
+    {
+        $ntKonsArray = App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'netransparentne');
+
+        App::set('konstrukcije', $ntKonsArray);
+        App::set('projectId', $projectId);
+    }
+
+    /**
      * Prikaz podatkov o konstrukciji
      *
-     * @param string $projectName Building name
+     * @param string $projectId Building name
      * @param string $konsId Konstruction id
      * @return void
      */
-    public function view($projectName, $konsId)
+    public function view($projectId, $konsId)
     {
-        App::set('okolje', App::loadProjectCalculation('Pures', $projectName, 'okolje'));
+        App::set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
 
-        $ntKonsArray = App::loadProjectCalculation('Pures', $projectName, 'konstrukcije' . DS . 'netransparentne');
+        $ntKonsArray = App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'netransparentne');
         $kons = array_first($ntKonsArray, fn($item) => $item->id == $konsId);
 
         if (empty($kons)) {

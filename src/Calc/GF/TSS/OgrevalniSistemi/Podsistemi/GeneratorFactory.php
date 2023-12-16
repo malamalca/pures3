@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi;
 
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Kotel;
-//use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZemljaVoda;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZrakVoda;
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaPodpostaja;
 
 class GeneratorFactory
 {
@@ -22,8 +22,8 @@ class GeneratorFactory
             case 'TC_zrakvoda':
             case 'TC_zrakvodaTSV':
                 return new ToplotnaCrpalkaZrakVoda($options);
-            //case 'TC_zemljavoda':
-            //    return new ToplotnaCrpalkaZemljaVoda($options);
+            case 'toplotnaPodpostaja':
+                return new ToplotnaPodpostaja($options);
             case 'plinskiKotel':
                 return new Kotel('PlinskiKotel', $options);
             case 'biomasa':
