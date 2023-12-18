@@ -25,7 +25,7 @@ class CalcKonstrukcije
      *
      * @param \stdClass $kons Podatki konstrukcije
      * @param \stdClass $okolje Podatki okolja
-     * @param array $options Dodatne možnosti
+     * @param array<string, mixed> $options Dodatne možnosti
      * @return \stdClass
      */
     public static function konstrukcija($kons, $okolje, $options = [])
@@ -412,7 +412,7 @@ class CalcKonstrukcije
      * da ni linearen ampak da poteka po liniji kondenzacijskih ravnin.
      *
      * @param \stdClass $kons Podatki konstrukcije
-     * @param array $kondRavnine Kondenzacijske ravnine
+     * @param array<mixed> $kondRavnine Kondenzacijske ravnine
      * @param int $mesec Številka meseca 0..11
      * @return void
      */
@@ -464,7 +464,7 @@ class CalcKonstrukcije
      *
      * @param \stdClass $kons Podatki konstrukcije
      * @param \stdClass $okolje Podatki okolja
-     * @param array $options Dodatne možnosti
+     * @param array<string, mixed> $options Dodatne možnosti
      * @return \stdClass
      */
     public static function transparentne($kons, $okolje, $options = [])
@@ -506,7 +506,7 @@ class CalcKonstrukcije
     /**
      * Graf s podatki o konstrukciji
      *
-     * @param array $data Podatki za graf
+     * @param array<string, mixed> $data Podatki za graf
      * @return string|false
      */
     public static function graf($data)

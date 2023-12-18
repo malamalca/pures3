@@ -416,15 +416,6 @@ class Cona
     }
 
     /**
-     * Izračun faktorjev Htr, Hgr,
-     *
-     * @return void
-     */
-    public function izracunFaktorjaH()
-    {
-    }
-
-    /**
      * Izračun faktorja izkoristka za ogrevanje
      *
      * @return void

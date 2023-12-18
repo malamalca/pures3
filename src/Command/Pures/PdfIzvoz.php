@@ -62,7 +62,7 @@ class PdfIzvoz extends Command
         $energentiSistema = [];
         if ($tssOgrevanje) {
             foreach ($tssOgrevanje as $sistem) {
-                /** @var \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem */
+                /** @var \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem */
                 if (isset($sistem->ogrevanje)) {
                     $vgrajeniSistemi[] = 'ogrevanje';
                     foreach ($sistem->energijaPoEnergentih as $energent => $energija) {

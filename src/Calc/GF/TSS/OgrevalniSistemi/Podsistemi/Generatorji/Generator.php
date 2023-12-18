@@ -43,7 +43,7 @@ abstract class Generator extends TSSInterface
      * Analiza podsistema
      *
      * @param array $toplotneIzgube Potrebna energija predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
@@ -66,7 +66,7 @@ abstract class Generator extends TSSInterface
      * Izračun potrebne energije
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
@@ -78,7 +78,7 @@ abstract class Generator extends TSSInterface
      * Izračun potrebne električne energije
      *
      * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
@@ -90,7 +90,7 @@ abstract class Generator extends TSSInterface
      * Uporabljena obnovljiva energija iz okolja
      *
      * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun

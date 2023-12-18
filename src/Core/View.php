@@ -8,20 +8,20 @@ class View
     public string $area = 'Pures';
 
     /**
-     * @var array $_vars
+     * @var array<string, mixed> $_vars
      */
     private $_vars = null;
 
     /**
-     * @var array $_options
+     * @var array<string, mixed> $_options
      */
     private $_options = null;
 
     /**
      * Constructor
      *
-     * @param array $vars Passed variables
-     * @param array $options Passed options
+     * @param array<string, mixed> $vars Passed variables
+     * @param array<string, mixed> $options Passed options
      */
     public function __construct(?array $vars = null, ?array $options = null)
     {
@@ -88,7 +88,7 @@ class View
     /**
      * Set variable for view render
      *
-     * @param string|array $varName Variable name or array with variables
+     * @param string|array<string, mixed> $varName Variable name or array with variables
      * @param mixed $varValue Variable value
      * @return void
      */

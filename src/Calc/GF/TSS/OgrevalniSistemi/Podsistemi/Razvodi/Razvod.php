@@ -68,7 +68,7 @@ abstract class Razvod extends TSSInterface
      * Izračun toplotnih izgub končnega prenosnika
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
@@ -80,7 +80,7 @@ abstract class Razvod extends TSSInterface
      * Izračun potrebne električne energije
      *
      * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun

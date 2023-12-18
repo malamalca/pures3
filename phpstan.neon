@@ -2,8 +2,10 @@ parameters:
     level: 7
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+    excludePaths:
+        analyse:
+            - src/Lib/EvalMath.php
+            - src/Lib/EvalMathStack.php
     bootstrapFiles:
         - config/paths.php
         - config/funcs.php
-    excludePaths:
-        - src/Calc/TSS/OgrevalniSistemi/Podsistemi/Generatorji/ToplotnaCrpalkaZemljaVoda.php

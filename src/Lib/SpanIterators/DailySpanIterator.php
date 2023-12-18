@@ -8,6 +8,9 @@ namespace App\Lib\SpanIterators;
  */
 class DailySpanIterator implements \Iterator
 {
+    /**
+     * @var array<int> $months
+     */
     private array $months = [0];
     private int $count = 1;
     private int $index = 0;

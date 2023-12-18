@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem;
 
 abstract class TSSInterface
 {
@@ -24,13 +24,13 @@ abstract class TSSInterface
      * Analiza podsistema
      *
      * @param array $toplotneIzgube Potrebna energija predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
-    abstract public function analiza($toplotneIzgube, OgrevalniSistem $sistem, $cona, $okolje, $params = []);
+    abstract public function analiza($toplotneIzgube, OHTSistem $sistem, $cona, $okolje, $params = []);
 
     /**
      * Export v json

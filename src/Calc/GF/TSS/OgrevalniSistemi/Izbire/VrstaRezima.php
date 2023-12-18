@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Izbire;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
 enum VrstaRezima: string
@@ -29,13 +29,13 @@ enum VrstaRezima: string
     /**
      * Vrne srednjo temperaturo režima
      *
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @return float
      */
     public function srednjaTemperatura($sistem)
     {
         if (
-            $sistem instanceof ToplovodniOgrevalniSistem ||
+            $sistem instanceof ToplovodniOHTSistem ||
             $sistem->energent == TSSVrstaEnergenta::Elektrika
         ) {
             // za ploskovno | toplovodno+elektrika
@@ -73,7 +73,7 @@ enum VrstaRezima: string
     /**
      * ΔθHK – temperaturna razlika pri standardnem temperaturnem režimu ogrevalnega sistema [°C]
      *
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @return int
      */
     public function temperaturnaRazlikaStandardnegaRezima($sistem)
@@ -81,7 +81,7 @@ enum VrstaRezima: string
         $deltaTHKLookup = [[5, 10], [10, 15], [10, 15]];
 
         if (
-            $sistem instanceof ToplovodniOgrevalniSistem ||
+            $sistem instanceof ToplovodniOHTSistem ||
             $sistem->energent == TSSVrstaEnergenta::Elektrika
         ) {
             $deltaT_HK = $deltaTHKLookup[$this->getOrdinal()][0];

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaNamestitve;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaRegulacijeTemperature;
 use App\Lib\Calc;
 
@@ -11,7 +10,7 @@ class ElektricnoOgrevalo extends KoncniPrenosnik
 {
     public string $vrsta = 'Električna ogrevala';
 
-    protected VrstaNamestitve $namestitev;
+    /*protected VrstaNamestitve $namestitev;*/
     protected VrstaRegulacijeTemperature $regulacija;
 
     /**
@@ -32,7 +31,7 @@ class ElektricnoOgrevalo extends KoncniPrenosnik
      * Izračun toplotnih izgub končnega prenosnika
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki
      * @param array $params Dodatni parametri za izračun
@@ -48,5 +47,24 @@ class ElektricnoOgrevalo extends KoncniPrenosnik
         }
 
         return $this->toplotneIzgube;
+    }
+
+    /**
+     * Uporabljena obnovljiva energija iz okolja
+     *
+     * @param array $vneseneIzgube Vnesene izgube
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @param array $params Dodatni parametri za izračun
+     * @return array
+     */
+    public function vracljiveIzgubeAux($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    {
+        foreach (array_keys(Calc::MESECI) as $mesec) {
+            $this->vracljiveIzgubeAux[$mesec] = 0;
+        }
+
+        return $this->vracljiveIzgubeAux;
     }
 }

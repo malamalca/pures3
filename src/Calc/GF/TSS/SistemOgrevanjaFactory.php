@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\LokalniOgrevalniSistemNaBiomaso;
-use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\LokalniOHTSistemNaBiomaso;
+use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
 
 class SistemOgrevanjaFactory
 {
@@ -13,15 +13,15 @@ class SistemOgrevanjaFactory
      *
      * @param string $type Tip sistema
      * @param \stdClass|null $options Dodatne nastavitve
-     * @return \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem|null
+     * @return \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem|null
      */
     public static function create($type, $options)
     {
         if ($type == 'toplovodni') {
-            return new ToplovodniOgrevalniSistem($options);
+            return new ToplovodniOHTSistem($options);
         }
         if ($type == 'lokalniBiomasa') {
-            return new LokalniOgrevalniSistemNaBiomaso($options);
+            return new LokalniOHTSistemNaBiomaso($options);
         }
 
         return null;

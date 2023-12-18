@@ -44,11 +44,11 @@ enum VrstaRegulacijeTemperature: string
     public function deltaTElektricnoOgrevalo()
     {
         if ($this == VrstaRegulacijeTemperature::P_krmilnik) {
-            return 1.1;
+            return 1.5;
         }
 
         if ($this == VrstaRegulacijeTemperature::PI_krmilnik) {
-            return 0.7;
+            return 1.1;
         }
 
         throw new \Exception(sprintf('Regulacija "%s" za električno ogrevalo ni podprta', $this->toString()));

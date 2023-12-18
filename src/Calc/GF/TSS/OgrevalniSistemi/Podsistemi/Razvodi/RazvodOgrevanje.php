@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\LokalniOgrevalniSistemNaBiomaso;
+use App\Calc\GF\TSS\OgrevalniSistemi\LokalniOHTSistemNaBiomaso;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\RazvodAbstractProperties;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaNamenaCevi;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
-use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
 use App\Core\Configure;
 use App\Lib\Calc;
 
@@ -64,24 +64,24 @@ abstract class RazvodOgrevanje extends Razvod
     /**
      * Analiza podsistema
      *
-     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param array $toplotneIzgube Toplotne izgube predhodnih TSS
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
-    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    public function analiza($toplotneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
-        $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->toplotneIzgube($toplotneIzgube, $sistem, $cona, $okolje, $params);
+        $this->potrebnaElektricnaEnergija($toplotneIzgube, $sistem, $cona, $okolje, $params);
     }
 
     /**
      * Izračun toplotnih izgub končnega prenosnika
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
@@ -144,7 +144,7 @@ abstract class RazvodOgrevanje extends Razvod
      * Izračun potrebne električne energije
      *
      * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
@@ -199,8 +199,8 @@ abstract class RazvodOgrevanje extends Razvod
                 $potrebnaElektricnaEnergija[$mesec] = 0;
 
                 if (
-                    ($sistem instanceof ToplovodniOgrevalniSistem) ||
-                    ($sistem instanceof LokalniOgrevalniSistemNaBiomaso)
+                    ($sistem instanceof ToplovodniOHTSistem) ||
+                    ($sistem instanceof LokalniOHTSistemNaBiomaso)
                 ) {
                     if ($betaI > 0) {
                         // tabela je del enačbe (68)
@@ -275,7 +275,7 @@ abstract class RazvodOgrevanje extends Razvod
      *
      * @param \App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik Podatki prenosnika
      * @param \App\Calc\GF\TSS\OgrevalniSistemi\Izbire\VrstaRezima|null $rezim Podatki režima
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @return float
      */

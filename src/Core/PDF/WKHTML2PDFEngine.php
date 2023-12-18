@@ -10,10 +10,13 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
     /**
      * PDF options
      *
-     * @var array
+     * @var array<mixed> $_localOptions
      */
     private array $_localOptions = [];
 
+    /**
+     * @var array<mixed> $_defaultOptions
+     */
     private array $_defaultOptions = [
         'binary' => 'C:\bin\wkhtmltopdf\bin\wkhtmltopdf.exe',
         'enable-local-file-access',
@@ -32,12 +35,15 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
         //'user-style-sheet' => WWW_ROOT . 'css' . DS . 'main.css',
     ];
 
+    /**
+     * @var array<string> $_tempFiles
+     */
     private array $_tempFiles = [];
 
     /**
      * __construct
      *
-     * @param array $enigneOptions Array of options.
+     * @param array<mixed> $enigneOptions Array of options.
      * @return void
      */
     public function __construct($enigneOptions)
@@ -89,7 +95,7 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
      * Add page with html contents
      *
      * @param string $html Html page content.
-     * @param array $options Page options.
+     * @param array<mixed> $options Page options.
      * @return void
      */
     public function newPage($html, $options = [])
@@ -194,7 +200,7 @@ class WKHTML2PDFEngine extends Pdf implements PdfEngineInterface
     /**
      * Get/set options.
      *
-     * @param array $values Options values.
+     * @param array<mixed> $values Options values.
      * @return mixed
      */
     public function options($values = null)

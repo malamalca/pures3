@@ -6,7 +6,7 @@ use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCev
 use App\Calc\GF\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\DvocevniRazvod;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
-use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOgrevalniSistem;
+use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
 
 final class DvocevniRazvodTest extends TestCase
 {
@@ -55,7 +55,7 @@ final class DvocevniRazvodTest extends TestCase
             "rezim": "40/30"
         }
         EOT;
-        $sistem = new ToplovodniOgrevalniSistem($configSistem);
+        $sistem = new ToplovodniOHTSistem($configSistem);
         $sistem->standardnaMoc = 5.0179966123288615;
 
         $configPrenosnika = <<<EOT
@@ -163,7 +163,7 @@ final class DvocevniRazvodTest extends TestCase
             "energent": "elektrika"
         }
         EOT;
-        $sistem = new ToplovodniOgrevalniSistem($configSistem);
+        $sistem = new ToplovodniOHTSistem($configSistem);
         $sistem->init($cona, $okolje);
 
         $configPrenosnika = <<<EOT
@@ -234,7 +234,7 @@ final class DvocevniRazvodTest extends TestCase
             "rezim": "40/30"
         }
         EOT;
-        $sistem = new ToplovodniOgrevalniSistem($configSistem);
+        $sistem = new ToplovodniOHTSistem($configSistem);
         $sistem->init($cona, $okolje);
 
         $configPrenosnika = <<<EOT

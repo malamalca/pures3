@@ -43,7 +43,7 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
      * Izračun toplotnih izgub končnega prenosnika
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki
      * @param array $params Dodatni parametri za izračun

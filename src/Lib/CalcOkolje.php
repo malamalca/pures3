@@ -126,8 +126,8 @@ class CalcOkolje
     /**
      * Izračun parametrov notranjega okolja glede na zunanjo temperaturo
      *
-     * @param array<string, array> $params Fiksni parametri. Min zahteva je "zunanjaT" in "zunanjaVlaga"
-     * @param array $options Options to set
+     * @param array<string, mixed> $params Fiksni parametri. Min zahteva je "zunanjaT" in "zunanjaVlaga"
+     * @param array<string, mixed> $options Options to set
      * @return \stdClass
      */
     public static function notranjeOkolje($params, $options = [])

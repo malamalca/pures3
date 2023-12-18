@@ -70,25 +70,25 @@ abstract class KoncniPrenosnik extends TSSInterface
     /**
      * Analiza podsistema
      *
-     * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param array $toplotneIzgube Toplotne izgube predhodnih TSS
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
-    public function analiza($potrebnaEnergija, $sistem, $cona, $okolje, $params = [])
+    public function analiza($toplotneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $this->toplotneIzgube($potrebnaEnergija, $sistem, $cona, $okolje, $params);
-        $this->potrebnaElektricnaEnergija($potrebnaEnergija, $sistem, $cona, $okolje, $params);
-        $this->vracljiveIzgubeAux($potrebnaEnergija, $sistem, $cona, $okolje, $params);
+        $this->toplotneIzgube($toplotneIzgube, $sistem, $cona, $okolje, $params);
+        $this->potrebnaElektricnaEnergija($toplotneIzgube, $sistem, $cona, $okolje, $params);
+        $this->vracljiveIzgubeAux($toplotneIzgube, $sistem, $cona, $okolje, $params);
     }
 
     /**
      * Izračun toplotnih izgub
      *
      * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki cone
      * @param array $params Dodatni parametri za izračun
@@ -100,7 +100,7 @@ abstract class KoncniPrenosnik extends TSSInterface
      * Izračun potrebne električne energije
      *
      * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
@@ -128,7 +128,7 @@ abstract class KoncniPrenosnik extends TSSInterface
      * Uporabljena obnovljiva energija iz okolja
      *
      * @param array $vneseneIzgube Vnesene izgube
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OgrevalniSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
