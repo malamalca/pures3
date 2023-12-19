@@ -39,10 +39,10 @@
             <th>Naziv</th>
             <th class="center">d<br />[m]</th>
             <th class="center w-10">&lambda;<br />[W/mK]</th>
-            <th class="center w-10">&rho;<br />[kg/m<sup>3</sup>]</th>
+            <th class="center w-10">&rho;<br />[kg/m³]</th>
             <th class="center w-10">c<sub>p</sub><br />[J/kg K]</th>
             <th class="center w-10">&mu;<br />[-]</th>
-            <th class="center w-10">R<br />[m<sup>2</sup>K/W]</th>
+            <th class="center w-10">R<br />[m²K/W]</th>
             <th class="center w-10">s<sub>d</sub><br />[m]</th>
         </tr>
     </thead>
@@ -137,13 +137,13 @@
                 <th></th>
                 <th class="right">d<br />[cm]</th>
                 <th class="right w-10">&lambda;<br />[W/mK]</th>
-                <th class="right w-10">R [m<sup>2</sup>K/W]</th>
+                <th class="right w-10">R [m²3K/W]</th>
                 <th class="right w-10">s<sub>d</sub><br />[m]</th>
                 <th class="right w-10">T<br />[°C]</th>
                 <th class="right w-10">p<sub>dej</sub><br />[Pa]</th>
                 <th class="right w-10">p<sub>nas</sub><br />[Pa]</th>
-                <th class="right w-10">g<sub>c</sub><br />[g/m<sup>2</sup> m]</th>
-                <th class="right w-10">M<sub>a</sub><br />[g/m<sup>2</sup>]</th>
+                <th class="right w-10">g<sub>c</sub><br />[g/m² m]</th>
+                <th class="right w-10">M<sub>a</sub><br />[g/m²]</th>
             </tr>
         </thead>
         <tr>

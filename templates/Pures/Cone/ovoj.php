@@ -199,7 +199,7 @@
     <tr><td colspan="<?= ($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
     <tr>
-        <th colspan="3">Dobitki sončnega obsevanja Qsol,m (kWh/m)</th>
+        <th colspan="3">Dobitki sončnega obsevanja Q<sub>sol,m</sub> (kWh/m)</th>
         <th>št. dni</th>
         <th colspan="<?= $stElementov ?>">OGREVANJE</th>
         <?php
@@ -233,7 +233,7 @@
     <tr><td colspan="<?=($jeZadnjaGrupa ? 5 : 4) + $stElementov ?>">&nbsp;</td></tr>
 
     <tr>
-        <th colspan="3">Dobitki sončnega obsevanja Qsol,m (kWh/m)</th>
+        <th colspan="3">Dobitki sončnega obsevanja Q<sub>sol,m</sub> (kWh/m)</th>
         <th>št. dni</td>
         <th colspan="<?= $stElementov ?>">HLAJENJE</th>
         <?php
