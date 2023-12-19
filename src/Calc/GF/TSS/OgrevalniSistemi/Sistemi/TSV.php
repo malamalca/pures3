@@ -6,6 +6,7 @@ namespace App\Calc\GF\TSS\OgrevalniSistemi\Sistemi;
 use App\Calc\GF\TSS\OgrevalniSistemi\Izbire\VrstaRezima;
 use App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem;
 use App\Calc\GF\TSS\TSSInterface;
+use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
 class TSV extends TSSInterface
 {
@@ -22,6 +23,7 @@ class TSV extends TSSInterface
     public array $hranilniki = [];
     public array $generatorji = [];
 
+    public array $energijaPoEnergentih = [];
     public array $potrebnaEnergija = [];
     public array $vracljiveIzgubeVOgrevanje = [];
 
@@ -157,5 +159,31 @@ class TSV extends TSSInterface
             fn($e) => $e / $sistem->energent->maksimalniIzkoristek(),
             $this->potrebnaEnergija
         );
+
+        $dejanskaEnergija = array_subtract_values($this->potrebnaEnergija, $this->obnovljivaEnergija);
+        $this->energijaPoEnergentih[$sistem->energent->value] = array_sum($dejanskaEnergija);
+
+        $elektricnaEnergija = array_sum($this->potrebnaElektricnaEnergija);
+        if (count($this->potrebnaElektricnaEnergija) > 0 && $elektricnaEnergija != 0) {
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = $elektricnaEnergija;
+        }
+
+        $obnovljivaEnergija = array_sum($this->obnovljivaEnergija);
+        if (count($this->obnovljivaEnergija) > 0 && $obnovljivaEnergija != 0) {
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] = $obnovljivaEnergija;
+        }
+    }
+
+    /**
+     * Export v json
+     *
+     * @return \stdClass
+     */
+    public function export()
+    {
+        $sistem = parent::export();
+        $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
+
+        return $sistem;
     }
 }

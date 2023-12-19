@@ -45,15 +45,11 @@ abstract class OHTSistem
     public array $potrebnaElektricnaEnergija = [];
     public array $obnovljivaEnergija = [];
     public array $vracljiveIzgube = [];
+    public array $energijaPoEnergentih = [];
 
     public ?Ogrevanje $ogrevanje;
     public ?TSV $tsv;
     public ?\stdClass $hlajenje;
-
-    public array $energijaPoEnergentih = [];
-    public array $energijaPoEnergentihOgrevanje = [];
-    public array $energijaPoEnergentihTSV = [];
-    public array $energijaPoEnergentihHlajenje = [];
 
     // array namenjen da se vnaša vračljiva energija iz drugih sistemov
     public array $vracljiveIzgubeVOgrevanje = [];
@@ -159,17 +155,7 @@ abstract class OHTSistem
     {
         $this->init($cona, $okolje);
 
-        $energijaPoEnergentihTemplate = [];
-        $energijaPoEnergentihTemplate[TSSVrstaEnergenta::Elektrika->value] = 0;
-        $energijaPoEnergentihTemplate[TSSVrstaEnergenta::Okolje->value] = 0;
-        if ($this->energent != TSSVrstaEnergenta::Elektrika) {
-            $energijaPoEnergentihTemplate[$this->energent->value] = 0;
-        }
-
-        $this->energijaPoEnergentih = $energijaPoEnergentihTemplate;
-        $this->energijaPoEnergentihOgrevanje = $energijaPoEnergentihTemplate;
-        $this->energijaPoEnergentihTSV = $energijaPoEnergentihTemplate;
-        $this->energijaPoEnergentihHlajenje = $energijaPoEnergentihTemplate;
+        $this->energijaPoEnergentih = [];
 
         $this->potrebnaEnergija = [];
         $this->potrebnaElektricnaEnergija = [];
@@ -199,19 +185,12 @@ abstract class OHTSistem
             $dejanskaEnergija =
                 array_subtract_values($this->tsv->potrebnaEnergija, $this->tsv->obnovljivaEnergija);
 
-            $this->energijaPoEnergentihTSV[$this->energent->value] +=
-                array_sum($dejanskaEnergija);
-            $this->energijaPoEnergentihTSV[TSSVrstaEnergenta::Elektrika->value] +=
-                array_sum($this->tsv->potrebnaElektricnaEnergija);
-            $this->energijaPoEnergentihTSV[TSSVrstaEnergenta::Okolje->value] +=
-                array_sum($this->tsv->obnovljivaEnergija);
-
-            $this->energijaPoEnergentih[$this->energent->value] +=
-                array_sum($dejanskaEnergija);
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
-                array_sum($this->tsv->potrebnaElektricnaEnergija);
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] +=
-                array_sum($this->tsv->obnovljivaEnergija);
+            foreach ($this->tsv->energijaPoEnergentih as $energentId => $energija) {
+                if ($energija != 0) {
+                    $this->energijaPoEnergentih[$energentId] =
+                        ($this->energijaPoEnergentih[$energentId] ?? 0) + $energija;
+                }
+            }
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=
                 array_sum($dejanskaEnergija) * $this->energent->utezniFaktor('tot') +
@@ -238,19 +217,12 @@ abstract class OHTSistem
             $dejanskaEnergija =
                 array_subtract_values($this->ogrevanje->potrebnaEnergija, $this->ogrevanje->obnovljivaEnergija);
 
-            $this->energijaPoEnergentih[$this->energent->value] +=
-                array_sum($dejanskaEnergija);
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] +=
-                array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] +=
-                array_sum($this->ogrevanje->obnovljivaEnergija);
-
-            $this->energijaPoEnergentihOgrevanje[$this->energent->value] +=
-                array_sum($dejanskaEnergija);
-            $this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Elektrika->value] +=
-                array_sum($this->ogrevanje->potrebnaElektricnaEnergija);
-            $this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Okolje->value] +=
-                array_sum($this->ogrevanje->obnovljivaEnergija);
+            foreach ($this->ogrevanje->energijaPoEnergentih as $energentId => $energija) {
+                if ($energija != 0) {
+                    $this->energijaPoEnergentih[$energentId] =
+                        ($this->energijaPoEnergentih[$energentId] ?? 0) + $energija;
+                }
+            }
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=
                 array_sum($dejanskaEnergija) * $this->energent->utezniFaktor('tot') +
@@ -258,19 +230,6 @@ abstract class OHTSistem
                 TSSVrstaEnergenta::Elektrika->utezniFaktor('tot') +
                 array_sum($this->ogrevanje->obnovljivaEnergija) * TSSVrstaEnergenta::Okolje->utezniFaktor('tot');
         }
-
-        if ($this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] == 0) {
-            unset($this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value]);
-        }
-        if ($this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Okolje->value] == 0) {
-            unset($this->energijaPoEnergentihOgrevanje[TSSVrstaEnergenta::Okolje->value]);
-        }
-        if ($this->energijaPoEnergentihTSV[TSSVrstaEnergenta::Okolje->value] == 0) {
-            unset($this->energijaPoEnergentihTSV[TSSVrstaEnergenta::Okolje->value]);
-        }
-        /*if ($this->energijaPoEnergentihHlajenje[TSSVrstaEnergenta::Okolje->value] == 0) {
-            unset($this->energijaPoEnergentihHlajenje[TSSVrstaEnergenta::Okolje->value]);
-        }*/
 
         if ($utezenaDovedenaEnergijaOgrHlaTsv > 0) {
             $this->letnaUcinkovitostOgrHlaTsv = $skupnaDovedenaEnergijaOgrHlaTsv / $utezenaDovedenaEnergijaOgrHlaTsv;
@@ -300,9 +259,6 @@ abstract class OHTSistem
         $sistem->vracljiveIzgube = $this->vracljiveIzgube;
 
         $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
-        $sistem->energijaPoEnergentihOgrevanje = $this->energijaPoEnergentihOgrevanje;
-        $sistem->energijaPoEnergentihTSV = $this->energijaPoEnergentihTSV;
-        $sistem->energijaPoEnergentihHlajenje = $this->energijaPoEnergentihHlajenje;
 
         $sistem->letnaUcinkovitostOgrHlaTsv = $this->letnaUcinkovitostOgrHlaTsv;
         $sistem->minLetnaUcinkovitostOgrHlaTsv = $this->minLetnaUcinkovitostOgrHlaTsv;

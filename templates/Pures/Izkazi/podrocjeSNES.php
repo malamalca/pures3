@@ -193,7 +193,7 @@ za področje TSS</h1>
     <?php
         $i = 1;
         foreach ($sistemiOgrevanja as $sistem) {
-            if (isset($sistem->energijaPoEnergentihOgrevanje)) {
+            if (isset($sistem->ogrevanje->energijaPoEnergentih)) {
     ?>
 
     <tr>
@@ -201,7 +201,7 @@ za področje TSS</h1>
         <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
         <td class="w-10 center">vrsta</td>
         <?php
-            foreach ($sistem->energijaPoEnergentihOgrevanje as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->ogrevanje->energijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
         <?php
@@ -212,7 +212,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-10 center">količina</td>
         <?php
-            foreach ($sistem->energijaPoEnergentihOgrevanje  as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->ogrevanje->energijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
         <?php
@@ -256,7 +256,7 @@ za področje TSS</h1>
     <?php
         $i = 1;
         foreach ($sistemiOgrevanja as $sistem) {
-            if (isset($sistem->energijaPoEnergentihTSV)) {
+            if (isset($sistem->tsv->energijaPoEnergentih)) {
     ?>
 
     <tr>
@@ -264,7 +264,7 @@ za področje TSS</h1>
         <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
         <td class="w-10 center">vrsta</td>
         <?php
-            foreach ($sistem->energijaPoEnergentihTSV as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->tsv->energijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
         <?php
@@ -275,7 +275,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-10 center">količina</td>
         <?php
-            foreach ($sistem->energijaPoEnergentihTSV  as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->tsv->energijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
         <?php
