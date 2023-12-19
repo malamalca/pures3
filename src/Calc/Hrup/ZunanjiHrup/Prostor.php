@@ -104,10 +104,10 @@ class Prostor
     /**
      * Glavna funkcija za analizo cone
      *
-     * @param \stdClass $splosniPodatki Splošni podatki
+     * @param \stdClass|null $splosniPodatki Splošni podatki
      * @return void
      */
-    public function analiza($splosniPodatki)
+    public function analiza($splosniPodatki = null)
     {
         Log::info(sprintf('"%s": Začetek analize zunanjega hrupa - prostor', $this->id));
 

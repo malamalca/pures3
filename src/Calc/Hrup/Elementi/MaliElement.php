@@ -5,17 +5,14 @@ namespace App\Calc\Hrup\Elementi;
 
 use App\Lib\EvalMath;
 
-class OknaVrata
+class MaliElement
 {
     public string $id;
     public string $naziv;
     public string $tip = 'vertikalna';
-    public bool $tsgDeltaR = true;
-    public string $vrsta;
     public float $Rw = 0;
     public float $C = 0;
     public float $Ctr = 0;
-    public ?float $dR;
 
     public array $options = [];
 
@@ -64,15 +61,6 @@ class OknaVrata
                 $this->{$prop->getName()} = $configValue;
             }
         }
-
-        if (!isset($this->dR)) {
-            if ($this->vrsta == 'okno') {
-                $this->dR = -2;
-            }
-            if ($this->vrsta == 'vrata') {
-                $this->dR = -5;
-            }
-        }
     }
 
     /**
@@ -91,16 +79,16 @@ class OknaVrata
      */
     public function export()
     {
-        $oknaVrata = new \stdClass();
+        $maliElement = new \stdClass();
 
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             if ($prop->isInitialized($this)) {
-                $oknaVrata->{$prop->getName()} = $prop->getValue($this);
+                $maliElement->{$prop->getName()} = $prop->getValue($this);
             }
         }
 
-        return $oknaVrata;
+        return $maliElement;
     }
 }

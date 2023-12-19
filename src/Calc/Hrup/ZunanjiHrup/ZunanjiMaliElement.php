@@ -1,34 +1,44 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Calc\Hrup\Elementi;
+namespace App\Calc\Hrup\ZunanjiHrup;
 
+use App\Calc\Hrup\Elementi\MaliElement;
 use App\Lib\EvalMath;
 
-class OknaVrata
+class ZunanjiMaliElement
 {
-    public string $id;
-    public string $naziv;
-    public string $tip = 'vertikalna';
-    public bool $tsgDeltaR = true;
-    public string $vrsta;
+    public string $idMaliElement;
+    public float $povrsina = 0;
+    public ?float $dolzina;
+    public int $stevilo = 1;
     public float $Rw = 0;
     public float $C = 0;
     public float $Ctr = 0;
-    public ?float $dR;
 
-    public array $options = [];
+    private array $options = [];
+
+    /**
+     * @var \App\Calc\Hrup\Elementi\MaliElement $maliElement
+     */
+    private MaliElement $maliElement;
 
     /**
      * Class Constructor
      *
-     * @param \stdClass|null $config Konstrukcija iz knjižnice
+     * @param \App\Calc\Hrup\Elementi\MaliElement $maliElement Konstrukcija iz knjižnice
+     * @param \stdClass|string $config Configuration
      * @param array $options Možnosti izračuna
      * @return void
      */
-    public function __construct($config = null, $options = [])
+    public function __construct($maliElement, $config = null, $options = [])
     {
         $this->options = $options;
+        $this->maliElement = $maliElement;
+
+        $this->Rw = $this->maliElement->Rw;
+        $this->C = $this->maliElement->C;
+        $this->Ctr = $this->maliElement->Ctr;
 
         if ($config) {
             $this->parseConfig($config);
@@ -64,15 +74,6 @@ class OknaVrata
                 $this->{$prop->getName()} = $configValue;
             }
         }
-
-        if (!isset($this->dR)) {
-            if ($this->vrsta == 'okno') {
-                $this->dR = -2;
-            }
-            if ($this->vrsta == 'vrata') {
-                $this->dR = -5;
-            }
-        }
     }
 
     /**
@@ -82,6 +83,9 @@ class OknaVrata
      */
     public function analiza()
     {
+        if (!empty($this->dolzina)) {
+            $this->Rw += round(-10 * log10($this->dolzina), 0);
+        }
     }
 
     /**

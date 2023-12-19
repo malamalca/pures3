@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\Hrup\ZunanjiHrup;
 
 use App\Calc\Hrup\Elementi\Konstrukcija;
+use App\Calc\Hrup\Elementi\MaliElement;
 use App\Calc\Hrup\Elementi\OknaVrata;
 use App\Calc\Hrup\ZunanjiHrup\Izbire\KoeficientStropa;
 use App\Calc\Hrup\ZunanjiHrup\Izbire\OblikaFasade;
@@ -13,7 +14,7 @@ use App\Lib\EvalMath;
 class Fasada
 {
     public float $Rw = 0;
-    public float $deltaL_fasada = 0;
+    public ?float $deltaL_fasada;
     public float $povrsina = 0;
     public bool $vplivPrometa = false;
 
@@ -23,7 +24,7 @@ class Fasada
 
     public array $konstrukcije = [];
     public array $oknaVrata = [];
-    private array $maliElementi = [];
+    public array $maliElementi = [];
     private array $options;
 
     private \stdClass $konstrukcijeLib;
@@ -67,40 +68,63 @@ class Fasada
         foreach ($props as $prop) {
             switch ($prop->getName()) {
                 case 'konstrukcije':
-                    foreach ($config->konstrukcije as $konstrukcijaConfig) {
-                        $libKonstrukcija = array_first(
-                            $this->konstrukcijeLib->konstrukcije,
-                            fn($kons) => $konstrukcijaConfig->idKonstrukcije == $kons->id
-                        );
-                        if (!$libKonstrukcija) {
-                            throw new \Exception(sprintf(
-                                'Konstrukcija "%s" v knjižnici ne obstaja.',
-                                $konstrukcijaConfig->idKonstrukcije
-                            ));
+                    if (isset($config->konstrukcije)) {
+                        foreach ($config->konstrukcije as $konstrukcijaConfig) {
+                            $libKonstrukcija = array_first(
+                                $this->konstrukcijeLib->konstrukcije,
+                                fn($kons) => $konstrukcijaConfig->idKonstrukcije == $kons->id
+                            );
+                            if (!$libKonstrukcija) {
+                                throw new \Exception(sprintf(
+                                    'Konstrukcija "%s" v knjižnici ne obstaja.',
+                                    $konstrukcijaConfig->idKonstrukcije
+                                ));
+                            }
+                            $konstrukcija = new ZunanjaKonstrukcija(
+                                new Konstrukcija($libKonstrukcija),
+                                $konstrukcijaConfig
+                            );
+                            $this->konstrukcije[] = $konstrukcija;
+                            $this->povrsina += $konstrukcija->povrsina * $konstrukcija->stevilo;
                         }
-                        $konstrukcija = new ZunanjaKonstrukcija(
-                            new Konstrukcija($libKonstrukcija),
-                            $konstrukcijaConfig
-                        );
-                        $this->konstrukcije[] = $konstrukcija;
-                        $this->povrsina += $konstrukcija->povrsina * $konstrukcija->stevilo;
                     }
                     break;
                 case 'oknaVrata':
-                    foreach ($config->oknaVrata as $oknaVrataConfig) {
-                        $libOknaVrata = array_first(
-                            $this->konstrukcijeLib->oknaVrata,
-                            fn($ov) => $oknaVrataConfig->idOknaVrata == $ov->id
-                        );
-                        if (!$libOknaVrata) {
-                            throw new \Exception(sprintf(
-                                'Okno ali vrata "%s" v knjižnici ne obstaja.',
-                                $oknaVrataConfig->idOknaVrata
-                            ));
+                    if (isset($config->oknaVrata)) {
+                        foreach ($config->oknaVrata as $oknaVrataConfig) {
+                            $libOknaVrata = array_first(
+                                $this->konstrukcijeLib->oknaVrata,
+                                fn($ov) => $oknaVrataConfig->idOknaVrata == $ov->id
+                            );
+                            if (!$libOknaVrata) {
+                                throw new \Exception(sprintf(
+                                    'Okno ali vrata "%s" v knjižnici ne obstaja.',
+                                    $oknaVrataConfig->idOknaVrata
+                                ));
+                            }
+                            $oknaVrata = new ZunanjaOknaVrata(new OknaVrata($libOknaVrata), $oknaVrataConfig);
+                            $this->oknaVrata[] = $oknaVrata;
+                            $this->povrsina += $oknaVrata->povrsina * $oknaVrata->stevilo;
                         }
-                        $oknaVrata = new ZunanjaOknaVrata(new OknaVrata($libOknaVrata), $oknaVrataConfig);
-                        $this->oknaVrata[] = $oknaVrata;
-                        $this->povrsina += $oknaVrata->povrsina * $oknaVrata->stevilo;
+                    }
+                    break;
+                case 'maliElementi':
+                    if (isset($config->maliElementi)) {
+                        foreach ($config->maliElementi as $maliElementConfig) {
+                            $libMaliElement = array_first(
+                                $this->konstrukcijeLib->maliElementi,
+                                fn($ml) => $maliElementConfig->idMaliElement == $ml->id
+                            );
+                            if (!$libMaliElement) {
+                                throw new \Exception(sprintf(
+                                    'Mali element "%s" v knjižnici ne obstaja.',
+                                    $maliElementConfig->idMaliElement
+                                ));
+                            }
+                            $maliElement = new ZunanjiMaliElement(new MaliElement($libMaliElement), $maliElementConfig);
+                            $this->maliElementi[] = $maliElement;
+                            $this->povrsina += $maliElement->povrsina * $maliElement->stevilo;
+                        }
                     }
                     break;
                 case 'oblikaFasade':
@@ -142,23 +166,32 @@ class Fasada
         $this->Rw = 0;
         $sumTau = 0;
         foreach ($this->konstrukcije as $konstrukcija) {
+            $konstrukcija->analiza();
             $Rw = $konstrukcija->Rw + ($this->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C);
 
             $sumTau += $konstrukcija->povrsina * $konstrukcija->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
                 $konstrukcija->stevilo;
         }
         foreach ($this->oknaVrata as $oknaVrata) {
+            $oknaVrata->analiza();
             $Rw = $oknaVrata->Rw + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);
 
             $sumTau += $oknaVrata->povrsina * $oknaVrata->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
                 $oknaVrata->stevilo;
         }
+        foreach ($this->maliElementi as $maliElement) {
+            $maliElement->analiza();
+            $Rw = $maliElement->Rw + ($this->vplivPrometa ? $maliElement->Ctr : $maliElement->C);
+
+            $sumTau += 10 / $this->povrsina * pow(10, -$Rw / 10) * $maliElement->stevilo;
+        }
 
         $this->Rw = -10 * log10($sumTau);
-        $this->deltaL_fasada = $this->oblikaFasade->faktorOblike(
+        $this->deltaL_fasada = $this->deltaL_fasada ?? $this->oblikaFasade->faktorOblike(
             $this->koeficientStropa ?? null,
             $this->visinaLinijePogleda ?? null
         );
+
         $this->Rw = $this->Rw + $this->deltaL_fasada;
     }
 
