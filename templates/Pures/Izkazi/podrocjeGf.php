@@ -5,7 +5,7 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="4">Toplotna prehodnost gradbenih konstrukcij in gradnikov ovoja stavb U (W/(m<sup>2</sup> K)):</th>
+        <th colspan="4">Toplotna prehodnost gradbenih konstrukcij in gradnikov ovoja stavb U (W/(m²K)):</th>
     </tr>
     </thead>
     <?php
@@ -14,7 +14,7 @@ za področje gradbene fizike</h1>
     ?>
     <tr>
         <td class="w-70" colspan="2"><?= h($cona->naziv) ?></td>
-        <td class="w-20 center">U<sub>op</sub>, U<sub>w</sub>, U<sub>d</sub><br />(W/(m<sup>2</sup> K))</td>
+        <td class="w-20 center">U<sub>op</sub>, U<sub>w</sub>, U<sub>d</sub><br />(W/(m²K))</td>
         <td class="w-10 center">Ustreza</td>
     </tr>
     <?php
@@ -131,14 +131,14 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="7">Specifični koeficient transmisijskih toplotnih izgub H'tr (W/(m2 K)):</th>
+        <th colspan="7">Specifični koeficient transmisijskih toplotnih izgub H'tr (W/(m²K)):</th>
     </tr>
     </thead>
     <tr>
         <td class="w-60" colspan="2">Energetska cona oziroma stavba</td>
         <td class="w-10 center">XH'tr<br />(-)</td>
-        <td class="w-10 center">H'tr<br />(W/(m2 K))</td>
-        <td class="w-10 center">H'tr,dov<br />(W/(m2 K))</td>
+        <td class="w-10 center">H'tr<br />(W/(m²K))</td>
+        <td class="w-10 center">H'tr,dov<br />(W/(m²K))</td>
         <td class="w-10 center">Ustreza</td>
     </tr>
 
@@ -387,14 +387,14 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="4">Specifična potrebna toplota za ogrevanje Q'<sub>H,nd,an</sub> (kWh/(m2an)) in specifična potrebna odvedena toplota za hlajenje Q'<sub>C,nd,an</sub> (kWh/(m2an)):</th>
+        <th colspan="4">Specifična potrebna toplota za ogrevanje Q'<sub>H,nd,an</sub> (kWh/(m²an)) in specifična potrebna odvedena toplota za hlajenje Q'<sub>C,nd,an</sub> (kWh/(m²an)):</th>
     </tr>
     </thead>
 
     <tr>
         <td class="w-60" colspan="2">energetske cone oziroma stavba</td>
-        <td class="w-20 center">Q'<sub>H,nd,an</sub><br />(kWh/m2an)</td>
-        <td class="w-20 center">Q'<sub>C,nd,an</sub><br />(kWh/m2an)</td>
+        <td class="w-20 center">Q'<sub>H,nd,an</sub><br />(kWh/m²an)</td>
+        <td class="w-20 center">Q'<sub>C,nd,an</sub><br />(kWh/m²an)</td>
     </tr>
     <tr>
         <td class="w-5 center"></td>

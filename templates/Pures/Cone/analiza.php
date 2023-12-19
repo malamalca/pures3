@@ -41,7 +41,7 @@
         </tr>
 
         <tr>
-            <td>QH,nd,zn,m; QH,nd,zn,an</td>
+            <td>Q<sub>H,nd,zn,m</sub>; Q<sub>H,nd,zn,an</sub></td>
             <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->energijaOgrevanje)) ?>
             <td class="center"><?= $this->numFormat($cona->skupnaEnergijaOgrevanje, 0) ?></td>
         </tr>
@@ -82,7 +82,7 @@
         </tr>
 
         <tr>
-            <td>QC,nd,zn,m; QC,nd,zn,an</td>
+            <td>Q<sub>C,nd,zn,m</sub>; Q<sub>C,nd,zn,an</sub></td>
             <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 1) : '') . '</td>', $cona->energijaHlajenje)) ?>
             <td class="center"><?= $this->numFormat($cona->skupnaEnergijaHlajenje, 0) ?></td>
         </tr>
@@ -105,18 +105,18 @@
         </tr>
 
         <tr>
-            <td>Navlazevanje - QHU,nd,zn</td>
+            <td>Navlazevanje - Q<sub>U,nd,zn</sub></td>
             <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->energijaNavlazevanje)) ?>
             <td class="center"><?= $this->numFormat($cona->skupnaEnergijaNavlazevanje, 0) ?></td>
         </tr>
         <tr>
-            <td>Razvlazevanje - QDHU,nd,zn</td>
+            <td>Razvlazevanje - Q<sub>DHU,nd,zn</sub></td>
             <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->energijaRazvlazevanje)) ?>
             <td class="center"><?= $this->numFormat($cona->skupnaEnergijaRazvlazevanje, 0) ?></td>
         </tr>
 
         <tr>
-            <td>Razsvetljava - EL,del,an,zn</td>
+            <td>Razsvetljava - E<sub>L,del,an,zn</sub></td>
             <?= implode(PHP_EOL, array_map(fn($mesecnaVrednost) => '<td class="center">' . ($mesecnaVrednost ? $this->numFormat($mesecnaVrednost, 0) : '') . '</td>', $cona->energijaRazsvetljava)) ?>
             <td class="center"><?= $this->numFormat($cona->skupnaEnergijaRazsvetljava, 0) ?></td>
         </tr>

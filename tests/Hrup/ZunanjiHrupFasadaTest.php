@@ -47,7 +47,7 @@ class ZunanjiHrupFasadaTest extends TestCase
         [
             {
                 "id": "prezracevalnaOdprtina1m",
-                "naziv": "Vstopna odprtina za zrak; 6 dm3/s, 1 m",
+                "naziv": "Vstopna odprtina za zrak; 6 dm³/s, 1 m",
                 "Rw": 37,
                 "C": -1,
                 "Ctr": -3

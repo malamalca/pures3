@@ -18,7 +18,7 @@
     <!--<tr>
         <td class="w-20">Prostornina sprejemnega prostora:</td>
         <td class="w-10 right strong">V=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->prostorninaSprejemnegaProstora, 1) ?> m3</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->prostorninaSprejemnegaProstora, 1) ?> m³</td>
     </tr>-->
     <tr>
         <td class="w-20">Ekvivalentna ovrednotena normirana raven zvočnega tlaka:</td>

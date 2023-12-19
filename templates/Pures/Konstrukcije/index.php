@@ -26,11 +26,11 @@
             '<td class="left">' . h($kons->TSG->naziv) . '<br />' .
             '<div class="nowrap">Tip: ' . h($kons->TSG->tip) . '</div>' .
             '<div class="nowrap">Dobitek SS: ' . (!empty($kons->TSG->dobitekSS) ? 'DA' : 'NE') . '</div>' .
-            '<div class="nowrap">U<sub>max</sub>=' . $this->numFormat($kons->TSG->Umax, 2) . ' W/m2K</div><br />' .
+            '<div class="nowrap">U<sub>max</sub>=' . $this->numFormat($kons->TSG->Umax, 2) . ' W/m²K</div><br />' .
             '</td>', $konstrukcije)) ?>
     </tr>
     <tr>
         <?= implode(PHP_EOL, array_map(fn($kons) =>
-            '<td class="left' . ($kons->U < $kons->TSG->Umax ? '' : ' red') . '">U = ' . $this->numFormat($kons->U, 2) . ' W/m2K</td>', $konstrukcije)) ?>
+            '<td class="left' . ($kons->U < $kons->TSG->Umax ? '' : ' red') . '">U = ' . $this->numFormat($kons->U, 2) . ' W/m²K</td>', $konstrukcije)) ?>
     </tr>
 </table>

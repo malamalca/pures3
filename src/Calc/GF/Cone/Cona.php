@@ -630,8 +630,8 @@ class Cona
             // tabela 7.1.1
             $this->uravnavanjeVlage->faktorUporabe = $this->uravnavanjeVlage->faktorUporabe ?? 1;
 
-            // specifična količina oddane vodne pare virov v stavbi na m2
-            // g_h2o,h (kg/m2h)
+            // specifična količina oddane vodne pare virov v stavbi na m²
+            // g_h2o,h (kg/m²h)
             $this->uravnavanjeVlage->viriVodnePare = $this->uravnavanjeVlage->viriVodnePare ?? 1.4;
 
             // samo za navlaževanje

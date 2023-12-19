@@ -18,17 +18,17 @@
     <tr>
         <td class="w-20">Prostornina:</td>
         <td class="w-10 right strong">V=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->prostornina, 1) ?> m3</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->prostornina, 1) ?> m³</td>
     </tr>
     <tr>
         <td class="w-20">Površina ovoja:</td>
         <td class="w-10 right strong">S<sub>f</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Sf, 1) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Sf, 1) ?> m²</td>
     </tr>
     <tr>
         <td class="w-20">Absorbcijska površina:</td>
         <td class="w-10 right strong">A<sub>f</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Af, 1) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Af, 1) ?> m²</td>
     </tr>
     <tr>
         <td class="w-20">Odmevni čas:</td>
@@ -54,7 +54,7 @@
     <tr>
         <td class="w-20">Površina:</td>
         <td class="w-10 right strong">A=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($fasada->povrsina) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($fasada->povrsina) ?> m²</td>
     </tr>
     <tr>
         <td class="w-20">Faktor oblike:</td>
@@ -72,11 +72,11 @@
                     <td class="center">Z. št.</td>
                     <td class="left">Šifra</td>
                     <td class="left">Naziv konstrukcije</td>
-                    <td class="center">Povr. masa<br/>[kg/m2]</td>
+                    <td class="center">Povr. masa<br/>[kg/m²]</td>
                     <td class="center">R<sub>w</sub> (C; C<sub>tr</sub>)</td>
                     <td class="center">R<sub>p,w</sub> (C; C<sub>tr</sub>)</td>
                     <td class="center">Št.</td>
-                    <td class="center">Površina<br />[m<sup>2</sup>]</td>
+                    <td class="center">Površina<br />[m²]</td>
                     <td class="center">Razmerje površin<br />S<sub>i</sub>/S<sub>f</sub> ali 10/S<sub>f</sub></td>
                     <td class="center">R<sub>p,w</sub>+C<?= $fasada->vplivPrometa ? '<sub>tr</sub>' : '' ?></td>
                 </tr>
@@ -98,8 +98,8 @@
                             <div class="small">
                                 + <?= h($dodatniSloj->naziv) ?>
                                 (
-                                    m'=<?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m2
-                                    <?php if ($dodatniSloj->vrsta == 'elasticen') echo ', s<sub>D</sub>=' . $this->numFormat($dodatniSloj->dinamicnaTogost, 1) . ' MN/m<sup>3</sup>'; ?>
+                                    m'=<?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m²
+                                    <?php if ($dodatniSloj->vrsta == 'elasticen') echo ', s<sub>D</sub>=' . $this->numFormat($dodatniSloj->dinamicnaTogost, 1) . ' MN/m³'; ?>
                                     <?php if ($dodatniSloj->vrsta == 'nepritrjen') echo ', d=' . $this->numFormat($dodatniSloj->sirinaMedprostora, 1) . ' m'; ?>
                                 )
                             </div>
@@ -187,7 +187,7 @@
 <table width="100%" border="1">
     <tr>
         <td class="strong">Z. št.:</td>
-        <td class="center strong">Površina fasade<br />[m<sup>2</sup>]</td>
+        <td class="center strong">Površina fasade<br />[m²]</td>
         <td class="center strong">Razmerje površin<br />S<sub>i</sub>/S<sub>f</sub></td>
         <td class="center strong">R'<sub>w</sub></td>
     </tr>

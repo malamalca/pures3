@@ -13,7 +13,7 @@
     <tr>
         <td>Površinska masa:</td>
         <td class="right">m'=</td>
-        <td><?= $this->numFormat($konstrukcija->povrsinskaMasa, 1) ?> kg/m<sup>2</sup></td>
+        <td><?= $this->numFormat($konstrukcija->povrsinskaMasa, 1) ?> kg/m²</td>
     </tr>
     <tr>
         <td>Izolativnost:</td>
@@ -41,7 +41,7 @@
         <tr>
             <td>Površinska masa:</td>
             <td class="right">m'=</td>
-            <td><?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m<sup>2</sup></td>
+            <td><?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m²</td>
         </tr>
         <tr>
             <td>Vpliv na hrup v zraku:</td>
@@ -65,7 +65,7 @@
         <tr>
             <td>Dinamična togost:</td>
             <td class="right">S<sub>D</sub>=</td>
-            <td><?= $this->numFormat($dodatniSloj->dinamicnaTogost, 1) ?> NM/m<sup>3</sup></td>
+            <td><?= $this->numFormat($dodatniSloj->dinamicnaTogost, 1) ?> NM/m³</td>
         </tr>
         <?php
             }

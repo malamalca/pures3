@@ -29,12 +29,12 @@
     <tr>
         <td class="w-30">Površina:</td>
         <td class="w-15 right">S<sub>s</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->povrsina, 1) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->povrsina, 1) ?> m²</td>
     </tr>
     <tr>
         <td class="w-30">Površinska masa:</td>
         <td class="w-15 right">m'=</td>
-        <td class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->povrsinskaMasa, 1) ?> kg/m2</td>
+        <td class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->povrsinskaMasa, 1) ?> kg/m²</td>
     </tr>
     <tr>
         <td class="w-30">Izolativnost:</td>
@@ -61,12 +61,12 @@
     <tr>
         <td class="w-30">Površina:</td>
         <td class="right w-15">S<sub>i</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($stranskiElement->povrsina, 1) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($stranskiElement->povrsina, 1) ?> m²</td>
     </tr>
     <tr>
         <td class="w-30">Površinska masa:</td>
         <td class="right w-15">m'=</td>
-        <td class="left strong"><?= $this->numFormat($stranskiElement->konstrukcija->povrsinskaMasa, 1) ?> kg/m2</td>
+        <td class="left strong"><?= $this->numFormat($stranskiElement->konstrukcija->povrsinskaMasa, 1) ?> kg/m²</td>
     </tr>
     <tr>
         <td class="w-30">Izolativnost:</td>
