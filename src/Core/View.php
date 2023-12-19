@@ -86,6 +86,37 @@ class View
     }
 
     /**
+     * Element function
+     *
+     * @param string $element Element name
+     * @return string|false
+     */
+    public function element($element)
+    {
+        $App = App::getInstance();
+
+        $templatePath = TEMPLATES;
+        $templateName = $element;
+        $templateFile = realpath($templatePath . $templateName . '.php');
+
+        if (
+            empty($templateFile) ||
+            strpos($templateFile, $templatePath) !== 0
+        ) {
+            die(sprintf('Template "%s" does not exist', $templateName . '.php'));
+        }
+
+        extract($this->_vars);
+
+        ob_start();
+        include $templateFile;
+        $contents = ob_get_contents();
+        ob_end_clean();
+
+        return $contents;
+    }
+
+    /**
      * Set variable for view render
      *
      * @param string|array<string, mixed> $varName Variable name or array with variables

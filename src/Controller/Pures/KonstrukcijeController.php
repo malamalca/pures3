@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Pures;
 
 use App\Core\App;
+use App\Lib\Calc;
 use App\Lib\CalcKonstrukcije;
+use App\Lib\CalcOkolje;
 
 class KonstrukcijeController
 {
@@ -51,7 +53,7 @@ class KonstrukcijeController
      */
     public function u($konsId = null)
     {
-        $kons = <<<EOT
+        $jsonKons = <<<EOT
         {
             "id": "F6",
             "naziv": "streha",
@@ -67,25 +69,83 @@ class KonstrukcijeController
             ]
         }
         EOT;
-        App::set('kons', $kons);
 
+        $GKY = 462000;
+        $GKX = 101000;
         if (!empty($_POST['data'])) {
-            $okolje = new \stdClass();
-            $okolje->notranjaT = [22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22];
-            $okolje->zunanjaT = [-10, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40];
-            $okolje->notranjaVlaga = [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50];
-            $okolje->zunanjaVlaga = [60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60];
-            $okolje->minfRsi = [1];
+            $jsonKons = $_POST['data'];
+            $GKY = (int)$_POST['GKY'];
+            $GKX = (int)$_POST['GKX'];
+
+            $okolje = $this->izracunOkolja($GKY, $GKX);
+            //$okolje->minfRsi = [1];
 
             $libraryArray = json_decode((string)file_get_contents(CONFIG . 'TSGKonstrukcije.json'));
             foreach ($libraryArray as $item) {
                 CalcKonstrukcije::$library[$item->sifra] = $item;
             }
 
-            $kons = CalcKonstrukcije::konstrukcija(json_decode($kons), $okolje, ['izracunKondenzacije' => true]);
-            App::set('kons', $kons);
+            $kons = CalcKonstrukcije::konstrukcija(json_decode($jsonKons), $okolje, ['izracunKondenzacije' => true]);
+            App::set('kons', json_decode((string)json_encode($kons)));
             App::set('okolje', $okolje);
         }
+
+        App::set('GKY', $GKY);
+        App::set('GKX', $GKX);
+        App::set('jsonKons', $jsonKons);
+    }
+
+    /**
+     * Izracun okolja
+     *
+     * @param int $GKY GKY
+     * @param int $GKX GKX
+     * @return \stdClass
+     */
+    private function izracunOkolja($GKY, $GKX)
+    {
+        $YXTemp = json_decode((string)file_get_contents(CONFIG . 'YXTemp.json'));
+        $YXTempNearest = null;
+        $nearestDistance = null;
+        foreach ($YXTemp as $line) {
+            $stavbaX = $GKX;
+            $stavbaY = $GKY;
+            $lineDistance = sqrt(pow($line->GKY - $stavbaY, 2) + pow($line->GKX - $stavbaX, 2));
+
+            if (is_null($nearestDistance) || ($lineDistance < $nearestDistance)) {
+                $nearestDistance = $lineDistance;
+                $YXTempNearest = $line;
+            }
+        }
+
+        $YXVlaga = json_decode((string)file_get_contents(CONFIG . 'YXVlaga.json'));
+        $YXVlagaNearest = null;
+        $nearestDistance = null;
+        foreach ($YXVlaga as $line) {
+            $stavbaX = $GKX;
+            $stavbaY = $GKY;
+            $lineDistance = sqrt(pow($line->GKY - $stavbaY, 2) + pow($line->GKX - $stavbaX, 2));
+
+            if (is_null($nearestDistance) || $lineDistance < $nearestDistance) {
+                $nearestDistance = $lineDistance;
+                $YXVlagaNearest = $line;
+            }
+        }
+
+        $zunanjaTemp = [];
+        $zunanjaVlaga = [];
+        foreach (Calc::MESECI as $mesecId => $mesec) {
+            if (isset($YXTempNearest->$mesec)) {
+                $zunanjaTemp[$mesecId] = $YXTempNearest->$mesec;
+            }
+            if (isset($YXVlagaNearest->$mesec)) {
+                $zunanjaVlaga[$mesecId] = $YXVlagaNearest->$mesec;
+            }
+        }
+
+        $okolje = CalcOkolje::notranjeOkolje(['zunanjaT' => $zunanjaTemp, 'zunanjaVlaga' => $zunanjaVlaga]);
+
+        return $okolje;
     }
 
     /**

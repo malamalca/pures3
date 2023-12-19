@@ -244,20 +244,24 @@ class CalcKonstrukcije
             $zacetniMeseci = [];
             foreach ($kondRavnine as $idRavnine => $sloj) {
                 // poiščemo začetni mesec
-                $zacetniMesec = 0; // januar
+                $zacetniMesecUp = 0; // januar
 
                 // pomikamo se naprej po mesecih, dokler ne pridemo do decembra ali do sloja, kjer je gc=0
-                while ($zacetniMesec <= 11 && !empty($sloj->gc[$zacetniMesec])) {
-                    $zacetniMesec++;
+                while ($zacetniMesecUp <= 11 && !empty($sloj->gc[$zacetniMesecUp])) {
+                    $zacetniMesecUp++;
                 }
+
                 // pomikamo se naprej po mesecih, dokler ne pridemo do decembra ali do sloja, kjer je gc>0
-                if ($zacetniMesec < 11) {
+                if ($zacetniMesecUp < 11) {
+                    $zacetniMesec = $zacetniMesecUp;
                     while ($zacetniMesec <= 11 && empty($sloj->gc[$zacetniMesec])) {
                         $zacetniMesec++;
                     }
+                } else {
+                    $zacetniMesec = 11;
                 }
 
-                if ($zacetniMesec == 11 && !empty($sloj->gc[$zacetniMesec])) {
+                if ($zacetniMesecUp == 11 && !empty($sloj->gc[$zacetniMesec])) {
                     // začetnega meseca nismo našli, to pomeni, da je kondenzacija skozi celotno leto
                     // in se nalaga in nalaga in nalaga....
                     $zacetniMeseci[$idRavnine] = -1;
@@ -538,8 +542,8 @@ class CalcKonstrukcije
         $data = $data['data'];
 
         // Image dimensions
-        $imageWidth = 600;
-        $imageHeight = 400;
+        $imageWidth = 800;
+        $imageHeight = 600;
 
         // Grid dimensions and placement within image
         $gridTop = 10;

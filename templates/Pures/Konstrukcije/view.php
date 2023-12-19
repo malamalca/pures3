@@ -90,7 +90,7 @@
     $png = CalcKonstrukcije::graf($data);
 ?>
 
-<img src="data:image/png;base64,<?= base64_encode($png) ?>"/>
+<img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 600px"/>
 
 <h3>Prikaz tlaka in kondenzacije</h3>
 <?php
@@ -128,7 +128,7 @@
     $png = CalcKonstrukcije::graf($data);
 ?>
 
-<img src="data:image/png;base64,<?= base64_encode($png) ?>"/>
+<img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 600px"/>
 
 <div>
     <table border="1">
