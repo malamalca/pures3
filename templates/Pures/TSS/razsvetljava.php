@@ -21,7 +21,7 @@
         <td>Specifična električna moč vgrajenih svetilk:</td>
         <td>P'<sub>L</sub></td>
         <td><?= $this->numFormat($sistem->mocSvetilk, 1) ?></td>
-        <td>W/m2</td>
+        <td>W/m²</td>
     </tr>
     <tr>
         <td>Letno št.ur razsvetljave - podnevi:</td>

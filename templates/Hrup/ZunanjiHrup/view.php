@@ -18,17 +18,17 @@
     <tr>
         <td class="w-20">Prostornina:</td>
         <td class="w-10 right strong">V=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->prostornina, 1) ?> m3</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->prostornina, 1) ?> m³</td>
     </tr>
     <tr>
         <td class="w-20">Površina ovoja:</td>
         <td class="w-10 right strong">S<sub>f</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Sf, 1) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Sf, 1) ?> m²</td>
     </tr>
     <tr>
         <td class="w-20">Absorbcijska površina:</td>
         <td class="w-10 right strong">A<sub>f</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Af, 1) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($prostor->Af, 1) ?> m²</td>
     </tr>
     <tr>
         <td class="w-20">Odmevni čas:</td>
@@ -54,7 +54,7 @@
     <tr>
         <td class="w-20">Površina:</td>
         <td class="w-10 right strong">A=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($fasada->povrsina) ?> m2</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($fasada->povrsina) ?> m²</td>
     </tr>
     <tr>
         <td class="w-20">Faktor oblike:</td>
@@ -72,7 +72,7 @@
                     <td class="center">Z. št.</td>
                     <td class="left">Šifra</td>
                     <td class="left">Naziv konstrukcije</td>
-                    <td class="center">Povr. masa<br/>[kg/m2]</td>
+                    <td class="center">Povr. masa<br/>[kg/m²]</td>
                     <td class="center">R<sub>w</sub> (C; C<sub>tr</sub>)</td>
                     <td class="center">R<sub>p,w</sub> (C; C<sub>tr</sub>)</td>
                     <td class="center">Št.</td>
@@ -98,7 +98,7 @@
                             <div class="small">
                                 + <?= h($dodatniSloj->naziv) ?>
                                 (
-                                    m'=<?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m2
+                                    m'=<?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m²
                                     <?php if ($dodatniSloj->vrsta == 'elasticen') echo ', s<sub>D</sub>=' . $this->numFormat($dodatniSloj->dinamicnaTogost, 1) . ' MN/m³'; ?>
                                     <?php if ($dodatniSloj->vrsta == 'nepritrjen') echo ', d=' . $this->numFormat($dodatniSloj->sirinaMedprostora, 1) . ' m'; ?>
                                 )

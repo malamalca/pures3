@@ -131,7 +131,7 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="7">Specifični koeficient transmisijskih toplotnih izgub H'tr (W/(m2 K)):</th>
+        <th colspan="7">Specifični koeficient transmisijskih toplotnih izgub H'tr (W/(m²K)):</th>
     </tr>
     </thead>
     <tr>

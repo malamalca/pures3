@@ -40,7 +40,7 @@ enum VrstaSpoja: string
                 $ret['K23'] = $ret['K12'];
                 break;
             case self::KrizniZElasticnimSpojem:
-                // Hz; if E1/t1 ~= 100 MN/m3
+                // Hz; if E1/t1 ~= 100 MN/m³
                 $f1 = 125;
                 $D1 = 10 * log10(500 / $f1);
 

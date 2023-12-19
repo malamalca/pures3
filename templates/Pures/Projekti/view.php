@@ -110,7 +110,7 @@
         <td colspan="2" class="left"><?= $this->numFormat($okolje->projektnaZunanjaT, 1) ?></td>
     </tr>
     <tr>
-        <td colspan="2">Energija sončnega obsevanja (kWh/m2)</td>
+        <td colspan="2">Energija sončnega obsevanja (kWh/m²)</td>
         <td colspan="2" class="left"><?= $this->numFormat($okolje->energijaSoncnegaObsevanja, 1) ?></td>
     </tr>
 </table>

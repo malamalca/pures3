@@ -15,7 +15,7 @@
         <td>Površina PV modulov:</td>
         <td>A<sub>PV</sub></td>
         <td><?= $sistem->povrsina ?></td>
-        <td>m2</td>
+        <td>m²</td>
     </tr>
     <tr>
         <td colspan="2">Orientacija:</td>
@@ -38,7 +38,7 @@
         <td>Koeficient vršne moči:</td>
         <td>K<sub>pk</sub></td>
         <td><?= $this->numFormat($sistem->koeficientMoci, 1) ?></td>
-        <td>kW/m2</td>
+        <td>kW/m²</td>
     </tr>
     <tr>
         <td>Nazivna moč fotonapetostnega sistema:</td>

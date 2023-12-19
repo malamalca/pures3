@@ -30,7 +30,7 @@
     <tr>
         <td>Pretok:</td>
         <td><?= $this->numFormat($sistem->dovod->volumen, 0) ?></td>
-        <td>m3/h</td>
+        <td>m³/h</td>
     </tr>
     <tr>
         <td>Moč ventilatorja:</td>
@@ -47,7 +47,7 @@
     <tr>
         <td>Pretok:</td>
         <td><?= $this->numFormat($sistem->odvod->volumen, 0) ?></td>
-        <td>m3/h</td>
+        <td>m³/h</td>
     </tr>
     <tr>
         <td>Moč ventilatorja:</td>

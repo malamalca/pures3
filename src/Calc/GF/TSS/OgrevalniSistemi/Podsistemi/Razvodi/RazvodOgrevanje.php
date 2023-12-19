@@ -303,7 +303,7 @@ abstract class RazvodOgrevanje extends Razvod
             $deltaT_HK = $rezim->temperaturnaRazlikaStandardnegaRezima($sistem);
         }
 
-        // V – volumski pretok ogrevnega medija [m3/h]
+        // V – volumski pretok ogrevnega medija [m³/h]
         // enačba (66)
         $volumskiPretok = 0;
         if ($deltaT_HK > 0) {

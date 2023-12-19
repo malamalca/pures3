@@ -59,7 +59,7 @@ class TransportZraka
     {
         $dodatekH1H2 = $this->visokIzkoristek ? 300 : 0;
 
-        // kW/(m3/h)
+        // kW/(m³/h)
         $spf = ($this->vrsta->faktorSpf() * 3600 + $this->vrstaFiltra->dodatekFiltra() + $dodatekH1H2) / 3600000;
 
         $mocVentilatorja = $spf * $this->volumen;

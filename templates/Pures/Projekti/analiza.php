@@ -12,7 +12,7 @@
         <td>Bruto ogrevana prostornina stavbe</td>
         <td>V<sub>e</sub></td>
         <td class="center"><?= $this->numFormat($stavba->brutoProstornina, 1) ?></td>
-        <td>m3</td>
+        <td>m³</td>
     </tr>
     <tr>
         <td>Površina toplotnega ovoja stavbe</td>

@@ -283,7 +283,7 @@ class RazvodTSV extends Razvod
             $this->dvizniVod->toplotneIzgube($this, $cona) +
             $this->prikljucniVod->toplotneIzgube($this, $cona)) * (57.5 - $cona->notranjaTOgrevanje);
 
-        // V – volumski pretok ogrevnega medija [m3/h]
+        // V – volumski pretok ogrevnega medija [m³/h]
         // enačba (66)
         $volumskiPretok = $Q_t / (1.15 * $deltaT_Z) / 1000;
 

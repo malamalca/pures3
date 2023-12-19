@@ -17,9 +17,9 @@
     </tr>
     <tr>
         <td>U=</td>
-        <td><?= number_format($kons->U, 3) ?> W/m2K</td>
+        <td><?= number_format($kons->U, 3) ?> W/m²K</td>
         <td>U<sub>max</sub>=</td>
-        <td><?= number_format($kons->TSG->Umax, 3) ?> W/m2K</td>
+        <td><?= number_format($kons->TSG->Umax, 3) ?> W/m²K</td>
         <td><?= $kons->TSG->Umax > $kons->U ? 'Ustreza' : 'Ne ustreza' ?></td>
     </tr>
     
