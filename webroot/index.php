@@ -31,6 +31,29 @@ if (false !== $pos = strpos($uri, '?')) {
     $uri = substr($uri, 0, $pos);
 }
 
+if (file_exists(WWW_ROOT . $uri) && is_file(WWW_ROOT . $uri)) {
+    $fullPath = realpath(WWW_ROOT . $uri);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE); // Return MIME type a la the 'mimetype' extension
+    if ($finfo && $fullPath) {
+        $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+        $mime = finfo_file($finfo, $fullPath);
+        finfo_close($finfo);
+
+        switch($extension){
+            case 'css':
+                $mime = 'text/css';
+                break;
+            case 'js':
+                $mime = 'application/javascript';
+                break;
+        }
+
+        header('Content-Type: ' . $mime);
+        readfile($fullPath);
+        die;
+    }
+}
+
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
