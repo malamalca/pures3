@@ -2,6 +2,7 @@
     {
         "id": "Razsvetljava",
         "idCone": "Cona1",
+        "tss": "razsvetljava",
         "faktorDnevneSvetlobe": 0.05,
         "letnoUrPodnevi": 1820,
         "letnoUrPonoci": 1680,

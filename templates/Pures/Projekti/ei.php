@@ -1,5 +1,6 @@
 <?php
     use App\Core\App;
+    use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
     $this->layout = false;
     header('Content-Type: text/xml');
@@ -25,44 +26,84 @@
     <TP><?= $this->numFormat($okolje->temperaturniPrimanjkljaj, 0) ?></TP>
     <Qfaux>1</Qfaux>
     <QfhEnergenti>
+    <?php
+        if (!empty($stavba->energijaTSSPoEnergentih->ogrevanje)) {
+            foreach (get_object_vars($stavba->energijaTSSPoEnergentih->ogrevanje) as $energentId => $energija) {
+                $energent = TSSVrstaEnergenta::from($energentId);
+    ?>
         <energent>
-        <sifra>energy_dt</sifra>
-        <naziv>Daljinsko</naziv>
-        <vrednost>71573.7</vrednost>
+        <sifra><?= h($energent->sifraEI()) ?></sifra>
+        <naziv><?= h($energent->naziv()) ?></naziv>
+        <vrednost><?= $this->numFormat($energija, 1, '.') ?></vrednost>
         </energent>
-        <energent>
-        <sifra>energy_e</sifra>
-        <naziv>Elektrika</naziv>
-        <vrednost>822.9</vrednost>
-        </energent>
+    <?php
+            }
+        }
+    ?>
     </QfhEnergenti>
     <QfcEnergenti>
+    <?php
+        if (!empty($stavba->energijaTSSPoEnergentih->hlajenje)) {
+            foreach (get_object_vars($stavba->energijaTSSPoEnergentih->hlajenje) as $energentId => $energija) {
+                $energent = TSSVrstaEnergenta::from($energentId);
+    ?>
+        <energent>
+        <sifra><?= h($energent->sifraEI()) ?></sifra>
+        <naziv><?= h($energent->naziv()) ?></naziv>
+        <vrednost><?= $this->numFormat($energija, 1, '.') ?></vrednost>
+        </energent>
+    <?php
+            }
+        }
+    ?>
     </QfcEnergenti>
     <QfvEnergenti>
+    <?php
+        if (!empty($stavba->energijaTSSPoEnergentih->prezracevanje)) {
+            foreach (get_object_vars($stavba->energijaTSSPoEnergentih->prezracevanje) as $energentId => $energija) {
+                $energent = TSSVrstaEnergenta::from($energentId);
+    ?>
         <energent>
-        <sifra>energy_e</sifra>
-        <naziv>Elektrika</naziv>
-        <vrednost>59799.3</vrednost>
+        <sifra><?= h($energent->sifraEI()) ?></sifra>
+        <naziv><?= h($energent->naziv()) ?></naziv>
+        <vrednost><?= $this->numFormat($energija, 1, '.') ?></vrednost>
         </energent>
+    <?php
+            }
+        }
+    ?>
     </QfvEnergenti>
     <QfwEnergenti>
+    <?php
+        if (!empty($stavba->energijaTSSPoEnergentih->tsv)) {
+            foreach (get_object_vars($stavba->energijaTSSPoEnergentih->tsv) as $energentId => $energija) {
+                $energent = TSSVrstaEnergenta::from($energentId);
+    ?>
         <energent>
-        <sifra>energy_dt</sifra>
-        <naziv>Daljinsko</naziv>
-        <vrednost>349277.2</vrednost>
+        <sifra><?= h($energent->sifraEI()) ?></sifra>
+        <naziv><?= h($energent->naziv()) ?></naziv>
+        <vrednost><?= $this->numFormat($energija, 1, '.') ?></vrednost>
         </energent>
-        <energent>
-        <sifra>energy_e</sifra>
-        <naziv>Elektrika</naziv>
-        <vrednost>878.4</vrednost>
-        </energent>
+    <?php
+            }
+        }
+    ?>
     </QfwEnergenti>
     <QflEnergenti>
+    <?php
+        if (!empty($stavba->energijaTSSPoEnergentih->razsvetljava)) {
+            foreach ($stavba->energijaTSSPoEnergentih->razsvetljava as $energentId => $energija) {
+                $energent = TSSVrstaEnergenta::from($energentId);
+    ?>
         <energent>
-        <sifra>energy_e</sifra>
-        <naziv>Elektrika</naziv>
-        <vrednost>49510.</vrednost>
+        <sifra><?= h($energent->sifraEI()) ?></sifra>
+        <naziv><?= h($energent->naziv()) ?></naziv>
+        <vrednost><?= $this->numFormat($energija, 1, '.') ?></vrednost>
         </energent>
+    <?php
+            }
+        }
+    ?>
     </QflEnergenti>
     <Ehund>0</Ehund>
     <Edhund>0</Edhund>

@@ -60,6 +60,8 @@ class ManjzahtevnaStavba extends Stavba
     public float $dovoljenaSpecificnaPrimarnaEnergija = 75;
     public float $dovoljenaKorigiranaSpecificnaPrimarnaEnergija = 75;
 
+    public array $energijaTSSPoEnergentih = [];
+
     /**
      * Analiza stavbe
      *
@@ -159,6 +161,31 @@ class ManjzahtevnaStavba extends Stavba
                     $this->neutezenaDovedenaEnergija += $energija;
                     $this->utezenaDovedenaEnergija +=
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg');
+
+                    $tss = $sistem->tss;
+                    if ($tss == 'oht') {
+                        if (isset($sistem->ogrevanje)) {
+                            foreach ((array)$sistem->ogrevanje->energijaPoEnergentih as $energentOgr => $energijaOgr) {
+                                $this->energijaTSSPoEnergentih['ogrevanje'][$energentOgr] =
+                                    ($this->energijaTSSPoEnergentih['ogrevanje'][$energentOgr] ?? 0) + $energijaOgr;
+                            }
+                        }
+                        if (isset($sistem->hlajenje)) {
+                            foreach ((array)$sistem->hlajenje->energijaPoEnergentih as $energentHl => $energijaHl) {
+                                $this->energijaTSSPoEnergentih['hlajenje'][$energentHl] =
+                                    ($this->energijaTSSPoEnergentih['hlajenje'][$energentHl] ?? 0) + $energijaHl;
+                            }
+                        }
+                        if (isset($sistem->tsv)) {
+                            foreach ((array)$sistem->tsv->energijaPoEnergentih as $energentTsv => $energijaTsv) {
+                                $this->energijaTSSPoEnergentih['tsv'][$energentTsv] =
+                                    ($this->energijaTSSPoEnergentih['tsv'][$energentTsv] ?? 0) + $energijaTsv;
+                            }
+                        }
+                    } else {
+                        $this->energijaTSSPoEnergentih[$tss][$energent] =
+                            ($this->energijaTSSPoEnergentih[$tss][$energent] ?? 0) + $energija;
+                    }
                 } else {
                     if ($energent == TSSVrstaEnergenta::Elektrika->value) {
                         $this->skupnaProizvedenaPorabljenaElektricnaEnergija += $energija * -1;

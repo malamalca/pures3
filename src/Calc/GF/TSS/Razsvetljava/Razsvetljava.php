@@ -10,6 +10,7 @@ class Razsvetljava
 {
     public ?string $id;
     public ?string $idCone;
+    public string $tss = 'razsvetljava';
 
     public float $faktorDnevneSvetlobe;
 
@@ -155,6 +156,7 @@ class Razsvetljava
         $ret = new \stdClass();
         $ret->id = $this->id;
         $ret->idCone = $this->idCone;
+        $ret->tss = $this->tss;
 
         $ret->faktorDnevneSvetlobe = $this->faktorDnevneSvetlobe;
 

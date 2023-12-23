@@ -16,6 +16,8 @@ abstract class OHTSistem
 {
     public ?string $id;
     public ?string $idCone;
+    public string $tss = 'oht';
+
     public string $vrsta;
     public float $izkoristek = 1;
     public bool $jeOgrevalniSistem = true;
@@ -249,6 +251,7 @@ abstract class OHTSistem
         $sistem = new \stdClass();
         $sistem->id = $this->id;
         $sistem->idCone = $this->idCone;
+        $sistem->tss = $this->tss;
         $sistem->vrsta = $this->vrsta;
         $sistem->energent = $this->energent;
         $sistem->jeOgrevalniSistem = $this->jeOgrevalniSistem;

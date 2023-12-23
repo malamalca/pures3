@@ -29,7 +29,6 @@
     "skupnaEnergijaRazvlazevanje": 0,
     "skupnaEnergijaRazsvetljava": 1237.5009981369863,
     "specKoeficientTransmisijskihIzgub": 0.21158309324103663,
-    "specKoeficientVentilacijskihIzgub": 0.012035294117647057,
     "specLetnaToplota": 30.67266705493007,
     "specLetniHlad": 0.4577082776271368,
     "specEnergijaTSV": 8.407802375,
@@ -37,23 +36,35 @@
     "specEnergijaRazvlazevanje": 0,
     "dovoljenaSpecLetnaToplota": 25,
     "dovoljenSpecKoeficientTransmisijskihIzgub": 0.3262248338564675,
-    "neutezenaDovedenaEnergija": 8952.208943284064,
+    "neutezenaDovedenaEnergija": 8952.208943284068,
     "utezenaDovedenaEnergija": 16886.749593667006,
     "skupnaPrimarnaEnergija": 16886.749593667006,
-    "neobnovljivaPrimarnaEnergija": 7934.540650382939,
-    "obnovljivaPrimarnaEnergija": 8952.208943284064,
-    "izpustCO2": 2221.6713821072226,
+    "neobnovljivaPrimarnaEnergija": 7934.540650382941,
+    "obnovljivaPrimarnaEnergija": 8952.208943284068,
+    "izpustCO2": 2221.671382107223,
     "skupnaOddanaElektricnaEnergija": 0,
     "skupnaProizvedenaPorabljenaElektricnaEnergija": 0,
     "skupnaProizvedenaElektricnaEnergija": 0,
     "skupnaOddanaToplota": 0,
     "faktorUjemanja": 0,
-    "ROVE": 53.01321544225058,
+    "ROVE": 53.013215442250605,
     "minROVE": 50,
     "specificnaPrimarnaEnergija": 105.54218496041878,
     "korigiranaSpecificnaPrimarnaEnergija": 126.65062195250253,
     "dovoljenaSpecificnaPrimarnaEnergija": 75,
     "dovoljenaKorigiranaSpecificnaPrimarnaEnergija": 75,
+    "energijaTSSPoEnergentih": {
+        "prezracevanje": {
+            "elektrika": 1892.549333333333
+        },
+        "ogrevanje": {
+            "elektrika": 4319.286870903282,
+            "okolje": 7325.030352724216
+        },
+        "razsvetljava": {
+            "elektrika": 1237.5009981369863
+        }
+    },
     "cone": [
         {
             "id": "Cona1",
@@ -5065,7 +5076,7 @@
                                                 761.6847465171074,
                                                 853.2526039639015,
                                                 1065.953794123886,
-                                                1324.0099184729993,
+                                                1324.0099184729995,
                                                 1766.1774858796227,
                                                 2097.1611010588063,
                                                 2346.8812812515644,
@@ -6540,8 +6551,59 @@
     ],
     "sistemi": [
         {
+            "id": "Prezracevanje",
+            "idCone": "Cona1",
+            "tss": "prezracevanje",
+            "razredH1H2": true,
+            "vrsta": "centralni",
+            "faktorKrmiljenja": 1,
+            "odvod": {
+                "volumen": 200,
+                "mocVentilatorja": 0.10062222222222221,
+                "filter": "hepa"
+            },
+            "dovod": {
+                "volumen": 200,
+                "mocVentilatorja": 0.11442222222222223,
+                "filter": "hepa"
+            },
+            "potrebnaEnergija": [
+                160.73706666666666,
+                145.18186666666665,
+                160.73706666666666,
+                155.552,
+                160.73706666666666,
+                155.552,
+                160.73706666666666,
+                160.73706666666666,
+                155.552,
+                160.73706666666666,
+                155.552,
+                160.73706666666666
+            ],
+            "potrebnaElektricnaEnergija": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "skupnaPotrebnaEnergija": 1892.549333333333,
+            "energijaPoEnergentih": {
+                "elektrika": 1892.549333333333
+            }
+        },
+        {
             "id": "TC",
             "idCone": "Cona1",
+            "tss": "oht",
             "vrsta": "toplovodni",
             "energent": "elektrika",
             "jeOgrevalniSistem": true,
@@ -6555,7 +6617,7 @@
                 0,
                 0,
                 34.89009365819562,
-                271.18145454131366,
+                271.18145454131604,
                 915.7445595175474,
                 1383.4377052925347
             ],
@@ -6569,7 +6631,7 @@
                 0,
                 0,
                 13.110353489986652,
-                108.28557950380905,
+                108.28557950381,
                 331.09103225251283,
                 521.1867739008187
             ],
@@ -6583,16 +6645,16 @@
                 0,
                 0,
                 24.690813280326445,
-                188.716509200916,
+                188.71650920091767,
                 612.8641156549472,
                 893.0925476502772
             ],
             "vracljiveIzgube": [],
             "energijaPoEnergentih": {
-                "elektrika": 2159.64343545164,
-                "okolje": 3662.515176362106
+                "elektrika": 2159.643435451641,
+                "okolje": 3662.515176362108
             },
-            "letnaUcinkovitostOgrHlaTsv": 0.351274568265532,
+            "letnaUcinkovitostOgrHlaTsv": 0.35127456826553194,
             "minLetnaUcinkovitostOgrHlaTsv": 0.5,
             "ogrevanje": {
                 "id": null,
@@ -6607,7 +6669,7 @@
                     0,
                     0,
                     13.110353489986652,
-                    108.28557950380905,
+                    108.28557950381,
                     331.09103225251283,
                     521.1867739008187
                 ],
@@ -6621,7 +6683,7 @@
                     0,
                     0,
                     24.690813280326445,
-                    188.716509200916,
+                    188.71650920091767,
                     612.8641156549472,
                     893.0925476502772
                 ],
@@ -6640,8 +6702,8 @@
                     "TC"
                 ],
                 "energijaPoEnergentih": {
-                    "elektrika": 2159.64343545164,
-                    "okolje": 3662.515176362106
+                    "elektrika": 2159.643435451641,
+                    "okolje": 3662.515176362108
                 },
                 "potrebnaEnergija": [
                     1379.147306513585,
@@ -6653,7 +6715,7 @@
                     0,
                     0,
                     34.89009365819562,
-                    271.18145454131366,
+                    271.18145454131604,
                     915.7445595175474,
                     1383.4377052925347
                 ],
@@ -6672,7 +6734,7 @@
                         0,
                         0,
                         7.470725315898046,
-                        33.259534850267244,
+                        33.259534850267535,
                         78.89130625625405,
                         98.37954785232152
                     ],
@@ -6686,7 +6748,7 @@
                         0,
                         0,
                         0.08047494274037145,
-                        0.7165459977362049,
+                        0.7165459977362112,
                         0.72,
                         0.744
                     ],
@@ -6703,7 +6765,7 @@
                         0,
                         0,
                         0.08047494274037145,
-                        0.7165459977362049,
+                        0.7165459977362112,
                         0.72,
                         0.744
                     ],
@@ -6727,7 +6789,7 @@
                         0,
                         0,
                         7.22821883987042,
-                        58.140650230142384,
+                        58.14065023014291,
                         154.55006401801492,
                         221.4954779556561
                     ],
@@ -6741,7 +6803,7 @@
                         0,
                         0,
                         2.7860233016273264,
-                        24.73187163761791,
+                        24.73187163761813,
                         26.081230719143537,
                         27.79458562661035
                     ],
@@ -6756,7 +6818,7 @@
                         0,
                         0,
                         5.3581605640923735,
-                        41.81425653417376,
+                        41.81425653417413,
                         133.12860112972882,
                         196.13534309794773
                     ],
@@ -6771,7 +6833,7 @@
                         0,
                         0,
                         0.6965058254068316,
-                        6.182967909404478,
+                        6.182967909404533,
                         6.520307679785884,
                         6.948646406652587
                     ],
@@ -6837,7 +6899,7 @@
                             0,
                             0,
                             10.243855245618954,
-                            82.83716186845493,
+                            82.83716186845565,
                             304.2898015333693,
                             492.6481882742084
                         ]
@@ -6853,7 +6915,7 @@
                             0,
                             0,
                             24.690813280326445,
-                            188.716509200916,
+                            188.71650920091767,
                             612.8641156549472,
                             893.0925476502772
                         ]
@@ -6875,7 +6937,7 @@
                                 0,
                                 0,
                                 10.199280377869172,
-                                82.46494534039765,
+                                82.46494534039837,
                                 302.8804438626002,
                                 490.3451576422575
                             ],
@@ -6916,7 +6978,7 @@
                             0,
                             0,
                             34.89009365819562,
-                            271.18145454131366,
+                            271.18145454131604,
                             915.7445595175474,
                             1383.4377052925347
                         ]
@@ -6929,57 +6991,9 @@
             ]
         },
         {
-            "id": "Prezracevanje",
-            "idCone": "Cona1",
-            "razredH1H2": true,
-            "vrsta": "centralni",
-            "faktorKrmiljenja": 1,
-            "odvod": {
-                "volumen": 200,
-                "mocVentilatorja": 0.10062222222222221,
-                "filter": "hepa"
-            },
-            "dovod": {
-                "volumen": 200,
-                "mocVentilatorja": 0.11442222222222223,
-                "filter": "hepa"
-            },
-            "potrebnaEnergija": [
-                160.73706666666666,
-                145.18186666666665,
-                160.73706666666666,
-                155.552,
-                160.73706666666666,
-                155.552,
-                160.73706666666666,
-                160.73706666666666,
-                155.552,
-                160.73706666666666,
-                155.552,
-                160.73706666666666
-            ],
-            "potrebnaElektricnaEnergija": [
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0,
-                0
-            ],
-            "skupnaPotrebnaEnergija": 1892.549333333333,
-            "energijaPoEnergentih": {
-                "elektrika": 1892.549333333333
-            }
-        },
-        {
             "id": "Razsvetljava",
             "idCone": "Cona1",
+            "tss": "razsvetljava",
             "faktorDnevneSvetlobe": 0.05,
             "letnoUrPodnevi": 1820,
             "letnoUrPonoci": 1680,
