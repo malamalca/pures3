@@ -102,7 +102,7 @@ class Log
      *
      * @return void
      */
-    public static function d()
+    public static function debug()
     {
         $func = [self::getLogger(), 'debug'];
         if (is_callable($func)) {

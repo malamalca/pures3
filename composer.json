@@ -17,7 +17,8 @@
         "tecnickcom/tcpdf": "^6.6",
         "justinrainbow/json-schema": "^5.2",
         "mikehaertl/phpwkhtmltopdf": "^2.5",
-        "michelf/php-markdown": "^2.0"
+        "michelf/php-markdown": "^2.0",
+        "seld/jsonlint": "^1.10"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "*",

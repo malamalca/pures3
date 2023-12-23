@@ -7,7 +7,7 @@ return [
         'namespace' => 'App',
         'encoding' => 'UTF-8',
         'baseUrl' => '/index.php?url=',
-        'defaultName' => 'Pures 3',
+        'defaultName' => 'PHPures 3',
     ],
 
     'Log' => [

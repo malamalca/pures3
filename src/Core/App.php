@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use Seld\JsonLint\JsonParser;
+use Seld\JsonLint\ParsingException;
+
 class App
 {
     public string $area = 'Pures';
@@ -273,8 +276,22 @@ class App
 
             $result = json_decode($data);
 
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
+            if ($result === null && json_last_error() !== JSON_ERROR_NONE) {
+                //throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
+                $parser = new JsonParser();
+                $result = $parser->lint($data);
+                if ($result === null) {
+                    if (defined('JSON_ERROR_UTF8') && json_last_error() === JSON_ERROR_UTF8) {
+                        throw new \UnexpectedValueException('"' . $dataFilename . '" ni v UTF-8, analiza ni možna.');
+                    }
+
+                    return true;
+                }
+
+                throw new ParsingException(
+                    sprintf('%1$s' . "\n" . 'Json napaka: %2$s', $dataFilename, $result->getMessage()),
+                    $result->getDetails()
+                );
             }
 
             return $result;
