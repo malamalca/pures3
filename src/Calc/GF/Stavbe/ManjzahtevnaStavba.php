@@ -8,6 +8,7 @@ use App\Calc\GF\TSS\TSSVrstaEnergenta;
 class ManjzahtevnaStavba extends Stavba
 {
     public float $brutoProstornina = 0;
+    public float $netoProstornina = 0;
     public float $povrsinaOvoja = 0;
     public float $ogrevanaPovrsina = 0;
     public float $transparentnaPovrsina = 0;
@@ -46,6 +47,8 @@ class ManjzahtevnaStavba extends Stavba
     public float $skupnaProizvedenaPorabljenaElektricnaEnergija = 0;
     public float $skupnaProizvedenaElektricnaEnergija = 0;
 
+    public float $skupnaOddanaToplota = 0;
+
     public float $faktorUjemanja = 0;
 
     public float $ROVE = 0;
@@ -71,6 +74,8 @@ class ManjzahtevnaStavba extends Stavba
             (float)array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->povrsinaOvoja, 0);
         $this->ogrevanaPovrsina =
             (float)array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->ogrevanaPovrsina, 0);
+        $this->netoProstornina =
+            (float)array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->netoProstornina, 0);
 
         if ($this->povrsinaOvoja == 0.00 || $this->ogrevanaPovrsina == 0.00) {
             return;

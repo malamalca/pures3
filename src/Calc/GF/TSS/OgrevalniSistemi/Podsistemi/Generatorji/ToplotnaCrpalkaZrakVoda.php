@@ -163,10 +163,16 @@ class ToplotnaCrpalkaZrakVoda extends Generator
                 if (empty($namen)) {
                     $this->toplotneIzgube[$mesec] = ($this->toplotneIzgube[$mesec] ?? 0) + 0;
                     $this->E_tc[$mesec] = ($this->E_tc[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
+
+                    $this->potrebnaElektricnaEnergija[$mesec] =
+                        ($this->potrebnaElektricnaEnergija[$mesec] ?? 0) + $E_tc[$mesec][$rezim];
                 } else {
                     $this->toplotneIzgube[$namen][$mesec] =
                         ($this->toplotneIzgube[$namen][$mesec] ?? 0) + 0;
                     $this->E_tc[$namen][$mesec] = ($this->E_tc[$namen][$mesec] ?? 0) + $E_tc[$mesec][$rezim];
+
+                    $this->potrebnaElektricnaEnergija[$namen][$mesec] =
+                        ($this->potrebnaElektricnaEnergija[$namen][$mesec] ?? 0) + $E_tc[$mesec][$rezim];
                 }
             }
         }

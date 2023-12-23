@@ -107,4 +107,19 @@ class ProjektiController
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
     }
+
+    /**
+     * Izvoz XML za energetske izkaznice
+     *
+     * @param string|null $projectId Building name
+     * @return void
+     */
+    public function ei($projectId = null)
+    {
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
+        App::set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
+        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
+        App::set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
+    }
 }
