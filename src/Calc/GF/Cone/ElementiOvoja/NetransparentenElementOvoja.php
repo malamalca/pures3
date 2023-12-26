@@ -117,17 +117,17 @@ class NetransparentenElementOvoja extends ElementOvoja
      */
     public function analiza($cona, $okolje)
     {
-        // temperaturni korekcijski faktor
-        $this->b = empty($this->konstrukcija->ogrRazvodT) ? 1 :
-            ($this->konstrukcija->ogrRazvodT - $okolje->projektnaZunanjaT) /
-            ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
-
         if (empty($this->konstrukcija)) {
             throw new \Exception(sprintf('Konstrukcija "%s" v ovoju ne obstaja.', $this->idKonstrukcije));
         }
         if (empty($this->konstrukcija->TSG)) {
             throw new \Exception(sprintf('TSG podatki konstrukcije ovoja "%s" ne obstajajo.', $this->idKonstrukcije));
         }
+
+        // temperaturni korekcijski faktor
+        $this->b = empty($this->konstrukcija->ogrRazvodT) ? 1 :
+            ($this->konstrukcija->ogrRazvodT - $okolje->projektnaZunanjaT) /
+            ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
 
         // napolni podatke o vplivu zemljine
         if ($this->konstrukcija->TSG->tip != 'zunanja') {

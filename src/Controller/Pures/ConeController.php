@@ -12,11 +12,12 @@ class ConeController
      *
      * @param string $projectId Building name
      * @param string $conaId Id cone
+     * @param string|null $ref Referenčna stavba
      * @return void
      */
-    public function ovoj($projectId, $conaId)
+    public function ovoj($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone');
+        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone' . ($ref == 'ref' ? '_ref' : ''));
 
         App::set('projectId', $projectId);
         App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
@@ -27,11 +28,12 @@ class ConeController
      *
      * @param string $projectId Building name
      * @param string $conaId Id cone
+     * @param string|null $ref Referenčna stavba
      * @return void
      */
-    public function analiza($projectId, $conaId)
+    public function analiza($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone');
+        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone' . ($ref == 'ref' ? '_ref' : ''));
 
         App::set('projectId', $projectId);
         App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));

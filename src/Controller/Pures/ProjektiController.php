@@ -72,14 +72,15 @@ class ProjektiController
      * Prikaz analize projekta s področja gradbene fizike
      *
      * @param string $projectId Building name
+     * @param ?string $ref Referenčna stavba
      * @return void
      */
-    public function analiza($projectId)
+    public function analiza($projectId, $ref = null)
     {
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
-        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
-        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
+
+        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba' . ($ref == 'ref' ? '_ref' : '')));
     }
 
     /**

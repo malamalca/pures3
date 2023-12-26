@@ -1,5 +1,14 @@
-<h1>Energijska učinkovitost energetsko manj stavbe –
-za področje gradbene fizike</h1>
+<?php
+    if ($stavba->vrsta == 'zahtevna') {
+?>
+    <h1>Energijska učinkovitost energetsko zahtevne stavbe – za področje gradbene fizike</h1>
+<?php
+    } else {
+?>
+    <h1>Energijska učinkovitost energetsko manj zahtevne stavbe – za področje gradbene fizike</h1>
+<?php
+    }
+?>
 
 <h3>Kazalniki</h3>
 <table border="1" cellpadding="3" width="100%">
@@ -126,6 +135,45 @@ za področje gradbene fizike</h1>
     ?>
 </table>
 
+<!-- ---------------------------------------------------------------------------- -->
+<?php
+    if ($stavba->vrsta == 'zahtevna') {
+?>
+<table border="1" cellpadding="3" width="100%">
+    <thead>
+    <tr>
+        <th colspan="4">Faktor toplotne stabilnosti f (-):</th>
+    </tr>
+    </thead>
+    <tr>
+        <td class="w-60" colspan="2">konstrukcija</td>
+        <td class="w-20 center">f (-)</td>
+        <td class="w-20 center">ustreza</td>
+    </tr>
+
+    <?php
+        foreach ($cone as $cona) {
+    ?>
+
+    <?php
+            $i = 0;
+            foreach (array_filter($ntKons, fn($k) => empty($k->TSG->izracunToplotneStabilnosti) ? null : $k) as $konstrukcija) {
+    ?>
+    <tr>
+        <td class="w-5 center"><?= $i+1 ?></td>
+        <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
+        <td class="w-20 center"><?= $this->numFormat($konstrukcija->f, 2) ?></td>
+        <td class="w-20 center"><?= $konstrukcija->f < 0.5 ? 'DA' : 'NE' ?></td>
+    </tr>
+    <?php
+                $i++;
+            }
+        }
+    ?>
+</table>
+<?php
+    }
+?>
 
 <!-- ---------------------------------------------------------------------------- -->
 <table border="1" cellpadding="3" width="100%">
@@ -255,19 +303,42 @@ za področje gradbene fizike</h1>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
-        <th colspan="4">Tesnost ovoja stavbe n<sub>50</sub> (h<sup>-1</sup>), w<sub>50</sub> (m³/(h m²)):</th>
+        <th colspan="6">Tesnost ovoja stavbe n<sub>50</sub> (h<sup>-1</sup>), w<sub>50</sub> (m³/(h m²)):</th>
     </tr>
     </thead>
     <tr>
         <td class="w-5 center"><span style="border: solid 1px black; display: inline-block; width: 18px;">&#10003;</span></td>
-        <td class="w-55">načrtovano</td>
-        <td class="w-20 right">n<sub>50</sub> (h<sup>-1</sup>)</td>
-        <td class="w-20 center">0.5</td>
+        <td class="w-55" colspan="3">načrtovano</td>
+        <td class="w-10 right">n<sub>50</sub> (h<sup>-1</sup>)</td>
+        <td class="w-10 center">0.5</td>
     </tr>
     <tr>
         <td class="w-5 center"><span style="border: solid 1px black; display: inline-block; width: 18px;">&nbsp;</span></td>
-        <td colspan="3">izračunano</td>
+        <td colspan="5">izmerjeno</td>
     </tr>
+    <tr>
+        <td class="w-60" colspan="2">energetska cona oziroma stavba</td>
+        <td class="w-10 center">n<sub>50</sub><br />(h<sup>-1</sup>)</td>
+        <td class="w-10 center">ustreza</td>
+        <td class="w-10 center">w<sub>50</sub><br />(m³/(h m²))</td>
+        <td class="w-10 center">ustreza</td>
+    </tr>
+    <?php
+        $i = 0;
+        foreach ($cone as $cona) {
+    ?>
+    <tr>
+        <td class="w-5 center"><?= $i+1 ?></td>
+        <td class="w-55"><?= h($cona->naziv) ?></td>
+        <td class="w-10 center">&nbsp;</td>
+        <td class="w-10 center">&nbsp;</td>
+        <td class="w-10 center">&nbsp;</td>
+        <td class="w-10 center">&nbsp;</td>
+    </tr>
+    <?php
+            $i++;
+        }
+    ?>
 </table>
 
 
@@ -417,4 +488,69 @@ za področje gradbene fizike</h1>
                 $i++;
         }
     ?>
-</table>
+
+<!-- ---------------------------------------------------------------------------- -->
+<?php
+    if ($stavba->vrsta == 'zahtevna') {
+?>
+    <table border="1" cellpadding="3" width="100%">
+        <tr>
+            <td class="w-20">stavba</td>
+            <td class="w-20 center">Q'<sub>H,nd,an</sub></td>
+            <td class="w-20 center">Q'<sub>H,nd,an,ref</sub></td>
+            <td class="w-20 center">Q'<sub>C,nd,an</sub></td>
+            <td class="w-20 center">Q'<sub>C,nd,an,ref</sub></td>
+        </tr>
+        <tr>
+            <td class="w-20 center">&nbsp;</td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->specLetnaToplota, 2) ?></td>
+            <td class="w-20 center"><?= $this->numFormat($refStavba->specLetnaToplota, 2) ?></td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->specLetniHlad, 2) ?></td>
+            <td class="w-20 center"><?= $this->numFormat($refStavba->specLetniHlad, 2) ?></td>
+        </tr>
+    </table>
+    <table border="1" cellpadding="3" width="100%">
+        <thead>
+        <tr>
+            <th colspan="6">Razmernik toplote za ogrevanje H<sub>nd (-)</sub> in razmernik odvedene toplote za hlajenje C<sub>nd</sub> (-) stavbe:</th>
+        </tr>
+        </thead>
+        <tr>
+            <td class="w-20 center">H<sub>nd</sub></td>
+            <td class="w-20 center">H<sub>nd,dov</sub></td>
+            <td class="w-10 center">ustreza</td>
+            <td class="w-20 center">C<sub>nd</sub></td>
+            <td class="w-20 center">C<sub>nd,dov</sub></td>
+            <td class="w-10 center">ustreza</td>
+        </tr>
+        <tr>
+            <td class="w-20 center"><?= $this->numFormat($stavba->specLetnaToplota / $refStavba->specLetnaToplota, 2) ?></td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->H_nd_dov, 2) ?></td>
+            <td class="w-10 center"><?= $stavba->specLetnaToplota / $refStavba->specLetnaToplota < $stavba->H_nd_dov ? 'DA' : 'NE' ?></td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->specLetniHlad / $refStavba->specLetniHlad, 2) ?></td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->C_nd_dov, 2) ?></td>
+            <td class="w-10 center"><?= $stavba->specLetniHlad / $refStavba->specLetniHlad < $stavba->C_nd_dov ? 'DA' : 'NE' ?></td>
+        </tr>
+    </table>
+<?php
+    } else {
+?>
+    <table border="1" cellpadding="3" width="100%">
+        <tr>
+            <td class="w-20 center">X<sub>H,nd</sub></td>
+            <td class="w-20 center">Q'<sub>H,nd,an</sub></td>
+            <td class="w-20 center">Q'<sub>H,nd,an,dov</sub></td>
+            <td class="w-20 center">ustreza</td>
+            <td class="w-20 center">Y<sub>H,nd</sub></td>
+        </tr>
+        <tr>
+            <td class="w-20 center"><?= $this->numFormat($stavba->X_Hnd, 1) ?></td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->specLetnaToplota, 2) ?></td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->dovoljenaSpecLetnaToplota, 2) ?></td>
+            <td class="w-20 center"><?= $stavba->specLetnaToplota < $stavba->dovoljenaSpecLetnaToplota ? 'DA' : 'NE' ?></td>
+            <td class="w-20 center"><?= $this->numFormat($stavba->Y_Hnd, 1) ?></td>
+        </tr>
+    </table>
+<?php
+    }
+?>

@@ -16,8 +16,8 @@
         
         "infiltracija": {
             "n50": 0.6,
-            "lega": 2,
-            "zavetrovanost": 2
+            "lega": "naPodezeljuMedDrevesi",
+            "zavetrovanost": "izpostavljenihVecFasad"
         },
 
         "notranjiViri": {

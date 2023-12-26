@@ -7,8 +7,8 @@ enum VrstaIzpostavljenostiFasad: string
 {
     use \App\Lib\Traits\GetOrdinalTrait;
 
-    case VecFasad = 'vecFasad';
-    case EnaFasada = 'enaFasada';
+    case VecFasad = 'izpostavljenaEnaFasada';
+    case EnaFasada = 'izpostavljenihVecFasad';
 
     /**
      * Vrne faktor vetra po tabeli 8.8

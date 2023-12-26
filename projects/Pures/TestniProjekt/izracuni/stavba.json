@@ -88,8 +88,8 @@
             "faktorOblike": 1.012,
             "infiltracija": {
                 "n50": 0.6,
-                "lega": "delnoIzpostavljena",
-                "zavetrovanost": "enaFasada"
+                "lega": "naPodezeljuMedDrevesi",
+                "zavetrovanost": "izpostavljenihVecFasad"
             },
             "notranjiViri": {
                 "ogrevanje": 4.1,

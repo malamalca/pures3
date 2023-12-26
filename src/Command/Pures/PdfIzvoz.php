@@ -28,7 +28,13 @@ class PdfIzvoz extends Command
         $view->set('projectId', $projectId);
         $view->set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
         $view->set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
-        $view->set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
+
+        $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
+        $view->set('stavba', $stavba);
+        if ($stavba->vrsta == 'zahtevna') {
+            $view->set('refStavba', App::loadProjectCalculation('Pures', $projectId, 'stavba_ref'));
+        }
+
         $view->set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
         $view->set(
             'tKons',

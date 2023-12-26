@@ -90,6 +90,11 @@ class CalcKonstrukcije
         $kons->Sd = $totalSd;
         $kons->debelina = $debelina;
 
+        if (!empty($options['referencnaStavba'])) {
+            // todo: takole dele Excel
+            //$kons->U = $kons->TSG->Umax;
+        }
+
         foreach (self::$spanIterator as $mesec) {
             $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
             $kons->Tsi[$mesec] = $okolje->notranjaT[$mesec] - $kons->Rsi * $toplotniTok;
