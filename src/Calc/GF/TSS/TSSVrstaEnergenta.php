@@ -118,10 +118,10 @@ enum TSSVrstaEnergenta: string
     public function sifraEI()
     {
         $sifre = [
-            'energy_ok',
+            'energy_to',
             'energy_e',
-            'energy_b',
-            'energy_ko',
+            'energy_lb',
+            'energy_elko',
             'energy_zp',
             'energy_dt',
             'energy_unp',

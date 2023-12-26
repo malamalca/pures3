@@ -26,4 +26,16 @@ enum VrstaLegeStavbe: string
 
         return $k[$zavetrovanje->getOrdinal()][$this->getOrdinal()];
     }
+
+    /**
+     * Vrne sifro za EI XML
+     *
+     * @return int
+     */
+    public function sifraEI()
+    {
+        $sifre = [1, 2, 3];
+
+        return $sifre[$this->getOrdinal()];
+    }
 }

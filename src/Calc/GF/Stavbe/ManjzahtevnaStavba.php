@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\Stavbe;
 
+use App\Calc\GF\Stavbe\Izbire\VrstaGradnje;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
 class ManjzahtevnaStavba extends Stavba
@@ -303,7 +304,7 @@ class ManjzahtevnaStavba extends Stavba
     public function X_Htr()
     {
         $ret = 1;
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             $ret = 1.2;
         } elseif ($this->javna) {
             $ret = 0.9;
@@ -320,7 +321,7 @@ class ManjzahtevnaStavba extends Stavba
     // phpcs:ignore
     public function X_Hnd()
     {
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             if ($this->javna) {
                 $ret = 1.25;
             } else {
@@ -346,7 +347,7 @@ class ManjzahtevnaStavba extends Stavba
     public function X_s()
     {
         $ret = 1;
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             $ret = 1.2;
         } elseif ($this->javna) {
             $ret = 0.9;
@@ -363,7 +364,7 @@ class ManjzahtevnaStavba extends Stavba
     // phpcs:ignore
     public function Y_Hnd()
     {
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             if ($this->specLetnaToplota > $this->dovoljenaSpecLetnaToplota) {
                 $ret = 1.2;
             } else {

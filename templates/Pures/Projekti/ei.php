@@ -1,6 +1,11 @@
 <?php
     use App\Core\App;
+    use App\Calc\GF\Stavbe\Izbire\VrstaGradnje;
+    use App\Calc\GF\Stavbe\Izbire\VrstaZahtevnosti;
     use App\Calc\GF\TSS\TSSVrstaEnergenta;
+
+    use App\Calc\GF\Cone\Izbire\VrstaIzpostavljenostiFasad;
+    use App\Calc\GF\Cone\Izbire\VrstaLegeStavbe;
 
     $this->layout = false;
     header('Content-Type: text/xml');
@@ -11,12 +16,12 @@
     <nazivStavbe><?= h($stavba->naziv) ?></nazivStavbe>
     <LokacijaX><?= $stavba->koordinate->X ?></LokacijaX>
     <LokacijaY><?= $stavba->koordinate->Y ?></LokacijaY>
-    <VrstaStavbe>3</VrstaStavbe>
-    <VrstaGradnje>1</VrstaGradnje>
+    <VrstaStavbe><?= VrstaZahtevnosti::from($stavba->vrsta)->sifraEI() ?></VrstaStavbe>
+    <VrstaGradnje><?= VrstaGradnje::from($stavba->tip)->sifraEI() ?></VrstaGradnje>
     <JavnaStavba><?= $stavba->javna ? 'true' : 'false' ?></JavnaStavba>
     <QNH><?= $this->numFormat($stavba->skupnaEnergijaOgrevanje, 0) ?></QNH>
     <QNC><?= $this->numFormat($stavba->skupnaEnergijaHlajenje, 0) ?></QNC>
-    <RefKlima>94534</RefKlima>
+    <RefKlima><?= $this->numFormat($stavba->skupnaEnergijaOgrevanje, 0) ?></RefKlima>
     <NetoPovrsina><?= $this->numFormat($stavba->ogrevanaPovrsina, 0) ?></NetoPovrsina>
     <BrutoVolumen><?= $this->numFormat($stavba->brutoProstornina, 0) ?></BrutoVolumen>
     <A><?= $this->numFormat($stavba->povrsinaOvoja, 0) ?></A>
@@ -130,10 +135,10 @@
     <Xhnd><?= $this->numFormat($stavba->X_Hnd, 1, '.') ?></Xhnd>
     <VrstaModeliranja>1</VrstaModeliranja>
     <rei>
-        <cone_num>1</cone_num>
-        <gradnja>2</gradnja>
-        <lega_stavbe>3</lega_stavbe>
-        <zavetrovanost>1</zavetrovanost>
+        <cone_num><?= $this->numFormat(count($stavba->cone), 0) ?></cone_num>
+        <gradnja><?= $stavba->cone[0]->toplotnaKapaciteta <= 110000 ? 1 : 2 ?></gradnja>
+        <lega_stavbe><?= VrstaLegeStavbe::from($stavba->cone[0]->infiltracija->lega)->sifraEI() ?></lega_stavbe>
+        <zavetrovanost><?= VrstaIzpostavljenostiFasad::from($stavba->cone[0]->infiltracija->zavetrovanost)->sifraEI() ?></zavetrovanost>
         <cone/>
         <ogrevalni_sistemi/>
         <os_razvodi_ogr_stavbe/>

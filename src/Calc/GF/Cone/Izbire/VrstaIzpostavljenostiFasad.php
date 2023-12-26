@@ -21,4 +21,16 @@ enum VrstaIzpostavljenostiFasad: string
 
         return $k[$this->getOrdinal()];
     }
+
+    /**
+     * Vrne sifro za EI XML
+     *
+     * @return int
+     */
+    public function sifraEI()
+    {
+        $sifre = [1, 2];
+
+        return $sifre[$this->getOrdinal()];
+    }
 }

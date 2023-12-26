@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\Stavbe;
 
+use App\Calc\GF\Stavbe\Izbire\VrstaGradnje;
+use App\Calc\GF\Stavbe\Izbire\VrstaZahtevnosti;
+
 abstract class Stavba
 {
     public string $naziv;
@@ -12,7 +15,8 @@ abstract class Stavba
     public \stdClass $koordinate;
     public string $klasifikacija;
 
-    public string $tip;
+    public VrstaGradnje $tip;
+    public VrstaZahtevnosti $zahtevnost;
     public bool $javna;
 
     public array $cone = [];
@@ -49,7 +53,8 @@ abstract class Stavba
         $this->parcele = $config->parcele;
         $this->koordinate = $config->koordinate;
         $this->klasifikacija = $config->klasifikacija;
-        $this->tip = $config->tip;
+        $this->tip = VrstaGradnje::from($config->tip);
+        $this->zahtevnost = VrstaZahtevnosti::from($config->vrsta);
         $this->javna = $config->javna;
     }
 
@@ -82,7 +87,8 @@ abstract class Stavba
         $stavba->parcele = $this->lokacija;
         $stavba->koordinate = $this->lokacija;
         $stavba->klasifikacija = $this->klasifikacija;
-        $stavba->tip = $this->tip;
+        $stavba->tip = $this->tip->value;
+        $stavba->vrsta = $this->zahtevnost->value;
         $stavba->javna = $this->javna;
 
         return $stavba;
