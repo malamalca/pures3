@@ -91,9 +91,7 @@ class CentralniPrezracevalniSistem extends PrezracevalniSistem
      */
     public function export()
     {
-        $ret = new \stdClass();
-        $ret->id = $this->id;
-        $ret->idCone = $this->idCone;
+        $ret = parent::export();
         $ret->razredH1H2 = $this->razredH1H2;
 
         $ret->vrsta = $this->vrsta;

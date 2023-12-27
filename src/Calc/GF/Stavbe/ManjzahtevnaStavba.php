@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\Stavbe;
 
+use App\Calc\GF\Stavbe\Izbire\VrstaGradnje;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
 class ManjzahtevnaStavba extends Stavba
 {
     public float $brutoProstornina = 0;
+    public float $netoProstornina = 0;
     public float $povrsinaOvoja = 0;
     public float $ogrevanaPovrsina = 0;
     public float $transparentnaPovrsina = 0;
@@ -46,6 +48,8 @@ class ManjzahtevnaStavba extends Stavba
     public float $skupnaProizvedenaPorabljenaElektricnaEnergija = 0;
     public float $skupnaProizvedenaElektricnaEnergija = 0;
 
+    public float $skupnaOddanaToplota = 0;
+
     public float $faktorUjemanja = 0;
 
     public float $ROVE = 0;
@@ -56,6 +60,8 @@ class ManjzahtevnaStavba extends Stavba
 
     public float $dovoljenaSpecificnaPrimarnaEnergija = 75;
     public float $dovoljenaKorigiranaSpecificnaPrimarnaEnergija = 75;
+
+    public array $energijaTSSPoEnergentih = [];
 
     /**
      * Analiza stavbe
@@ -71,6 +77,8 @@ class ManjzahtevnaStavba extends Stavba
             (float)array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->povrsinaOvoja, 0);
         $this->ogrevanaPovrsina =
             (float)array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->ogrevanaPovrsina, 0);
+        $this->netoProstornina =
+            (float)array_reduce($this->cone, fn($vsota, $cona) => $vsota + $cona->netoProstornina, 0);
 
         if ($this->povrsinaOvoja == 0.00 || $this->ogrevanaPovrsina == 0.00) {
             return;
@@ -154,6 +162,31 @@ class ManjzahtevnaStavba extends Stavba
                     $this->neutezenaDovedenaEnergija += $energija;
                     $this->utezenaDovedenaEnergija +=
                         $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg');
+
+                    $tss = $sistem->tss;
+                    if ($tss == 'oht') {
+                        if (isset($sistem->ogrevanje)) {
+                            foreach ((array)$sistem->ogrevanje->energijaPoEnergentih as $energentOgr => $energijaOgr) {
+                                $this->energijaTSSPoEnergentih['ogrevanje'][$energentOgr] =
+                                    ($this->energijaTSSPoEnergentih['ogrevanje'][$energentOgr] ?? 0) + $energijaOgr;
+                            }
+                        }
+                        if (isset($sistem->hlajenje)) {
+                            foreach ((array)$sistem->hlajenje->energijaPoEnergentih as $energentHl => $energijaHl) {
+                                $this->energijaTSSPoEnergentih['hlajenje'][$energentHl] =
+                                    ($this->energijaTSSPoEnergentih['hlajenje'][$energentHl] ?? 0) + $energijaHl;
+                            }
+                        }
+                        if (isset($sistem->tsv)) {
+                            foreach ((array)$sistem->tsv->energijaPoEnergentih as $energentTsv => $energijaTsv) {
+                                $this->energijaTSSPoEnergentih['tsv'][$energentTsv] =
+                                    ($this->energijaTSSPoEnergentih['tsv'][$energentTsv] ?? 0) + $energijaTsv;
+                            }
+                        }
+                    } else {
+                        $this->energijaTSSPoEnergentih[$tss][$energent] =
+                            ($this->energijaTSSPoEnergentih[$tss][$energent] ?? 0) + $energija;
+                    }
                 } else {
                     if ($energent == TSSVrstaEnergenta::Elektrika->value) {
                         $this->skupnaProizvedenaPorabljenaElektricnaEnergija += $energija * -1;
@@ -271,7 +304,7 @@ class ManjzahtevnaStavba extends Stavba
     public function X_Htr()
     {
         $ret = 1;
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             $ret = 1.2;
         } elseif ($this->javna) {
             $ret = 0.9;
@@ -288,7 +321,7 @@ class ManjzahtevnaStavba extends Stavba
     // phpcs:ignore
     public function X_Hnd()
     {
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             if ($this->javna) {
                 $ret = 1.25;
             } else {
@@ -314,7 +347,7 @@ class ManjzahtevnaStavba extends Stavba
     public function X_s()
     {
         $ret = 1;
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             $ret = 1.2;
         } elseif ($this->javna) {
             $ret = 0.9;
@@ -331,7 +364,7 @@ class ManjzahtevnaStavba extends Stavba
     // phpcs:ignore
     public function Y_Hnd()
     {
-        if ($this->tip == 'celovitaObnova') {
+        if ($this->tip == VrstaGradnje::CelovitaObnova) {
             if ($this->specLetnaToplota > $this->dovoljenaSpecLetnaToplota) {
                 $ret = 1.2;
             } else {

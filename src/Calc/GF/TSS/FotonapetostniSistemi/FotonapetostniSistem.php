@@ -12,6 +12,7 @@ class FotonapetostniSistem
 {
     public string $id;
     public string $idCone;
+    public string $tss = 'fotovoltaika';
 
     public float $povrsina;
     public string $orientacija;

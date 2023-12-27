@@ -109,4 +109,25 @@ enum TSSVrstaEnergenta: string
 
         return $naziviEnergentov[$this->getOrdinal()];
     }
+
+    /**
+     * Vrne sifro energenta za EI XML
+     *
+     * @return string
+     */
+    public function sifraEI()
+    {
+        $sifre = [
+            'energy_to',
+            'energy_e',
+            'energy_lb',
+            'energy_elko',
+            'energy_zp',
+            'energy_dt',
+            'energy_unp',
+            'energy_sol',
+        ];
+
+        return $sifre[$this->getOrdinal()];
+    }
 }

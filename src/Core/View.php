@@ -62,25 +62,27 @@ class View
         $contents = ob_get_contents();
         ob_end_clean();
 
-        // extract vars that might be set in template
-        extract($this->_vars);
+        if (!isset($this->layout) || $this->layout !== false) {
+            // extract vars that might be set in template
+            extract($this->_vars);
 
-        // set default title
-        if (!isset($title)) {
-            $title = $controllerName . '::' . $methodName;
+            // set default title
+            if (!isset($title)) {
+                $title = $controllerName . '::' . $methodName;
+            }
+
+            // output render data
+            $layoutName = 'default';
+            if (isset($this->_options['layout'])) {
+                $layoutName = $this->_options['layout'];
+            }
+            $layoutFile = realpath(TEMPLATES . 'layouts' . DS . $layoutName . '.php');
+
+            ob_start();
+            require $layoutFile;
+            $contents = ob_get_contents();
+            ob_end_clean();
         }
-
-        // output render data
-        $layoutName = 'default';
-        if (isset($this->_options['layout'])) {
-            $layoutName = $this->_options['layout'];
-        }
-        $layoutFile = realpath(TEMPLATES . 'layouts' . DS . $layoutName . '.php');
-
-        ob_start();
-        require $layoutFile;
-        $contents = ob_get_contents();
-        ob_end_clean();
 
         return $contents;
     }

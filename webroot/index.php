@@ -5,7 +5,7 @@ use App\Core\App;
 use App\Core\Configure;
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-    $r->addRoute(['GET', 'POST'], '/pures/{controller}[/{action}[/{param1}[/{param2}]]]', 'Pures');
+    $r->addRoute(['GET', 'POST'], '/pures/{controller}[/{action}[/{param1}[/{param2}[/{param3}]]]]', 'Pures');
     $r->addRoute(['GET', 'POST'], '/hrup/{controller}[/{action}[/{param1}[/{param2}]]]', 'Hrup');
     $r->addRoute(['GET'], '/project-image/{area}/{projectId}/{image}', 'ProjectImage');
 });

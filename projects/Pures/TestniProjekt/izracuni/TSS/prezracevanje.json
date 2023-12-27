@@ -2,6 +2,7 @@
     {
         "id": "Prezracevanje",
         "idCone": "Cona1",
+        "tss": "prezracevanje",
         "razredH1H2": true,
         "vrsta": "centralni",
         "faktorKrmiljenja": 1,

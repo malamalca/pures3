@@ -61,7 +61,6 @@ class IzracunTSS extends Command
                 if (!$cona) {
                     throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
                 }
-                //$sistem = CalcTSSRazsvetljava::analiza($sistem, $cona, $okolje, $splosniPodatki);
                 $razsvetljava = new Razsvetljava($sistem);
                 $razsvetljava->analiza([], $cona, $okolje);
 

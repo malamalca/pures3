@@ -10,6 +10,7 @@ class Razsvetljava
 {
     public ?string $id;
     public ?string $idCone;
+    public string $tss = 'razsvetljava';
 
     public float $faktorDnevneSvetlobe;
 
@@ -114,9 +115,14 @@ class Razsvetljava
      */
     public function analiza($potrebnaEnergija, $cona, $okolje, $params = [])
     {
+        $faktorOblike = $cona->faktorOblikeCone ?? 1;
+        if (!empty($params['referencnaStavba'])) {
+            $faktorOblike = 1.4;
+        }
+
         // ker je LAHKO odvisna od $cone oz. faktorjaOblikeCone
         $mocSvetilk = !is_null($this->mocSvetilk) ? $this->mocSvetilk :
-            $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine * ($cona->faktorOblikeCone ?? 1) *
+            1 / $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine * ($faktorOblike ?? 1) *
             $this->faktorZmanjsaneOsvetlitveDelovnePovrsine * $this->faktorVzdrzevanja;
 
         $letnaDovedenaEnergija = ($this->faktorZmanjsanjaSvetlobnegaToka *
@@ -155,6 +161,7 @@ class Razsvetljava
         $ret = new \stdClass();
         $ret->id = $this->id;
         $ret->idCone = $this->idCone;
+        $ret->tss = $this->tss;
 
         $ret->faktorDnevneSvetlobe = $this->faktorDnevneSvetlobe;
 

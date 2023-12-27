@@ -130,9 +130,9 @@
         "sifra": "hidroizolacija",
         "opis": "Večplastna bitumenska hidroizolacija",
         "lambda": 0.19,
-        "gostota": 1200,
+        "gostota": 1100,
         "specificnaToplota": 1460,
-        "difuzijskaUpornost": 14000
+        "difuzijskaUpornost": 2000
     },
     {
         "id": "113.4",
@@ -193,9 +193,9 @@
         "sifra": "parnaZapora",
         "opis": "Parna zapora",
         "lambda": 0.19,
-        "gostota": 964,
-        "specificnaToplota": 1700,
-        "difuzijskaUpornost": 526000
+        "gostota": 1200,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 10000
     },
     {
         "id": "00.3",

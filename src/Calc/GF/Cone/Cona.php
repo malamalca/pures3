@@ -141,9 +141,29 @@ class Cona
         }
 
         if (!empty($this->options['referencnaStavba'])) {
-            $config->infiltracija->n50 = 2;
+            // todo: za rekonstrukcije n50=2
+            $config->infiltracija->n50 = 1.5;
             $config->toplotnaKapaciteta = 260000;
             $config->deltaPsi = 0;
+
+            $prezracevanje = $config->prezracevanje ?? new \stdClass();
+            $prezracevanje->vrsta = 'rekuperacija';
+            $prezracevanje->regulacija = 'brez';
+            $prezracevanje->izkoristek = 0.65;
+            $config->prezracevanje = $prezracevanje;
+
+            $razsvetljava = $config->razsvetljava ?? new \stdClass();
+            unset($razsvetljava->mocSvetilk);
+            $razsvetljava->faktorNaravneOsvetlitve = 1;
+            $razsvetljava->faktorZmanjsanjaSvetlobnegaToka = 1;
+            $razsvetljava->faktorPrisotnosti = 1;
+            $razsvetljava->faktorDnevneSvetlobe = 0;
+            $razsvetljava->osvetlitevDelovnePovrsine = 300;
+            // velja za LED
+            $razsvetljava->ucinkovitostViraSvetlobe = 80;
+            $razsvetljava->faktorVzdrzevanja = 1;
+
+            $config->razsvetljava = $razsvetljava;
         }
 
         $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
@@ -253,7 +273,10 @@ class Cona
      */
     public function analiza($okolje)
     {
-        Log::info(sprintf('"%s": Začetek analize cone', $this->id));
+        Log::info(sprintf(
+            '"%s": Začetek analize cone' . (empty($this->options['referencnaStavba']) ? '' : ' :: REF'),
+            $this->id
+        ));
 
         // izračunaj delto temperature med notranjostjo in zuanjim zrakom
         foreach (array_keys(Calc::MESECI) as $mesec) {
@@ -319,7 +342,10 @@ class Cona
                 ($this->transparentnaPovrsina / $this->povrsinaOvoja) / 8;
         }
 
-        Log::info(sprintf('"%s": Konec analize cone', $this->id));
+        Log::info(sprintf(
+            '"%s": Konec analize cone' . (empty($this->options['referencnaStavba']) ? '' : ' :: REF'),
+            $this->id
+        ));
     }
 
     /**
@@ -598,7 +624,7 @@ class Cona
     public function izracunRazsvetljave()
     {
         $TSSRazsvetljava = new Razsvetljava($this->razsvetljava);
-        $TSSRazsvetljava->analiza([], $this, null);
+        $TSSRazsvetljava->analiza([], $this, null, $this->options);
         $this->energijaRazsvetljava = $TSSRazsvetljava->potrebnaEnergija;
         $this->skupnaEnergijaRazsvetljava = $TSSRazsvetljava->skupnaPotrebnaEnergija;
     }

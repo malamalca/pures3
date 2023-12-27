@@ -28,10 +28,19 @@ class IzracunStavbe extends Command
         $stavba = StavbaFactory::create($splosniPodatki->stavba->vrsta, $splosniPodatki->stavba);
         $stavba->cone = App::loadProjectCalculation('Pures', $projectId, 'cone');
         $stavba->analiza($okolje);
+
         $stavba->sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS);
         $stavba->analizaTSS();
         $stavbaJson = $stavba->export();
 
         App::saveProjectCalculation('Pures', $projectId, 'stavba', $stavbaJson);
+
+        if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
+            $stavbaRef = StavbaFactory::create($splosniPodatki->stavba->vrsta, $splosniPodatki->stavba);
+            $stavbaRef->cone = App::loadProjectCalculation('Pures', $projectId, 'cone_ref');
+            $stavbaRef->analiza($okolje);
+
+            App::saveProjectCalculation('Pures', $projectId, 'stavba_ref', $stavbaRef->export());
+        }
     }
 }

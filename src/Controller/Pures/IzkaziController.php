@@ -112,7 +112,12 @@ class IzkaziController
      */
     public function podrocjeGf($projectId)
     {
-        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
+        $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
+        App::set('stavba', $stavba);
+        if ($stavba->vrsta == 'zahtevna') {
+            App::set('refStavba', App::loadProjectCalculation('Pures', $projectId, 'stavba_ref'));
+        }
+
         App::set(
             'tKons',
             App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'transparentne') ?? []

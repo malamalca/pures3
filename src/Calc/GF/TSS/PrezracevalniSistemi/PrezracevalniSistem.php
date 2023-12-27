@@ -7,6 +7,7 @@ abstract class PrezracevalniSistem
 {
     public string $id;
     public string $idCone;
+    public string $tss = 'prezracevanje';
     public string $vrsta;
 
     public int $stevilo;
@@ -63,5 +64,13 @@ abstract class PrezracevalniSistem
      *
      * @return \stdClass
      */
-    abstract public function export();
+    public function export()
+    {
+        $ret = new \stdClass();
+        $ret->id = $this->id;
+        $ret->idCone = $this->idCone;
+        $ret->tss = $this->tss;
+
+        return $ret;
+    }
 }
