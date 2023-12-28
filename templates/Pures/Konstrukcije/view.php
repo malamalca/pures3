@@ -153,8 +153,8 @@
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"><?= $okolje->notranjaT[$mesec] ?></td>
-            <td class="right"><?= round(Calc::nasicenTlak($okolje->notranjaT[$mesec]) * $okolje->notranjaVlaga[$mesec] / 100, 0) ?></td>
-            <td class="right"><?= round(Calc::nasicenTlak($okolje->notranjaT[$mesec]), 0) ?></td>
+            <td class="right"><?= round(Calc::nasicenTlak($okolje->notranjaT[$mesec]) * $okolje->notranjaVlaga[$mesec] / 100, 2) ?></td>
+            <td class="right"><?= round(Calc::nasicenTlak($okolje->notranjaT[$mesec]), 2) ?></td>
         </tr>
         <tr>
             <td>Notr. površina</td>
@@ -163,8 +163,8 @@
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"><?= round($kons->Tsi[$mesec], 1) ?></td>
-            <td class="right"><?= round($kons->dejanskiTlakSi[$mesec], 0) ?></td>
-            <td class="right"><?= round($kons->nasicenTlakSi[$mesec], 0) ?></td>
+            <td class="right"><?= round($kons->dejanskiTlakSi[$mesec], 2) ?></td>
+            <td class="right"><?= round($kons->nasicenTlakSi[$mesec], 2) ?></td>
         </tr>
 <?php
     foreach ($kons->materiali as $material) {
@@ -177,8 +177,8 @@
             <td class="right w-10"><?= !empty($sloj->lambda) ? round(($sloj->debelina ?? 0) / ($sloj->lambda ?? 0), 3) : '' ?></td>
             <td class="right w-10"><?= isset($sloj->Sd) ? round($sloj->Sd, 4) : round($sloj->debelina * $sloj->difuzijskaUpornost, 4) ?></td>
             <td class="right w-10"><?= round($sloj->T[$mesec], 1) ?></td>
-            <td class="right w-10"><?= round($sloj->dejanskiTlak[$mesec], 1) ?></td>
-            <td class="right w-10"><?= round($sloj->nasicenTlak[$mesec], 1) ?></td>
+            <td class="right w-10"><?= round($sloj->dejanskiTlak[$mesec], 2) ?></td>
+            <td class="right w-10"><?= round($sloj->nasicenTlak[$mesec], 2) ?></td>
             <td class="right w-10"><?= isset($sloj->gc->$mesec) ? round($sloj->gc->$mesec, 5) : '' ?></td>
             <td class="right w-10"><?= isset($sloj->gm->$mesec) ? round($sloj->gm->$mesec, 5) : '' ?></td>
         </tr>
@@ -193,8 +193,8 @@
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"><?= round($kons->Tse[$mesec], 1) ?></td>
-            <td class="right"><?= round($kons->dejanskiTlakSe[$mesec], 0) ?></td>
-            <td class="right"><?= round($kons->nasicenTlakSe[$mesec], 0) ?></td>
+            <td class="right"><?= round($kons->dejanskiTlakSe[$mesec], 2) ?></td>
+            <td class="right"><?= round($kons->nasicenTlakSe[$mesec], 2) ?></td>
         </tr>
         <tr>
             <td>Okolica</td>

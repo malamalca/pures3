@@ -173,6 +173,20 @@ class CalcKonstrukcije
                 }
             }
 
+            $racunskiSloji = [];
+            foreach ($kons->materiali as $material) {
+                foreach ($material->racunskiSloji as $sloj) {
+                    $sloj->material = $material;
+                    $racunskiSloji[] = $sloj;
+                }
+            }
+
+            // naredim popravek tlaka in določim kondenzacijske ravnine
+            foreach (self::$spanIterator as $mesec) {
+                self::izracunTlakaRekurzija($kons, $racunskiSloji, $mesec, 0, count($racunskiSloji) - 1);
+            }
+
+            // izračunam dejansko količino kondenzacije
             self::izracunKondenzacije($kons);
 
             // odstrani odvečne podatke
@@ -189,6 +203,79 @@ class CalcKonstrukcije
     }
 
     /**
+     * Preračun dejanskega tlaka in določitev kondenzacijskih ravnin.
+     * Rutina dela rekurzivno, tako da poišče najnižjo točko nasičenega tlaka v segmentu -
+     * najprej vzame za segment celotno širino, v drugi globini ponovi za segmenta levo in desno od kond. ravnine,...
+     * Start in end indeksa pri večjih globinah vključujeta predhodno določeno konenzacijsko ravnino.
+     *
+     * @param \stdClass $kons Podatki konstrukcije
+     * @param array<\stdClass> $racunskiSloji Array vseh računskih slojev po vrsti
+     * @param int $mesec Številka meseca 0..11
+     * @param int $start Startni index segmenta
+     * @param int $end Končni index segmenta
+     * @param int $depth Globina iteracije
+     * @return void
+     */
+    private static function izracunTlakaRekurzija($kons, $racunskiSloji, $mesec, $start, $end, $depth = 1)
+    {
+        $maxRazlika = 0;
+        $maxIndex = -1;
+        for ($i = $start; $i <= $end; $i++) {
+            $razlikaDoNasicenegaTlaka =
+                $racunskiSloji[$i]->dejanskiTlak[$mesec] - $racunskiSloji[$i]->nasicenTlak[$mesec];
+            if ($razlikaDoNasicenegaTlaka > $maxRazlika) {
+                $maxRazlika = $razlikaDoNasicenegaTlaka;
+                $maxIndex = $i;
+            }
+        }
+
+        if ($maxIndex >= 0) {
+            // konenzacijska ravnina v tem segmentu obstaja na indexu $maxIndex
+            // v tem primeru popravim tlake na preostalih konstrukcijah
+            $racunskiSloji[$maxIndex]->dejanskiTlak[$mesec] = $racunskiSloji[$maxIndex]->nasicenTlak[$mesec];
+            $racunskiSloji[$maxIndex]->kondenzacijskaRavnina[$mesec] = true;
+
+            // popravim tlak slojev levo od ravnine
+            if ($start == 0) {
+                $dejanskiTlakStart = $kons->dejanskiTlakSi[$mesec];
+                $SdStart = 0;
+            } else {
+                $dejanskiTlakStart = $racunskiSloji[$start]->dejanskiTlak[$mesec];
+                $SdStart = $racunskiSloji[$start]->Sdn;
+            }
+            $dejanskiTlakEnd = $racunskiSloji[$maxIndex]->dejanskiTlak[$mesec];
+            $SdEnd = $racunskiSloji[$maxIndex]->Sdn;
+
+            for ($i = $start; $i < $maxIndex; $i++) {
+                $racunskiSloji[$i]->dejanskiTlak[$mesec] = $dejanskiTlakStart +
+                    ($racunskiSloji[$i]->Sdn - $SdStart) / ($SdEnd - $SdStart) *
+                    ($dejanskiTlakEnd - $dejanskiTlakStart);
+            }
+
+            self::izracunTlakaRekurzija($kons, $racunskiSloji, $mesec, 0, $maxIndex, $depth + 1);
+
+            // popravim tlak slojev desno od ravnine
+            if ($end == count($racunskiSloji) - 1) {
+                $dejanskiTlakEnd = $kons->dejanskiTlakSe[$mesec];
+                $SdEnd = $kons->Sd;
+            } else {
+                $dejanskiTlakEnd = $racunskiSloji[$end]->dejanskiTlak[$mesec];
+                $SdEnd = $racunskiSloji[$end]->Sdn;
+            }
+            $dejanskiTlakStart = $racunskiSloji[$maxIndex]->dejanskiTlak[$mesec];
+            $SdStart = $racunskiSloji[$maxIndex]->Sdn;
+
+            for ($i = $maxIndex + 1; $i < $end; $i++) {
+                $racunskiSloji[$i]->dejanskiTlak[$mesec] = $dejanskiTlakStart +
+                    ($SdStart - $racunskiSloji[$i]->Sdn) / ($SdEnd - $SdStart) *
+                        ($dejanskiTlakStart - $dejanskiTlakEnd);
+            }
+
+            self::izracunTlakaRekurzija($kons, $racunskiSloji, $mesec, $maxIndex, $end, $depth + 1);
+        }
+    }
+
+    /**
      * Funkcija izračuna kondenzacijo v konstrukciji
      *
      * @param \stdClass $kons Konstrukcija
@@ -196,32 +283,41 @@ class CalcKonstrukcije
      */
     private static function izracunKondenzacije($kons)
     {
+        // vse kond. ravnine ne glede na mesece
+        /** @var array<\stdClass> $kondRavnine */
         $kondRavnine = [];
+        foreach ($kons->materiali as $material) {
+            foreach ($material->racunskiSloji as $sloj) {
+                if (isset($sloj->kondenzacijskaRavnina)) {
+                    $kondRavnine[] = $sloj;
+                }
+            }
+        }
+
         // iščemo kondenzacijo po mesecih
         foreach (self::$spanIterator as $mesec) {
+            // kond. ravnine v trenutnem mesecu
+            /** @var array<\stdClass> $kondRavnineVMesecu */
             $kondRavnineVMesecu = [];
-
-            $i = 0;
-            while ($i < 10 && ($kondRavnineKorak = self::isciKondRavnine($kons, $mesec))) {
-                // popravimo dejanski tlak
-                $kondRavnineVMesecu = array_merge($kondRavnineVMesecu, $kondRavnineKorak);
-                self::popravekDejanskegaTlaka($kons, $kondRavnineVMesecu, $mesec);
-                $i++;
+            foreach ($kons->materiali as $material) {
+                foreach ($material->racunskiSloji as $sloj) {
+                    if (isset($sloj->kondenzacijskaRavnina[$mesec])) {
+                        $kondRavnineVMesecu[] = $sloj;
+                    }
+                }
             }
 
             if (count($kondRavnineVMesecu) > 0) {
-                foreach ($kondRavnineVMesecu as $sloj) {
-                    if (!in_array($sloj, $kondRavnine)) {
-                        $kondRavnine[] = $sloj;
-                    }
-                }
                 // kondenzacijske ravnine so določene, sedaj poiščemo količino vlage v posamezni ravnini
                 $tlakLevo = $kons->dejanskiTlakSi[$mesec];
                 $SdLevo = 0;
                 foreach ($kondRavnineVMesecu as $i => $sloj) {
+                    /** @var \stdClass $sloj */
                     if (!empty($kondRavnineVMesecu[$i + 1])) {
-                        $tlakDesno = $kondRavnineVMesecu[$i + 1]->nasicenTlak[$mesec];
-                        $SdDesno = $kondRavnineVMesecu[$i + 1]->Sdn;
+                        /** @var \stdClass $naslednjaKondRavnina */
+                        $naslednjaKondRavnina = $kondRavnineVMesecu[$i + 1];
+                        $tlakDesno = $naslednjaKondRavnina->nasicenTlak[$mesec];
+                        $SdDesno = $naslednjaKondRavnina->Sdn;
                     } else {
                         $tlakDesno = $kons->dejanskiTlakSe[$mesec];
                         $SdDesno = $kons->Sd;
@@ -240,7 +336,7 @@ class CalcKonstrukcije
                     $sloj->gc[$mesec] = $gc;
                     $kons->gc[$mesec] = ($kons->gc[$mesec] ?? 0) + $sloj->gc[$mesec];
                 }
-            } // sizeof($kondRavnine) > 0
+            } // sizeof($kondRavnineVMesecu) > 0
         } // foreach (self::MESECI)
 
         // pa še količino kondenza po mesecih
@@ -311,17 +407,21 @@ class CalcKonstrukcije
                             $kons->gm[$mesec] = ($kons->gm[$mesec] ?? 0) + $sloj->gm[$mesec];
                         } else {
                             if (!empty($sloj->gm[$prejsnjiMesec])) {
-                                if ($idRavnine > 0) {
-                                    $tlakLevo = $kondRavnine[$idRavnine - 1]->nasicenTlak[$mesec];
-                                    $SdLevo = $kondRavnine[$idRavnine - 1]->Sdn;
+                                if ($idRavnine > 0 && isset($kondRavnine[$idRavnine - 1])) {
+                                    /** @var \stdClass $prejsnjaKondRavnina */
+                                    $prejsnjaKondRavnina = $kondRavnine[$idRavnine - 1];
+                                    $tlakLevo = $prejsnjaKondRavnina->nasicenTlak[$mesec];
+                                    $SdLevo = $prejsnjaKondRavnina->Sdn;
                                 } else {
                                     $tlakLevo = $kons->dejanskiTlakSi[$mesec];
                                     $SdLevo = 0;
                                 }
 
                                 if (isset($kondRavnine[$idRavnine + 1])) {
-                                    $tlakDesno = $kondRavnine[$idRavnine + 1]->nasicenTlak[$mesec];
-                                    $SdDesno = $kondRavnine[$idRavnine + 1]->Sdn;
+                                    /** @var \stdClass $naslednjaKondRavnina */
+                                    $naslednjaKondRavnina = $kondRavnine[$idRavnine + 1];
+                                    $tlakDesno = $naslednjaKondRavnina->nasicenTlak[$mesec];
+                                    $SdDesno = $naslednjaKondRavnina->Sdn;
                                 } else {
                                     $tlakDesno = $kons->dejanskiTlakSe[$mesec];
                                     $SdDesno = $kons->Sd;
@@ -362,108 +462,6 @@ class CalcKonstrukcije
                         $kons->maxGm = $mesecniGm;
                     }
                 }
-            }
-        }
-    }
-
-    /**
-     * Funkcija išče kondenzacijske ravnine v konstrukciji
-     *
-     * @param \stdClass $kons Podatki konstrukcije
-     * @param int $mesec Številka meseca
-     * @return array<int, mixed>|null
-     */
-    public static function isciKondRavnine($kons, $mesec)
-    {
-        // 0-ni kondenzacije, 1-iscemo največjo razliko, 2-zmanjsevanje
-        $kondIskanje = 0;
-
-        /** @var array<int, mixed> $kondRavnine */
-        $kondRavnine = [];
-        $zadnjaKondenzacija = null;
-
-        foreach ($kons->materiali as $material) {
-            foreach ($material->racunskiSloji as $sloj) {
-                $deltaTlaka = $sloj->nasicenTlak[$mesec] - $sloj->dejanskiTlak[$mesec];
-                if ($deltaTlaka < 0) {
-                    if ($kondIskanje == 0) {
-                        $kondIskanje = 1;
-                        $zadnjaKondenzacija = $sloj;
-                    } elseif ($kondIskanje == 1) {
-                        $prejsnjaDeltaTlaka = $zadnjaKondenzacija->nasicenTlak[$mesec] -
-                            $zadnjaKondenzacija->dejanskiTlak[$mesec];
-                        if ($deltaTlaka < $prejsnjaDeltaTlaka) {
-                            $zadnjaKondenzacija = $sloj;
-                        } else {
-                            $zadnjaKondenzacija->material = $material;
-                            $kondRavnine[] = $zadnjaKondenzacija;
-                            $kondIskanje = 2;
-                        }
-                    }
-                } else {
-                    // če smo prišli izven območja kondenzacije
-                    if ($kondIskanje == 1) {
-                        $zadnjaKondenzacija->material = $material;
-                        $kondRavnine[] = $zadnjaKondenzacija;
-                        $kondIskanje = 0;
-                    } elseif ($kondIskanje == 2) {
-                        $kondIskanje = 0;
-                    }
-                }
-            }
-        }
-
-        return count($kondRavnine) > 0 ? $kondRavnine : null;
-    }
-
-    /**
-     * Funkcija popravi potek tlaka vodne pare v konstrukciji tako,
-     * da ni linearen ampak da poteka po liniji kondenzacijskih ravnin.
-     *
-     * @param \stdClass $kons Podatki konstrukcije
-     * @param array<mixed> $kondRavnine Kondenzacijske ravnine
-     * @param int $mesec Številka meseca 0..11
-     * @return void
-     */
-    public static function popravekDejanskegaTlaka($kons, $kondRavnine, $mesec)
-    {
-        $indexRavnine = 0;
-        $dejanskiTlakLevo = $kons->dejanskiTlakSi[$mesec];
-        $dejanskiTlakDesno = $kondRavnine[0]->nasicenTlak[$mesec];
-        $SdLevo = 0;
-        $SdDesno = $kondRavnine[0]->Sdn;
-
-        // kondenzacijske ravnine so določene, sedaj prilagodim pdej na da so tangente na kondenzacijske ravnine
-        foreach ($kons->materiali as $material) {
-            foreach ($material->racunskiSloji as $sloj) {
-                // samo za tiste mesece, kjer dejansko poteka kondenzacija ali evaporacija
-                //if (!empty($kondRavnine[$indexRavnine]->gc[$mesec])) {
-                if ($indexRavnine < count($kondRavnine) && ($sloj == $kondRavnine[$indexRavnine])) {
-                    // prišli smo do kondenzacijske ravnine
-                    $indexRavnine++;
-
-                    // popravimo dejanski tlak kondenzacijske ravnine na nasičen tlak
-                    $sloj->dejanskiTlak[$mesec] = $sloj->nasicenTlak[$mesec];
-
-                    $dejanskiTlakLevo = $sloj->dejanskiTlak[$mesec];
-                    $SdLevo = $sloj->Sdn;
-
-                    if ($indexRavnine < count($kondRavnine)) {
-                        // naslednja ravnina obstaja, nastavi vrednosti nanjo
-                        $dejanskiTlakDesno = $kondRavnine[$indexRavnine]->nasicenTlak[$mesec];
-                        $SdDesno = $sloj->Sdn;
-                    } else {
-                        // ni več kondenzacijskih ravnin
-                        $dejanskiTlakDesno = $kons->dejanskiTlakSe[$mesec];
-                        $SdDesno = $kons->Sd;
-                    }
-                } else {
-                    $deltaDejanskegaTlaka = $dejanskiTlakLevo - $dejanskiTlakDesno;
-
-                    $sloj->dejanskiTlak[$mesec] = $dejanskiTlakLevo -
-                        $deltaDejanskegaTlaka * ($sloj->Sdn - $SdLevo) / ($SdDesno - $SdLevo);
-                }
-                //}
             }
         }
     }

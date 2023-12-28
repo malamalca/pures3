@@ -108,6 +108,15 @@
         "difuzijskaUpornost": 70
     },
     {
+        "id": "76.1",
+        "sifra": "asfalt",
+        "opis": "Asfalt",
+        "lambda": 0.7,
+        "gostota": 2100,
+        "specificnaToplota": 1050,
+        "difuzijskaUpornost": 2500
+    },
+    {
         "id": "78",
         "sifra": "vinil",
         "opis": "PVC, homogen",
@@ -128,6 +137,15 @@
     {
         "id": "91.2",
         "sifra": "hidroizolacija",
+        "opis": "Večplastna bitumenska hidroizolacija",
+        "lambda": 0.19,
+        "gostota": 1200,
+        "specificnaToplota": 1460,
+        "difuzijskaUpornost": 14000
+    },
+    {
+        "id": "91.3",
+        "sifra": "hidroizolacija2",
         "opis": "Večplastna bitumenska hidroizolacija",
         "lambda": 0.19,
         "gostota": 1100,

@@ -68,7 +68,7 @@
             "Umax": 0.35, "Rsi": 0.1, "Rse": 0.1, "tip": "zunanja", "idReferencneKonstrukcije": 2
     },
     {
-        "id": 17, "naziv": "Del terase, ki ne presega 5 % površine strehe",
+        "id": 17, "naziv": "Del terase, ki ne presega 5% površine strehe",
             "Umax": 0.6, "Rsi": 0.1, "Rse": 0.04, "tip": "zunanja", "idReferencneKonstrukcije": 3, "dobitekSS": true
     }
 ]

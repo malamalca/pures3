@@ -16,6 +16,9 @@ class NetransparentenElementOvoja extends ElementOvoja
     public VrstaTal $tla;
     public BarvaElementaOvoja $barva;
 
+    // lahko se overrida določilo iz TSG
+    public ?bool $dobitekSS;
+
     // velja za konstrukcije v stiku z zemljino
     public ?float $obseg;
     public ?float $debelinaStene;
@@ -34,7 +37,6 @@ class NetransparentenElementOvoja extends ElementOvoja
     public ?float $visinaNadTerenom;
     public ?float $prostorninaKleti;
     public ?float $izmenjavaZraka;
-    public ?float $ekvivalentnaDebelinaTal;
 
     /**
      * Loads configuration from json|stdClass
@@ -59,7 +61,16 @@ class NetransparentenElementOvoja extends ElementOvoja
         $this->tla = VrstaTal::from($config->tla ?? 'pesek');
 
         $this->barva = BarvaElementaOvoja::from($config->barva ?? 'brez');
-        if (empty($config->barva) && !empty($this->konstrukcija->TSG->dobitekSS)) {
+
+        if (isset($config->dobitekSS)) {
+            $this->dobitekSS = $config->dobitekSS;
+        }
+
+        $dobitekSS = !empty($this->konstrukcija->TSG->dobitekSS);
+        if (isset($this->dobitekSS)) {
+            $dobitekSS = $this->dobitekSS;
+        }
+        if (empty($config->barva) && $dobitekSS) {
             Log::warn(sprintf('Netransparenten element ovoja "%s" nima določene barve.', $this->idKonstrukcije));
         }
 
@@ -179,7 +190,7 @@ class NetransparentenElementOvoja extends ElementOvoja
                 $Qsky = $Fsky * $this->konstrukcija->Rse * ($this->U + $cona->deltaPsi) *
                     $this->povrsina * $hri * $dTsky * $stDni * 24;
 
-                if (!empty($this->konstrukcija->TSG->dobitekSS)) {
+                if (!empty($this->konstrukcija->TSG->dobitekSS) || (isset($this->dobitekSS) && $this->dobitekSS)) {
                     $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol - $Qsky) / 1000 * $this->stevilo;
                     $this->solarniDobitkiHlajenje[$mesec] = ($Qsol - $Qsky) / 1000 * $this->stevilo;
                 } else {
