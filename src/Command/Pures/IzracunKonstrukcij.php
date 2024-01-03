@@ -5,6 +5,9 @@ namespace App\Command\Pures;
 
 use App\Core\App;
 use App\Core\Command;
+use App\Core\Configure;
+use App\Core\PDF\PdfFactory;
+use App\Core\PdfView;
 use App\Lib\CalcKonstrukcije;
 
 class IzracunKonstrukcij extends Command
@@ -13,9 +16,10 @@ class IzracunKonstrukcij extends Command
      * Command run routine
      *
      * @param string|null $projectId Project id.
+     * @param array|null $args Additional argumetns
      * @return void
      */
-    public function run($projectId = null)
+    public function run($projectId = null, ...$args)
     {
         parent::run();
 
@@ -104,5 +108,42 @@ class IzracunKonstrukcij extends Command
                 );
             }
         }
+
+        if (count($args) > 0 && in_array('--pdf', $args)) {
+            $this->pdfIzvoz($projectId);
+        }
+    }
+
+    /**
+     * Rutina za izvod pdf s konstrukcijami
+     *
+     * @param string $projectId Project id.
+     * @return void
+     */
+    private function pdfIzvoz($projectId)
+    {
+        $pdfEngine = Configure::read('PDF.engine');
+        $pdfLayout = Configure::read('PDF.' . $pdfEngine . '.layout');
+
+        $pdf = PdfFactory::create($pdfEngine, Configure::read('PDF.' . $pdfEngine, []));
+
+        $view = new PdfView([], ['layout' => $pdfLayout]);
+        $view->set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
+        $view->set(
+            'ntKons',
+            App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'netransparentne') ?? []
+        );
+
+        foreach ($view->get('ntKons') as $kons) {
+            $view->set('kons', $kons);
+            $pdf->newPage((string)$view->render('Konstrukcije', 'view'));
+        }
+
+        $pdfFolder = App::getProjectFolder('Pures', $projectId, 'pdf');
+        if (!is_dir($pdfFolder)) {
+            mkdir($pdfFolder, 0777, true);
+        }
+
+        $pdf->saveAs($pdfFolder . 'PuresKonstrukcije.pdf');
     }
 }

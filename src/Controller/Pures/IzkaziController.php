@@ -15,6 +15,8 @@ class IzkaziController
      */
     public function splosniPodatki($projectId)
     {
+        App::set('projectId', $projectId);
+
         App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
         App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
         App::set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
@@ -112,6 +114,8 @@ class IzkaziController
      */
     public function podrocjeGf($projectId)
     {
+        App::set('projectId', $projectId);
+
         $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
         App::set('stavba', $stavba);
         if ($stavba->vrsta == 'zahtevna') {
@@ -138,6 +142,8 @@ class IzkaziController
      */
     public function podrocjeSNES($projectId)
     {
+        App::set('projectId', $projectId);
+
         App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
         App::set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
         App::set('sistemiOgrevanja', App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje'));

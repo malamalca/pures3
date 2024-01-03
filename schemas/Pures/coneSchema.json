@@ -210,10 +210,11 @@
                                 "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90]},
                                 "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]},
 
-                                "visinaStekla": {"type": "number"},
-                                "sirinaStekla": {"type": "number"},
-                                "delezOkvirja": {"type": "number"},
-                                "dolzinaOkvirja": {"type": "number"},
+                                "visinaStekla": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+                                "sirinaStekla": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+                                "delezOkvirja": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+                                "dolzinaOkvirja": {"oneOf": [{"type": "number"}, {"type": "string"}]},
+
                                 "faktorSencil": {"type": "number"},
 
                                 "stranskoSencenje": {

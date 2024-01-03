@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\Hrup\ZunanjiHrup;
 
-use App\Calc\Hrup\Elementi\Konstrukcija;
+use App\Calc\Hrup\Elementi\EnostavnaKonstrukcija;
 use App\Lib\EvalMath;
 
 class ZunanjaKonstrukcija
@@ -18,14 +18,14 @@ class ZunanjaKonstrukcija
     private array $options = [];
 
     /**
-     * @var \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija
+     * @var \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija
      */
-    private Konstrukcija $konstrukcija;
+    private EnostavnaKonstrukcija $konstrukcija;
 
     /**
      * Class Constructor
      *
-     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija Konstrukcija iz knjižnice
+     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija Konstrukcija iz knjižnice
      * @param \stdClass|string $config Configuration
      * @param array $options Možnosti izračuna
      * @return void

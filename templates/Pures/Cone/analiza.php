@@ -4,6 +4,8 @@
 ?>
 <p class="actions">
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+<a class="button active" href="<?= App::url('/pures/cone/analiza/' . $projectId . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
+<a class="button" href="<?= App::url('/pures/cone/ovoj/' . $projectId . '/' . $cona->id) ?>">Analiza ovoja cone "<?= $cona->id ?>"</a>
 </p>
 
 <h1>Analiza cone "<?= h($cona->naziv) ?>"</h1>

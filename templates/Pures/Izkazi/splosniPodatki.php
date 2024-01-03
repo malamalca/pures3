@@ -1,6 +1,12 @@
 <?php
     use App\Core\App;
 ?>
+<p class="actions">
+    <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+    <a class="button active" href="<?= App::url('/pures/izkazi/splosniPodatki/' . $projectId) ?>">Splošni podatki</a>
+    <a class="button" href="<?= App::url('/pures/izkazi/podrocjeGf/' . $projectId) ?>">Področje GF</a>
+    <a class="button" href="<?= App::url('/pures/izkazi/podrocjeSNES/' . $projectId) ?>">Področje SNES</a>
+</p>
 <h1>Izkaz o energijskih lastnostih stavbe </h1>
 
 <h3>Splošni podatki o stavbi: </h3>

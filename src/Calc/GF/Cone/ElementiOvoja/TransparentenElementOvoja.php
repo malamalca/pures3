@@ -5,6 +5,7 @@ namespace App\Calc\GF\Cone\ElementiOvoja;
 
 use App\Core\Configure;
 use App\Lib\Calc;
+use App\Lib\EvalMath;
 
 class TransparentenElementOvoja extends ElementOvoja
 {
@@ -35,11 +36,30 @@ class TransparentenElementOvoja extends ElementOvoja
             $config = json_decode($config);
         }
 
-        /** @var \stdClass $config */
-        if (!empty($config->dolzinaStekla)) {
-            $config->visinaStekla = $config->dolzinaStekla;
+        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+
+        $numSettings = ['A', 'B', 'sirinaOkvirja', 'sirinaStekla', 'visinaStekla', 'delezOkvirja', 'dolzinaOkvirja'];
+        foreach ($numSettings as $setting) {
+            if (isset($config->$setting) && gettype($config->$setting) == 'string') {
+                $config->$setting = (float)$EvalMath->e($config->$setting);
+                $EvalMath->setVar($setting, $config->$setting);
+            }
         }
 
+        /** Povzemi lastnosti zidu, v katerega je okno vgrajeno */
+        if (isset($this->options['elementVgradnje'])) {
+            /** @var \App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja $ntElement */
+            $ntElement = $this->options['elementVgradnje'];
+
+            if (empty($config->naklon)) {
+                $this->naklon = $ntElement->naklon;
+            }
+            if (empty($config->orientacija)) {
+                $this->orientacija = $ntElement->orientacija;
+            }
+        }
+
+        /** @var \stdClass $config */
         if (!empty($config->A) && !empty($config->B) && !empty($config->sirinaOkvirja)) {
             $config->sirinaStekla = $config->A - $config->sirinaOkvirja * 2;
             $config->visinaStekla = $config->B - $config->sirinaOkvirja * 2;

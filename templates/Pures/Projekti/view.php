@@ -18,19 +18,15 @@
     }
 ?>
     <a class="button" href="<?= App::url('/pures/projekti/analiza/' . $projectId) ?>">Analiza GF</a>
-    <a class="button" href="<?= App::url('/pures/izkazi/podrocjeGf/' . $projectId) ?>">Izkaz GF</a>
     <a class="button" href="<?= App::url('/pures/projekti/snes/' . $projectId) ?>">Analiza SNES</a>
-    <a class="button" href="<?= App::url('/pures/izkazi/podrocjeSNES/' . $projectId) ?>">Izkaz sNES</a>
+    <a class="button" href="<?= App::url('/pures/izkazi/splosniPodatki/' . $projectId) ?>">Izkaz</a>
     </p>
 <p class="actions">
 <?php
     if (!empty($cone)) {
         foreach ($cone as $cona) {
 ?>
-
-<a class="button" href="<?= App::url('/pures/cone/ovoj/' . $projectId . '/' . $cona->id) ?>">Analiza ovoja cone "<?= $cona->id ?>"</a>
-<a class="button" href="<?= App::url('/pures/cone/analiza/' . $projectId . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
-
+<a class="button" href="<?= App::url('/pures/cone/analiza/' . $projectId . '/' . $cona->id) ?>"><?= h($cona->id) ?></a>
 <?php
         }
     }

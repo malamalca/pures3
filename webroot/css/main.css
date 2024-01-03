@@ -564,6 +564,7 @@ span.checkbox {
 
 .button {
   display: inline-block;
+  white-space: nowrap;
   outline: none;
   cursor: pointer;
   padding: 0 16px;
@@ -580,6 +581,10 @@ span.checkbox {
 .button:hover {
   background-color: #3b91dd;
   border-color: #005fb2;
+}
+.button.active {
+  background-color: #9dcffa;
+  color: #202020;
 }
 
 table {

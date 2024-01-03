@@ -81,6 +81,10 @@ abstract class ElementOvoja
 
         $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
 
+        if (isset($config->id)) {
+            $this->id = $config->id;
+        }
+
         $this->opis = $config->opis ?? '';
 
         $this->stevilo = $config->stevilo ?? 1;

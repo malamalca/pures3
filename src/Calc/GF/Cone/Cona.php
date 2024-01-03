@@ -244,8 +244,29 @@ class Cona
                                 fn($k) => $k->id == $konsConfig->idKonstrukcije
                             );
 
-                            $this->ovoj->transparentneKonstrukcije[] =
-                                new TransparentenElementOvoja($kons, $konsConfig, $options);
+                            // določi netransparentni element v katerega je okno/vrata vgrajeno
+                            $additionalOptions = [];
+                            if (isset($konsConfig->idElementaVgradnje)) {
+                                $elementVgradnje = array_first(
+                                    $this->ovoj->netransparentneKonstrukcije,
+                                    fn($k) => $k->id == $konsConfig->idElementaVgradnje
+                                );
+                                if ($elementVgradnje) {
+                                    $additionalOptions['elementVgradnje'] = $elementVgradnje;
+                                }
+                            }
+
+                            $tKons = new TransparentenElementOvoja(
+                                $kons,
+                                $konsConfig,
+                                array_merge($options, $additionalOptions)
+                            );
+                            $this->ovoj->transparentneKonstrukcije[] = $tKons;
+
+                            // če se okno vgrajuje v NT element, odštejem površino okna
+                            if (!empty($elementVgradnje)) {
+                                $elementVgradnje->povrsina -= $tKons->povrsina;
+                            }
                         }
                     }
                     break;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\Hrup\ZracniHrup;
 
-use App\Calc\Hrup\Elementi\Konstrukcija;
+use App\Calc\Hrup\Elementi\EnostavnaKonstrukcija;
 use App\Calc\Hrup\ZracniHrup\Izbire\VrstaSpoja;
 use App\Lib\Calc;
 use App\Lib\EvalMath;
@@ -43,14 +43,14 @@ class StranskiElement
     private array $options = [];
 
     /**
-     * @var \App\Calc\Hrup\Elementi\Konstrukcija $izvornaKonstrukcija
+     * @var \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $izvornaKonstrukcija
      */
-    public Konstrukcija $izvornaKonstrukcija;
+    public EnostavnaKonstrukcija $izvornaKonstrukcija;
 
     /**
-     * @var \App\Calc\Hrup\Elementi\Konstrukcija $oddajnaKonstrukcija
+     * @var \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $oddajnaKonstrukcija
      */
-    public Konstrukcija $oddajnaKonstrukcija;
+    public EnostavnaKonstrukcija $oddajnaKonstrukcija;
 
     /**
      * @var\App\Calc\Hrup\ZracniHrup\LocilniElement $locilniElement
@@ -60,8 +60,8 @@ class StranskiElement
     /**
      * Class Constructor
      *
-     * @param \App\Calc\Hrup\Elementi\Konstrukcija $izvornaKonstrukcija Konstrukcija iz knjižnice
-     * @param \App\Calc\Hrup\Elementi\Konstrukcija $oddajnaKonstrukcija Konstrukcija iz knjižnice
+     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $izvornaKonstrukcija Konstrukcija iz knjižnice
+     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $oddajnaKonstrukcija Konstrukcija iz knjižnice
      * @param \App\Calc\Hrup\ZracniHrup\LocilniElement $locilniElement Ločilni element
      * @param \stdClass|string $config Configuration
      * @param array $options Možnosti izračuna

@@ -37,9 +37,9 @@ class Calc
     /**
      * Funkcija združi dve dR vrednosti
      *
-     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija1 Prva konstrukcija
+     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija1 Prva konstrukcija
      * @param string $idSloja1 Id sloja 1
-     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija2 Druga konstrukcija
+     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija2 Druga konstrukcija
      * @param string $idSloja2 Id sloja 2
      * @return float
      */

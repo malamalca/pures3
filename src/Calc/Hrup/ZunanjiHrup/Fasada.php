@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\Hrup\ZunanjiHrup;
 
-use App\Calc\Hrup\Elementi\Konstrukcija;
+use App\Calc\Hrup\Elementi\EnostavnaKonstrukcija;
 use App\Calc\Hrup\Elementi\MaliElement;
 use App\Calc\Hrup\Elementi\OknaVrata;
 use App\Calc\Hrup\ZunanjiHrup\Izbire\KoeficientStropa;
@@ -81,7 +81,7 @@ class Fasada
                                 ));
                             }
                             $konstrukcija = new ZunanjaKonstrukcija(
-                                new Konstrukcija($libKonstrukcija),
+                                new EnostavnaKonstrukcija($libKonstrukcija),
                                 $konstrukcijaConfig
                             );
                             $this->konstrukcije[] = $konstrukcija;

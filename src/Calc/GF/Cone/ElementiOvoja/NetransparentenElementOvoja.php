@@ -66,6 +66,10 @@ class NetransparentenElementOvoja extends ElementOvoja
             $this->dobitekSS = $config->dobitekSS;
         }
 
+        if (isset($config->b)) {
+            $this->b = $config->b;
+        }
+
         $dobitekSS = !empty($this->konstrukcija->TSG->dobitekSS);
         if (isset($this->dobitekSS)) {
             $dobitekSS = $this->dobitekSS;
@@ -135,10 +139,12 @@ class NetransparentenElementOvoja extends ElementOvoja
             throw new \Exception(sprintf('TSG podatki konstrukcije ovoja "%s" ne obstajajo.', $this->idKonstrukcije));
         }
 
-        // temperaturni korekcijski faktor
-        $this->b = empty($this->konstrukcija->ogrRazvodT) ? 1 :
-            ($this->konstrukcija->ogrRazvodT - $okolje->projektnaZunanjaT) /
-            ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
+        if (!empty($this->konstrukcija->ogrRazvodT)) {
+            // temperaturni korekcijski faktor
+            // prilagoditev zaradi ploskovnega ogrevanja
+            $this->b = ($this->konstrukcija->ogrRazvodT - $okolje->projektnaZunanjaT) /
+                ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
+        }
 
         // napolni podatke o vplivu zemljine
         if ($this->konstrukcija->TSG->tip != 'zunanja') {
@@ -173,24 +179,31 @@ class NetransparentenElementOvoja extends ElementOvoja
                 $this->transIzgubeHlajenje[$mesec] = $this->H_hlajenje * 24 / 1000 *
                     $cona->deltaTHlajenje[$mesec] * $stDni * $this->stevilo;
 
-                // svetla barva 0.3, srednja barva 0.6, temna barva 0.9
-                $alphaSr = !empty($this->options['referencnaStavba']) ? 0.5 : $this->barva->koeficientAlphaSr();
-                $Fsky = $this->naklon < 45 ? 1 : 0.5;
-                $hri = 4.14;
-                $dTsky = 11;
+                $dobitekSS = !empty($this->konstrukcija->TSG->dobitekSS);
+                if (isset($this->dobitekSS)) {
+                    $dobitekSS = $this->dobitekSS;
+                }
+                if ($dobitekSS) {
+                    if (isset($this->dobitekSS)) {
+                        var_dump($this->dobitekSS);
+                    }
+                    // svetla barva 0.3, srednja barva 0.6, temna barva 0.9
+                    $alphaSr = !empty($this->options['referencnaStavba']) ? 0.5 : $this->barva->koeficientAlphaSr();
+                    $Fsky = $this->naklon < 45 ? 1 : 0.5;
+                    $hri = 4.14;
+                    $dTsky = 11;
 
-                // toplotni tok zaradi osončenja
-                // ISO 52016-1:2017 enačba 124 na strani 105
-                $Qsol = $alphaSr * $this->konstrukcija->Rse * ($this->U + $cona->deltaPsi) * $this->povrsina *
+                    // toplotni tok zaradi osončenja
+                    // ISO 52016-1:2017 enačba 124 na strani 105
+                    $Qsol = $alphaSr * $this->konstrukcija->Rse * ($this->U + $cona->deltaPsi) * $this->povrsina *
                     $this->faktorSencenja[$mesec] * $this->soncnoObsevanje[$mesec] * $stDni;
 
-                // sevanje elementa proti nebu za trenutni mesec
-                // popravek po verziji v160:
-                // $Qsky = 0.001 * $Fsky * $this->konstrukcija->Rse * ($this->U + $cona->deltaPsi) *
-                $Qsky = $Fsky * $this->konstrukcija->Rse * ($this->U + $cona->deltaPsi) *
-                    $this->povrsina * $hri * $dTsky * $stDni * 24;
+                    // sevanje elementa proti nebu za trenutni mesec
+                    // popravek po verziji v160:
+                    // $Qsky = 0.001 * $Fsky * $this->konstrukcija->Rse * ($this->U + $cona->deltaPsi) *
+                    $Qsky = $Fsky * $this->konstrukcija->Rse * ($this->U + $cona->deltaPsi) *
+                        $this->povrsina * $hri * $dTsky * $stDni * 24;
 
-                if (!empty($this->konstrukcija->TSG->dobitekSS) || (isset($this->dobitekSS) && $this->dobitekSS)) {
                     $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol - $Qsky) / 1000 * $this->stevilo;
                     $this->solarniDobitkiHlajenje[$mesec] = ($Qsol - $Qsky) / 1000 * $this->stevilo;
                 } else {

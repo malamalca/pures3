@@ -1,4 +1,13 @@
 <?php
+    use App\Core\App;
+?>
+<p class="actions">
+    <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+    <a class="button" href="<?= App::url('/pures/izkazi/splosniPodatki/' . $projectId) ?>">Splošni podatki</a>
+    <a class="button active" href="<?= App::url('/pures/izkazi/podrocjeGf/' . $projectId) ?>">Področje GF</a>
+    <a class="button" href="<?= App::url('/pures/izkazi/podrocjeSNES/' . $projectId) ?>">Področje SNES</a>
+</p>
+<?php
     if ($stavba->vrsta == 'zahtevna') {
 ?>
     <h1>Energijska učinkovitost energetsko zahtevne stavbe – za področje gradbene fizike</h1>
@@ -527,9 +536,9 @@
             <td class="w-20 center"><?= $this->numFormat($stavba->specLetnaToplota / $refStavba->specLetnaToplota, 2) ?></td>
             <td class="w-20 center"><?= $this->numFormat($stavba->H_nd_dov, 2) ?></td>
             <td class="w-10 center"><?= $stavba->specLetnaToplota / $refStavba->specLetnaToplota < $stavba->H_nd_dov ? 'DA' : 'NE' ?></td>
-            <td class="w-20 center"><?= $this->numFormat($stavba->specLetniHlad / $refStavba->specLetniHlad, 2) ?></td>
+            <td class="w-20 center"><?= $refStavba->specLetniHlad ? $this->numFormat($stavba->specLetniHlad / $refStavba->specLetniHlad, 2) : '-' ?></td>
             <td class="w-20 center"><?= $this->numFormat($stavba->C_nd_dov, 2) ?></td>
-            <td class="w-10 center"><?= $stavba->specLetniHlad / $refStavba->specLetniHlad < $stavba->C_nd_dov ? 'DA' : 'NE' ?></td>
+            <td class="w-10 center"><?= $refStavba->specLetniHlad ? ($stavba->specLetniHlad / $refStavba->specLetniHlad < $stavba->C_nd_dov ? 'DA' : 'NE') : '-' ?></td>
         </tr>
     </table>
 <?php

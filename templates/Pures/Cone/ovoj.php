@@ -2,11 +2,14 @@
     use App\Lib\Calc;
     use App\Core\App;
 
+    array_walk($cona->ovoj->transparentneKonstrukcije, function ($value, $key) use ($cona) { $cona->ovoj->transparentneKonstrukcije[$key]->povezavaIzpis = 'oknavrata'; });
     $elementiOvoja = array_merge($cona->ovoj->netransparentneKonstrukcije, $cona->ovoj->transparentneKonstrukcije);
     $stElementov = count($elementiOvoja);
 ?>
 <p class="actions">
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+<a class="button" href="<?= App::url('/pures/cone/analiza/' . $projectId . '/' . $cona->id) ?>">Analiza cone "<?= $cona->id ?>"</a>
+<a class="button active" href="<?= App::url('/pures/cone/ovoj/' . $projectId . '/' . $cona->id) ?>">Analiza ovoja cone "<?= $cona->id ?>"</a>
 </p>
 <h1>Ovoj cone "<?= h($cona->naziv) ?>"</h1>
 <?php
@@ -33,9 +36,14 @@
         <th colspan="4">Zaporedna št. konstrukcije</th>
         <?= implode(PHP_EOL, array_map(fn($elementOvoja) =>
             '<th class="center">' . 
-            '<a class="button" href="' .
-            App::url('/pures/konstrukcije/view/' . $projectId . '/' . $elementOvoja->konstrukcija->id) .
-            '">' . $elementOvoja->konstrukcija->id . '</a>' . '</th>', $elementiOvoja)) ?>
+            sprintf('<a class="button" href="%2$s" title="%3$s">%1$s</a>',
+                ($elementOvoja->id ?? $elementOvoja->konstrukcija->id),
+                (empty($elementOvoja->povezavaIzpis) ?
+                    App::url('/pures/konstrukcije/view/' . $projectId . '/' . $elementOvoja->konstrukcija->id) :
+                    App::url('/pures/cone/transparentniElement/' . $projectId . '/' . $cona->id . '/' . $elementOvoja->id)),
+                $elementOvoja->konstrukcija->naziv ?? ''
+            ) .
+            '</th>', $elementiOvoja)) ?>
     </tr>
     <tr>
         <td colspan="4">Št. enakih</td>

@@ -309,24 +309,26 @@ class App
     public static function loadProjectCalculation($area, $projectId, $projectFile)
     {
         if (substr($projectFile, -1, 1) == DS) {
-            $sourceFolder = self::getProjectFolder($area, $projectId, 'izracuni') . $projectFile;
             $sistemi = [];
-            $iterator = new \DirectoryIterator($sourceFolder);
-            foreach ($iterator as $info) {
-                if ($info->isFile()) {
-                    $data = file_get_contents($sourceFolder . (string)$info);
-                    if (!$data) {
-                        throw new \Exception(sprintf('Datoteke "%s" ni mogoče prebrati.', (string)$info));
-                    }
+            $sourceFolder = self::getProjectFolder($area, $projectId, 'izracuni') . $projectFile;
+            if (is_dir($sourceFolder)) {
+                $iterator = new \DirectoryIterator($sourceFolder);
+                foreach ($iterator as $info) {
+                    if ($info->isFile()) {
+                        $data = file_get_contents($sourceFolder . (string)$info);
+                        if (!$data) {
+                            throw new \Exception(sprintf('Datoteke "%s" ni mogoče prebrati.', (string)$info));
+                        }
 
-                    $result = json_decode($data);
+                        $result = json_decode($data);
 
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', (string)$info));
-                    }
+                        if (json_last_error() !== JSON_ERROR_NONE) {
+                            throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', (string)$info));
+                        }
 
-                    if (is_array($result)) {
-                        $sistemi = array_merge($sistemi, $result);
+                        if (is_array($result)) {
+                            $sistemi = array_merge($sistemi, $result);
+                        }
                     }
                 }
             }
