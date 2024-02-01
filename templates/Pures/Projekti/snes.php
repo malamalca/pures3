@@ -29,12 +29,16 @@
         $energijeFaktorjiNren = [];
         $energijeFaktorjiPrim = [];
         $energijeFaktorjiCO2 = [];
+        $utezenaDovedenaEnergija = 0;
+
         foreach($stavba->sistemi as $i => $sistem) {
             foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                 if ($energija > 0) {
                     $energije[] = $this->numFormat($energija, 0, '.');
                     $energijeFaktorjiTot[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
                 }
+
+                $utezenaDovedenaEnergija += $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg');
                 $energijeFaktorjiTsg[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg'), 2, '.');
                 $energijeFaktorjiPrim[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
                 $energijeFaktorjiRen[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.');
@@ -68,7 +72,7 @@
         <td class="center"><?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=<?= implode(' + ', $energijeFaktorjiTsg) ?>=<?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">`E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=<?= implode(' + ', $energijeFaktorjiTsg) ?>=<?= $this->numFormat($utezenaDovedenaEnergija, 0) ?>`</td>
     </tr>
     <tr>
         <td>Obnovljiva primarna energija dovedene energije</td>

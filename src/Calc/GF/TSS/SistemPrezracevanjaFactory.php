@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF\TSS;
 
 use App\Calc\GF\TSS\PrezracevalniSistemi\CentralniPrezracevalniSistem;
+use App\Calc\GF\TSS\PrezracevalniSistemi\LokalniPrezracevalniSistem;
 
 class SistemPrezracevanjaFactory
 {
@@ -19,6 +20,8 @@ class SistemPrezracevanjaFactory
         switch ($type) {
             case 'centralni':
                 return new CentralniPrezracevalniSistem($options);
+            case 'lokalni':
+                return new LokalniPrezracevalniSistem($options);
             default:
                 throw new \Exception('Vrsta prezračevalnega sistema ne obstaja.');
         }

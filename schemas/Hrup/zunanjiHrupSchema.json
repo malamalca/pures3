@@ -20,15 +20,15 @@
                 "type": "array",
                 "items": {
                     "type": "object",
-                    "required": ["oblika"],
+                    "required": ["oblikaFasade"],
                     "anyOf": [
                         {"required": ["konstrukcije"]},
                         {"required": ["oknaVrata"]}
                     ],
                     "properties": {
                         "vplivPrometa": {"type": "boolean"},
-                        "oblika": {"enum": [
-                            "ravnaFasada", "konzolaZgoraj", "balkon", "balkonZOgrajo", 
+                        "oblikaFasade": {"enum": [
+                            "ravna", "konzolaZgoraj", "balkon", "balkonZOgrajo", 
                             "balkonZOgrajoInSteklom", "loggiaSKonzolo", "loggiaSKonzoloInOgrajo", "loggia",
                             "terasa", "terasaZOgrajo"
                         ]},

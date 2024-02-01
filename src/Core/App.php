@@ -115,12 +115,24 @@ class App
      * Build url with specified base
      *
      * @param string $params Url params
+     * @param bool $fullBase Full base url.
      * @return string
      */
-    public static function url($params)
+    public static function url($params, $fullBase = false)
     {
         if (defined('CLI')) {
             $url_base = WWW_ROOT;
+            if (substr($params, 0, 14) == '/project-image') {
+                $parts = explode('/', $params);
+                if (count($parts) == 5) {
+                    $image = $parts[4];
+                    $projectId = $parts[3];
+                    $area = $parts[2];
+
+                    $url_base = self::getProjectFolder($area, $projectId, 'podatki');
+                    $params = '/' . $image;
+                }
+            }
         } else {
             $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
         }

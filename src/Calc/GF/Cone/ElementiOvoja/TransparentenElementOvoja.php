@@ -99,7 +99,7 @@ class TransparentenElementOvoja extends ElementOvoja
                 // 0 - okna
                 // 1 - strešna okna
                 if (!empty($this->konstrukcija->Uw)) {
-                    $this->U = $this->povrsina * $this->konstrukcija->Uw;
+                    $this->U = $this->povrsina * $this->konstrukcija->Uw / $this->povrsina;
                 } else {
                     $this->U = (
                         $this->povrsina * $this->konstrukcija->Ug * (1 - $this->delezOkvirja) +
@@ -114,6 +114,10 @@ class TransparentenElementOvoja extends ElementOvoja
                 // 3 - garažna vrata ali proti neogrevavanem prostoru
                 $this->U = $this->konstrukcija->Ud;
                 break;
+        }
+
+        if (empty($this->orientacija) || empty($this->naklon)) {
+            throw new \Exception(sprintf('Transparentni element %s nima določene orientacije ali naklona', $this->id));
         }
     }
 

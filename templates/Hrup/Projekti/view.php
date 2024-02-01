@@ -7,11 +7,11 @@
     <a class="button" href="<?= App::url('/hrup/projekti/konstrukcije/' . $projectId) ?>">Konstrukcije</a>
     <a class="button" href="<?= App::url('/hrup/projekti/izkaz/' . $projectId) ?>">Izkaz</a>
 </p>
-<h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 <?php
     if (!empty($prostori)) {
 ?>
 <p class="actions">
+    Zunanji hrup:
 <?php
         foreach ($prostori as $prostor) {
 ?>
@@ -26,7 +26,7 @@
 <?php
     if (!empty($udarniHrup)) {
 ?>
-<p class="actions">
+<div>
     Udarni hrup:
 <?php
         foreach ($udarniHrup as $locilnaKonstrukcija) {
@@ -35,7 +35,7 @@
 <?php
         }
 ?>
-</p>
+</div>
 <?php
     }
 ?>
@@ -55,6 +55,8 @@
 <?php
     }
 ?>
+
+<h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 <table>
     <tr>
         <td colspan="2">Naziv projekta</td>

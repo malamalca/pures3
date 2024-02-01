@@ -216,8 +216,8 @@
     </tr>
     <tr>
         <td class="right strong" colspan="3">USTREZNOST:</td>
-        <td class="center strong <?= $prostor->Rw > $prostor->minRw ? 'green' : 'red' ?>">
-            <?= $prostor->Rw > $prostor->minRw ? 'DA' : 'NE' ?>
+        <td class="center strong <?= round($prostor->Rw, 0) >= round($prostor->minRw, 0) ? 'green' : 'red' ?>">
+            <?= round($prostor->Rw, 0) >= round($prostor->minRw, 0) ? 'DA' : 'NE' ?>
         </td>
     </tr>
 </table>

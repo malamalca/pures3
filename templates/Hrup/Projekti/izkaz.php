@@ -4,6 +4,10 @@
     use App\Calc\Hrup\ZunanjiHrup\Izbire\ObmocjeZascitePredHrupom;
     use App\Calc\Hrup\ZunanjiHrup\Izbire\VrstaKazalcevHrupa;
 ?>
+<p class="actions">
+    <a class="button" href="<?= App::url('/hrup/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+</p>
+
 <h1>Izkaz o zaščiti pred hrupom </h1>
 
 <h2>Podatki o stavbi</h2>

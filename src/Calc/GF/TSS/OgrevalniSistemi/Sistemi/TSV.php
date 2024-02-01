@@ -53,7 +53,7 @@ class TSV extends TSSInterface
         }
 
         $this->id = $config->id ?? null;
-        $this->rezim = VrstaRezima::from($config->rezim);
+        $this->rezim = VrstaRezima::from($config->rezim ?? null);
 
         $this->razvodi = $config->razvodi ?? [];
         $this->prenosniki = $config->prenosniki ?? [];

@@ -1,6 +1,11 @@
 <?php
+    use App\Core\App;
     use App\Calc\Hrup\Elementi\Izbire\VrstaDodatnegaSloja;
 ?>
+<p class="actions">
+    <a class="button" href="<?= App::url('/hrup/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+</p>
+
 <h1>Konstrukcije projekta</h1>
 <?php
     foreach ($konstrukcije as $konstrukcija) {

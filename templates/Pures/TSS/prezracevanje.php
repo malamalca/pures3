@@ -17,13 +17,16 @@
     </tr>
     <tr>
         <td colspan="2">Rekuperator toplote razreda H2 ali H1:</td>
-        <td colspan="2"><?= $sistem->razredH1H2 ? 'da' : 'ne' ?></td>
+        <td colspan="2"><?= (isset($sistem->razredH1H2) && $sistem->razredH1H2) ? 'da' : 'ne' ?></td>
     </tr>
     <tr>
         <td colspan="2">Faktor krmiljenja:</td>
         <td colspan="2"><?= $sistem->faktorKrmiljenja ?></td>
     </tr>
 
+    <?php
+        if (isset($sistem->dovod)) {
+    ?>
     <tr>
         <td rowspan="4">Dovod:</td>
     </tr>
@@ -41,6 +44,12 @@
         <td>Filter:</td>
         <td><?= $sistem->dovod->filter ?></td>
     </tr>
+    <?php
+        }
+    ?>
+    <?php
+        if (isset($sistem->odvod)) {
+    ?>
     <tr>
         <td rowspan="4">Odvod:</td>
     </tr>
@@ -58,6 +67,9 @@
         <td>Filter:</td>
         <td><?= $sistem->odvod->filter ?></td>
     </tr>
+    <?php
+        }
+    ?>
 </table>
 
 

@@ -176,7 +176,7 @@ za področje TSS</h1>
 <h3>Dovedena energija za delovanje TSS:</h3>
 <table border="1" cellpadding="3" width="100%">
     <?php
-        $maxEnergentov = 0;
+        $maxEnergentov = 1;
         foreach ($sistemiOgrevanja as $sistem) {
             if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
                 $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
@@ -239,13 +239,13 @@ za področje TSS</h1>
 
 <table border="1" cellpadding="3" width="100%">
     <?php
-        $maxEnergentov = 0;
+        $maxEnergentov = 1;
         foreach ($sistemiOgrevanja as $sistem) {
             if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
                 $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
             }
         }
-        $cellWidth = round(50/$maxEnergentov, 1);
+        $cellWidth = (int)round(50/$maxEnergentov, 0);
     ?>
     <tr>
         <th colspan="<?= (3 + $maxEnergentov) ?>">Dovedena energija za TSV E<sub>W,del,an</sub> (kWh/an):</th>
@@ -339,13 +339,13 @@ za področje TSS</h1>
 <!-- HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE -->
 <table border="1" cellpadding="3" width="100%">
     <?php
-        $maxEnergentov = 0;
+        $maxEnergentov = 1;
         foreach ($sistemiOgrevanja as $sistem) {
             if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
                 $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
             }
         }
-        $cellWidth = round(50/$maxEnergentov, 1);
+        $cellWidth = (int)round(50/$maxEnergentov, 0);
     ?>
     <tr>
         <th colspan="<?= (3 + $maxEnergentov) ?>">Dovedena energija za hlajenje E<sub>C,del,an</sub> (kWh/an):</th>
