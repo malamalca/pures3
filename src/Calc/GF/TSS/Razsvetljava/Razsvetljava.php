@@ -122,7 +122,7 @@ class Razsvetljava
 
         // ker je LAHKO odvisna od $cone oz. faktorjaOblikeCone
         $mocSvetilk = !is_null($this->mocSvetilk) ? $this->mocSvetilk :
-            1 / $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine * ($faktorOblike ?? 1) *
+            1 / $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine * $faktorOblike *
             $this->faktorZmanjsaneOsvetlitveDelovnePovrsine * $this->faktorVzdrzevanja;
 
         $letnaDovedenaEnergija = ($this->faktorZmanjsanjaSvetlobnegaToka *

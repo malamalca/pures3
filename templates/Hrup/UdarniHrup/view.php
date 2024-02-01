@@ -51,7 +51,7 @@
     </tr>
     <tr>
         <td class="right strong" colspan="1">Min. zahteva:</td>
-        <td class="right strong nowrap">L'<sub>n,w,min</sub> = </td>
+        <td class="right strong nowrap">L'<sub>n,w,max</sub> = </td>
         <td class="left strong"><?= $this->numFormat($locilnaKonstrukcija->minLnw, 0) ?> dB</td>
     </tr>
     <tr>
