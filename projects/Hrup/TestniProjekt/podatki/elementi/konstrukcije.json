@@ -1,0 +1,78 @@
+[
+    {
+        "id": "Z.Z",
+        "naziv": "AB 20 cm - zahtevna konstrukcija",
+        "tip": "zahtevna",
+        "gostota": 2300,
+        "povrsinskaMasa": 460,
+        "hitrostLongitudinalnihValov": 3500,
+        "faktorNotranjegaDusenja": 0.006
+    },
+    {
+        "id": "Z.1",
+        "naziv": "AB 20 cm",
+        "povrsinskaMasa": 460,
+        "dodatniSloji": [
+            {
+                "vrsta": "elasticen",
+                "naziv": "MW Lamele",
+                "povrsinskaMasa": 26,
+                "dinamicnaTogost": 45
+            }
+        ]
+    },
+    {
+        "id": "T.1",
+        "naziv": "Talna konstrukcija",
+        "povrsinskaMasa": 322,
+        "dodatniSloji": [
+            {
+                "id": "estrih",
+                "vrsta": "elasticen",
+                "naziv": "estrih",
+                "povrsinskaMasa": 80,
+                "dinamicnaTogost": 8
+            }
+        ]
+    },
+    {
+        "id": "ZH.1",
+        "naziv": "Zvok v zraku - ločilna - beton 200mm",
+        "povrsinskaMasa": 460,
+        "Rw": 57
+    },
+    {
+        "id": "ZH.2",
+        "naziv": "Zvok v zraku - fasada - bloki kalcijev silikat 100mm",
+        "povrsinskaMasa": 175,
+        "Rw": 42
+    },
+    {
+        "id": "ZH.3",
+        "naziv": "Zvok v zraku - notranja stena - mavčni bloki 70mm",
+        "povrsinskaMasa": 67,
+        "Rw": 33
+    },
+    {
+        "id": "ZH.4",
+        "naziv": "Zvok v zraku - strop - beton 100mm",
+        "povrsinskaMasa": 230,
+        "Rw": 46
+    },
+    {
+        "id": "ZH.5",
+        "naziv": "Zvok v zraku - talna konstrukcija - beton 100mm/zaključni sloj 30mm",
+        "povrsinskaMasa": 287,
+        "Rw": 49,
+        "dodatniSloji": [
+            {
+                "id": "estrih",
+                "vrsta": "elasticen",
+                "naziv": "estrih",
+                "povrsinskaMasa": 80,
+                "dinamicnaTogost": 8,
+                "dR": 14
+            }
+        ]
+    }
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "id": "T.1",
+        "naziv": "Testna konstrukcija",
+        "model": "poenostavljen",
+        "idKonstrukcije": "T.1",
+        "povrsinskaMasaStranskihElementov": 145,
+        "prostorninaSprejemnegaProstora": 50,
+        "minLnw": 50,
+        "idDodatnegaSloja": "estrih"
+    }
+]

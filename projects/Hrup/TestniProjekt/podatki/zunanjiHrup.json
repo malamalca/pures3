@@ -1,0 +1,29 @@
+[
+    {
+        "id": "P.1",
+        "naziv": "Dnevna soba",
+        "prostornina": 37.2,
+        "odmevniCas": 0.5,
+        "Lzunaj": 60,
+        "Lmax": 35,
+        "fasade": [
+            {
+                "vplivPrometa": true,
+                "oblikaFasade": "ravna",
+                "konstrukcije": [
+                    {
+                        "idKonstrukcije": "Z.1",
+                        "povrsina": 14.6
+                    }
+                ],
+                "oknaVrata": [
+                    {
+                        "idOknaVrata": "O.1",
+                        "stevilo": 2,
+                        "povrsina": 4.8
+                    }
+                ]
+            }
+        ]
+    }
+]

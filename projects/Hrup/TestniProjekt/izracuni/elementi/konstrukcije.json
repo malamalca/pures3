@@ -1,0 +1,136 @@
+[
+    {
+        "tip": "zahtevna",
+        "id": "Z.Z",
+        "naziv": "AB 20 cm - zahtevna konstrukcija",
+        "povrsinskaMasa": 460,
+        "gostota": 2300,
+        "debelina": 5,
+        "hitrostLongitudinalnihValov": 3500,
+        "faktorNotranjegaDusenja": 0.006,
+        "R": {
+            "50": 48.20145345723034,
+            "63": 49.41278648358857,
+            "80": 50.61637722975654,
+            "100": 51.69432565469048,
+            "125": 52.727068390155985,
+            "160": 52.11036793457773,
+            "200": 51.40469533123917,
+            "250": 50.5237529907412,
+            "315": 49.24337964810252,
+            "400": 46.929318321418556,
+            "500": 43.87684765093071,
+            "630": 59.89673268701394,
+            "800": 63.00707292007271,
+            "1000": 65.00040785318242,
+            "1250": 66.94552425710174,
+            "1600": 69.09091374716309,
+            "2000": 71.02929725980674,
+            "2500": 72.96753509337174,
+            "3150": 74.9749541250682,
+            "4000": 77.04994457919649,
+            "5000": 78.98814516878451
+        },
+        "Rw": 63,
+        "dR": 0,
+        "C": -7,
+        "Ctr": -10,
+        "dodatniSloji": []
+    },
+    {
+        "id": "Z.1",
+        "naziv": "AB 20 cm",
+        "povrsinskaMasa": 460,
+        "Rw": 57,
+        "dR": -1,
+        "C": -2,
+        "Ctr": -7,
+        "dodatniSloji": [
+            {
+                "vrsta": "elasticen",
+                "naziv": "MW Lamele",
+                "povrsinskaMasa": 26,
+                "dinamicnaTogost": 45,
+                "dR": -1
+            }
+        ]
+    },
+    {
+        "id": "T.1",
+        "naziv": "Talna konstrukcija",
+        "povrsinskaMasa": 322,
+        "Rw": 61,
+        "dR": 9,
+        "C": -2,
+        "Ctr": -7,
+        "dodatniSloji": [
+            {
+                "id": "estrih",
+                "vrsta": "elasticen",
+                "naziv": "estrih",
+                "povrsinskaMasa": 80,
+                "dinamicnaTogost": 8,
+                "dR": 9
+            }
+        ]
+    },
+    {
+        "id": "ZH.1",
+        "naziv": "Zvok v zraku - ločilna - beton 200mm",
+        "povrsinskaMasa": 460,
+        "Rw": 57,
+        "dR": 0,
+        "C": -2,
+        "Ctr": -7,
+        "dodatniSloji": []
+    },
+    {
+        "id": "ZH.2",
+        "naziv": "Zvok v zraku - fasada - bloki kalcijev silikat 100mm",
+        "povrsinskaMasa": 175,
+        "Rw": 42,
+        "dR": 0,
+        "C": -1,
+        "Ctr": -4,
+        "dodatniSloji": []
+    },
+    {
+        "id": "ZH.3",
+        "naziv": "Zvok v zraku - notranja stena - mavčni bloki 70mm",
+        "povrsinskaMasa": 67,
+        "Rw": 33,
+        "dR": 0,
+        "C": -1,
+        "Ctr": -1,
+        "dodatniSloji": []
+    },
+    {
+        "id": "ZH.4",
+        "naziv": "Zvok v zraku - strop - beton 100mm",
+        "povrsinskaMasa": 230,
+        "Rw": 46,
+        "dR": 0,
+        "C": -2,
+        "Ctr": -5,
+        "dodatniSloji": []
+    },
+    {
+        "id": "ZH.5",
+        "naziv": "Zvok v zraku - talna konstrukcija - beton 100mm\/zaključni sloj 30mm",
+        "povrsinskaMasa": 287,
+        "Rw": 63,
+        "dR": 14,
+        "C": -2,
+        "Ctr": -6,
+        "dodatniSloji": [
+            {
+                "id": "estrih",
+                "vrsta": "elasticen",
+                "naziv": "estrih",
+                "povrsinskaMasa": 80,
+                "dinamicnaTogost": 8,
+                "dR": 14
+            }
+        ]
+    }
+]

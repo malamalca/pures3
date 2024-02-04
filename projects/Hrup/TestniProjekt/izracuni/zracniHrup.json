@@ -1,0 +1,163 @@
+[
+    {
+        "id": "S.1",
+        "naziv": "Testna konstrukcija",
+        "povrsina": 0,
+        "Rw": 53,
+        "minRw": 0,
+        "locilniElement": {
+            "idKonstrukcije": "ZH.1",
+            "idDodatnegaSloja1": null,
+            "idDodatnegaSloja2": null,
+            "povrsina": 11.475,
+            "povrsinskaMasa": 460,
+            "Rw": 57,
+            "konstrukcija": {
+                "id": "ZH.1",
+                "naziv": "Zvok v zraku - ločilna - beton 200mm",
+                "povrsinskaMasa": 460,
+                "Rw": 57,
+                "dR": 0,
+                "C": -2,
+                "Ctr": -7,
+                "dodatniSloji": []
+            }
+        },
+        "stranskiElementi": [
+            {
+                "idKonstrukcije": "ZH.2",
+                "dolzinaSpoja": 2.55,
+                "povrsina": 11.118,
+                "M": 0.4197197829952796,
+                "vrstaSpoja": "togiT",
+                "Kmin_Df": -3.4526528115687896,
+                "Kmin_Ff": -3.3845649360460484,
+                "Kmin_Fd": -3.4526528115687896,
+                "K_Df": 6.704138768554347,
+                "K_Ff": 12.62218770878779,
+                "K_Fd": 6.704138768554347,
+                "R_Df": 62.736263906307784,
+                "R_Ff": 61.15431284654123,
+                "R_Fd": 62.736263906307784,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                },
+                "konstrukcija": {
+                    "id": "ZH.2",
+                    "naziv": "Zvok v zraku - fasada - bloki kalcijev silikat 100mm",
+                    "povrsinskaMasa": 175,
+                    "Rw": 42,
+                    "dR": 0,
+                    "C": -1,
+                    "Ctr": -4,
+                    "dodatniSloji": []
+                }
+            },
+            {
+                "idKonstrukcije": "ZH.3",
+                "dolzinaSpoja": 2.55,
+                "povrsina": 11.118,
+                "M": 0.8366830289807476,
+                "vrstaSpoja": "krizniElasticni",
+                "Kmin_Df": -3.4526528115687896,
+                "Kmin_Ff": -3.3845649360460484,
+                "Kmin_Fd": -3.4526528115687896,
+                "K_Df": 15.710819311890695,
+                "K_Ff": 33.52864993379886,
+                "K_Fd": 15.710819311890695,
+                "R_Df": 67.24294444964413,
+                "R_Ff": 73.0607750715523,
+                "R_Fd": 67.24294444964413,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                },
+                "konstrukcija": {
+                    "id": "ZH.3",
+                    "naziv": "Zvok v zraku - notranja stena - mavčni bloki 70mm",
+                    "povrsinskaMasa": 67,
+                    "Rw": 33,
+                    "dR": 0,
+                    "C": -1,
+                    "Ctr": -1,
+                    "dodatniSloji": []
+                }
+            },
+            {
+                "idKonstrukcije": "ZH.4",
+                "dolzinaSpoja": 4.5,
+                "povrsina": 19.62,
+                "M": 0.3010299956639812,
+                "vrstaSpoja": "togiKrizni",
+                "Kmin_Df": -2.0654862232834277,
+                "Kmin_Ff": -3.3845649360460484,
+                "Kmin_Fd": -2.0654862232834277,
+                "K_Df": 9.2165286322499,
+                "K_Ff": 14.36414155810398,
+                "K_Fd": 9.2165286322499,
+                "R_Df": 64.78193043658945,
+                "R_Ff": 64.42954336244352,
+                "R_Fd": 64.78193043658945,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                },
+                "konstrukcija": {
+                    "id": "ZH.4",
+                    "naziv": "Zvok v zraku - strop - beton 100mm",
+                    "povrsinskaMasa": 230,
+                    "Rw": 46,
+                    "dR": 0,
+                    "C": -2,
+                    "Ctr": -5,
+                    "dodatniSloji": []
+                }
+            },
+            {
+                "idKonstrukcije": "ZH.5",
+                "idDodatnegaSloja": "estrih",
+                "dolzinaSpoja": 4.5,
+                "povrsina": 19.62,
+                "M": 0.20487593494758172,
+                "vrstaSpoja": "togiKrizni",
+                "Kmin_Df": -2.0654862232834277,
+                "Kmin_Ff": -3.3845649360460484,
+                "Kmin_Fd": -2.0654862232834277,
+                "K_Df": 8.93925264770768,
+                "K_Ff": 12.442631135311327,
+                "K_Fd": 8.93925264770768,
+                "R_Df": 87.00465445204722,
+                "R_Ff": 100.50803293965089,
+                "R_Fd": 87.00465445204722,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                },
+                "konstrukcija": {
+                    "id": "ZH.5",
+                    "naziv": "Zvok v zraku - talna konstrukcija - beton 100mm\/zaključni sloj 30mm",
+                    "povrsinskaMasa": 287,
+                    "Rw": 63,
+                    "dR": 14,
+                    "C": -2,
+                    "Ctr": -6,
+                    "dodatniSloji": [
+                        {
+                            "id": "estrih",
+                            "vrsta": "elasticen",
+                            "naziv": "estrih",
+                            "povrsinskaMasa": 80,
+                            "dinamicnaTogost": 8,
+                            "dR": 14
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+]

@@ -1,0 +1,59 @@
+[
+    {
+        "id": "S.1",
+        "naziv": "Testna konstrukcija",
+        "model": "poenostavljen",
+        "locilniElement": {
+            "idKonstrukcije": "ZH.1",
+            "povrsina": "4.5*2.55"
+        },
+        
+        "stranskiElementi": [
+            {
+                "idKonstrukcije": "ZH.2",
+                "povrsina": "4.36*2.55",
+                "vrstaSpoja": "togiT",
+                "dolzinaSpoja": 2.55,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                }
+            },
+            {
+                "idKonstrukcije": "ZH.3",
+                "vrstaSpoja": "krizniElasticni",
+                "povrsina": "4.36*2.55",
+                "dolzinaSpoja": 2.55,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                }
+            },
+            {
+                "idKonstrukcije": "ZH.4",
+                "vrstaSpoja": "togiKrizni",
+                "povrsina": "4.36*4.5",
+                "dolzinaSpoja": 4.5,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                }
+            },
+            {
+                "idKonstrukcije": "ZH.5",
+                "idDodatnegaSloja": "estrih",
+                "vrstaSpoja": "togiKrizni",
+                "povrsina": "4.36*4.5",
+                "dolzinaSpoja": 4.5,
+                "pozicijeElementov": {
+                    "locilni": 2,
+                    "izvorni": 1,
+                    "oddajni": 3
+                }
+            }
+        ]
+    }
+]

@@ -1,0 +1,25 @@
+{
+    "stavba": {
+        "naziv": "Testni Projekt",
+        "lokacija": "Mestna cesta 12",
+        "KO": "Ljubljana",
+        "parcele": [
+            "123/4"
+        ],
+        "klasifikacija": "11100"
+    },
+    "zunanjiHrup": {
+        "kazalciHrupa": "obmocje",
+        "obmocje": "III"
+    },
+    "investitorji": [
+        {
+            "naziv": "Janez Novak",
+            "naslov": "Mestna cesta 12, 1000 Ljubljana"
+        }
+    ],
+    "vodjaProjektiranja": "Franc Pavlin, udia, ZAPS 1122",
+    "izdelovalec": "Franc Pavlin, udia, ZAPS 1122",
+    "stevilkaElaborata": "2023-01",
+    "datum": "april 2023"
+}
