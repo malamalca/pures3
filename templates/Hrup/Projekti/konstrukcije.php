@@ -1,6 +1,9 @@
 <?php
     use App\Core\App;
     use App\Calc\Hrup\Elementi\Izbire\VrstaDodatnegaSloja;
+    use App\Lib\Calc;
+    use App\Lib\CalcKonstrukcije;
+    use App\Lib\Charts\Chart;
 ?>
 <p class="actions">
     <a class="button" href="<?= App::url('/hrup/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
@@ -20,9 +23,38 @@
         <td class="right">m'=</td>
         <td><?= $this->numFormat($konstrukcija->povrsinskaMasa, 1) ?> kg/m²</td>
     </tr>
+    <?php
+        if (isset($konstrukcija->tip) && $konstrukcija->tip == 'zahtevna') {
+    ?>
     <tr>
         <td>Izolativnost:</td>
-        <td class="right">Rw (C; C<sub>tr</sub>)=</td>
+        <td class="right">R =</td>
+        <td>
+            <table border="1">
+                <tr><th>f [Hz]</th><?= implode(PHP_EOL, array_map(fn($fq) => '<td class="center">' . $fq . '</td>', Calc::FREKVENCE_TERCE)) ?></tr>
+                <tr><th>R [dB]</th><?= implode(PHP_EOL, array_map(fn($R) => '<td class="center">' . $this->numFormat($R, 0) . '</td>', json_decode(json_encode($konstrukcija->R), true))) ?></tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <?php
+            $fqs = Calc::FREKVENCE_TERCE;
+            $Rs = json_decode(json_encode($konstrukcija->R), true);
+
+            $data = ['series' => [array_values($Rs), Calc::RF], 'category' => $fqs];
+            //$png = CalcKonstrukcije::lineGraph($data);
+            $png = (new Chart($data, ['seriesColor' => ['ff00a0', '808080'], 'seriesThickness' => [8, 8]]))->draw();
+        ?>
+        <td>Graf:</td>
+        <td class="right">&nbsp;</td>
+        <td><img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 300px"/></td>
+    </tr>
+    <?php
+        }
+    ?>
+    <tr>
+        <td>Ovrednotena izolativnost:</td>
+        <td class="right nowrap">Rw (C; C<sub>tr</sub>)=</td>
         <td>
             <?= $this->numFormat($konstrukcija->Rw, 0) ?>
             (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>) dB

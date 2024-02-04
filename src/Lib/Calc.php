@@ -8,6 +8,14 @@ class Calc
     public const MESECI = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'avg', 'sep', 'okt', 'nov', 'dec'];
     public const NIX = 0.000001;
 
+    public const FREKVENCE_TERCE = [
+        50, 63, 80,
+        100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500,
+        3150, 4000, 5000,
+    ];
+
+    public const RF = [null, null, null, 33, 36, 39, 42, 45, 48, 51, 52, 53, 54, 55, 56, 56, 56, 56, null, null, null];
+
     /**
      * Izračun nasičenega tlaka glede na podano temperaturo
      *

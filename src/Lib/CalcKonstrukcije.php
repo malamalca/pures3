@@ -560,7 +560,6 @@ class CalcKonstrukcije
         $lineWidth = 1;
         $data1lineWidth = 4;
         $data2lineWidth = 2;
-        $barWidth = 20;
 
         // Font settings
         $font = RESOURCES . 'OpenSans-Regular.ttf';
@@ -793,6 +792,246 @@ class CalcKonstrukcije
                 }
             }
             $prevValue = $value;
+        }
+
+        ob_start();
+        imagepng($chart);
+        $imageData = ob_get_contents();
+        ob_end_clean();
+
+        imagedestroy($chart);
+
+        return $imageData;
+    }
+
+    /**
+     * Klasičen line-graf
+     *
+     * @param array<string, mixed> $data Podatki za graf
+     * @return string|false
+     */
+    public static function lineGraph($data)
+    {
+        // Image dimensions
+        $imageWidth = 800;
+        $imageHeight = 600;
+
+        // Grid dimensions and placement within image
+        $gridTop = 10;
+        $gridLeft = 50;
+        $gridBottom = $imageHeight - 40;
+        $gridRight = $imageWidth - 50;
+        $gridHeight = $gridBottom - $gridTop;
+        $gridWidth = $gridRight - $gridLeft;
+
+        // Bar and line width
+        $lineWidth = 1;
+        $data1lineWidth = 4;
+        $data2lineWidth = 2;
+
+        // Font settings
+        $font = RESOURCES . 'OpenSans-Regular.ttf';
+        $fontSize = 12;
+
+        // Margin between label and axis
+        $labelMargin = 8;
+
+        // Margin between axis and graph
+        $offsetMargin = 20;
+
+        // Max value on y-axis
+        $maxSeriesValues = [];
+        $minSeriesValues = [];
+
+        foreach ($data['series'] as $k => $serie) {
+            $maxSeriesValues[$k] = max($serie);
+            $minSeriesValues[$k] = min($serie);
+        }
+        $yMaxValue = max($maxSeriesValues);
+        $yMinValue = min($minSeriesValues);
+
+        $yMaxAxis = $yMaxValue + abs(0.05 * ($yMaxValue - $yMinValue));
+        $yMinAxis = $yMinValue - abs(0.05 * ($yMaxValue - $yMinValue));
+
+        // Distance between grid lines on y-axis
+        // $yGridStep = 10;
+        // Number of lines we want in a grid
+        $yGridLinesCount = 4;
+        $gridSteps = [1, 2, 5];
+        $yGridStepReal = ($yMaxValue - $yMinValue) / $yGridLinesCount;
+
+        $yGridFactor = 1;
+        while ($yGridStepReal < 10) {
+            $yGridStepReal *= 10;
+            $yGridFactor *= 0.1;
+        }
+        while ($yGridStepReal > 100) {
+            $yGridStepReal /= 10;
+            $yGridFactor *= 10;
+        }
+
+        $yGridStepReal = ((int)$yGridStepReal) / 10;
+        $yGridStep = null;
+        $yGridMinDifference = 10;
+        foreach ($gridSteps as $gridStep) {
+            if (abs($gridStep - $yGridStepReal) < $yGridMinDifference) {
+                $yGridMinDifference = abs($gridStep - $yGridStepReal);
+                $yGridStep = $gridStep;
+            }
+        }
+
+        $yGridStep = $yGridStep * $yGridFactor * 10;
+
+        $yGridLines = [];
+        $yGridStepDiff = ($yMaxValue - $yMinValue) / $yGridLinesCount;
+
+        // First horizontal grid line
+        $firstGridLinePos = floor($yMinAxis / $yGridStep) * $yGridStep;
+        if ($firstGridLinePos > $gridBottom) {
+            $yGridLines[] = $firstGridLinePos;
+        } else {
+            $yGridLines[] = $firstGridLinePos + $yGridStep;
+        }
+
+        $yGridLinesCount = floor(($yMaxAxis - $firstGridLinePos) / $yGridStep);
+
+        for ($i = 0; $i < $yGridLinesCount; $i++) {
+            $yGridLines[] = $yGridLines[count($yGridLines) - 1] + $yGridStep;
+        }
+
+        // Init image
+        $chart = imagecreatetruecolor($imageWidth, $imageHeight);
+        if (!$chart) {
+            return false;
+        }
+
+        // Setup colors
+        $backgroundColor = imagecolorallocate($chart, 255, 255, 255);
+        $axisColor = imagecolorallocate($chart, 85, 85, 85);
+        $labelColor = $axisColor;
+        $gridColor = imagecolorallocate($chart, 212, 212, 212);
+        $barColor = imagecolorallocatealpha($chart, 127, 201, 255, 50);
+        $separatorLineColor = imagecolorallocate($chart, 80, 80, 80);
+        $dataLineColor = imagecolorallocate($chart, 255, 0, 0);
+        $data2LineColor = imagecolorallocate($chart, 64, 64, 255);
+
+        if (
+            $backgroundColor === false ||
+            $axisColor === false ||
+            $labelColor === false ||
+            $gridColor === false ||
+            $barColor === false ||
+            $separatorLineColor === false ||
+            $dataLineColor == false ||
+            $data2LineColor == false
+        ) {
+            return false;
+        }
+
+        imagefill($chart, 0, 0, $backgroundColor);
+        imagesetthickness($chart, $lineWidth);
+
+        /*
+        * Print grid lines bottom up
+        */
+        //for ($i = 0; $i <= $yMaxValue; $i += $yLabelSpan) {
+        foreach ($yGridLines as $yGridLineValue) {
+            //$y = $gridBottom - $i * $gridHeight / $yMaxAxis;
+
+            $y = $gridBottom - ($yGridLineValue - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+
+            // draw the line
+            imageline($chart, $gridLeft, (int)$y, $gridRight, (int)$y, $gridColor);
+
+            // draw right aligned label
+            $labelBox = imagettfbbox($fontSize, 0, $font, strval($yGridLineValue));
+            if ($labelBox) {
+                $labelWidth = $labelBox[4] - $labelBox[0];
+
+                $labelX = $gridLeft - $labelWidth - $labelMargin;
+                $labelY = $y + $fontSize / 2;
+
+                imagettftext(
+                    $chart,
+                    $fontSize,
+                    0,
+                    (int)$labelX,
+                    (int)$labelY,
+                    $labelColor,
+                    $font,
+                    strval($yGridLineValue)
+                );
+            }
+        }
+
+        /*
+        * Draw x- and y-axis
+        */
+        imageline($chart, $gridLeft, $gridTop, $gridLeft, $gridBottom, $axisColor);
+        imageline($chart, $gridLeft, $gridBottom, $gridRight, $gridBottom, $axisColor);
+
+        /** Draw the data series line */
+        $dataX = [];
+
+        $sirinaGrafa = $gridWidth - 2 * $offsetMargin;
+        $offsetX = $gridLeft + $offsetMargin;
+        foreach ($data['X'] as $dataValue) {
+            $dataX[] = $offsetX + $dataValue / max($data['X']) * $sirinaGrafa;
+        }
+
+        $prevLabelX = $gridLeft;
+        foreach ($dataX as $k => $value) {
+            if ($k > 0) {
+                // draw series line
+                foreach ($data['series'] as $j => $serie) {
+                    $x1 = $dataX[$k - 1];
+                    $y1 = $gridBottom - ($serie[$k - 1] - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+                    $x2 = $value;
+                    $y2 = $gridBottom - ($serie[$k] - $yMinAxis) / ($yMaxAxis - $yMinAxis) * $gridHeight;
+
+                    imagesetthickness($chart, $data1lineWidth);
+                    imageline($chart, (int)$x1, (int)$y1, (int)$x2, (int)$y2, $dataLineColor);
+                }
+
+                /* Grid Line */
+                $x1 = $value;
+                $y1 = $gridBottom - $gridHeight;
+                $x2 = $value;
+                $y2 = $gridBottom - 1;
+
+                imagefilledrectangle(
+                    $chart,
+                    (int)$x1,
+                    (int)$y1,
+                    (int)$x2,
+                    (int)$y2,
+                    $gridColor
+                );
+
+                // draw right aligned label
+                $labelBox = imagettfbbox($fontSize, 0, $font, strval(round($data['X'][$k], 0)));
+                if ($labelBox) {
+                    $labelWidth = $labelBox[4] - $labelBox[0];
+
+                    $labelX = $value - $labelWidth / 2;
+                    $labelY = $gridBottom + $fontSize + $labelMargin;
+                    
+                    // prevent overlap
+                    if ($labelX > $prevLabelX) {
+                        imagettftext(
+                            $chart,
+                            $fontSize,
+                            0,
+                            (int)$labelX,
+                            (int)$labelY,
+                            $labelColor,
+                            $font,
+                            strval(round($data['X'][$k], 0))
+                        );
+                        $prevLabelX = $labelX + $labelWidth;
+                    }
+                }
+            }
         }
 
         ob_start();

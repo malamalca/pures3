@@ -4,6 +4,13 @@
 ?>
 <p class="actions">
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+<?php
+    foreach ($sistemi as $s) {
+?>
+<a class="button<?= $s->id == $sistem->id ? ' active' : '' ?>" href="<?= App::url('/pures/TSS/fotovoltaika/' . $projectId . '/' . $s->id) ?>"><?= $s->id ?></a>
+<?php
+    }
+?>
 </p>
 <h1>Analiza fotonapetostnega sistema "<?= h($sistem->id) ?>"</h1>
 <table border="1">

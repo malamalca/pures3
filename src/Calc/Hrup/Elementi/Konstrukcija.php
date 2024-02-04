@@ -27,7 +27,8 @@ class Konstrukcija
 
     public string $id;
     public string $naziv;
-    public ?string $tip;
+    public string $tip = 'zahtevna';
+    public string $racunskiPasovi = 'tercni';
 
     public float $povrsinskaMasa = 0;
     public float $gostota = 0;
@@ -107,6 +108,8 @@ class Konstrukcija
                     }
             }
         }
+
+        $this->debelina = $this->gostota / $this->povrsinskaMasa;
     }
 
     /**
@@ -269,14 +272,14 @@ class Konstrukcija
             $sumTau += pow(10, (-self::SPQ_C[$ix] - $this->R[$fq]) / 10);
         }
 
-        $this->C = $this->Rw - round((-10 * log10($sumTau)), 0);
+        $this->C = -($this->Rw - round((-10 * log10($sumTau)), 0));
 
         $sumTau = 0;
         foreach (self::FQS as $ix => $fq) {
             $sumTau += pow(10, (-self::SPQ_CTR[$ix] - $this->R[$fq]) / 10);
         }
 
-        $this->Ctr = $this->Rw - round((-10 * log10($sumTau)), 0);
+        $this->Ctr = -($this->Rw - round((-10 * log10($sumTau)), 0));
     }
 
     /**
@@ -287,6 +290,7 @@ class Konstrukcija
     public function export()
     {
         $konstrukcija = new \stdClass();
+        $konstrukcija->tip = 'zahtevna';
 
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);

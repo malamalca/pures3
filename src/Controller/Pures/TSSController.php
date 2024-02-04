@@ -19,6 +19,7 @@ class TSSController
         App::set('projectId', $projectId);
 
         $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
+        App::set('sistemi', $sistemi);
         App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 
@@ -34,6 +35,7 @@ class TSSController
         App::set('projectId', $projectId);
 
         $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
+        App::set('sistemi', $sistemi);
         App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 
@@ -49,6 +51,7 @@ class TSSController
         App::set('projectId', $projectId);
 
         $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
+        App::set('sistemi', $sistemi);
         App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 
@@ -64,6 +67,7 @@ class TSSController
         App::set('projectId', $projectId);
 
         $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
+        App::set('sistemi', $sistemi);
         App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 }

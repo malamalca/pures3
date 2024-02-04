@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Command\Hrup;
 
-use App\Calc\Hrup\Elementi\EnostavnaKonstrukcija;
 use App\Calc\Hrup\Elementi\OknaVrata;
+use App\Calc\Hrup\KonstrukcijaFactory;
 use App\Core\App;
 use App\Core\Command;
 
@@ -28,7 +28,7 @@ class IzracunElementov extends Command
 
             $konstrukcijeOut = [];
             foreach ($konstrukcijeIn as $konstrukcijaConfig) {
-                $konstrukcija = new EnostavnaKonstrukcija($konstrukcijaConfig);
+                $konstrukcija = KonstrukcijaFactory::create($konstrukcijaConfig);
                 $konstrukcija->analiza();
                 $konstrukcijeOut[] = $konstrukcija->export();
             }
