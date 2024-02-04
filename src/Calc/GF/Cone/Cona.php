@@ -44,6 +44,7 @@ class Cona
     public \stdClass $razsvetljava;
     public \stdClass $prezracevanje;
     public \stdClass $ovoj;
+    public \stdClass $uravnavanjeVlage;
 
     public array $deltaTOgrevanje = [];
     public array $deltaTHlajenje = [];
@@ -659,7 +660,7 @@ class Cona
      */
     public function izracunNavlazevanje($okolje, $options = [])
     {
-        if (empty($this->uravnavanjeVlage)) {
+        if (!isset($this->uravnavanjeVlage)) {
             foreach (array_keys(Calc::MESECI) as $mesec) {
                 $this->energijaNavlazevanje[$mesec] = 0;
                 $this->energijaRazvlazevanje[$mesec] = 0;
@@ -777,6 +778,8 @@ class Cona
                 $cona->infiltracija = $prop->getValue($this);
                 $cona->infiltracija->lega = $this->infiltracija->lega->value;
                 $cona->infiltracija->zavetrovanost = $this->infiltracija->zavetrovanost->value;
+            } elseif ($prop->getName() == 'uravnavanjeVlage') {
+                //TODO:
             } else {
                 $cona->{$prop->getName()} = $prop->getValue($this);
             }

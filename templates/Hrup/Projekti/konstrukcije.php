@@ -80,11 +80,17 @@
             <td class="right">m'=</td>
             <td><?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m²</td>
         </tr>
+        <?php
+            if (isset($dodatniSloj->dR)) {
+        ?>
         <tr>
             <td>Vpliv na hrup v zraku:</td>
             <td class="right">&Delta;R=</td>
             <td><?= $this->numFormat($dodatniSloj->dR, 0) ?> dB</td>
         </tr>
+        <?php
+            }
+        ?>
         <?php
             if (isset($dodatniSloj->dLw)) {
         ?>

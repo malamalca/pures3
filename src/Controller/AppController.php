@@ -7,6 +7,8 @@ use App\Core\App;
 
 class AppController
 {
+    public string $area;
+    public \stdClass $request;
     /**
      * Prikaz podatkov o ovoju cone
      *

@@ -11,14 +11,14 @@
     <meta name="description" content="PHPures 3">
     <meta name="author" content="ARHIM d.o.o.">
 
-    <script type="text/javascript" src="<?= $this->url("/js/ASCIIMathML.js") ?>"></script>
-    <link rel="stylesheet" href="<?= $this->url("/css/main.css") ?>" />
-    <link rel="stylesheet" media="print" href="<?= $this->url("/css/print.css") ?>" />
+    <script type="text/javascript" src="<?= App::url("/js/ASCIIMathML.js") ?>"></script>
+    <link rel="stylesheet" href="<?= App::url("/css/main.css") ?>" />
+    <link rel="stylesheet" media="print" href="<?= App::url("/css/print.css") ?>" />
 </head>
 
 <body translate="no">
   <div id="container">
-      <?php include TEMPLATES . 'elements' . DS . 'header.php'; ?>
+      <?php require TEMPLATES . 'elements' . DS . 'header.php'; ?>
       <div id="content">
         <?= App::flash() ?>
 

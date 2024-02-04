@@ -513,7 +513,7 @@ class CalcKonstrukcije
     /**
      * Graf s podatki o konstrukciji
      *
-     * @param array<int|non-empty-string, non-empty-array<int|non-empty-string, array<int|non-empty-string, mixed>|string>|string> $data Podatki za graf
+     * @param mixed $data Podatki za graf
      * @return string|false
      */
     public static function graf($data)
@@ -529,19 +529,24 @@ class CalcKonstrukcije
         }
 
         if (!empty($data['data2'])) {
+            /** @var array<int,float> $data2 */
             $data2 = $data['data2'];
         }
 
         $colors = $data['color'] ?? null;
 
         // podatki o slojih konstrukcije: naziv | debelina | lambda
+        /** @var array<int,float> $thicknesses */
         $thicknesses = $data['thickness'];
+
+        /** @var array<int,string> $sloji */
         $sloji = $data['layer'];
         //$thicknesses = [0.2, 0.2, 0.01];
         //$sloji = ['ab', 'eps', 'fasada'];
 
         // podatki o temperaturah na posameznem stiku slojev -  T_Si + T_[n] + T_se
         //$data = [20, 19.8, 19, -11, -12.8, -13];
+        /** @var array<int,float> $data */
         $data = $data['data'];
 
         // Image dimensions
@@ -572,11 +577,11 @@ class CalcKonstrukcije
         $offsetMargin = 20;
 
         // Max value on y-axis
-        $yMaxValue = max((array)$data);
-        $yMinValue = min((array)$data);
+        $yMaxValue = (float)max((array)$data);
+        $yMinValue = (float)min((array)$data);
         if (!empty($data2)) {
-            $yMaxValue2 = max($data2);
-            $yMinValue2 = min($data2);
+            $yMaxValue2 = (float)max((array)$data2);
+            $yMinValue2 = (float)min((array)$data2);
             $yMaxValue = max($yMaxValue, $yMaxValue2);
             $yMinValue = min($yMinValue, $yMinValue2);
         }
@@ -707,7 +712,7 @@ class CalcKonstrukcije
         /*
         * Draw the bars with labels
         */
-        $debelinaKonstrukcije = array_sum($thicknesses);
+        $debelinaKonstrukcije = array_sum((array)$thicknesses);
 
         $sirinaGrafa = $gridWidth - 2 * $offsetMargin;
 
