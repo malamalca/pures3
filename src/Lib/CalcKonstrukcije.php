@@ -284,7 +284,7 @@ class CalcKonstrukcije
     private static function izracunKondenzacije($kons)
     {
         // vse kond. ravnine ne glede na mesece
-        /** @var array<\stdClass> $kondRavnine */
+        /** @var array<int, \stdClass> $kondRavnine */
         $kondRavnine = [];
         foreach ($kons->materiali as $material) {
             foreach ($material->racunskiSloji as $sloj) {
@@ -297,7 +297,7 @@ class CalcKonstrukcije
         // iščemo kondenzacijo po mesecih
         foreach (self::$spanIterator as $mesec) {
             // kond. ravnine v trenutnem mesecu
-            /** @var array<\stdClass> $kondRavnineVMesecu */
+            /** @var array<int, \stdClass> $kondRavnineVMesecu */
             $kondRavnineVMesecu = [];
             foreach ($kons->materiali as $material) {
                 foreach ($material->racunskiSloji as $sloj) {
@@ -513,7 +513,7 @@ class CalcKonstrukcije
     /**
      * Graf s podatki o konstrukciji
      *
-     * @param array<string, mixed> $data Podatki za graf
+     * @param array<int|non-empty-string, non-empty-array<int|non-empty-string, array<int|non-empty-string, mixed>|string>|string> $data Podatki za graf
      * @return string|false
      */
     public static function graf($data)
@@ -572,8 +572,8 @@ class CalcKonstrukcije
         $offsetMargin = 20;
 
         // Max value on y-axis
-        $yMaxValue = max($data);
-        $yMinValue = min($data);
+        $yMaxValue = max((array)$data);
+        $yMinValue = min((array)$data);
         if (!empty($data2)) {
             $yMaxValue2 = max($data2);
             $yMinValue2 = min($data2);
@@ -1015,15 +1015,15 @@ class CalcKonstrukcije
 
                     $labelX = $value - $labelWidth / 2;
                     $labelY = $gridBottom + $fontSize + $labelMargin;
-                    
+
                     // prevent overlap
                     if ($labelX > $prevLabelX) {
                         imagettftext(
                             $chart,
                             $fontSize,
                             0,
-                            (int)$labelX,
-                            (int)$labelY,
+                            $labelX,
+                            $labelY,
                             $labelColor,
                             $font,
                             strval(round($data['X'][$k], 0))

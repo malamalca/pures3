@@ -184,9 +184,6 @@ class NetransparentenElementOvoja extends ElementOvoja
                     $dobitekSS = $this->dobitekSS;
                 }
                 if ($dobitekSS) {
-                    if (isset($this->dobitekSS)) {
-                        var_dump($this->dobitekSS);
-                    }
                     // svetla barva 0.3, srednja barva 0.6, temna barva 0.9
                     $alphaSr = !empty($this->options['referencnaStavba']) ? 0.5 : $this->barva->koeficientAlphaSr();
                     $Fsky = $this->naklon < 45 ? 1 : 0.5;

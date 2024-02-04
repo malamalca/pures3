@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Lib\Charts;
 
-use \GdImage;
+use GdImage;
 
 class Chart
 {
@@ -47,7 +47,6 @@ class Chart
     private int $axisColor;
     private int $labelColor;
     private int $gridColor;
-    private int $barColor;
     private int $separatorLineColor;
 
     /**
@@ -81,11 +80,11 @@ class Chart
         $this->gridWidth = $this->gridRight - $this->gridLeft;
 
         // Setup colors
-        $this->backgroundColor = imagecolorallocate($this->chart, 255, 255, 255);
-        $this->axisColor = imagecolorallocate($this->chart, 85, 85, 85);
+        $this->backgroundColor = (int)imagecolorallocate($this->chart, 255, 255, 255);
+        $this->axisColor = (int)imagecolorallocate($this->chart, 85, 85, 85);
         $this->labelColor = $this->axisColor;
-        $this->gridColor = imagecolorallocate($this->chart, 212, 212, 212);
-        $this->separatorLineColor = imagecolorallocate($this->chart, 80, 80, 80);
+        $this->gridColor = (int)imagecolorallocate($this->chart, 212, 212, 212);
+        $this->separatorLineColor = (int)imagecolorallocate($this->chart, 80, 80, 80);
     }
 
     /**
@@ -93,7 +92,8 @@ class Chart
      *
      * @return void
      */
-    function __destruct() {
+    public function __destruct()
+    {
         imagecolordeallocate($this->chart, $this->backgroundColor);
         imagecolordeallocate($this->chart, $this->axisColor);
         imagecolordeallocate($this->chart, $this->labelColor);
@@ -103,7 +103,13 @@ class Chart
         imagedestroy($this->chart);
     }
 
-    public function draw() {
+    /**
+     * Draws chart
+     *
+     * @return string
+     */
+    public function draw()
+    {
         $this->drawAxes();
         $this->drawBackground();
         $this->drawHorizontalGrid();
@@ -111,7 +117,7 @@ class Chart
 
         ob_start();
         imagepng($this->chart);
-        $imageData = ob_get_contents();
+        $imageData = (string)ob_get_contents();
         ob_end_clean();
 
         return $imageData;
@@ -119,7 +125,7 @@ class Chart
 
     /**
      * Draw background
-     * 
+     *
      * @return void
      */
     protected function drawBackground()
@@ -129,7 +135,7 @@ class Chart
 
     /**
      * Draw x- and y-axis
-     * 
+     *
      * @return void
      */
     protected function drawAxes()
@@ -147,7 +153,7 @@ class Chart
 
     /**
      * Draw horizontal grid
-     * 
+     *
      * @return void
      */
     protected function drawHorizontalGrid()
@@ -247,7 +253,7 @@ class Chart
 
     /**
      * Draw series
-     * 
+     *
      * @return void
      */
     protected function drawSeries()
@@ -274,7 +280,7 @@ class Chart
 
         $scaleY = $this->gridHeight / ($yMaxAxis - $yMinAxis);
 
-        $equalSpacing = true;
+        $equalSpacing = $this->options['equalSpacing'] ?? false;
 
         $prevLabelX = $this->gridLeft;
         $prevGridX = 0;
@@ -301,7 +307,10 @@ class Chart
                         $x2 = $gridX;
                         $y2 = $this->gridBottom - ($serie[$k] - $yMinAxis) * $scaleY;
 
-                        imagesetthickness($this->chart, $this->options['seriesThickness'][$serieId] ?? $this->dataLineWidth);
+                        imagesetthickness(
+                            $this->chart,
+                            $this->options['seriesThickness'][$serieId] ?? $this->dataLineWidth
+                        );
                         imageline($this->chart, (int)$x1, (int)$y1, (int)$x2, (int)$y2, $seriesColors[$serieId]);
                     }
                 }
@@ -322,13 +331,18 @@ class Chart
                 );
 
                 // draw right aligned label below x-axis
-                $labelBox = imagettfbbox($this->fontSize, 0, $this->font, strval(round($this->data['category'][$k], 0)));
+                $labelBox = imagettfbbox(
+                    $this->fontSize,
+                    0,
+                    $this->font,
+                    strval(round($this->data['category'][$k], 0))
+                );
                 if ($labelBox) {
                     $labelWidth = $labelBox[4] - $labelBox[0];
 
                     $labelX = $gridX - $labelWidth / 2;
                     $labelY = $this->gridBottom + $this->fontSize + $this->gridLabelMargin;
-                    
+
                     // prevent overlap
                     if ($labelX > $prevLabelX) {
                         imagettftext(
@@ -349,14 +363,19 @@ class Chart
         }
     }
 
-
+    /**
+     * Allocate color
+     *
+     * @param string $RGB Rgb color
+     * @return int
+     */
     private function allocateColor(string $RGB)
     {
-        return imagecolorallocate(
+        return (int)imagecolorallocate(
             $this->chart,
-            hexdec(substr($RGB, 0, 2)),
-            hexdec(substr($RGB, 2, 2)),
-            hexdec(substr($RGB, 4, 2))
+            (int)hexdec(substr($RGB, 0, 2)),
+            (int)hexdec(substr($RGB, 2, 2)),
+            (int)hexdec(substr($RGB, 4, 2))
         );
     }
 }

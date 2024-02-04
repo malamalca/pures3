@@ -191,7 +191,7 @@ class Konstrukcija
                 } else {
                     $sigma = $sigma4;
                 }
-                if ($f11 > $fq & $sigma > $sigma2) {
+                if ($f11 > $fq && $sigma > $sigma2) {
                     $sigma = $sigma2;
                 }
             } else {
