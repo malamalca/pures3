@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Hrup;
 
 use App\Core\App;
+use App\Core\Controller;
 
-class UdarniHrupController
+class UdarniHrupController extends Controller
 {
     /**
      * Prikaz

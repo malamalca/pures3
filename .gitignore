@@ -11,6 +11,7 @@
 !/projects/Pures/TestniProjekt
 #!/projects/Pures/TestniProjekt2
 /projects/Hrup/*
+!/projects/Hrup/TestniProjekt
 
 /vendor/*
 /.phpunit.cache/*

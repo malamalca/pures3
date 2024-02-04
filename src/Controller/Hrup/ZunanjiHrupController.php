@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Hrup;
 
 use App\Core\App;
+use App\Core\Controller;
 
-class ZunanjiHrupController
+class ZunanjiHrupController extends Controller
 {
     /**
      * Prikaz splosnih podatkov projekta

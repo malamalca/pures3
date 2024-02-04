@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace App\Controller\Pures;
 
 use App\Core\App;
+use App\Core\Controller;
 use App\Lib\Calc;
 use App\Lib\CalcKonstrukcije;
 use App\Lib\CalcOkolje;
 
-class KonstrukcijeController
+class KonstrukcijeController extends Controller
 {
     /**
      * Prikaz seznama

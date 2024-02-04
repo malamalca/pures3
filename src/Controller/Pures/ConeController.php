@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Pures;
 
 use App\Core\App;
+use App\Core\Controller;
 
-class ConeController
+class ConeController extends Controller
 {
     /**
      * Prikaz podatkov o ovoju cone
