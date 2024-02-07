@@ -108,6 +108,9 @@ class FotonapetostniSistem
                     break;
                 }
             }
+            if (!$solarnoObsevanje) {
+                throw new \Exception('Podatki za solarno obsevanja za fotonapetosni sistem ne obstajajo.');
+            }
             $solarnoObsevanje = $stDni * $solarnoObsevanje[$mesec] / 1000;
 
             $this->proizvedenaElektricnaEnergija[$mesec] = $this->povrsina * $solarnoObsevanje *

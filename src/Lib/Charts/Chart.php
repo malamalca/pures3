@@ -7,47 +7,47 @@ use GdImage;
 
 class Chart
 {
-    private const CHART_WIDTH = 800;
-    private const CHART_HEIGHT = 600;
-    private const OFFSET_TOP = 10;
-    private const OFFSET_BOTTOM = 40;
-    private const OFFSET_LEFT = 50;
-    private const OFFSET_RIGHT = 50;
+    protected const CHART_WIDTH = 800;
+    protected const CHART_HEIGHT = 600;
+    protected const OFFSET_TOP = 10;
+    protected const OFFSET_BOTTOM = 40;
+    protected const OFFSET_LEFT = 50;
+    protected const OFFSET_RIGHT = 50;
 
-    private const SERIES_COLOR = 'FF0000';
+    protected const SERIES_COLOR = 'FF0000';
 
-    private array $data = [];
-    private array $options = [];
-    private ?GdImage $chart;
+    protected array $data = [];
+    protected array $options = [];
+    protected ?GdImage $chart;
 
-    private int $chartWidth;
-    private int $chartHeight;
+    protected int $chartWidth;
+    protected int $chartHeight;
 
-    private int $gridTop;
-    private int $gridLeft;
-    private int $gridBottom;
-    private int $gridRight;
-    private int $gridHeight;
-    private int $gridWidth;
+    protected int $gridTop;
+    protected int $gridLeft;
+    protected int $gridBottom;
+    protected int $gridRight;
+    protected int $gridHeight;
+    protected int $gridWidth;
 
     // Bar and line width
-    private int $gridLineWidth = 1;
-    private int $dataLineWidth = 4;
+    protected int $gridLineWidth = 1;
+    protected int $dataLineWidth = 4;
 
     // Font settings
-    private string $font = RESOURCES . 'OpenSans-Regular.ttf';
-    private int $fontSize = 12;
+    protected string $font = RESOURCES . 'OpenSans-Regular.ttf';
+    protected int $fontSize = 12;
 
     // Margin between label and axis
-    private int $gridLabelMargin = 8;
+    protected int $gridLabelMargin = 8;
     // Margin between axis and graph
-    private int $graphOffsetMargin = 20;
+    protected int $graphOffsetMargin = 20;
 
-    private int $backgroundColor;
-    private int $axisColor;
-    private int $labelColor;
-    private int $gridColor;
-    private int $separatorLineColor;
+    protected int $backgroundColor;
+    protected int $axisColor;
+    protected int $labelColor;
+    protected int $gridColor;
+    protected int $separatorLineColor;
 
     /**
      * Class Constructor
@@ -316,46 +316,50 @@ class Chart
                 }
 
                 /* Grid Line */
-                $x1 = $gridX;
-                $y1 = $this->gridBottom - $this->gridHeight;
-                $x2 = $gridX;
-                $y2 = $this->gridBottom - 1;
+                if (!isset($this->options['showCategoryLines']) || $this->options['showCategoryLines'] == true) {
+                    $x1 = $gridX;
+                    $y1 = $this->gridBottom - $this->gridHeight;
+                    $x2 = $gridX;
+                    $y2 = $this->gridBottom - 1;
 
-                imagefilledrectangle(
-                    $this->chart,
-                    (int)$x1,
-                    (int)$y1,
-                    (int)$x2,
-                    (int)$y2,
-                    $this->gridColor
-                );
+                    imagefilledrectangle(
+                        $this->chart,
+                        (int)$x1,
+                        (int)$y1,
+                        (int)$x2,
+                        (int)$y2,
+                        $this->gridColor
+                    );
+                }
 
-                // draw right aligned label below x-axis
-                $labelBox = imagettfbbox(
-                    $this->fontSize,
-                    0,
-                    $this->font,
-                    strval(round($this->data['category'][$k], 0))
-                );
-                if ($labelBox) {
-                    $labelWidth = $labelBox[4] - $labelBox[0];
+                if (!isset($this->options['showCategoryValues']) || $this->options['showCategoryValues'] == true) {
+                    // draw right aligned label below x-axis
+                    $labelBox = imagettfbbox(
+                        $this->fontSize,
+                        0,
+                        $this->font,
+                        strval(round($this->data['category'][$k], 0))
+                    );
+                    if ($labelBox) {
+                        $labelWidth = $labelBox[4] - $labelBox[0];
 
-                    $labelX = $gridX - $labelWidth / 2;
-                    $labelY = $this->gridBottom + $this->fontSize + $this->gridLabelMargin;
+                        $labelX = $gridX - $labelWidth / 2;
+                        $labelY = $this->gridBottom + $this->fontSize + $this->gridLabelMargin;
 
-                    // prevent overlap
-                    if ($labelX > $prevLabelX) {
-                        imagettftext(
-                            $this->chart,
-                            $this->fontSize,
-                            0,
-                            (int)$labelX,
-                            (int)$labelY,
-                            $this->labelColor,
-                            $this->font,
-                            strval(round($this->data['category'][$k], 0))
-                        );
-                        $prevLabelX = $labelX + $labelWidth;
+                        // prevent overlap
+                        if ($labelX > $prevLabelX) {
+                            imagettftext(
+                                $this->chart,
+                                $this->fontSize,
+                                0,
+                                (int)$labelX,
+                                (int)$labelY,
+                                $this->labelColor,
+                                $this->font,
+                                strval(round($this->data['category'][$k], 0))
+                            );
+                            $prevLabelX = $labelX + $labelWidth;
+                        }
                     }
                 }
             }

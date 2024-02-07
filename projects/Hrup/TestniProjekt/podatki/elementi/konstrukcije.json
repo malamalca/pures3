@@ -2,11 +2,19 @@
     {
         "id": "Z.Z",
         "naziv": "AB 20 cm - zahtevna konstrukcija",
-        "tip": "zahtevna",
+        "zahtevnost": "zahtevna",
         "gostota": 2300,
         "povrsinskaMasa": 460,
         "hitrostLongitudinalnihValov": 3500,
-        "faktorNotranjegaDusenja": 0.006
+        "faktorNotranjegaDusenja": 0.006,
+        "dodatniSloji": [
+            {
+                "vrsta": "elasticen",
+                "naziv": "MW Lamele",
+                "povrsinskaMasa": 26,
+                "dinamicnaTogost": 45
+            }
+        ]
     },
     {
         "id": "Z.1",

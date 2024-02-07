@@ -43,7 +43,7 @@
 
             $data = ['series' => [array_values($Rs), Calc::RF], 'category' => $fqs];
             //$png = CalcKonstrukcije::lineGraph($data);
-            $png = (new Chart($data, ['seriesColor' => ['ff00a0', '808080'], 'seriesThickness' => [8, 8]]))->draw();
+            $png = (new Chart($data, ['equalSpacing' => true, 'seriesColor' => ['ff00a0', '808080'], 'seriesThickness' => [8, 8]]))->draw();
         ?>
         <td>Graf:</td>
         <td class="right">&nbsp;</td>

@@ -18,6 +18,15 @@
         "difuzijskaUpornost": 6
     },
     {
+        "id": "16",
+        "sifra": "betonskiVotlak",
+        "opis": "Betonski votlaki z odprtinami v treh vrstah",
+        "lambda": 0.74,
+        "gostota": 1600,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 10
+    },
+    {
         "id": "21",
         "sifra": "cementnoLepilo",
         "opis": "Cementna malta",
@@ -63,6 +72,15 @@
         "difuzijskaUpornost": 65
     },
     {
+        "id": "35.2",
+        "sifra": "humus",
+        "opis": "Zaraščeno zemljišče, humus",
+        "lambda": 1.5,
+        "gostota": 1500,
+        "specificnaToplota": 840,
+        "difuzijskaUpornost": 50
+    },
+    {
         "id": "37",
         "sifra": "tampon",
         "opis": "Gramoz, suh",
@@ -70,6 +88,15 @@
         "gostota": 1700,
         "specificnaToplota": 840,
         "difuzijskaUpornost": 1.4
+    },
+    {
+        "id": "43",
+        "sifra": "zemlja",
+        "opis": "Nasuta zemlja (vlažna)",
+        "lambda": 2.1,
+        "gostota": 1700,
+        "specificnaToplota": 840,
+        "difuzijskaUpornost": 2.1
     },
     {
         "id": "44",

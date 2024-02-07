@@ -7,6 +7,7 @@
         "properties" : {
             "id": {"type": "string"},
             "naziv": {"type": "string"},
+            "tip": {"enum": ["vertikalna", "horizontalna"]},
             "povrsinskaMasa" : {
                 "oneOf": [
                     {"type": "number"},

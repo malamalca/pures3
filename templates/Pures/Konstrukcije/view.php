@@ -2,6 +2,7 @@
     use \App\Core\App;
     use \App\Lib\Calc;
     use \App\Lib\CalcKonstrukcije;
+    use \App\Lib\Charts\PuresChart;
 ?>
 <h1>Analiza netransparentne konstrukcije</h1>
 
@@ -69,25 +70,34 @@
 <?php
     $mesec = 0;
 
-    $thicknesses = [];
     $temperatures = [];
+    $categories = [];
     $layers = [];
 
     $temperatures[] = $okolje->notranjaT[$mesec];
     $temperatures[] = $kons->Tsi[$mesec];
 
+    $categories[] = -$kons->debelina * 0.02;
+    $categories[] = 0;
+
     foreach ($kons->materiali as $i => $material) {
         $temperatures[] = $material->T[$mesec];
-        $thicknesses[] = $material->debelina;
-        $layers[] = $material->opis;
-        $colors[] = $material->lambda < 0.05 ? 1 : ($material->lambda < 0.2 ? 2 : ($material->lambda < 0.7 ? 3 : 4));
+        $categories[] = $categories[count($categories)-1] + $material->debelina;
+
+        $color = $material->lambda < 0.05 ? 1 : ($material->lambda < 0.2 ? 2 : ($material->lambda < 0.7 ? 3 : 4));
+        $layers[] = ['thickness' => $material->debelina, 'title' => $material->opis, 'color' => $color];
     }
 
-    $temperatures[] = $kons->Tse[$mesec];
+    $categories[] = $kons->debelina + $kons->debelina * 0.02;
     $temperatures[] = $okolje->zunanjaT[$mesec];
 
-    $data = ['data' => $temperatures, 'thickness' => $thicknesses, 'layer' => $layers, 'color' => $colors];
-    $png = CalcKonstrukcije::graf($data);
+    $png = (new PuresChart(['series' => [$temperatures], 'category' => $categories], [
+        'layers' => $layers,
+        'seriesColor' => ['ff0000'],
+        'seriesThickness' => [4],
+        'showCategoryLines' => false,
+        'showCategoryValues' => false
+    ]))->draw();
 ?>
 
 <img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 600px"/>
@@ -96,11 +106,10 @@
 <?php
     $mesec = 0;
 
-    $thicknesses = [];
     $layers = [];
     $nasicenTlak = [];
     $dejanskiTlak = [];
-    $colors = [];
+    $categories = [];
 
     $nasicenTlak[] = Calc::nasicenTlak($okolje->notranjaT[$mesec]);
     $nasicenTlak[] = $kons->nasicenTlakSi[$mesec];
@@ -108,24 +117,33 @@
     $dejanskiTlak[] = $kons->dejanskiTlakSi[$mesec];
     $dejanskiTlak[] = $kons->dejanskiTlakSi[$mesec];
 
+    $categories[] = -$kons->Sd * 0.02;
+    $categories[] = 0;
+
     foreach ($kons->materiali as $i => $material) {
         foreach ($material->racunskiSloji as $k => $sloj) {
             $nasicenTlak[] = $sloj->nasicenTlak[$mesec];
             $dejanskiTlak[] = $sloj->dejanskiTlak[$mesec];
             $thicknesses[] = $sloj->Sd;
-            $layers[] = /*$sloj->opis*/(string)($i+1);
-            $colors[] = $sloj->lambda < 0.05 ? 1 : ($sloj->lambda < 0.2 ? 2 : ($sloj->lambda < 0.7 ? 3 : 4));
+
+            $categories[] = $categories[count($categories)-1] + $sloj->Sd;
         }
+        $color = $material->lambda < 0.05 ? 1 : ($material->lambda < 0.2 ? 2 : ($material->lambda < 0.7 ? 3 : 4));
+        $layers[] = ['thickness' => $material->Sd, 'title' => $material->opis, 'color' => $color];
     }
 
-    $nasicenTlak[] = $kons->nasicenTlakSe[$mesec];
     $nasicenTlak[] = Calc::nasicenTlak($okolje->zunanjaT[$mesec]);
-
     $dejanskiTlak[] = $kons->dejanskiTlakSe[$mesec];
-    $dejanskiTlak[] = $kons->dejanskiTlakSe[$mesec];
+    $categories[] = $kons->Sd + $kons->Sd * 0.02;
 
-    $data = ['data' => $nasicenTlak, 'data2' => $dejanskiTlak, 'thickness' => $thicknesses, 'layer' => $layers, 'color' => $colors];
-    $png = CalcKonstrukcije::graf($data);
+
+    $png = (new PuresChart(['series' => [$nasicenTlak, $dejanskiTlak], 'category' => $categories], [
+        'layers' => $layers,
+        'seriesColor' => ['ff0000', '0000ff'],
+        'seriesThickness' => [4],
+        'showCategoryLines' => false,
+        'showCategoryValues' => false
+    ]))->draw();
 ?>
 
 <img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 600px"/>
@@ -203,7 +221,7 @@
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"><?= $okolje->zunanjaT[$mesec] ?></td>
-            <td class="right"><?= round(Calc::nasicenTlak($okolje->zunanjaT[$mesec]) * $okolje->zunanjaVlaga[$mesec] / 100, 0) ?></td>
+            <td class="right"><?= round(Calc::nasicenTlak($okolje->zunanjaT[$mesec]) * $okolje->zunanjaVlaga[$mesec] / 100, 2) ?></td>
             <td class="right"><?= round(Calc::nasicenTlak($okolje->zunanjaT[$mesec]), 0) ?></td>
         </tr>
     </table>

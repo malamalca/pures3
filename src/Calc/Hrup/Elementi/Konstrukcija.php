@@ -280,6 +280,37 @@ class Konstrukcija
         }
 
         $this->Ctr = -($this->Rw - round((-10 * log10($sumTau)), 0));
+
+        // dodatni sloji
+        foreach ($this->dodatniSloji as $dodatniSloj) {
+            if (!isset($dodatniSloj->dR)) {
+                switch ($dodatniSloj->vrsta) {
+                    case VrstaDodatnegaSloja::Elasticen:
+                        $dodatniSloj->dR = $dodatniSloj->vrsta->dR(
+                            povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
+                            RwKonstrukcije: $this->Rw,
+                            povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
+                            dinamicnaTogost: $dodatniSloj->dinamicnaTogost
+                        );
+                        break;
+                    case VrstaDodatnegaSloja::Nepritrjen:
+                        $dodatniSloj->dR = $dodatniSloj->vrsta->dR(
+                            povrsinskaMasaKonstrukcije: $this->povrsinskaMasa,
+                            RwKonstrukcije: $this->Rw,
+                            povrsinskaMasaSloja: $dodatniSloj->povrsinskaMasa,
+                            sirinaMedprostora: $dodatniSloj->sirinaMedprostora
+                        );
+                        break;
+                    default:
+                        $dodatniSloj->dR = 0;
+                }
+            }
+            $this->dR += $dodatniSloj->dR ?? 0;
+
+            if (!empty($dodatniSloj->dLw)) {
+                $this->dLw = $dodatniSloj->dLw;
+            }
+        }
     }
 
     /**

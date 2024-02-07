@@ -39,9 +39,11 @@
         'fotovoltaika' => $sistemiSTPE];
 
     foreach ($vrsteTSS as $vrstaTSS => $sistemi) {
+        if ($sistemi) {
 ?>
     <a class="button" href="<?= App::url('/pures/TSS/' . $vrstaTSS . '/' . $projectId . '/' . $sistemi[0]->id) ?>">TSS <?= $vrstaTSS ?></a>
 <?php
+        }
     }
 ?>
 </p>

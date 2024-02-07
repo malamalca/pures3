@@ -193,21 +193,25 @@ class PdfIzvoz extends Command
 
         foreach ($view->get('sistemiOgrevanja') as $sistem) {
             $view->set('sistem', $sistem);
+            $view->set('sistemi', $view->get('sistemiOgrevanja'));
             $pdf->newPage((string)$view->render('TSS', 'ogrevanje'));
         }
 
         foreach ($view->get('sistemiPrezracevanja') as $sistem) {
             $view->set('sistem', $sistem);
+            $view->set('sistemi', $view->get('sistemiPrezracevanja'));
             $pdf->newPage((string)$view->render('TSS', 'prezracevanje'));
         }
 
         foreach ($view->get('sistemiRazsvetljave') as $sistem) {
             $view->set('sistem', $sistem);
+            $view->set('sistemi', $view->get('sistemiRazsvetljave'));
             $pdf->newPage((string)$view->render('TSS', 'razsvetljava'));
         }
 
         foreach ($view->get('sistemiSTPE') as $sistem) {
             $view->set('sistem', $sistem);
+            $view->set('sistemi', $view->get('sistemiSTPE'));
             $pdf->newPage((string)$view->render('TSS', 'fotovoltaika'));
         }
 

@@ -148,17 +148,4 @@ class KonstrukcijeController extends Controller
 
         return $okolje;
     }
-
-    /**
-     * Prikaz slike grafa
-     *
-     * @return void
-     */
-    public function graf()
-    {
-        $png = CalcKonstrukcije::graf($_GET);
-
-        header('Content-Type: image/png');
-        echo $png;
-    }
 }

@@ -16,17 +16,17 @@ class KonstrukcijaFactory
      */
     public static function create($options)
     {
-        if (empty($options->tip)) {
+        if (empty($options->zahtevnost)) {
             return new EnostavnaKonstrukcija($options);
         }
 
-        switch ($options->tip) {
+        switch ($options->zahtevnost) {
             case 'zahtevna':
                 return new Konstrukcija($options);
             case 'enostavna':
                 return new EnostavnaKonstrukcija($options);
             default:
-                throw new \Exception('Vrsta stavbe ne obstaja.');
+                throw new \Exception('Vrsta konstrukcije ne obstaja.');
         }
     }
 }
