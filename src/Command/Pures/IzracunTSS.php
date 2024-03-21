@@ -40,7 +40,7 @@ class IzracunTSS extends Command
             foreach ($TSSSistemiPrezracevanja as $sistem) {
                 $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
-                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
+                    throw new \Exception(sprintf('TSS Prezračevanje: Cona "%s" ne obstaja.', $sistem->idCone));
                 }
                 $prezracevalniSistem = SistemPrezracevanjaFactory::create($sistem->vrsta, $sistem);
                 $prezracevalniSistem->analiza([], $cona, $okolje);
@@ -59,7 +59,7 @@ class IzracunTSS extends Command
             foreach ($TSSSistemiRazsvetljava as $sistem) {
                 $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
-                    throw new \Exception('TSS Prezračevanje: Cona ne obstaja.');
+                    throw new \Exception('TSS Razsvetljava: Cona ne obstaja.');
                 }
                 $razsvetljava = new Razsvetljava($sistem);
                 $razsvetljava->analiza([], $cona, $okolje);

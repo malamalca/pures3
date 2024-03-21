@@ -40,6 +40,12 @@ class CalcKonstrukcije
             if (empty($kons->TSG)) {
                 throw new \Exception(sprintf('Vrsta konstrukcije "%s" po TSG ne obstaja.', $kons->vrsta));
             }
+            if (!isset($kons->Rsi)) {
+                $kons->Rsi = $kons->TSG->Rsi;
+            }
+            if (!isset($kons->Rse)) {
+                $kons->Rse = $kons->TSG->Rse;
+            }
         }
 
         if (!empty($options['referencnaStavba'])) {

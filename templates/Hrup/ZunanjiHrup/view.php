@@ -49,8 +49,9 @@
 <?php
     foreach ($prostor->fasade as $k => $fasada) {
 ?>
-    <h3>Fasada <?= ($k+1) ?></h3>
+    
     <table width="100%">
+    <tr class="title"><th colspan="4"><h3>Fasada <?= ($k+1) ?></h3></th></tr>
     <tr>
         <td class="w-20">Površina:</td>
         <td class="w-10 right strong">A=</td>
@@ -183,8 +184,8 @@
     }
 ?>
 
-<h3>Skupaj za prostor</h3>
 <table width="100%" border="1">
+    <tr class="title"><th colspan="4"><h3>Skupaj za prostor</h3></th></tr>
     <tr>
         <td class="strong">Z. št.:</td>
         <td class="center strong">Površina fasade<br />[m²]</td>

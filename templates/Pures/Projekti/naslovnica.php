@@ -9,7 +9,7 @@
 <p>Po Pravilniku o učinkoviti rabi energije v stavbah (Uradni list RS, št. 70/22 z dne 20. 5. 2022) in 
 Pravilniku o spremembah Pravilnika o učinkoviti rabi energije v stavbah (Uradni list RS, št. 161/22 z dne 23. 12. 2022).
 </p>
-<table width="100%">
+<table width="100%" class="naslovnica">
     <tr><td colspan="2">&nbsp;</td></tr>
     <?php
         foreach ($splosniPodatki->investitorji as $investitor) {

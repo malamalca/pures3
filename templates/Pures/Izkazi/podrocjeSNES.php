@@ -10,8 +10,8 @@
 <h1>Energijska učinkovitost energetsko manj stavbe –<br />
 za področje TSS</h1>
 
-<h3>Potrebna energija za zagotavljanje pogojev notranjega okolja:</h3>
 <table border="1" cellpadding="3" width="100%">
+    <tr class="title"><th colspan="4"><h3>Potrebna energija za zagotavljanje pogojev notranjega okolja:</h3></th></tr>
     <tr>
         <th colspan="4">Potrebna toplota za ogrevanje Q<sub>H,nd,an</sub> (kWh/an):</th>
     </tr>
@@ -172,8 +172,6 @@ za področje TSS</h1>
 </table>
 
 <!-- NEW PAGE -->
-
-<h3>Dovedena energija za delovanje TSS:</h3>
 <table border="1" cellpadding="3" width="100%">
     <?php
         $maxEnergentov = 1;
@@ -184,6 +182,7 @@ za področje TSS</h1>
         }
         $cellWidth = (int)round(50/$maxEnergentov, 0);
     ?>
+    <tr class="title"><th colspan="<?= (3 + $maxEnergentov) ?>"><h3>Dovedena energija za delovanje TSS:</h3></th></tr>
     <tr>
         <th colspan="<?= (3 + $maxEnergentov) ?>">Dovedena energija za ogrevanje E<sub>H,del,an</sub> (kWh/an):</th>
     </tr>
@@ -496,8 +495,8 @@ za področje TSS</h1>
     </tr>
 </table>
 <!-- NEW PAGE -->
-<h3>Kazalniki energijske učinkovitosti stavbe</h3>
 <table border="1" cellpadding="3" width="100%">
+    <tr class="title"><th colspan="4"><h3>Kazalniki energijske učinkovitosti stavbe</h3></th></tr>
     <tr>
         <td class="w-80" colspan="3">neutežena dovedena energija E<sub>del,an</sub> (kWh/an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->neutezenaDovedenaEnergija, 0) ?></td>

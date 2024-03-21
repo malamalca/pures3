@@ -5,6 +5,8 @@
 <p class="actions">
     <a class="button" href="<?= App::url('/hrup/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
+<div class="porocilo">
 <?php
     echo MarkdownExtra::defaultTransform($porocilo);
 ?>
+</div>

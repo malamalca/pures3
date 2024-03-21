@@ -1,6 +1,5 @@
 * {
     font-family: 'Open Sans Light', Tahoma, Geneva, Verdana, sans-serif;
-
 }
 
 h2 {
@@ -85,8 +84,31 @@ table {
             padding: 10px;
             background-color: #f0f0f0;
         }
+        tr {
+            &.title {
+                    th {
+                    border-left-color: transparent !important;
+                    border-right-color: transparent !important;
+                    border-top-color: transparent !important;
+                    background-color: transparent;
+                }
+                
+            }
+        }
     }
+
     tbody {
+        tr {
+            &.title {
+                    th {
+                    border-left-color: transparent !important;
+                    border-right-color: transparent !important;
+                    border-top-color: transparent !important;
+                    background-color: transparent;
+                }
+                
+            }
+        }
         th {
             text-align: left;
             font-weight: normal;
@@ -149,6 +171,33 @@ table {
             &.border {
                 border: solid 1px black;
             }
+        }
+    }
+
+    &.naslovnica {
+        tbody {
+            td, th {
+                font-size: 14px !important;
+            }
+        }
+    }
+}
+
+div.porocilo {
+    blockquote {
+        font-family: Courier, monospace !important;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-left: solid 10px #a0a0a0;
+    }
+
+    table {
+        border-collapse: collapse;
+        border: solid 1px #404040;
+
+        th, td {
+            border: solid 1px #404040;
+
         }
     }
 }

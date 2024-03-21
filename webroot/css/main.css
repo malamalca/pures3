@@ -595,6 +595,18 @@ table thead td, table thead th {
   padding: 10px;
   background-color: #f0f0f0;
 }
+table thead tr.title th {
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  background-color: transparent;
+}
+table tbody tr.title th {
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  background-color: transparent;
+}
 table tbody th {
   text-align: left;
   font-weight: normal;
@@ -657,6 +669,23 @@ table tbody td.w-70, table tbody th.w-70 {
 }
 table tbody td.border, table tbody th.border {
   border: solid 1px black;
+}
+table.naslovnica tbody td, table.naslovnica tbody th {
+  font-size: 14px !important;
+}
+
+div.porocilo blockquote {
+  font-family: Courier, monospace !important;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-left: solid 10px #a0a0a0;
+}
+div.porocilo table {
+  border-collapse: collapse;
+  border: solid 1px #404040;
+}
+div.porocilo table th, div.porocilo table td {
+  border: solid 1px #404040;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -10,8 +10,8 @@
 
 <h1>Izkaz o zaščiti pred hrupom </h1>
 
-<h2>Podatki o stavbi</h2>
 <table cellpadding="3" width="100%">
+    <tr class="title"><th colspan="2"><h2>Podatki o stavbi</h2></th></tr>
     <tr>
         <td class="w-40">Naziv:</td>
         <td class="w-60 strong"> <?= h($splosniPodatki->stavba->naziv) ?></td>
@@ -66,8 +66,8 @@
     </tr>
 </table>
 
-<h2>Zaščita pred hrupom v okolju</h2>
 <table cellpadding="3" width="70%">
+    <tr class="title"><th colspan="4"><h2>Zaščita pred hrupom v okolju</h2></th></tr>
     <tr>
         <td colspan="4">Izračun izveden na podlagi:</td>
     </tr>
@@ -98,8 +98,9 @@
     </tr>
 </table>
 
-<h2>Zvočna izolacija ovoja stavbe</h2>
-<table border="2" cellpadding="3" width="100%">
+<br />
+<table border="1" cellpadding="3" width="100%">
+    <tr class="title"><th colspan="7"><h2>Zvočna izolacija ovoja stavbe</h2></th></tr>
     <tr>
         <td class="w-60 strong" colspan="4">&nbsp;</td>
         <td class="w-20 strong center">Načrtovani ukrepi</td>
@@ -182,12 +183,9 @@
 </table>
 
 
-
-
-
 <h2>Zaščita pred hrupom v stavbi</h2>
-<h3>Zvočna izolacija notranji ločilnih elementov</h3>
-<table border="2" cellpadding="3" width="100%">
+<table border="1" cellpadding="3" width="100%">
+    <tr class="title"><th colspan="7"><h3>Zvočna izolacija notranji ločilnih elementov</h3></th></tr>
     <tr>
         <td class="w-60 strong" colspan="4">&nbsp;</td>
         <td class="w-20 strong center">Načrtovani ukrepi</td>
@@ -274,10 +272,8 @@
     ?>
 </table>
 
-
-
-<h3>Odmevni hrup</h3>
-<table border="2" cellpadding="3" width="100%">
+<table border="1" cellpadding="3" width="100%">
+    <tr class="title"><th colspan="7"><h3>Odmevni hrup</h3></th></tr>
     <tr>
         <td class="w-60 strong" colspan="4">&nbsp;</td>
         <td class="w-20 strong center">Načrtovani ukrepi</td>
@@ -329,9 +325,8 @@
     ?>
 </table>
 
-
-<h3>Hrup obratovalne opreme</h3>
-<table border="2" cellpadding="3" width="100%">
+<table border="1" cellpadding="3" width="100%">
+    <tr class="title"><th colspan="7"><h3>Hrup obratovalne opreme</h3></th></tr>
     <tr>
         <td class="w-60 strong" colspan="4">&nbsp;</td>
         <td class="w-20 strong center">Načrtovani ukrepi</td>
@@ -382,9 +377,8 @@
         }
     ?>
 </table>
-
 <br />
-<table border="2" cellpadding="3" width="100%">
+<table border="1" cellpadding="3" width="100%">
     <tr>
         <td class="w-100"><h2 style="margin: 0">Opombe</h2>(izdelovalca izkaza in merilca)</td>
     </tr>

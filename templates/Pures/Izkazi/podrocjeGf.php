@@ -19,9 +19,9 @@
     }
 ?>
 
-<h3>Kazalniki</h3>
 <table border="1" cellpadding="3" width="100%">
     <thead>
+    <tr class="title"><th colspan="4"><h3>Kazalniki</h3></th></tr>
     <tr>
         <th colspan="4">Toplotna prehodnost gradbenih konstrukcij in gradnikov ovoja stavb U (W/(m²K)):</th>
     </tr>

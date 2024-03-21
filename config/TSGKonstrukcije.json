@@ -18,6 +18,15 @@
         "difuzijskaUpornost": 6
     },
     {
+        "id": "10.2",
+        "sifra": "porobeton",
+        "opis": "Betonski votlaki z odprtinami v treh vrstah",
+        "lambda": 0.16,
+        "gostota": 500,
+        "specificnaToplota": 860,
+        "difuzijskaUpornost": 5
+    },
+    {
         "id": "16",
         "sifra": "betonskiVotlak",
         "opis": "Betonski votlaki z odprtinami v treh vrstah",
@@ -190,7 +199,7 @@
     },
     {
         "id": "114",
-        "sifra": "EPSNeo",
+        "sifra": "EPSneo",
         "opis": "EPS F grafitni",
         "lambda": 0.031,
         "gostota": 15,

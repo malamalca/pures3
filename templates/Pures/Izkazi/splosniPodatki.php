@@ -9,8 +9,8 @@
 </p>
 <h1>Izkaz o energijskih lastnostih stavbe </h1>
 
-<h3>Splošni podatki o stavbi: </h3>
 <table border="1" cellpadding="3" width="100%">
+    <tr class="title"><th colspan="2"><h3>Splošni podatki o stavbi:</h3></th></tr>
     <tr>
         <td class="w-40">investitor:</td>
         <td class="w-60">
@@ -47,8 +47,8 @@
     </tr>
 </table>
 
-<h3>Vrsta stavbe: </h3>
 <table cellpadding="3" width="100%">
+    <tr class="title"><th colspan="2"><h3>Vrsta stavbe: </h3></th></tr>
     <tr>
         <td class="w-5 checkbox"><?= $splosniPodatki->stavba->vrsta == 'nezahtevna' ? '&#x2611;' : '&#x2610;' ?></td>
         <td>energetsko nezahtevna stavba</td>
@@ -77,8 +77,9 @@
         'transport' => 'transportni sistemi v stavbi',
     ];
 ?>
-<h3>Vgrajeni TSS: </h3>
+
 <table cellpadding="3" border="0" width="100%">
+    <tr class="title"><th colspan="4"><h3>Vgrajeni TSS: </h3></th></tr>
     <tr>
         <td class="w-5"></td>
         <td class="w-35"></td>

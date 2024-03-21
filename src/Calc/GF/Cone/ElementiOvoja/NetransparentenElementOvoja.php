@@ -136,7 +136,7 @@ class NetransparentenElementOvoja extends ElementOvoja
             throw new \Exception(sprintf('Konstrukcija "%s" v ovoju ne obstaja.', $this->idKonstrukcije));
         }
         if (empty($this->konstrukcija->TSG)) {
-            throw new \Exception(sprintf('TSG podatki konstrukcije ovoja "%s" ne obstajajo.', $this->idKonstrukcije));
+            throw new \Exception(sprintf('TSG podatki konstrukcije ovoja "%s" ne obstajajo.', $this->id));
         }
 
         if (!empty($this->konstrukcija->ogrRazvodT)) {
@@ -158,7 +158,11 @@ class NetransparentenElementOvoja extends ElementOvoja
                 }
             }
             if (empty($this->soncnoObsevanje)) {
-                throw new \Exception(sprintf('Sončno obsevanje za element %s ne obstaja', $this->opis));
+                throw new \Exception(sprintf(
+                    'Sončno obsevanje %1$s za element "%2$s" ne obstaja',
+                    $this->id ?? '',
+                    $this->orientacija . ':' . $this->naklon
+                ));
             }
 
             $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
@@ -338,7 +342,7 @@ class NetransparentenElementOvoja extends ElementOvoja
                 $d_f = $d_wb;
             }
 
-            $z = $this->globina ?? 0;
+            $z = $this->globina;
 
             /** enačba 16 v standardu */
             $this->U = 2 * $this->tla->lambda() / (Pi() * $z) *

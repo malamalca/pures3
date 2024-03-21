@@ -275,39 +275,54 @@ class App
             throw new \Exception(sprintf('Projekt "%s" ne obstaja.', $projectId));
         }
 
-        $dataFilename = $sourceFolder . $projectFile . '.json';
-
-        if (!file_exists($dataFilename)) {
-            //throw new \Exception(sprintf('Datoteka "%s" ne obstaja.', $dataFilename));
-            return null;
-        } else {
-            $data = file_get_contents($dataFilename);
-            if (!$data) {
-                throw new \Exception(sprintf('Datoteke "%s" ni mogoče prebrati.', $dataFilename));
-            }
-
-            $result = json_decode($data);
-
-            if ($result === null && json_last_error() !== JSON_ERROR_NONE) {
-                //throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
-                $parser = new JsonParser();
-                $result = $parser->lint($data);
-                if ($result === null) {
-                    if (defined('JSON_ERROR_UTF8') && json_last_error() === JSON_ERROR_UTF8) {
-                        throw new \UnexpectedValueException('"' . $dataFilename . '" ni v UTF-8, analiza ni možna.');
+        if (is_dir($sourceFolder . $projectFile)) {
+            $dataFilename = $sourceFolder . $projectFile;
+            $iterator = new \DirectoryIterator($sourceFolder . $projectFile);
+            $jsonObjects = [];
+            foreach ($iterator as $info) {
+                if ($info->isFile()) {
+                    $data = file_get_contents($sourceFolder . $projectFile . DS . (string)$info);
+                    if (!$data) {
+                        throw new \Exception(sprintf('Datoteke "%s" ni mogoče prebrati.', (string)$info));
                     }
+                    $jsonObjects[] = $data;
+                }
+            }
+            $data = '[' . PHP_EOL . implode(', ' . PHP_EOL, $jsonObjects) . PHP_EOL . ']';
+        } else {
+            $dataFilename = $sourceFolder . $projectFile . '.json';
+            if (!file_exists($dataFilename)) {
+                //throw new \Exception(sprintf('Datoteka "%s" ne obstaja.', $dataFilename));
+                return null;
+            } else {
+                $data = file_get_contents($dataFilename);
+                if (!$data) {
+                    throw new \Exception(sprintf('Datoteke "%s" ni mogoče prebrati.', $dataFilename));
+                }
+            }
+        }
 
-                    return true;
+        $result = json_decode($data);
+
+        if ($result === null && json_last_error() !== JSON_ERROR_NONE) {
+            //throw new \Exception(sprintf('Datoteka "%s" ni v ustreznem json formatu.', $dataFilename));
+            $parser = new JsonParser();
+            $result = $parser->lint($data);
+            if ($result === null) {
+                if (defined('JSON_ERROR_UTF8') && json_last_error() === JSON_ERROR_UTF8) {
+                    throw new \UnexpectedValueException('"' . $dataFilename . '" ni v UTF-8, analiza ni možna.');
                 }
 
-                throw new ParsingException(
-                    sprintf('%1$s' . "\n" . 'Json napaka: %2$s', $dataFilename, $result->getMessage()),
-                    $result->getDetails()
-                );
+                return true;
             }
 
-            return $result;
+            throw new ParsingException(
+                sprintf('%1$s' . "\n" . 'Json napaka: %2$s', $dataFilename, $result->getMessage()),
+                $result->getDetails()
+            );
         }
+
+        return $result;
     }
 
     /**

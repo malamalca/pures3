@@ -68,10 +68,38 @@
         <td class="right w-15">m'=</td>
         <td class="left strong"><?= $this->numFormat($stranskiElement->konstrukcija->povrsinskaMasa, 1) ?> kg/m²</td>
     </tr>
+    <?php
+        if (isset($stranskiElement->idDodatnegaSloja)) {
+            $dodatniSloj = array_first($stranskiElement->konstrukcija->dodatniSloji, fn($k) => $k->id == $stranskiElement->idDodatnegaSloja)
+    ?>
     <tr>
+        <td class="w-30">Dodatni sloj :: <?= h($dodatniSloj->naziv) ?></td>
+        <td class="right w-15">&Delta;R=</td>
+        <td class="left strong">
+            <?= $this->numFormat($dodatniSloj->dR, 0) ?> dB 
+            (
+                m'=<?= $this->numFormat($dodatniSloj->povrsinskaMasa, 1) ?> kg/m²
+                <?php if ($dodatniSloj->vrsta == 'elasticen') echo ', s<sub>D</sub>=' . $this->numFormat($dodatniSloj->dinamicnaTogost, 1) . ' MN/m³'; ?>
+                <?php if ($dodatniSloj->vrsta == 'nepritrjen') echo ', d=' . $this->numFormat($dodatniSloj->sirinaMedprostora, 1) . ' m'; ?>
+            )
+        </td>
+    </tr>
+    <?php
+        }
+    ?>
+    <tr>
+        <?php
+            $Rw = round($stranskiElement->konstrukcija->Rw, 0);
+            if (!empty($dodatniSloj)) {
+                $Rw += $dodatniSloj->dR;
+            }
+        ?>
         <td class="w-30">Izolativnost:</td>
         <td class="right w-15">R'<sub>w</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($stranskiElement->konstrukcija->Rw, 0) ?> dB</td>
+        <td colspan="2" class="left strong">
+            <?= $this->numFormat($Rw, 0) ?> 
+            dB
+        </td>
     </tr>
 
 

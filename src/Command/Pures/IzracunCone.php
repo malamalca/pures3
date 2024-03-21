@@ -33,8 +33,11 @@ class IzracunCone extends Command
 
         /** @var array $coneIn */
         $coneIn = App::loadProjectData('Pures', $projectId, 'cone');
+        if (!$coneIn) {
+            throw new \Exception('Ni podatkov o conah.');
+        }
         if (!$this->validateSchema(json: $coneIn, schema: 'cone', area: 'Pures')) {
-            return;
+            throw new \Exception('Napake v opisu cone.');
         }
 
         $coneOut = [];
@@ -42,10 +45,6 @@ class IzracunCone extends Command
             $cona = new Cona($konstrukcije, $conaConfig);
             $cona->analiza($okolje);
             $coneOut[] = $cona->export();
-        }
-
-        if (count($coneOut) == 0) {
-            throw new \Exception('Cone ne obstajajo.');
         }
 
         App::saveProjectCalculation('Pures', $projectId, 'cone', $coneOut);

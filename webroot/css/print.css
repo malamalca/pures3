@@ -29,6 +29,10 @@ td, th {
     font-size: 13px;
 }
 
+table {
+    border-collapse: collapse;
+    border: 0;
+}
 table, tr, td, th, tbody, thead, tfoot {
     page-break-inside: avoid !important;
 }
