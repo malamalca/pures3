@@ -12,7 +12,7 @@
 ?>
 <?xml version="1.0" encoding="utf-8"?>
 <reiXmlPrenos>
-    <program>PHPures3</program>
+    <program>drugo</program>
     <nazivStavbe><?= h($stavba->naziv) ?></nazivStavbe>
     <LokacijaX><?= $stavba->koordinate->X ?></LokacijaX>
     <LokacijaY><?= $stavba->koordinate->Y ?></LokacijaY>

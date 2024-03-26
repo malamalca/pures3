@@ -228,7 +228,7 @@
         "id": "131.3",
         "sifra": "poliuretan",
         "opis": "Poliuretanska pena",
-        "lambda": 0.025,
+        "lambda": 0.022,
         "gostota": 15,
         "specificnaToplota": 1500,
         "difuzijskaUpornost": 30

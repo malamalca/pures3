@@ -61,6 +61,7 @@ class PdfIzvoz extends Command
         $vgrajeniSistemi = [];
 
         $tssOgrevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
+        $tssHlajenje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'hlajenje');
         $tssRazsvetljava = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
         $tssPrezracevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
         $tssFotovoltaika = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
@@ -103,6 +104,17 @@ class PdfIzvoz extends Command
             if (isset($energentiSistema['hlajenje'])) {
                 $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
             }
+        }
+
+        if ($tssHlajenje) {
+            $vgrajeniSistemi[] = 'hlajenje';
+            $energentiSistema['hlajenje'] = [];
+            foreach ($tssHlajenje as $sistem) {
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    $energentiSistema['hlajenje'][] = $energent;
+                }
+            }
+            $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
         }
 
         if ($tssRazsvetljava) {
@@ -195,6 +207,11 @@ class PdfIzvoz extends Command
             $view->set('sistem', $sistem);
             $view->set('sistemi', $view->get('sistemiOgrevanja'));
             $pdf->newPage((string)$view->render('TSS', 'ogrevanje'));
+        }
+        foreach ($view->get('sistemiHlajenja') as $sistem) {
+            $view->set('sistem', $sistem);
+            $view->set('sistemi', $view->get('sistemiHlajenja'));
+            $pdf->newPage((string)$view->render('TSS', 'hlajenje'));
         }
 
         foreach ($view->get('sistemiPrezracevanja') as $sistem) {

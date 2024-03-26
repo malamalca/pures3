@@ -21,7 +21,7 @@
         <td><?= number_format($kons->U, 3) ?> W/m²K</td>
         <td>U<sub>max</sub>=</td>
         <td><?= number_format($kons->TSG->Umax, 3) ?> W/m²K</td>
-        <td><?= $kons->TSG->Umax > $kons->U ? 'Ustreza' : 'Ne ustreza' ?></td>
+        <td class="<?= $kons->TSG->Umax > $kons->U ? 'green' : 'red' ?>"><?= $kons->TSG->Umax > $kons->U ? 'Ustreza' : 'Ne ustreza' ?></td>
     </tr>
     
     <tr>
@@ -66,7 +66,8 @@
 ?>
 </table>
 
-<h3>Prikaz temperature v konstrukciji</h3>
+<table>
+<tr class="title"><th><h3>Prikaz temperature v konstrukciji</h3></th></tr>
 <?php
     $mesec = 0;
 
@@ -99,10 +100,13 @@
         'showCategoryValues' => false
     ]))->draw();
 ?>
+<tr><td>
+    <img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 600px"/>
+</td></tr>
+</table>
 
-<img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 600px"/>
-
-<h3>Prikaz tlaka in kondenzacije</h3>
+<table>
+<tr class="title"><th><h3>Prikaz tlaka in kondenzacije</h3></th></tr>
 <?php
     $mesec = 0;
 
@@ -145,12 +149,15 @@
         'showCategoryValues' => false
     ]))->draw();
 ?>
-
+<tr><td>
 <img src="data:image/png;base64,<?= base64_encode($png) ?>" style="width: 600px"/>
+</td></tr>
+</table>
 
 <div>
     <table border="1">
         <thead>
+            <tr class="title"><th colspan="10"><h3>Temperature, tlak in kondenzat</h3></th></tr>
             <tr>
                 <th></th>
                 <th class="right">d<br />[cm]</th>
@@ -231,8 +238,8 @@
     if (isset($kons->maxGm) && ($kons->maxGm == -1 || $kons->maxGm > 0)) {
 ?>
 <div>
-    <h2>Kondenzacija</h2>
     <table border="1" class="small">
+        <tr class="title"><th colspan="25"><h3 style="font-size: 15px !important;">Kondenzacija</h3></th></tr>
         <tr>
             <td>&nbsp;</td>
             <?php
