@@ -61,6 +61,7 @@
         "ovoj": {
             "netransparentneKonstrukcije": [
                 {
+                    "id": "K1",
                     "idKonstrukcije": "Z1",
                     "konstrukcija": {
                         "id": "Z1",
@@ -1837,6 +1838,7 @@
                     "barva": "svetla"
                 },
                 {
+                    "id": "K2",
                     "idKonstrukcije": "Tp1",
                     "konstrukcija": {
                         "id": "Tp1",
@@ -3460,6 +3462,7 @@
                     }
                 },
                 {
+                    "id": "K3",
                     "idKonstrukcije": "Ts1",
                     "konstrukcija": {
                         "id": "Ts1",
@@ -5620,6 +5623,7 @@
             ],
             "transparentneKonstrukcije": [
                 {
+                    "id": "V1",
                     "idKonstrukcije": "V1",
                     "konstrukcija": {
                         "id": "V1",
@@ -5735,6 +5739,7 @@
                     "g_sh": 0.5
                 },
                 {
+                    "id": "O1",
                     "idKonstrukcije": "O1",
                     "konstrukcija": {
                         "id": "O1",
@@ -5853,6 +5858,7 @@
                     "g_sh": 0.03
                 },
                 {
+                    "id": "O2",
                     "idKonstrukcije": "O1",
                     "konstrukcija": {
                         "id": "O1",
@@ -5971,6 +5977,7 @@
                     "g_sh": 0.18
                 },
                 {
+                    "id": "O3",
                     "idKonstrukcije": "O1",
                     "konstrukcija": {
                         "id": "O1",
@@ -6089,6 +6096,7 @@
                     "g_sh": 0.18
                 },
                 {
+                    "id": "O4",
                     "idKonstrukcije": "O1",
                     "konstrukcija": {
                         "id": "O1",

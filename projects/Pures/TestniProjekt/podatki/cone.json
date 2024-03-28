@@ -64,6 +64,7 @@
         "ovoj": {
             "netransparentneKonstrukcije": [
                 {
+                    "id": "K1",
                     "idKonstrukcije": "Z1",
                     "povrsina": 243,
                     "naklon": 90,
@@ -71,6 +72,7 @@
                     "barva": "svetla"
                 },
                 {
+                    "id": "K2",
                     "idKonstrukcije": "Tp1",
                     "povrsina": 200,
                     "obseg": 40,
@@ -84,12 +86,14 @@
                     }
                 },
                 {
+                    "id": "K3",
                     "idKonstrukcije": "Ts1",
                     "povrsina": 200
                 }
             ],
             "transparentneKonstrukcije": [
                 {
+                    "id": "V1",
                     "idKonstrukcije": "V1",
                     "povrsina": 3,
                     "naklon": 90,
@@ -97,6 +101,7 @@
                     "delezOkvirja": 1
                 },
                 {
+                    "id": "O1",
                     "idKonstrukcije": "O1",
                     "povrsina": 15,
                     "naklon": 90,
@@ -129,6 +134,7 @@
                     ]
                 },
                 {
+                    "id": "O2",
                     "idKonstrukcije": "O1",
                     "stevilo": 3,
 
@@ -154,6 +160,7 @@
                     }
                 },
                 {
+                    "id": "O3",
                     "idKonstrukcije": "O1",
                     "stevilo": 2,
                     
@@ -179,6 +186,7 @@
                     }
                 },
                 {
+                    "id": "O4",
                     "idKonstrukcije": "O1",
                     "stevilo": 2,
                     

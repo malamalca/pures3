@@ -168,7 +168,7 @@
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "required": ["idKonstrukcije", "povrsina"],
+                            "required": ["id", "idKonstrukcije", "povrsina"],
                             "properties": {
                                 "idKonstrukcije": {"type": "string"},
                                 "opis": {"type": "string"},
@@ -199,7 +199,7 @@
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "required": ["idKonstrukcije"],
+                            "required": ["id", "idKonstrukcije"],
                             "properties": {
                                 "idKonstrukcije": {"type": "string"},
                                 "opis": {"type": "string"},
