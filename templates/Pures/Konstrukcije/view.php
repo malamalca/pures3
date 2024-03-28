@@ -21,7 +21,7 @@
         <td><?= number_format($kons->U, 3) ?> W/m²K</td>
         <td>U<sub>max</sub>=</td>
         <td><?= number_format($kons->TSG->Umax, 3) ?> W/m²K</td>
-        <td class="<?= $kons->TSG->Umax > $kons->U ? 'green' : 'red' ?>"><?= $kons->TSG->Umax > $kons->U ? 'Ustreza' : 'Ne ustreza' ?></td>
+        <td class="<?= $kons->TSG->Umax >= round($kons->U, 3) ? 'green' : 'red' ?>"><?= $kons->TSG->Umax >= round($kons->U, 3) ? 'Ustreza' : 'Ne ustreza' ?></td>
     </tr>
     
     <tr>

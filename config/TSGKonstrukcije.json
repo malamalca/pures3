@@ -171,6 +171,15 @@
         "difuzijskaUpornost": 80000
     },
     {
+        "id": "87.2",
+        "sifra": "hidroizolacijaAl",
+        "opis": "Bitumenski trak z vložkom Al folije debeline 0.2 mm",
+        "lambda": 0.19,
+        "gostota": 900,
+        "specificnaToplota": 1460,
+        "difuzijskaUpornost": 150000
+    },
+    {
         "id": "91.2",
         "sifra": "hidroizolacija",
         "opis": "Večplastna bitumenska hidroizolacija",
@@ -187,6 +196,24 @@
         "gostota": 1100,
         "specificnaToplota": 1460,
         "difuzijskaUpornost": 2000
+    },
+    {
+        "id": "92",
+        "sifra": "PVCtrakovi",
+        "opis": "PVC strešni trakovi, mehki",
+        "lambda": 0.19,
+        "gostota": 1200,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 20000
+    },
+    {
+        "id": "99",
+        "sifra": "jeklo",
+        "opis": "Jeklo, jeklena pločevina",
+        "lambda": 53.5,
+        "gostota": 7800,
+        "specificnaToplota": 4600,
+        "difuzijskaUpornost": 600000
     },
     {
         "id": "113.4",

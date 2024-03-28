@@ -1,0 +1,71 @@
+span.energyCard {
+    display: inline-block;
+    position: relative;
+    border: solid 1px #606060;
+    padding: 3px;
+    padding-top: 13px;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 12px;
+
+    span.sistem {
+        position: absolute;
+        overflow: hidden;
+        text-align: center;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 10px;
+        font-size: 8px;
+
+        &.sistem-oht {
+            background-color: chocolate !important;
+        }
+        &.sistem-razsvetljava {
+            background-color:gold;
+        }
+        &.sistem-prezracevanje {
+            background-color: cornflowerblue !important;
+        }
+        &.sistem-fotovoltaika {
+            background-color:khaki;
+        }
+    }
+
+    span.energent {
+        position: relative;
+        display: inline-block;
+        border: solid 1px #aaaaaa;
+        height: 22px;
+        padding: 2px;
+
+        span.energent-title {
+            position: absolute;
+            overflow: hidden;
+            text-align: center;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            font-size: 8px;
+            background-color:#f0f0f0;
+        }
+
+        &.energent-elektrika {
+            span.energent-title {
+                color: #ffffff;
+                background-color:red;
+            }
+            span.energent-okolje {
+                color: #ffffff;
+                background-color:forestgreen;
+            }
+        }
+        &.energent-okolje {
+            span.energent-title {
+                color: #ffffff;
+                background-color:forestgreen;
+            }
+        }
+    }
+}

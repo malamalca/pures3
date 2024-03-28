@@ -208,7 +208,7 @@ class PdfIzvoz extends Command
             $view->set('sistemi', $view->get('sistemiOgrevanja'));
             $pdf->newPage((string)$view->render('TSS', 'ogrevanje'));
         }
-        foreach ($view->get('sistemiHlajenja') as $sistem) {
+        foreach ($view->get('sistemiHlajenja') ?? [] as $sistem) {
             $view->set('sistem', $sistem);
             $view->set('sistemi', $view->get('sistemiHlajenja'));
             $pdf->newPage((string)$view->render('TSS', 'hlajenje'));

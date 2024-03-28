@@ -499,6 +499,69 @@ template {
   height: 68px;
 }
 
+span.energyCard {
+  display: inline-block;
+  position: relative;
+  border: solid 1px #606060;
+  padding: 3px;
+  padding-top: 13px;
+  margin-right: 5px;
+  text-align: center;
+  font-size: 12px;
+}
+span.energyCard span.sistem {
+  position: absolute;
+  overflow: hidden;
+  text-align: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  font-size: 8px;
+}
+span.energyCard span.sistem.sistem-oht {
+  background-color: chocolate !important;
+}
+span.energyCard span.sistem.sistem-razsvetljava {
+  background-color: gold;
+}
+span.energyCard span.sistem.sistem-prezracevanje {
+  background-color: cornflowerblue !important;
+}
+span.energyCard span.sistem.sistem-fotovoltaika {
+  background-color: khaki;
+}
+span.energyCard span.energent {
+  position: relative;
+  display: inline-block;
+  border: solid 1px #aaaaaa;
+  height: 22px;
+  padding: 2px;
+}
+span.energyCard span.energent span.energent-title {
+  position: absolute;
+  overflow: hidden;
+  text-align: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  font-size: 8px;
+  background-color: #f0f0f0;
+}
+span.energyCard span.energent.energent-elektrika span.energent-title {
+  color: #ffffff;
+  background-color: red;
+}
+span.energyCard span.energent.energent-elektrika span.energent-okolje {
+  color: #ffffff;
+  background-color: forestgreen;
+}
+span.energyCard span.energent.energent-okolje span.energent-title {
+  color: #ffffff;
+  background-color: forestgreen;
+}
+
 * {
   font-family: "Open Sans Light", Tahoma, Geneva, Verdana, sans-serif;
 }

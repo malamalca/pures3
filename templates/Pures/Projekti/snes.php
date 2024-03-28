@@ -21,50 +21,35 @@
         <td>E<sub>del,an</sub></td>
         <td class="center"><?= $this->numFormat($stavba->neutezenaDovedenaEnergija, 0) ?></td>
     </tr>
-    <?php
-        $energije = [];
-        $energijeFaktorjiTsg = [];
-        $energijeFaktorjiTot = [];
-        $energijeFaktorjiRen = [];
-        $energijeFaktorjiNren = [];
-        $energijeFaktorjiPrim = [];
-        $energijeFaktorjiCO2 = [];
-        $utezenaDovedenaEnergija = 0;
-
-        foreach($stavba->sistemi as $i => $sistem) {
-            foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                if ($energija > 0) {
-                    $energije[] = $this->numFormat($energija, 0, '.');
-                    $energijeFaktorjiTot[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
-                }
-
-                $utezenaDovedenaEnergija += $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg');
-                $energijeFaktorjiTsg[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg'), 2, '.');
-                $energijeFaktorjiPrim[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
-                $energijeFaktorjiRen[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.');
-                $energijeFaktorjiNren[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('nren'), 2, '.');
-                $energijeFaktorjiCO2[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.');
-            }
-        
-            if (isset($sistem->proizvedenaEnergijaPoEnergentih)) {
-                foreach ((array)$sistem->proizvedenaEnergijaPoEnergentih as $energent => $energija) {
-                    $energijeFaktorjiPrim[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.');
-                    $energijeFaktorjiRen[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.');
-                    $energijeFaktorjiNren[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('nren'), 2, '.');
-                    $energijeFaktorjiCO2[] = $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.');
-                }
-            }
-
-            if (isset($sistem->oddanaEnergijaPoEnergentih)) {
-                foreach ((array)$sistem->oddanaEnergijaPoEnergentih as $energent => $energija) {
-                    $energijeFaktorjiPrim[] = '-(' . $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat($stavba->k_exp, 2, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.') . ')';
-                    $energijeFaktorjiCO2[] = '-(' . $this->numFormat($energija, 0, '.') . ' * ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.'). ')';
-                }
-            }
-        };
-    ?>
     <tr class="noprint">
-        <td colspan="4" class="math">`E_(d el,an)=sum_(i=1)^n E_(de l,an,i)=<?= implode(' + ', $energije) ?> = <?= $this->numFormat($stavba->neutezenaDovedenaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">
+            `E_(d el,an)=sum_(i=1)^n E_(de l,an,i)=`
+            <?php
+            $cards = [];
+            foreach($stavba->sistemi as $i => $sistem) {
+                $cardContents = '';
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    if ($energija > 0) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' + ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.')
+                        );
+                    }
+                }
+                if ($cardContents != '') {
+                    $card = '<span class="energyCard">';
+                    $card .= sprintf('<span class="sistem sistem-%1$s">%2$s</span>', $sistem->tss, $sistem->id);
+                    $card .= $cardContents;
+                    $card .= '</span>';
+                    $cards[] = $card;
+                }
+            }
+            ?>
+            <?= implode('+ ', $cards) ?> = <?= $this->numFormat($stavba->neutezenaDovedenaEnergija, 0) ?> kWh/an
+        </td>
     </tr>
     <tr>
         <td>Utežena dovedena energija za delovanje TSS</td>
@@ -72,7 +57,34 @@
         <td class="center"><?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=<?= implode(' + ', $energijeFaktorjiTsg) ?>=<?= $this->numFormat($utezenaDovedenaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">
+            `E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`
+            <?php
+            $cards = [];
+            foreach($stavba->sistemi as $i => $sistem) {
+                $cardContents = '';
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    if ($energija > 0) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' + ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg'), 2, '.')
+                        );
+                    }
+                }
+                if ($cardContents != '') {
+                    $card = '<span class="energyCard">';
+                    $card .= sprintf('<span class="sistem sistem-%1$s">%2$s</span>', $sistem->tss, $sistem->id);
+                    $card .= $cardContents;
+                    $card .= '</span>';
+                    $cards[] = $card;
+                }
+            }
+            ?>
+            <?= implode('+ ', $cards) ?> = <?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?> kWh/an
+        </td>
     </tr>
     <tr>
         <td>Obnovljiva primarna energija dovedene energije</td>
@@ -80,7 +92,43 @@
         <td class="center"><?= $this->numFormat($stavba->obnovljivaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`E_(P_(ren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"ren")=<?= implode(' + ', $energijeFaktorjiRen) ?>=<?= $this->numFormat($stavba->obnovljivaPrimarnaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">
+            `E_(P_(ren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"ren")=`
+            <?php
+            $cards = [];
+            foreach($stavba->sistemi as $i => $sistem) {
+                $cardContents = '';
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    if ($cardContents != '') {
+                        $cardContents .= ' + ';
+                    }
+                    $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s</span></span>',
+                        h($energent),
+                        $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.')
+                    );
+                }
+                if (isset($sistem->proizvedenaEnergijaPoEnergentih)) {
+                    foreach ((array)$sistem->proizvedenaEnergijaPoEnergentih as $energent => $energija) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' + ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s (+)</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('ren'), 2, '.')
+                        );
+                    }
+                }
+                if ($cardContents != '') {
+                    $card = '<span class="energyCard">';
+                    $card .= sprintf('<span class="sistem sistem-%1$s">%2$s</span>', $sistem->tss, $sistem->id);
+                    $card .= $cardContents;
+                    $card .= '</span>';
+                    $cards[] = $card;
+                }
+            }
+            ?>
+            <?= implode('+ ', $cards) ?> = <?= $this->numFormat($stavba->obnovljivaPrimarnaEnergija, 0) ?> kWh/an
+        </td>
     </tr>
     <tr>
         <td>Neobnovljiva primarna energija dovedene energije</td>
@@ -88,7 +136,43 @@
         <td class="center"><?= $this->numFormat($stavba->neobnovljivaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`E_(P_(nren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"nren")=<?= implode(' + ', $energijeFaktorjiNren) ?>=<?= $this->numFormat($stavba->neobnovljivaPrimarnaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">
+            `E_(P_(nren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"nren")=`
+            <?php
+            $cards = [];
+            foreach($stavba->sistemi as $i => $sistem) {
+                $cardContents = '';
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    if ($cardContents != '') {
+                        $cardContents .= ' + ';
+                    }
+                    $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s</span></span>',
+                        h($energent),
+                        $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('nren'), 2, '.')
+                    );
+                }
+                if (isset($sistem->proizvedenaEnergijaPoEnergentih)) {
+                    foreach ((array)$sistem->proizvedenaEnergijaPoEnergentih as $energent => $energija) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' + ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s (+)</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('nren'), 2, '.')
+                        );
+                    }
+                }
+                if ($cardContents != '') {
+                    $card = '<span class="energyCard">';
+                    $card .= sprintf('<span class="sistem sistem-%1$s">%2$s</span>', $sistem->tss, $sistem->id);
+                    $card .= $cardContents;
+                    $card .= '</span>';
+                    $cards[] = $card;
+                }
+            }
+            ?>
+            <?= implode('+ ', $cards) ?> = <?= $this->numFormat($stavba->neobnovljivaPrimarnaEnergija, 0) ?> kWh/an
+        </td>
     </tr>
     <tr>
         <td>Skupna primarna energija</td>
@@ -96,7 +180,54 @@
         <td class="center"><?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`E_(P_(t ot,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=<?= implode(' + ', $energijeFaktorjiPrim) ?>=<?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 0) ?>`</td>
+        <td colspan="4" class="math">
+            `E_(P_(t ot,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`
+            <?php
+            $cards = [];
+            foreach($stavba->sistemi as $i => $sistem) {
+                $cardContents = '';
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    if ($cardContents != '') {
+                        $cardContents .= ' + ';
+                    }
+                    $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s</span></span>',
+                        h($energent),
+                        $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.')
+                    );
+                }
+                if (isset($sistem->proizvedenaEnergijaPoEnergentih)) {
+                    foreach ((array)$sistem->proizvedenaEnergijaPoEnergentih as $energent => $energija) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' + ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s (+)</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.')
+                        );
+                    }
+                }
+                if (isset($sistem->oddanaEnergijaPoEnergentih)) {
+                    foreach ((array)$sistem->oddanaEnergijaPoEnergentih as $energent => $energija) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' - ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s (odd.)</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat($stavba->k_exp, 2, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->utezniFaktor('tot'), 2, '.')
+                        );
+                    }
+                }
+                if ($cardContents != '') {
+                    $card = '<span class="energyCard">';
+                    $card .= sprintf('<span class="sistem sistem-%1$s">%2$s</span>', $sistem->tss, $sistem->id);
+                    $card .= $cardContents;
+                    $card .= '</span>';
+                    $cards[] = $card;
+                }
+            }
+            ?>
+            <?= implode('+ ', $cards) ?> = <?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 0) ?> kWh/an
+        </td>
     </tr>
     <tr><td colspan="3"></td></tr>
 
@@ -216,7 +347,54 @@
         <td class="center"><?= $this->numFormat($stavba->izpustCO2, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">`M_("CO2,an)=sum_(i=1)^n E_(de l,i,an) * k_(CO2,i) + sum_(j=1)^m E_(pr,on-site,j,an) * k_(CO2,j) - sum_(k=1)^l k_(exp) * E_(exp,k,an) * k_(CO2,exp,k)=<?= implode(' + ', $energijeFaktorjiCO2) ?>=<?= $this->numFormat($stavba->izpustCO2, 0) ?>`</td>
+        <td colspan="4" class="math">
+            `M_("CO2,an)=sum_(i=1)^n E_(de l,i,an) * k_(CO2,i) + sum_(j=1)^m E_(pr,on-site,j,an) * k_(CO2,j) - sum_(k=1)^l k_(exp) * E_(exp,k,an) * k_(CO2,exp,k)=`<br />
+            <?php
+            $cards = [];
+            foreach($stavba->sistemi as $i => $sistem) {
+                $cardContents = '';
+                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                    if ($cardContents != '') {
+                        $cardContents .= ' + ';
+                    }
+                    $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s</span></span>',
+                        h($energent),
+                        $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.')
+                    );
+                }
+                if (isset($sistem->proizvedenaEnergijaPoEnergentih)) {
+                    foreach ((array)$sistem->proizvedenaEnergijaPoEnergentih as $energent => $energija) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' + ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s (+)</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.')
+                        );
+                    }
+                }
+                if (isset($sistem->oddanaEnergijaPoEnergentih)) {
+                    foreach ((array)$sistem->oddanaEnergijaPoEnergentih as $energent => $energija) {
+                        if ($cardContents != '') {
+                            $cardContents .= ' - ';
+                        }
+                        $cardContents .= sprintf('<span class="energent energent-%1$s">%2$s<span class="energent-title">%1$s (odd.)</span></span>',
+                            h($energent),
+                            $this->numFormat($energija, 0, '.') . ' x ' . $this->numFormat(TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2(), 2, '.')
+                        );
+                    }
+                }
+                if ($cardContents != '') {
+                    $card = '<span class="energyCard">';
+                    $card .= sprintf('<span class="sistem sistem-%1$s">%2$s</span>', $sistem->tss, $sistem->id);
+                    $card .= $cardContents;
+                    $card .= '</span>';
+                    $cards[] = $card;
+                }
+            }
+            ?>
+            <?= implode('+ ', $cards) ?> = <?= $this->numFormat($stavba->izpustCO2, 0) ?> kg/an
+        </td>
     </tr>
 </table>
 <br />
