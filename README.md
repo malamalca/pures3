@@ -7,6 +7,10 @@
 
 Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
 
+## NOVO - Energijske kartice
+
+![Energijske kartice](https://github.com/malamalca/pures3/blob/1f34d5514117c985e1f841e68ea164e1963e6686/images/kartice.png)
+
 ## Namestitev aplikacije v sistemu Windows
 
 1. Prenesite [PHP](https://windows.php.net/downloads/releases/php-8.2.6-nts-Win32-vs16-x64.zip)
