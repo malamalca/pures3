@@ -271,6 +271,27 @@ class Cona
                         }
                     }
                     break;
+                case 'prezracevanje':
+                    if (isset($config->prezracevanje)) {
+                        $this->prezracevanje = $config->prezracevanje;
+                        if (isset($this->prezracevanje->volumenDovedenegaZraka)) {
+                            if (
+                                isset($this->prezracevanje->volumenDovedenegaZraka->ogrevanje) &&
+                                is_string($this->prezracevanje->volumenDovedenegaZraka->ogrevanje)
+                            ) {
+                                $this->prezracevanje->volumenDovedenegaZraka->ogrevanje =
+                                    (float)$EvalMath->e($this->prezracevanje->volumenDovedenegaZraka->ogrevanje);
+                            }
+                            if (
+                                isset($this->prezracevanje->volumenDovedenegaZraka->hlajenje) &&
+                                is_string($this->prezracevanje->volumenDovedenegaZraka->hlajenje)
+                            ) {
+                                $this->prezracevanje->volumenDovedenegaZraka->hlajenje =
+                                    (float)$EvalMath->e($this->prezracevanje->volumenDovedenegaZraka->hlajenje);
+                            }
+                        }
+                    }
+                    break;
                 default:
                     if (isset($config->{$prop->getName()})) {
                         $configValue = $config->{$prop->getName()};

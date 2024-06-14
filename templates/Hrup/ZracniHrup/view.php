@@ -39,7 +39,7 @@
     <tr>
         <td class="w-30">Izolativnost:</td>
         <td class="w-15 right">R'<sub>w</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->konstrukcija->Rw, 0) ?> dB</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->Rw, 0) ?> dB</td>
     </tr>
 </table>
 

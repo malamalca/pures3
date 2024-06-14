@@ -125,7 +125,8 @@
         <td class="w-100 strong" colspan="7">PROSTORI</td>
     </tr>
     <?php
-        foreach ($prostori as $prostor) {
+        if (isset($prostori)) {
+            foreach ($prostori as $prostor) {
     ?>
     <tr>
         <td class="w-10"><?= h($prostor->id) ?></td>
@@ -137,13 +138,14 @@
         <td class="w-10 center">&nbsp;</td>
     </tr>
     <?php
+            }
         }
     ?>
     <tr>
         <td class="w-100 strong" colspan="7">ZUNANJI POKONČNI LOČILNI ELEMENTI</td>
     </tr>
     <?php
-        $elementi = array_merge($konstrukcije, $oknaVrata);
+        $elementi = array_merge((array)$konstrukcije, (array)$oknaVrata);
         foreach ($elementi as $element) {
             if (isset($element->tip) && $element->tip == 'vertikalna') {
     ?>

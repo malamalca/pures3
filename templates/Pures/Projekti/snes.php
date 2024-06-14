@@ -249,8 +249,8 @@
         <td>Ustreza minimalni zahtevi </td>
         <td></td>
         <td class="center">
-            <b class="<?= $stavba->ROVE > $stavba->minROVE ? 'green' : 'red' ?>">
-            <?= $stavba->ROVE > $stavba->minROVE ? 'DA' : 'NE' ?>
+            <b class="<?= round($stavba->ROVE, 0) >= round($stavba->minROVE, 0) ? 'green' : 'red' ?>">
+            <?= round($stavba->ROVE, 0) >= round($stavba->minROVE, 0) ? 'DA' : 'NE' ?>
             </b>
         </td>
     </tr>

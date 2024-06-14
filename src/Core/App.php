@@ -61,7 +61,7 @@ class App
         } else {
             $controllerClass = 'App\Controller\\' . $controllerName . 'Controller';
         }
-
+        
         // check if action exists
         if (!method_exists($controllerClass, $methodName)) {
             header('HTTP/1.0 404 Not Found');

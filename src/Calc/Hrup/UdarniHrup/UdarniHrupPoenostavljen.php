@@ -120,7 +120,7 @@ class UdarniHrupPoenostavljen
      */
     public function analiza($splosniPodatki = null)
     {
-        $this->Lnweq = 164 - 35 * log10($this->konstrukcija->povrsinskaMasa);
+        $this->Lnweq = $this->konstrukcija->Lnw;
 
         $dodatniSloj = null;
         if (!empty($this->idDodatnegaSloja)) {
@@ -161,7 +161,11 @@ class UdarniHrupPoenostavljen
                 }
                 $this->deltaL = 78 - $refDeltaDev[7];
             }
+        }
 
+        // korekcija stranskega prenosa
+        $this->K = 0;
+        if (!is_null($this->povrsinskaMasaStranskihElementov) && $this->povrsinskaMasaStranskihElementov > 0) {
             $nearestMStranski = array_nearest(
                 array_keys($this->KLibMDodatnegaSloja),
                 $this->povrsinskaMasaStranskihElementov
@@ -173,6 +177,7 @@ class UdarniHrupPoenostavljen
 
         // zaokroževanje Lnweq je po standardu
         $this->Lnw = round($this->Lnweq) - $this->deltaL + $this->K;
+
 
         $this->Lntw = $this->Lnw - 10 * log10($this->prostorninaSprejemnegaProstora / 30);
     }

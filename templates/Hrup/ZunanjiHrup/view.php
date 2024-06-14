@@ -197,12 +197,13 @@
     foreach ($prostor->fasade as $fasada) {
 ?>
     <tr>
-        <td>Fasada <?= $i ?>.</td>
+        <td>Fasada <?= $i ?></td>
         <td class="center"><?= $this->numFormat($fasada->povrsina) ?></td>
         <td class="center"><?= $this->numFormat($fasada->povrsina / $prostor->Sf, 2) ?> 
         <td class="center"><?= $this->numFormat($fasada->Rw, 0) ?> dB</td>
     </tr>
 <?php
+        $i++;
     }
 ?>
     <tr>

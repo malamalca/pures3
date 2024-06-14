@@ -17,6 +17,7 @@ class EnostavnaKonstrukcija
     public ?float $dLw;
     public float $C = 0;
     public float $Ctr = 0;
+    public float $Lnw = 0;
 
     public array $dodatniSloji = [];
 
@@ -79,6 +80,7 @@ class EnostavnaKonstrukcija
                         ) {
                             $configValue = (float)$EvalMath->e($configValue);
                         }
+
                         $this->{$prop->getName()} = $configValue;
                     }
             }
@@ -114,6 +116,10 @@ class EnostavnaKonstrukcija
             }
         }
 
+        if (empty($this->Lnw)) {
+            $this->Lnw = 164 - 35 * log10($this->povrsinskaMasa);
+        }
+
         foreach ($this->dodatniSloji as $dodatniSloj) {
             if (!isset($dodatniSloj->dR)) {
                 switch ($dodatniSloj->vrsta) {
@@ -143,7 +149,7 @@ class EnostavnaKonstrukcija
             }
         }
 
-        $this->Rw += $this->dR;
+        //$this->Rw += $this->dR;
     }
 
     /**

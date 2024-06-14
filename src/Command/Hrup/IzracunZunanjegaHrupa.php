@@ -30,25 +30,27 @@ class IzracunZunanjegaHrupa extends Command
 
         /** @var array $prostoriIn */
         $prostoriIn = App::loadProjectData('Hrup', $projectId, 'zunanjiHrup');
-        if (!$this->validateSchema(json: $prostoriIn, schema: 'zunanjiHrup', area: 'Hrup')) {
-            return;
+        if ($prostoriIn) {
+            if (!$this->validateSchema(json: $prostoriIn, schema: 'zunanjiHrup', area: 'Hrup')) {
+                return;
+            }
+
+            $elementi = new \stdClass();
+            $elementi->konstrukcije = $konstrukcije;
+            $elementi->oknaVrata = $oknaVrata;
+
+            $prostoriOut = [];
+            foreach ($prostoriIn as $prostorConfig) {
+                $prostor = new Prostor($elementi, $prostorConfig);
+                $prostor->analiza($splosniPodatki);
+                $prostoriOut[] = $prostor->export();
+            }
+
+            if (count($prostoriOut) == 0) {
+                throw new \Exception('Prostori obstajajo.');
+            }
+
+            App::saveProjectCalculation('Hrup', $projectId, 'zunanjiHrup', $prostoriOut);
         }
-
-        $elementi = new \stdClass();
-        $elementi->konstrukcije = $konstrukcije;
-        $elementi->oknaVrata = $oknaVrata;
-
-        $prostoriOut = [];
-        foreach ($prostoriIn as $prostorConfig) {
-            $prostor = new Prostor($elementi, $prostorConfig);
-            $prostor->analiza($splosniPodatki);
-            $prostoriOut[] = $prostor->export();
-        }
-
-        if (count($prostoriOut) == 0) {
-            throw new \Exception('Prostori obstajajo.');
-        }
-
-        App::saveProjectCalculation('Hrup', $projectId, 'zunanjiHrup', $prostoriOut);
     }
 }
