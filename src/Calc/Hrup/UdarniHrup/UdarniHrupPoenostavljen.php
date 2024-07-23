@@ -165,7 +165,7 @@ class UdarniHrupPoenostavljen
 
         // korekcija stranskega prenosa
         $this->K = 0;
-        if (!is_null($this->povrsinskaMasaStranskihElementov) && $this->povrsinskaMasaStranskihElementov > 0) {
+        if ($this->povrsinskaMasaStranskihElementov > 0) {
             $nearestMStranski = array_nearest(
                 array_keys($this->KLibMDodatnegaSloja),
                 $this->povrsinskaMasaStranskihElementov
@@ -177,7 +177,6 @@ class UdarniHrupPoenostavljen
 
         // zaokroževanje Lnweq je po standardu
         $this->Lnw = round($this->Lnweq) - $this->deltaL + $this->K;
-
 
         $this->Lntw = $this->Lnw - 10 * log10($this->prostorninaSprejemnegaProstora / 30);
     }

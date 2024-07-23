@@ -73,7 +73,7 @@ switch ($routeInfo[0]) {
             case 'ProjectImage':
                 $controllerName = 'App';
                 $vars['action'] = 'projectImage';
-                $handler = null;
+                $handler = $vars['area'];
                 break;
             case 'Index':
                 $vars['controller'] = 'Projekti';

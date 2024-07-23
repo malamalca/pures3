@@ -15,6 +15,7 @@ class UdarniHrupTest extends TestCase
             "naziv": "Talna konstrukcija",
             "tip": "horizontalna",
             "povrsinskaMasa": 322,
+            "Lnw": 76,
             "dodatniSloji": [
                 {
                     "id": "estrih",

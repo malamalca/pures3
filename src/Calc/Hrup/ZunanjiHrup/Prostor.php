@@ -13,6 +13,7 @@ class Prostor
 
     public float $odmevniCas = 0;
     public float $prostornina = 0;
+    public float $korekcijaBocnegaPrenosa = 0;
 
     public float $Af = 0;
 
@@ -119,10 +120,11 @@ class Prostor
             $this->Sf += $fasada->povrsina;
             $sumTau += $fasada->povrsina / $this->Sf * pow(10, -$fasada->Rw / 10);
         }
-        $this->Rw = -10 * log10($sumTau);
+
+        $this->Rw = -10 * log10($sumTau) - 10 * log10($this->Sf / $this->Af) + $this->korekcijaBocnegaPrenosa;
 
         // minimalna izolativnost konstrukcij, da se doseže nivo hrupa
-        $this->minRw = $this->Lzunaj - $this->Lmax + 10 * log10($this->Sf / $this->Af);
+        $this->minRw = $this->Lzunaj - $this->Lmax;
 
         Log::info(sprintf('"%s": Konec analize zunanjega hrupa - prostor', $this->id));
     }

@@ -130,9 +130,12 @@
                         (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>)
                     </td>
                     <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 1) ?> 
+                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 2) ?> 
                     <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB</td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB
+                        <br />
+                        <?= sprintf('%.1E', $konstrukcija->povrsina * $konstrukcija->stevilo / $fasada->povrsina * pow(10, -($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C)) / 10) * $konstrukcija->stevilo) ?>
+                    </td>
                 </tr>
             <?php
                         $k++;
@@ -161,9 +164,12 @@
                         (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>)
                     </td>
                     <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 1) ?> 
+                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 2) ?> 
                     <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB</td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB
+                        <br />
+                        <?= sprintf('%.1E', $konstrukcija->povrsina * $konstrukcija->stevilo / $fasada->povrsina * pow(10, -($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C)) / 10) * $konstrukcija->stevilo) ?>
+                    </td>
                 </tr>
             <?php
                         $k++;
@@ -174,7 +180,7 @@
                     <td class="center">&nbsp;</td>
                     <td class="right strong" colspan="7">Skupaj:</td>
                     <td class="right strong">R'<sub>w</sub> = </td>
-                    <td class="center strong"><?= $this->numFormat($fasada->Rw, 0) ?> dB</td>
+                    <td class="center strong"><?= $this->numFormat($fasada->Rw, 1) ?> dB</td>
                 </tr>
             <table>
         </td>
@@ -185,12 +191,12 @@
 ?>
 
 <table width="100%" border="1">
-    <tr class="title"><th colspan="4"><h3>Skupaj za prostor</h3></th></tr>
+    <tr class="title"><th colspan="4"><h3>Skupaj za ovoj</h3></th></tr>
     <tr>
         <td class="strong">Z. št.:</td>
         <td class="center strong">Površina fasade<br />[m²]</td>
         <td class="center strong">Razmerje površin<br />S<sub>i</sub>/S<sub>f</sub></td>
-        <td class="center strong">R'<sub>w</sub></td>
+        <td class="center strong">Ocenjena izolirnost<br />R'<sub>w</sub></td>
     </tr>
 <?php
     $i = 1;
@@ -200,12 +206,37 @@
         <td>Fasada <?= $i ?></td>
         <td class="center"><?= $this->numFormat($fasada->povrsina) ?></td>
         <td class="center"><?= $this->numFormat($fasada->povrsina / $prostor->Sf, 2) ?> 
-        <td class="center"><?= $this->numFormat($fasada->Rw, 0) ?> dB</td>
+        <td class="center"><?= $this->numFormat($fasada->Rw, 1) ?> dB</td>
     </tr>
 <?php
         $i++;
     }
 ?>
+    <tr>
+        <td class="center">&nbsp;</td>
+        <td class="right strong">Skupaj ovoj:</td>
+        <td class="right strong">R'<sub>w</sub> = </td>
+        <td class="center strong"><?= $this->numFormat($prostor->Rw + 10 * log10($prostor->Sf / $prostor->Af) - $prostor->korekcijaBocnegaPrenosa, 1) ?> dB</td>
+    </tr>
+</table>
+
+<table width="100%" border="1">
+    <tr class="title"><th colspan="4"><h3>Skupaj za prostor</h3></th></tr>
+    <tr>
+        <td class="right strong" colspan="2">Izolirnost ovoja:</td>
+        <td class="right strong">&nbsp;</td>
+        <td class="center strong"><?= $this->numFormat($prostor->Rw + 10 * log10($prostor->Sf / $prostor->Af) - $prostor->korekcijaBocnegaPrenosa, 1) ?> dB</td>
+    </tr>
+    <tr>
+        <td class="right strong" colspan="2">Vpliv prostora:</td>
+        <td class="right strong">&nbsp;</td>
+        <td class="center strong">- <?= $this->numFormat(10 * log10($prostor->Sf / $prostor->Af), 1) ?> dB</td>
+    </tr>
+    <tr>
+        <td class="right strong" colspan="2">Korekcija bočnega prenosa:</td>
+        <td class="right strong">&nbsp;</td>
+        <td class="center strong"><?= $this->numFormat($prostor->korekcijaBocnegaPrenosa, 1) ?> dB</td>
+    </tr>
     <tr>
         <td class="right strong" colspan="2">Skupaj:</td>
         <td class="right strong">R'<sub>s,w</sub> = </td>
@@ -221,5 +252,10 @@
         <td class="center strong <?= round($prostor->Rw, 0) >= round($prostor->minRw, 0) ? 'green' : 'red' ?>">
             <?= round($prostor->Rw, 0) >= round($prostor->minRw, 0) ? 'DA' : 'NE' ?>
         </td>
+    </tr>
+    <tr>
+        <td class="right strong" colspan="2">Nivo hrupa v prostoru:</td>
+        <td class="right strong">L<sub>notri</sub> = </td>
+        <td class="center strong"><?= $this->numFormat($prostor->Lzunaj - $prostor->Rw, 0) ?> dB</td>
     </tr>
 </table>

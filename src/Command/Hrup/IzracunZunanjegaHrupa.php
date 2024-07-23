@@ -46,10 +46,6 @@ class IzracunZunanjegaHrupa extends Command
                 $prostoriOut[] = $prostor->export();
             }
 
-            if (count($prostoriOut) == 0) {
-                throw new \Exception('Prostori obstajajo.');
-            }
-
             App::saveProjectCalculation('Hrup', $projectId, 'zunanjiHrup', $prostoriOut);
         }
     }

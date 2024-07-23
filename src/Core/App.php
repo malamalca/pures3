@@ -56,12 +56,12 @@ class App
             $methodName = substr($methodName, 0, -(strlen($extension) + 1));
         }
 
-        if ($area) {
+        if ($controllerName !== 'App') {
             $controllerClass = 'App\Controller\\' . $area . '\\' . $controllerName . 'Controller';
         } else {
             $controllerClass = 'App\Controller\\' . $controllerName . 'Controller';
         }
-        
+
         // check if action exists
         if (!method_exists($controllerClass, $methodName)) {
             header('HTTP/1.0 404 Not Found');
