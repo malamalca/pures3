@@ -105,6 +105,18 @@ class Fasada
                             $oknaVrata = new ZunanjaOknaVrata(new OknaVrata($libOknaVrata), $oknaVrataConfig);
                             $this->oknaVrata[] = $oknaVrata;
                             $this->povrsina += $oknaVrata->povrsina * $oknaVrata->stevilo;
+
+                            // določi netransparentni element v katerega je okno/vrata vgrajeno
+                            if (isset($oknaVrataConfig->idElementaVgradnje)) {
+                                $konstrukcijaVgradnje = array_first(
+                                    $this->konstrukcije,
+                                    fn($k) => $k->id == $oknaVrataConfig->idElementaVgradnje
+                                );
+                                if ($konstrukcijaVgradnje) {
+                                    $konstrukcijaVgradnje->povrsina -= $oknaVrata->povrsina * $oknaVrata->stevilo;
+                                    $this->povrsina -= $oknaVrata->povrsina * $oknaVrata->stevilo;
+                                }
+                            }
                         }
                     }
                     break;

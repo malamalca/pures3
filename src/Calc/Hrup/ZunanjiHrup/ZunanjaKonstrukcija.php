@@ -8,6 +8,7 @@ use App\Lib\EvalMath;
 
 class ZunanjaKonstrukcija
 {
+    public ?string $id;
     public string $idKonstrukcije;
     public float $povrsina = 0;
     public int $stevilo = 1;
