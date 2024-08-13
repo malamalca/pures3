@@ -131,9 +131,18 @@
     <tr>
         <td class="w-10"><?= h($prostor->id) ?></td>
         <td class="w-30"><?= h($prostor->naziv) ?></td>
-        <td class="w-10 center" style="border-right: dashed 1px">R'<sub>w,min</sub> [dBA]</td>
-        <td class="w-10 center strong"><?= $this->numFormat($prostor->minRw, 0) ?></td>
-        <td class="w-20 center strong"><?= $this->numFormat($prostor->Rw, 0) ?></td>
+        <td class="w-10 center" style="border-right: dashed 1px" class="nowrap">
+            L<sub>notri</sub>&nbsp;[dBA]<br />
+            R'<sub>s,w</sub>&nbsp;[dB]
+        </td>
+        <td class="w-10 center strong">
+            maks. <?= $this->numFormat($prostor->Lmax, 0) ?><br />
+            min. <?= $this->numFormat($prostor->minRw, 0) ?>
+        </td>
+        <td class="w-20 center strong">
+            <?= $this->numFormat($prostor->Lzunaj - $prostor->Rw, 0) ?><br />
+            <?= $this->numFormat($prostor->Rw, 0) ?>
+        </td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>
