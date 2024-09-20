@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi;
 
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ElektricniGrelnik;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\Kotel;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZrakVoda;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Generatorji\ToplotnaPodpostaja;
@@ -28,6 +29,8 @@ class GeneratorFactory
                 return new Kotel('PlinskiKotel', $options);
             case 'biomasa':
                 return new Kotel('Biomasa', $options);
+            case 'elektricniGrelnik':
+                return new ElektricniGrelnik($options);
             default:
                 throw new \Exception(sprintf('Generator : Vrsta "%s" ne obstaja', $type));
         }

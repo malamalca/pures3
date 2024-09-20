@@ -33,7 +33,7 @@
             "5000": 78.98814516878451
         },
         "Rw": 63,
-        "dR": 0,
+        "dR": -1,
         "C": -7,
         "Ctr": -10,
         "dodatniSloji": [
@@ -41,7 +41,8 @@
                 "vrsta": "elasticen",
                 "naziv": "MW Lamele",
                 "povrsinskaMasa": 26,
-                "dinamicnaTogost": 45
+                "dinamicnaTogost": 45,
+                "dR": -1
             }
         ]
     },
@@ -49,10 +50,11 @@
         "id": "Z.1",
         "naziv": "AB 20 cm",
         "povrsinskaMasa": 460,
-        "Rw": 57,
+        "Rw": 58,
         "dR": -1,
         "C": -2,
         "Ctr": -7,
+        "Lnw": 70.80347589114491,
         "dodatniSloji": [
             {
                 "vrsta": "elasticen",
@@ -67,10 +69,11 @@
         "id": "T.1",
         "naziv": "Talna konstrukcija",
         "povrsinskaMasa": 322,
-        "Rw": 61,
+        "Rw": 52,
         "dR": 9,
         "C": -2,
         "Ctr": -7,
+        "Lnw": 76.22504449064593,
         "dodatniSloji": [
             {
                 "id": "estrih",
@@ -90,6 +93,7 @@
         "dR": 0,
         "C": -2,
         "Ctr": -7,
+        "Lnw": 70.80347589114491,
         "dodatniSloji": []
     },
     {
@@ -100,6 +104,7 @@
         "dR": 0,
         "C": -1,
         "Ctr": -4,
+        "Lnw": 85.49366829597969,
         "dodatniSloji": []
     },
     {
@@ -110,6 +115,7 @@
         "dR": 0,
         "C": -1,
         "Ctr": -1,
+        "Lnw": 100.08738190547108,
         "dodatniSloji": []
     },
     {
@@ -120,16 +126,18 @@
         "dR": 0,
         "C": -2,
         "Ctr": -5,
+        "Lnw": 81.33952573938424,
         "dodatniSloji": []
     },
     {
         "id": "ZH.5",
         "naziv": "Zvok v zraku - talna konstrukcija - beton 100mm\/zaključni sloj 30mm",
         "povrsinskaMasa": 287,
-        "Rw": 63,
+        "Rw": 49,
         "dR": 14,
         "C": -2,
         "Ctr": -6,
+        "Lnw": 77.97413361431026,
         "dodatniSloji": [
             {
                 "id": "estrih",

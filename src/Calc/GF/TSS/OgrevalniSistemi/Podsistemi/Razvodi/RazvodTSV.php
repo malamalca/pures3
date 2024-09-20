@@ -89,6 +89,7 @@ class RazvodTSV extends Razvod
             // todo: število ur kroženja vode glede na vrsto cone
             $steviloUrCrpalke = 2;
         }
+
         $steviloUrBrezCirkulacije = 24 - $steviloUrCrpalke;
 
         $povprecniUCevi = ($this->horizontalniVod->toplotneIzgube($this, $cona) +
@@ -196,7 +197,7 @@ class RazvodTSV extends Razvod
 
                 // enačba (149)
                 // todo: excel tega ne upošteva
-                // $this->vracljiveIzgubeTSV[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
+                $this->vracljiveIzgubeTSV[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
 
                 // Delež vrnjene energije v okoliški zrak
                 // todo: upoštevaj možnost, da črpalka ni v ogrevanem prostoru/coni

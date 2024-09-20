@@ -4,10 +4,56 @@
         "naziv": "Dnevna soba",
         "odmevniCas": 0.5,
         "prostornina": 37.2,
+        "korekcijaBocnegaPrenosa": 0,
         "Af": 12.127200000000002,
         "Sf": 24.2,
-        "minRw": 28.000548260305948,
-        "Rw": 23.99855711713521,
+        "minRw": 25,
+        "Rw": 20.998008856829262,
+        "Lzunaj": 60,
+        "Lmax": 35,
+        "fasade": [
+            {
+                "Rw": 23.99855711713521,
+                "deltaL_fasada": 0,
+                "povrsina": 24.2,
+                "vplivPrometa": true,
+                "oblikaFasade": "ravna",
+                "koeficientStropa": null,
+                "visinaLinijePogleda": null,
+                "konstrukcije": [
+                    {
+                        "idKonstrukcije": "Z.1",
+                        "povrsina": 14.6,
+                        "stevilo": 1,
+                        "Rw": 57,
+                        "C": -2,
+                        "Ctr": -7
+                    }
+                ],
+                "oknaVrata": [
+                    {
+                        "idOknaVrata": "O.1",
+                        "povrsina": 4.8,
+                        "stevilo": 2,
+                        "Rw": 27,
+                        "C": -1,
+                        "Ctr": -4
+                    }
+                ],
+                "maliElementi": []
+            }
+        ]
+    },
+    {
+        "id": "P.2",
+        "naziv": "Dnevna soba - Kompleksno",
+        "odmevniCas": 0.5,
+        "prostornina": 37.2,
+        "korekcijaBocnegaPrenosa": 0,
+        "Af": 12.127200000000002,
+        "Sf": 24.2,
+        "minRw": 25,
+        "Rw": 20.998008856829262,
         "Lzunaj": 60,
         "Lmax": 35,
         "fasade": [

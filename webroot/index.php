@@ -78,7 +78,7 @@ switch ($routeInfo[0]) {
             case 'Index':
                 $vars['controller'] = 'Projekti';
                 $controllerName = $vars['controller'];
-                $handler = 'Hrup';
+                $handler = 'Pures';
                 break;
             default:
                 $controllerName = $vars['controller'];

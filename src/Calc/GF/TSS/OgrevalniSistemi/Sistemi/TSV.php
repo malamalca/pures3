@@ -11,7 +11,7 @@ use App\Calc\GF\TSS\TSSVrstaEnergenta;
 class TSV extends TSSInterface
 {
     // Excel ima 2 iteraciji za TSV
-    private const STEVILO_ITERACIJ = 2;
+    public int $stevilo_iteracij = 2;
 
     public VrstaRezima $rezim;
 
@@ -55,6 +55,8 @@ class TSV extends TSSInterface
         $this->id = $config->id ?? null;
         $this->rezim = VrstaRezima::from($config->rezim ?? null);
 
+        $this->stevilo_iteracij = $config->steviloIteracij ?? 2;
+
         $this->razvodi = $config->razvodi ?? [];
         $this->prenosniki = $config->prenosniki ?? [];
         $this->hranilniki = $config->hranilniki ?? [];
@@ -76,7 +78,7 @@ class TSV extends TSSInterface
         $vracljiveIzgubeTSV = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
         // iteracija za vračljive izgube
-        for ($i = 0; $i < self::STEVILO_ITERACIJ; $i++) {
+        for ($i = 0; $i < $this->stevilo_iteracij; $i++) {
             $this->potrebnaEnergija = array_subtract_values($cona->energijaTSV, $vracljiveIzgubeTSV);
             $this->potrebnaElektricnaEnergija = [];
             $this->obnovljivaEnergija = [];
@@ -126,6 +128,12 @@ class TSV extends TSSInterface
                 $generator = array_first($sistem->generatorji, fn($g) => $g->id == $generatorId);
                 if (!$generator) {
                     throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
+                }
+
+                // kadar je več iteracij se vracljive izgube upoštevajo, kadar pa je samo ena se pa ne, zato
+                // je potreeben še en korak
+                if ($this->stevilo_iteracij == 1) {
+                    $this->potrebnaEnergija = array_subtract_values($this->potrebnaEnergija, $vracljiveIzgubeTSV);
                 }
 
                 $generator->analiza(

@@ -13,7 +13,7 @@ class ElementRazvoda
     public VrstaIzolacijeCevi $izolacija;
     public VrstaNamenaCevi $namen;
 
-    public float $dolzina = 0;
+    public ?float $dolzina = 0;
 
     public ?float $toplotnaPrevodnost = null;
     public ?float $delezVOgrevaniConi = null;
@@ -48,6 +48,7 @@ class ElementRazvoda
         }
 
         $this->izolacija = VrstaIzolacijeCevi::from($config->izolacija ?? 'izolirane');
+        $this->dolzina = $config->dolzina ?? null;
         $this->toplotnaPrevodnost = $config->Ucevi ?? null;
         $this->delezVOgrevaniConi = $config->delezVOgrevaniConi ?? $this->privzetiDelezVOgrevaniConi();
     }
@@ -110,7 +111,10 @@ class ElementRazvoda
     {
         $this->toplotnaPrevodnost =
             $this->toplotnaPrevodnost ?? $this->racunskaToplotnaPrevodnost($cona->sirina * $cona->dolzina);
-        $this->dolzina = $razvod->dolzinaCevi($this->vrsta, $cona);
+
+        if (is_null($this->dolzina)) {
+            $this->dolzina = $razvod->dolzinaCevi($this->vrsta, $cona);
+        }
 
         return $this->toplotnaPrevodnost * $this->dolzina * $delez;
     }

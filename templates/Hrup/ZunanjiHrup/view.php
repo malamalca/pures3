@@ -256,6 +256,6 @@
     <tr>
         <td class="right strong" colspan="2">Nivo hrupa v prostoru:</td>
         <td class="right strong">L<sub>notri</sub> = </td>
-        <td class="center strong"><?= $this->numFormat($prostor->Lzunaj - $prostor->Rw, 0) ?> dB</td>
+        <td class="center strong"><?= $this->numFormat($prostor->Lzunaj - $prostor->Rw, 0) ?> dBA</td>
     </tr>
 </table>

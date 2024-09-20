@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi;
 
+use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Hranilniki\NeposrednoOgrevanHranilnik;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Hranilniki\PosrednoOgrevanHranilnik;
 
 class HranilnikFactory
@@ -19,6 +20,8 @@ class HranilnikFactory
         switch ($type) {
             case 'posrednoOgrevan':
                 return new PosrednoOgrevanHranilnik($options);
+            case 'neposrednoOgrevan':
+                return new NeposrednoOgrevanHranilnik($options);
             default:
                 throw new \Exception(sprintf('Hranilnik : Vrsta "%s" ne obstaja', $type));
         }

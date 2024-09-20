@@ -88,6 +88,30 @@
 </table>
 <p>Merodajni kazalci hrupa v okolju, uporabljeni v izračunu zvočne izolirnosti ovoja stavbe:</p>
 <table border="2" cellpadding="3" width="50%">
+<?php
+    if (isset($splosniPodatki->zunanjiHrup->vrednostiHrupa)) {
+?>
+        <tr>
+<?php
+        foreach ($splosniPodatki->zunanjiHrup->vrednostiHrupa as $oznaka => $vrednost) {
+?>
+            <td class="w-50 center strong"><?= h($oznaka) ?> [dB(A)]</td>
+<?php
+        }
+?>
+        </tr>
+        <tr>
+<?php
+        foreach ($splosniPodatki->zunanjiHrup->vrednostiHrupa as $oznaka => $vrednost) {
+?>
+            <td class="w-50 center strong"><?= $vrednost ?></td>
+<?php
+        }
+?>
+    </tr>
+<?php
+    } else {
+?>
     <tr>
         <td class="w-50 center strong">Ldvn [dB(A)]</td>
         <td class="w-50 center strong">Lnoč [dB(A)]</td>
@@ -96,6 +120,9 @@
         <td class="w-50 center"><?= ObmocjeZascitePredHrupom::from($splosniPodatki->zunanjiHrup->obmocje)->kazalci('Ldvn') ?></td>
         <td class="w-50 center"><?= ObmocjeZascitePredHrupom::from($splosniPodatki->zunanjiHrup->obmocje)->kazalci('Lnoc') ?></td>
     </tr>
+<?php
+    }
+?>
 </table>
 
 <br />
