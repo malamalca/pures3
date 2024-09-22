@@ -9,12 +9,57 @@ class Calc
     public const NIX = 0.000001;
 
     public const FREKVENCE_TERCE = [
-        50, 63, 80,
-        100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500,
-        3150, 4000, 5000,
+        //50, 63, 80,
+        100, 125, 160,
+        200, 250, 315,
+        400, 500, 630,
+        800, 1000, 1250,
+        1600, 2000, 2500,
+        3150,
+        //4000, 5000,
     ];
 
-    public const RF = [null, null, null, 33, 36, 39, 42, 45, 48, 51, 52, 53, 54, 55, 56, 56, 56, 56, null, null, null];
+    public const RF = [
+        //null, null, null,
+        33, 36, 39,
+        42, 45, 48,
+        51, 52, 53,
+        54, 55, 56,
+        56, 56, 56,
+        56,
+        //null, null,
+    ];
+
+    public const SPQ_C = [
+        29, 26, 23,
+        21, 19, 17,
+        15, 13, 12,
+        11, 10, 9,
+        9, 9, 9,
+        9,
+        //41, 37, 34,
+        //30, 27, 24,
+        //22, 20, 18,
+        //16, 14, 13,
+        //12, 11, 10,
+        //10, 10, 10,
+        //10, 10, 10,
+    ];
+    public const SPQ_CTR = [
+        20, 20, 18,
+        16, 15, 14,
+        13, 12, 11,
+        9, 8, 9,
+        10, 11, 13,
+        15,
+        //25, 23, 21,
+        //20, 20, 18,
+        //16, 15, 14,
+        //13, 12, 11,
+        //9, 8, 9,
+        //10, 11, 13,
+        //15, 16, 18,
+    ];
 
     /**
      * Izračun nasičenega tlaka glede na podano temperaturo
@@ -71,5 +116,76 @@ class Calc
         } else {
             return $sloj2->dR + $sloj1->dR / 2;
         }
+    }
+
+    /**
+     * Iz izolativnosti po frekvencah izračuna enoštevilčno izolativnost
+     *
+     * @param array $R Izolativnost po frekvencah
+     * @return int
+     */
+    public static function izracunajRw(array $R)
+    {
+        // 717-1
+        $shift = -40;
+        $shiftSum = 0;
+
+        $R = array_values($R);
+
+        while (($shift < 40) && ($shiftSum < 32)) {
+            $shiftSum = 0;
+            foreach (self::FREKVENCE_TERCE as $ix => $fq) {
+                //var_dump($R[$ix] . ' | ' . (self::RF[$ix] + $shift) . ' | ' . ((($R[$ix] - (self::RF[$ix] + $shift)) < 0) ? (-$R[$ix] + (self::RF[$ix] + $shift)) : ''));
+                if ($R[$ix] - (self::RF[$ix] + $shift) < 0) {
+                    $shiftSum += (-$R[$ix] + self::RF[$ix] + $shift);
+                }
+            }
+
+            $shift++;
+        }
+
+        $result = 52 + $shift - 2;
+
+        return $result;
+    }
+
+    /**
+     * Iz izolativnosti po frekvencah izračuna C
+     *
+     * @param array $R Izolativnost po frekvencah
+     * @return float
+     */
+    public static function izracunajC(array $R)
+    {
+        $sumTau = 0;
+        $R = array_values($R);
+
+        foreach (self::FREKVENCE_TERCE as $ix => $fq) {
+            $sumTau += pow(10, (-self::SPQ_C[$ix] - $R[$ix]) / 10);
+        }
+
+        $C = -(self::izracunajRw($R) - round((-10 * log10($sumTau)), 0));
+
+        return $C;
+    }
+
+    /**
+     * Iz izolativnosti po frekvencah izračuna Ctr
+     *
+     * @param array $R Izolativnost po frekvencah
+     * @return float
+     */
+    public static function izracunajCtr(array $R)
+    {
+        $sumTau = 0;
+        $R = array_values($R);
+
+        foreach (self::FREKVENCE_TERCE as $ix => $fq) {
+            $sumTau += pow(10, (-self::SPQ_CTR[$ix] - $R[$ix]) / 10);
+        }
+
+        $Ctr = -(self::izracunajRw($R) - round((-10 * log10($sumTau)), 0));
+
+        return $Ctr;
     }
 }

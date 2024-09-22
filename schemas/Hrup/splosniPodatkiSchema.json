@@ -31,6 +31,7 @@
             }
         },
         "vodjaProjektiranja": {"type": "string"},
+        "projektant": {"type": "string"},
         "izdelovalec": {"type": "string"},
         "stevilkaElaborata": {"type": "string"},
         "datum": {"type": "string"}

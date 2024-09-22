@@ -259,7 +259,7 @@ class Chart
     protected function drawSeries()
     {
         // Calculate X-scale
-        $sirinaGrafa = $this->gridWidth - 2 * $this->graphOffsetMargin;
+        $sirinaGrafa = $this->gridWidth - 1 * $this->graphOffsetMargin;
         $offsetX = $this->gridLeft + $this->graphOffsetMargin;
         $scaleX = $sirinaGrafa / max($this->data['category']);
 
@@ -314,55 +314,56 @@ class Chart
                         imageline($this->chart, (int)$x1, (int)$y1, (int)$x2, (int)$y2, $seriesColors[$serieId]);
                     }
                 }
+            }
 
-                /* Grid Line */
-                if (!isset($this->options['showCategoryLines']) || $this->options['showCategoryLines'] == true) {
-                    $x1 = $gridX;
-                    $y1 = $this->gridBottom - $this->gridHeight;
-                    $x2 = $gridX;
-                    $y2 = $this->gridBottom - 1;
+            /* Grid Line */
+            if (!isset($this->options['showCategoryLines']) || $this->options['showCategoryLines'] == true) {
+                $x1 = $gridX;
+                $y1 = $this->gridBottom - $this->gridHeight;
+                $x2 = $gridX;
+                $y2 = $this->gridBottom - 1;
 
-                    imagefilledrectangle(
-                        $this->chart,
-                        (int)$x1,
-                        (int)$y1,
-                        (int)$x2,
-                        (int)$y2,
-                        $this->gridColor
-                    );
-                }
+                imagefilledrectangle(
+                    $this->chart,
+                    (int)$x1,
+                    (int)$y1,
+                    (int)$x2,
+                    (int)$y2,
+                    $this->gridColor
+                );
+            }
 
-                if (!isset($this->options['showCategoryValues']) || $this->options['showCategoryValues'] == true) {
-                    // draw right aligned label below x-axis
-                    $labelBox = imagettfbbox(
-                        $this->fontSize,
-                        0,
-                        $this->font,
-                        strval(round($this->data['category'][$k], 0))
-                    );
-                    if ($labelBox) {
-                        $labelWidth = $labelBox[4] - $labelBox[0];
+            if (!isset($this->options['showCategoryValues']) || $this->options['showCategoryValues'] == true) {
+                // draw right aligned label below x-axis
+                $labelBox = imagettfbbox(
+                    $this->fontSize,
+                    0,
+                    $this->font,
+                    strval(round($this->data['category'][$k], 0))
+                );
+                if ($labelBox) {
+                    $labelWidth = $labelBox[4] - $labelBox[0];
 
-                        $labelX = $gridX - $labelWidth / 2;
-                        $labelY = $this->gridBottom + $this->fontSize + $this->gridLabelMargin;
+                    $labelX = $gridX - $labelWidth / 2;
+                    $labelY = $this->gridBottom + $this->fontSize + $this->gridLabelMargin;
 
-                        // prevent overlap
-                        if ($labelX > $prevLabelX) {
-                            imagettftext(
-                                $this->chart,
-                                $this->fontSize,
-                                0,
-                                (int)$labelX,
-                                (int)$labelY,
-                                $this->labelColor,
-                                $this->font,
-                                strval(round($this->data['category'][$k], 0))
-                            );
-                            $prevLabelX = $labelX + $labelWidth;
-                        }
+                    // prevent overlap
+                    if ($labelX > $prevLabelX) {
+                        imagettftext(
+                            $this->chart,
+                            $this->fontSize,
+                            0,
+                            (int)$labelX,
+                            (int)$labelY,
+                            $this->labelColor,
+                            $this->font,
+                            strval(round($this->data['category'][$k], 0))
+                        );
+                        $prevLabelX = $labelX + $labelWidth;
                     }
                 }
             }
+            //}
             $prevGridX = $gridX;
         }
     }

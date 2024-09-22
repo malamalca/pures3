@@ -4,23 +4,12 @@ declare(strict_types=1);
 namespace App\Calc\Hrup\Elementi;
 
 use App\Calc\Hrup\Elementi\Izbire\VrstaDodatnegaSloja;
+use App\Lib\Calc;
 use App\Lib\EvalMath;
 
 class Konstrukcija
 {
-    //private const FQS = [100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500];
-    private const FQS = [
-        50, 63, 80,
-        100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500,
-        3150, 4000, 5000,
-    ];
-    //private const FQS = [63, 125, 250, 500, 1000, 2000, 4000];
-
-    private const RF = [0, 0, 0, 33, 36, 39, 42, 45, 48, 51, 52, 53, 54, 55, 56, 56, 56, 56, 0, 0, 0];
-    private const SPQ_C = [41, 37, 34, 30, 27, 24, 22, 20, 18, 16, 14, 13, 12, 11, 10, 10, 10, 10, 10, 10, 10];
-    private const SPQ_CTR = [25, 23, 21, 20, 20, 18, 16, 15, 14, 13, 12, 11, 9, 8, 9, 10, 11, 13, 15, 16, 18];
-
-    private const HITROST_ZVOKA = 344;
+    private const HITROST_ZVOKA = 343;
     private const GOSTOTA_ZRAKA = 1.18;
     private const DOLZINA_ROBA_1 = 4;
     private const DOLZINA_ROBA_2 = 3;
@@ -109,7 +98,7 @@ class Konstrukcija
             }
         }
 
-        $this->debelina = $this->gostota / $this->povrsinskaMasa;
+        $this->debelina = $this->povrsinskaMasa / $this->gostota;
     }
 
     /**
@@ -128,8 +117,19 @@ class Konstrukcija
         // kritična frekvenca
         $fcrit = pow(self::HITROST_ZVOKA, 2) / (1.8 * $this->hitrostLongitudinalnihValov * $this->debelina);
 
+        //$E = 68000000000;  // young
+        //$poi = 0.23; // poisson
+
+        //$B = ($E * pow($this->debelina, 3)) / (12.0 * (1.0 - pow($poi, 2)));                        // Rigidez del material [Nm^2]
+        //$fc = pow(self::HITROST_ZVOKA, 2) / (2 * pi()) * sqrt($this->povrsinskaMasa / $B);          // Frecuencia crítica [Hz]
+        $f11 = pow(self::HITROST_ZVOKA, 2) / (4 * $fcrit) *
+            ((1 / pow(self::DOLZINA_ROBA_1, 2)) + (1 / pow(self::DOLZINA_ROBA_2, 2)));
+
+        //$fcrit = $fc;
+        $fc = $fcrit;
+
         // izračun faktorja sevanja "radiation factor"
-        foreach (self::FQS as $fq) {
+        foreach (Calc::FREKVENCE_TERCE as $fq) {
             // valovno število v radianih na m
             $k0 = 2 * pi() * $fq / self::HITROST_ZVOKA;
 
@@ -165,14 +165,15 @@ class Konstrukcija
             $sigma2 = 4 * self::DOLZINA_ROBA_1 * self::DOLZINA_ROBA_2 * pow($fq / self::HITROST_ZVOKA, 2);
             $sigma3 =
                 sqrt((2 * pi() * $fq * (self::DOLZINA_ROBA_1 + self::DOLZINA_ROBA_2)) / (16 * self::HITROST_ZVOKA));
-            $f11 = pow(self::HITROST_ZVOKA, 2) / (4 * $fc) * (1 / pow(self::DOLZINA_ROBA_1, 2) +
-                1 / pow(self::DOLZINA_ROBA_2, 2));
+            //$f11 = pow(self::HITROST_ZVOKA, 2) / (4 * $fc) * (1 / pow(self::DOLZINA_ROBA_1, 2) +
+            //    1 / pow(self::DOLZINA_ROBA_2, 2));
 
             // enačba B.3b posebej
             $lambda = sqrt($fq / $fc);
 
             $delta1 = (((1 - pow($lambda, 2)) * log((1 + $lambda) / (1 - $lambda)) + 2 * $lambda)) /
                 (4 * pow(pi(), 2) * pow(1 - pow($lambda, 2), 1.5));
+
             if ($fq > $fc / 2) {
                 $delta2 = 0;
             } else {
@@ -252,34 +253,9 @@ class Konstrukcija
             $this->R[$fq] = -10 * log10($tau);
         }
 
-        // 717-1
-        $shift = -40;
-        $shiftSum = 99;
-        while ($shift < 40 && $shiftSum > 32) {
-            $shiftSum = 0;
-            foreach (self::FQS as $ix => $fq) {
-                if (self::RF[$ix] <> 0 && $this->R[$fq] - (self::RF[$ix] + $shift) > 0) {
-                    $shiftSum += $this->R[$fq] - (self::RF[$ix] + $shift);
-                }
-            }
-            $shift++;
-        }
-
-        $this->Rw = 52 + $shift - 1;
-
-        $sumTau = 0;
-        foreach (self::FQS as $ix => $fq) {
-            $sumTau += pow(10, (-self::SPQ_C[$ix] - $this->R[$fq]) / 10);
-        }
-
-        $this->C = -($this->Rw - round((-10 * log10($sumTau)), 0));
-
-        $sumTau = 0;
-        foreach (self::FQS as $ix => $fq) {
-            $sumTau += pow(10, (-self::SPQ_CTR[$ix] - $this->R[$fq]) / 10);
-        }
-
-        $this->Ctr = -($this->Rw - round((-10 * log10($sumTau)), 0));
+        $this->Rw = Calc::izracunajRw($this->R);
+        $this->C = Calc::izracunajC($this->R);
+        $this->Ctr = Calc::izracunajCtr($this->R);
 
         // dodatni sloji
         foreach ($this->dodatniSloji as $dodatniSloj) {

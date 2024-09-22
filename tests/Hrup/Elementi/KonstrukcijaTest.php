@@ -24,6 +24,6 @@ class KonstrukcijaTest extends TestCase
         $konstrukcija = new Konstrukcija($konstrukcijaConfig);
         $konstrukcija->analiza();
 
-        $this->assertEquals(66, $konstrukcija->Rw);
+        $this->assertEquals(63, $konstrukcija->Rw);
     }
 }

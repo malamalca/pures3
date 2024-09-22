@@ -50,7 +50,7 @@ class PuresChart extends Chart
     {
         if (!empty($this->options['layers'])) {
             $offsetX = $this->gridLeft + $this->graphOffsetMargin;
-            $sirinaGrafa = $this->gridWidth - 2 * $this->graphOffsetMargin;
+            $sirinaGrafa = $this->gridWidth - 1 * $this->graphOffsetMargin;
             $debelinaKonstrukcije = max($this->data['category']);
 
             $x1 = 0;

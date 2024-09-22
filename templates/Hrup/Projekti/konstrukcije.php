@@ -31,8 +31,8 @@
         <td class="right">R =</td>
         <td>
             <table border="1">
-                <tr><th>f [Hz]</th><?= implode(PHP_EOL, array_map(fn($fq) => '<td class="center">' . $fq . '</td>', Calc::FREKVENCE_TERCE)) ?></tr>
-                <tr><th>R [dB]</th><?= implode(PHP_EOL, array_map(fn($R) => '<td class="center">' . $this->numFormat($R, 0) . '</td>', json_decode(json_encode($konstrukcija->R), true))) ?></tr>
+                <tr><th class="nowrap">f [Hz]</th><?= implode(PHP_EOL, array_map(fn($fq) => '<td class="center">' . $fq . '</td>', Calc::FREKVENCE_TERCE)) ?></tr>
+                <tr><th class="nowrap">R [dB]</th><?= implode(PHP_EOL, array_map(fn($R) => '<td class="center">' . $this->numFormat($R, 0) . '</td>', json_decode(json_encode($konstrukcija->R), true))) ?></tr>
             </table>
         </td>
     </tr>
@@ -40,10 +40,10 @@
         <?php
             $fqs = Calc::FREKVENCE_TERCE;
             $Rs = json_decode(json_encode($konstrukcija->R), true);
+            $elevatedRFs = array_map(fn($el) => $el + ($Rs[500] - Calc::RF[7]), Calc::RF);
 
-            $data = ['series' => [array_values($Rs), Calc::RF], 'category' => $fqs];
-            //$png = CalcKonstrukcije::lineGraph($data);
-            $png = (new Chart($data, ['equalSpacing' => true, 'seriesColor' => ['ff00a0', '808080'], 'seriesThickness' => [8, 8]]))->draw();
+            $data = ['series' => [$elevatedRFs, array_values($Rs)], 'category' => $fqs];
+            $png = (new Chart($data, ['equalSpacing' => true, 'seriesColor' => ['808080', 'ff00a0'], 'seriesThickness' => [4, 8]]))->draw();
         ?>
         <td>Graf:</td>
         <td class="right">&nbsp;</td>
