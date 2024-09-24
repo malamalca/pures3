@@ -1,11 +1,13 @@
-# Izračun gradbene fizike po PURES 3
+# Izračun gradbene fizike in zaščite pred hrupom
 
 [![CI](https://github.com/malamalca/pures3/actions/workflows/ci.yml/badge.svg)](https://github.com/malamalca/pures3/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/malamalca/pures3/branch/main/graph/badge.svg?token=RBTZLQY5Z2)](https://codecov.io/gh/malamalca/pures3)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
 
-Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
+Projekt je PHP aplikacija za izračun:
+1. gradbene fizike po PURES 3 pravilniku,
+2. zaščite pred hrupom po Pravilniku o zaščiti pred hrupom
 
 ## NOVO - Energijske kartice
 
@@ -22,7 +24,7 @@ Projekt je PHP aplikacija za izračun gradbene fizike po PURES 3 pravilniku.
 
 ## Uporaba
 
-Projekti za izračun gradbene fizike se nahajajo v podmapi `/projects`. Privzeto je v aplikaciji že vključen testni projekt v podmapi `/projects/TestniProjekt`.
+Projekti za izračun gradbene fizike se nahajajo v podmapi `/projects`. Privzeto je v aplikaciji že vključen testni projekt v podmapi `/projects/Pures/TestniProjekt`.
 
 Analizo projekta se izvede iz ukazne vrstice z ukazom:
 ```
