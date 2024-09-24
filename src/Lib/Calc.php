@@ -7,6 +7,8 @@ class Calc
 {
     public const MESECI = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'avg', 'sep', 'okt', 'nov', 'dec'];
     public const NIX = 0.000001;
+    public const HITROST_ZVOKA = 343;
+    public const GOSTOTA_ZRAKA = 1.18;
 
     public const FREKVENCE_TERCE = [
         //50, 63, 80,
@@ -37,13 +39,6 @@ class Calc
         11, 10, 9,
         9, 9, 9,
         9,
-        //41, 37, 34,
-        //30, 27, 24,
-        //22, 20, 18,
-        //16, 14, 13,
-        //12, 11, 10,
-        //10, 10, 10,
-        //10, 10, 10,
     ];
     public const SPQ_CTR = [
         20, 20, 18,
@@ -52,13 +47,6 @@ class Calc
         9, 8, 9,
         10, 11, 13,
         15,
-        //25, 23, 21,
-        //20, 20, 18,
-        //16, 15, 14,
-        //13, 12, 11,
-        //9, 8, 9,
-        //10, 11, 13,
-        //15, 16, 18,
     ];
 
     /**
@@ -90,9 +78,9 @@ class Calc
     /**
      * Funkcija združi dve dR vrednosti
      *
-     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija1 Prva konstrukcija
+     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija1 Prva konstrukcija
      * @param string $idSloja1 Id sloja 1
-     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija2 Druga konstrukcija
+     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija2 Druga konstrukcija
      * @param string $idSloja2 Id sloja 2
      * @return float
      */

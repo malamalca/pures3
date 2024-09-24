@@ -1,14 +1,16 @@
 [
     {
-        "tip": "zahtevna",
         "id": "Z.Z",
         "naziv": "AB 20 cm - zahtevna konstrukcija",
-        "racunskiPasovi": "tercni",
+        "tip": "vertikalna",
+        "tipKonstrukcije": "zahtevna",
         "povrsinskaMasa": 500,
-        "gostota": 2500,
-        "debelina": 0.2,
-        "hitrostLongitudinalnihValov": 3500,
-        "faktorNotranjegaDusenja": 0.006,
+        "lastnosti": {
+            "gostota": 2500,
+            "hitrostLongitudinalnihValov": 3500,
+            "faktorNotranjegaDusenja": 0.006,
+            "debelina": 0.2
+        },
         "R": {
             "100": 41.15699839588477,
             "125": 42.75252452324836,
@@ -31,6 +33,7 @@
         "dR": -1,
         "C": -2,
         "Ctr": -6,
+        "Lnw": 0,
         "dodatniSloji": [
             {
                 "vrsta": "elasticen",
@@ -44,7 +47,12 @@
     {
         "id": "Z.1",
         "naziv": "AB 20 cm",
+        "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 500,
+        "lastnosti": null,
+        "R": {
+            "500": 59
+        },
         "Rw": 59,
         "dR": -1,
         "C": -2,
@@ -63,7 +71,12 @@
     {
         "id": "T.1",
         "naziv": "Talna konstrukcija",
+        "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 322,
+        "lastnosti": null,
+        "R": {
+            "500": 52
+        },
         "Rw": 52,
         "dR": 9,
         "C": -2,
@@ -83,7 +96,10 @@
     {
         "id": "ZH.1",
         "naziv": "Zvok v zraku - ločilna - beton 200mm",
+        "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 460,
+        "lastnosti": null,
+        "R": [],
         "Rw": 57,
         "dR": 0,
         "C": -2,
@@ -94,7 +110,10 @@
     {
         "id": "ZH.2",
         "naziv": "Zvok v zraku - fasada - bloki kalcijev silikat 100mm",
+        "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 175,
+        "lastnosti": null,
+        "R": [],
         "Rw": 42,
         "dR": 0,
         "C": -1,
@@ -105,7 +124,10 @@
     {
         "id": "ZH.3",
         "naziv": "Zvok v zraku - notranja stena - mavčni bloki 70mm",
+        "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 67,
+        "lastnosti": null,
+        "R": [],
         "Rw": 33,
         "dR": 0,
         "C": -1,
@@ -116,7 +138,10 @@
     {
         "id": "ZH.4",
         "naziv": "Zvok v zraku - strop - beton 100mm",
+        "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 230,
+        "lastnosti": null,
+        "R": [],
         "Rw": 46,
         "dR": 0,
         "C": -2,
@@ -127,7 +152,10 @@
     {
         "id": "ZH.5",
         "naziv": "Zvok v zraku - talna konstrukcija - beton 100mm\/zaključni sloj 30mm",
+        "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 287,
+        "lastnosti": null,
+        "R": [],
         "Rw": 49,
         "dR": 14,
         "C": -2,

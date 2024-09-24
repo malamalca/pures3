@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Test\Pures;
+
 use App\Calc\GF\Cone\Cona;
-use App\Core\App;
 use PHPUnit\Framework\TestCase;
 
 class IzracunConeTest extends TestCase

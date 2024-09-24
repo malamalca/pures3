@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\Hrup\ZracniHrup;
 
-use App\Calc\Hrup\Elementi\EnostavnaKonstrukcija;
+use App\Calc\Hrup\Elementi\Konstrukcija;
 use App\Lib\EvalMath;
 
 class ZracniHrupPoenostavljen
@@ -48,7 +48,7 @@ class ZracniHrupPoenostavljen
                 ));
             }
             $this->locilniElement = new LocilniElement(
-                new EnostavnaKonstrukcija($konstrukcijaConfig),
+                new Konstrukcija($konstrukcijaConfig),
                 $config->locilniElement
             );
         }
@@ -88,7 +88,7 @@ class ZracniHrupPoenostavljen
                                 ));
                             }
                             $stranskiElement = new StranskiElementPoenostavljen(
-                                new EnostavnaKonstrukcija($libKonstrukcijaConfig),
+                                new Konstrukcija($libKonstrukcijaConfig),
                                 $this->locilniElement,
                                 $stranskiElementiConfig
                             );

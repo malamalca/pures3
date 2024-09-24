@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\Razvodi;
+
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Razvodi\RazvodTSV;
+use PHPUnit\Framework\TestCase;
 
 final class RazvodTSVTest extends TestCase
 {
@@ -132,7 +134,6 @@ final class RazvodTSVTest extends TestCase
 
         $this->assertEquals(13.484, round($casH, 3));
     }
-
 
     public function testToplotneIzgube(): void
     {

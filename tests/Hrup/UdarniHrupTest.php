@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Test\Hrup;
+
 use App\Calc\Hrup\UdarniHrup\UdarniHrupPoenostavljen;
-use App\Core\App;
 use PHPUnit\Framework\TestCase;
 
 class UdarniHrupTest extends TestCase

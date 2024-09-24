@@ -1,6 +1,7 @@
 <?php
-    use App\Core\App;
+    use App\Calc\Hrup\Elementi\Izbire\TipKonstrukcije;
     use App\Calc\Hrup\Elementi\Izbire\VrstaDodatnegaSloja;
+    use App\Core\App;
     use App\Lib\Calc;
     use App\Lib\CalcKonstrukcije;
     use App\Lib\Charts\Chart;
@@ -24,7 +25,7 @@
         <td><?= $this->numFormat($konstrukcija->povrsinskaMasa, 1) ?> kg/m²</td>
     </tr>
     <?php
-        if (isset($konstrukcija->tip) && $konstrukcija->tip == 'zahtevna') {
+        if ($konstrukcija->tipKonstrukcije == 'zahtevna') {
     ?>
     <tr>
         <td>Izolativnost:</td>

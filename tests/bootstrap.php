@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Configure paths required to find CakePHP + general filepath
  * constants
@@ -12,12 +14,12 @@ require ROOT . DS . 'vendor' . DS . 'autoload.php';
 
 use App\Core\Configure;
 
-$defaultConfig = require(dirname(__DIR__) . DS . '/config/app_default.php');
+$defaultConfig = require dirname(__DIR__) . DS . '/config/app_default.php';
 
 $config = [];
 $appConfigFile = dirname(__FILE__) . DS . 'app.php';
 if (file_exists($appConfigFile)) {
-    $config = require($appConfigFile);
+    $config = require $appConfigFile;
 }
 $config = array_replace_recursive($defaultConfig, $config);
 

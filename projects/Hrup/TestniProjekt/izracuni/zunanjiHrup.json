@@ -53,12 +53,12 @@
         "Af": 12.127200000000002,
         "Sf": 24.2,
         "minRw": 25,
-        "Rw": 20.999362237145334,
+        "Rw": 21.001291919822002,
         "Lzunaj": 60,
         "Lmax": 35,
         "fasade": [
             {
-                "Rw": 23.999910497451282,
+                "Rw": 24.00184018012795,
                 "deltaL_fasada": 0,
                 "povrsina": 24.2,
                 "vplivPrometa": true,
@@ -67,12 +67,12 @@
                 "visinaLinijePogleda": null,
                 "konstrukcije": [
                     {
-                        "idKonstrukcije": "Z.1",
+                        "idKonstrukcije": "Z.Z",
                         "povrsina": 14.6,
                         "stevilo": 1,
-                        "Rw": 58,
+                        "Rw": 59,
                         "C": -2,
-                        "Ctr": -7
+                        "Ctr": -6
                     }
                 ],
                 "oknaVrata": [

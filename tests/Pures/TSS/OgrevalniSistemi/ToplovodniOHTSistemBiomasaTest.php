@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\OgrevalniSistemi;
+
 use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
+use PHPUnit\Framework\TestCase;
 
 final class ToplovodniOHTSistemBiomasaTest extends TestCase
 {
@@ -108,7 +110,7 @@ final class ToplovodniOHTSistemBiomasaTest extends TestCase
         $potrebnaElektricnaEnergija = $sistem->generatorji[0]->potrebnaElektricnaEnergija['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [32.92, 23.89, 18.91, 13.93, 11.74, 10.80, 11.16, 11.16, 11.37, 15.12, 24.91, 32.96];
-        $this->assertEquals($expected, $roundedResult); 
+        $this->assertEquals($expected, $roundedResult);
 
         $potrebnaToplotaZaGenerator = $sistem->ogrevanje->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaToplotaZaGenerator);

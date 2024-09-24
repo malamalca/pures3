@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\Hrup\ZracniHrup;
 
-use App\Calc\Hrup\Elementi\EnostavnaKonstrukcija;
+use App\Calc\Hrup\Elementi\Konstrukcija;
 use App\Calc\Hrup\ZracniHrup\Izbire\VrstaSpoja;
 use App\Lib\Calc;
 use App\Lib\EvalMath;
@@ -45,9 +45,9 @@ class StranskiElementPoenostavljen
     private array $options = [];
 
     /**
-     * @var \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija
+     * @var \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija
      */
-    public EnostavnaKonstrukcija $konstrukcija;
+    public Konstrukcija $konstrukcija;
 
     /**
      * @var \App\Calc\Hrup\ZracniHrup\LocilniElement $locilniElement
@@ -57,7 +57,7 @@ class StranskiElementPoenostavljen
     /**
      * Class Constructor
      *
-     * @param \App\Calc\Hrup\Elementi\EnostavnaKonstrukcija $konstrukcija Konstrukcija iz knjižnice
+     * @param \App\Calc\Hrup\Elementi\Konstrukcija $konstrukcija Konstrukcija iz knjižnice
      * @param \App\Calc\Hrup\ZracniHrup\LocilniElement $locilniElement Ločilni element
      * @param \stdClass|string $config Configuration
      * @param array $options Možnosti izračuna

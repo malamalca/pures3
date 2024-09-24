@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\OgrevalniSistemi;
+
 use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
+use PHPUnit\Framework\TestCase;
 
 final class ToplovodniOHTSistemSamoTSV extends TestCase
 {
@@ -84,7 +86,6 @@ final class ToplovodniOHTSistemSamoTSV extends TestCase
         $expected = [1.75, 1.58, 1.75, 1.69, 1.75, 1.69, 1.75, 1.75, 1.69, 1.75, 1.69, 1.75];
         $this->assertEquals($expected, $roundedResult);
 
-
         $izgubeHranilnika = $sistem->hranilniki[0]->toplotneIzgube;
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubeHranilnika);
         $expected = [44.95, 40.60, 44.95, 43.50, 44.95, 43.50, 44.95, 44.95, 43.50, 44.95, 43.50, 44.95];
@@ -100,13 +101,11 @@ final class ToplovodniOHTSistemSamoTSV extends TestCase
         $expected = [6.99, 6.31, 6.99, 6.76, 6.99, 6.76, 6.99, 6.99, 6.76, 6.99, 6.76, 6.99];
         $this->assertEquals($expected, $roundedResult);
 
-
         $vracljiveIzgubeVOgrevanje = $sistem->tsv->vracljiveIzgubeVOgrevanje;
         $roundedResult = array_map(fn($el) => round($el, 2), $vracljiveIzgubeVOgrevanje);
         $expected = [503.95, 455.18, 503.95, 487.70, 503.95, 487.70, 503.95, 503.95, 487.70, 503.95, 487.70, 503.95];
         $this->assertEquals($expected, $roundedResult);
     }
-
 
     public function testToplotneIzgube(): void
     {
@@ -197,7 +196,7 @@ final class ToplovodniOHTSistemSamoTSV extends TestCase
         $potrebnaElektricnaEnergija = $sistem->generatorji[0]->potrebnaElektricnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [1.62, 1.30, 1.40, 1.19, 1.11, 1.00, 1.01, 1.02, 1.05, 1.23, 1.36, 1.59];
-        $this->assertEquals($expected, $roundedResult); 
+        $this->assertEquals($expected, $roundedResult);
 
         $potrebnaToplotaZaGenerator = $sistem->tsv->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaToplotaZaGenerator);

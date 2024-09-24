@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\OgrevalniSistemi;
+
 use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
+use PHPUnit\Framework\TestCase;
 
 final class ToplovodniOHTSistemVrocevodTest extends TestCase
 {
@@ -103,7 +105,7 @@ final class ToplovodniOHTSistemVrocevodTest extends TestCase
         $potrebnaElektricnaEnergija = $sistem->generatorji[0]->potrebnaElektricnaEnergija['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [10.00, 10.00, 10.00, 7.19, 1.13, 0.00, 0.00, 0.00, 1.10, 8.80, 10.00, 10.00];
-        $this->assertEquals($expected, $roundedResult); 
+        $this->assertEquals($expected, $roundedResult);
 
         $roundedResult = array_map(fn($el) => round($el, 2), $sistem->ogrevanje->potrebnaEnergija);
         $expected = [1374.12, 887.97, 525.63, 224.91, 39.99, 0.00, 0.00, 0.00, 39.20, 287.96, 913.27, 1377.35];
@@ -114,7 +116,6 @@ final class ToplovodniOHTSistemVrocevodTest extends TestCase
         $expected = [38.43, 35.00, 36.80, 25.55, 4.11, 0.00, 0.00, 0.00, 3.92, 32.06, 36.71, 38.44];
         $this->assertEquals($expected, $roundedResult);
     }
-
 
     public function testTSV(): void
     {

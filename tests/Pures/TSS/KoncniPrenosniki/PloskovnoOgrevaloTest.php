@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\KoncniPrenosniki;
+
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
+use PHPUnit\Framework\TestCase;
 
 final class PloskovnoOgrevaloTest extends TestCase
 {

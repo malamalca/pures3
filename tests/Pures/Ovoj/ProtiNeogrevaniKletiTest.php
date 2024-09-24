@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Test\Pures\Ovoj;
+
 use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
 use App\Lib\CalcKonstrukcije;
 use PHPUnit\Framework\TestCase;

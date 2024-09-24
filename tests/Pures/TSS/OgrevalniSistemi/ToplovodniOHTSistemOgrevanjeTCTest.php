@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\OgrevalniSistemi;
+
 use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
+use PHPUnit\Framework\TestCase;
 
 final class ToplovodniOHTSistemOgrevanjeTCTest extends TestCase
 {
@@ -104,7 +106,7 @@ final class ToplovodniOHTSistemOgrevanjeTCTest extends TestCase
         $potrebnaElektricnaEnergija = $sistem->generatorji[0]->potrebnaElektricnaEnergija['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [2.41, 1.51, 0.78, 0.29, 0.04, 0.00, 0.00, 0.00, 0.04, 0.37, 1.41, 2.30];
-        //$this->assertEquals($expected, $roundedResult); 
+        //$this->assertEquals($expected, $roundedResult);
 
         $potrebnaToplotaZaGenerator = $sistem->ogrevanje->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaToplotaZaGenerator);
@@ -137,14 +139,14 @@ final class ToplovodniOHTSistemOgrevanjeTCTest extends TestCase
             "idCone": "Cona1",
             "vrsta": "toplovodni",
             "energent": "elektrika",
-            
+
             "ogrevanje": {
                 "rezim": "40/30",
                 "generatorji": ["TC"],
                 "razvodi": ["Ogrevanje"],
                 "prenosniki": ["Talno"]
             },
-    
+
             "generatorji": [
                 {
                     "id": "TC",
@@ -156,7 +158,7 @@ final class ToplovodniOHTSistemOgrevanjeTCTest extends TestCase
                     "elektricnaMocNaSekundarnemKrogu": 3
                 }
             ],
-    
+
             "razvodi": [
                 {
                     "vrsta": "dvocevni",
@@ -178,13 +180,13 @@ final class ToplovodniOHTSistemOgrevanjeTCTest extends TestCase
                 {
                     "id": "Talno",
                     "vrsta": "ploskovnaOgrevala",
-    
+
                     "sistem": "talno_mokri",
                     "izolacija": "100%",
-    
+
                     "hidravlicnoUravnotezenje": "staticnoDviznihVodov",
                     "regulacijaTemperature": "referencniProstor",
-    
+
                     "mocRegulatorja": 1,
                     "steviloRegulatorjev": 1
                 }
@@ -219,7 +221,7 @@ final class ToplovodniOHTSistemOgrevanjeTCTest extends TestCase
         /*$potrebnaElektricnaEnergija = $sistem->generatorji[0]->potrebnaElektricnaEnergija['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [2.48, 1.56, 0.82, 0.31, 0.05, 0.00, 0.00, 0.00, 0.05, 0.40, 1.47, 2.37];
-        $this->assertEquals($expected, $roundedResult); 
+        $this->assertEquals($expected, $roundedResult);
 
         $potrebnaToplotaZaGenerator = $sistem->ogrevanje->potrebnaEnergija;
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaToplotaZaGenerator);

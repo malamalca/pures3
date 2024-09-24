@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Test\Pures;
+
+use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
 use PHPUnit\Framework\TestCase;
 
 final class IzracunKonstrukcijeTSG004Test extends TestCase
@@ -98,7 +101,7 @@ final class IzracunKonstrukcijeTSG004Test extends TestCase
         $cona->notranjaTOgrevanje = 20;
 
         $config = json_decode($elementOvojaJson);
-        $element = new App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja(null, $config);
+        $element = new NetransparentenElementOvoja(null, $config);
         $element->analiza($cona, $okolje);
 
         $this->assertEquals(165.8, round($element->Lpi, 1));

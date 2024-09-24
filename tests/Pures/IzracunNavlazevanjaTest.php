@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace App\Test\Pures;
+
 use PHPUnit\Framework\TestCase;
 
 final class IzracunNavlazevanjaTest extends TestCase
@@ -41,7 +43,7 @@ final class IzracunNavlazevanjaTest extends TestCase
         $expected_G_h2o = [1311, 1184, 1311, 1269, 1311, 1269, 1311, 1311, 1269, 1311, 1269, 1311];
         $roundedResult = array_map(fn($el) => (int)round($el, 0), $cona->uravnavanjeVlage->mesecnaKolicinaVodnePare);
         $this->assertEquals($expected_G_h2o, $roundedResult);
-        
+
         // TODO:
         //$expected_m_h2o_HU_m = [3064, 2248, -3122, -8097, -21452, -29708, -31974, -30576, -16591, -9882, -2674, 1265];
         //$roundedResult = array_map(fn($el) => (int)round($el, 0), $cona->uravnavanjeVlage->potrebnaMesecnaKolicinaVodeOgrevanje);

@@ -15,7 +15,12 @@
         "konstrukcija": {
             "id": "T.1",
             "naziv": "Talna konstrukcija",
+            "tipKonstrukcije": "enostavna",
             "povrsinskaMasa": 322,
+            "lastnosti": null,
+            "R": {
+                "500": 52
+            },
             "Rw": 52,
             "dR": 9,
             "C": -2,

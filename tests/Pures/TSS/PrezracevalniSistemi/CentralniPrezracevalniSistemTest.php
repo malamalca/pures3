@@ -1,15 +1,17 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\PrezracevalniSistemi;
+
 use App\Calc\GF\TSS\PrezracevalniSistemi\CentralniPrezracevalniSistem;
+use PHPUnit\Framework\TestCase;
 
 final class CentralniPrezracevalniSistemTest extends TestCase
 {
     public function testToplotneIzgube(): void
     {
         $cona = new \stdClass();
-        $cona->id = "Cona1";
+        $cona->id = 'Cona1';
 
         $config = <<<EOT
         {

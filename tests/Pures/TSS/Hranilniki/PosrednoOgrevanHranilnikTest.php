@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace App\Test\Pures\TSS\Hranilniki;
+
 use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\Hranilniki\PosrednoOgrevanHranilnik;
+use PHPUnit\Framework\TestCase;
 
 final class PosrednoOgrevanHranilnikTest extends TestCase
 {
