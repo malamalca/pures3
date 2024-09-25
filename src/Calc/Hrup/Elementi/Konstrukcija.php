@@ -77,7 +77,7 @@ class Konstrukcija
                     break;
                 case 'R':
                     if (isset($config->R)) {
-                        $this->R = (array)json_decode(json_encode($config->R), true);
+                        $this->R = (array)json_decode((string)json_encode($config->R), true);
                     }
                     break;
                 case 'dodatniSloji':
