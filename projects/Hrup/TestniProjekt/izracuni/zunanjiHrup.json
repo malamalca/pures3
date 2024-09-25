@@ -53,12 +53,12 @@
         "Af": 12.127200000000002,
         "Sf": 24.2,
         "minRw": 25,
-        "Rw": 21.001291919822002,
+        "Rw": 21.00043756598086,
         "Lzunaj": 60,
         "Lmax": 35,
         "fasade": [
             {
-                "Rw": 24.00184018012795,
+                "Rw": 24.000985826286808,
                 "deltaL_fasada": 0,
                 "povrsina": 24.2,
                 "vplivPrometa": true,
@@ -70,7 +70,7 @@
                         "idKonstrukcije": "Z.Z",
                         "povrsina": 14.6,
                         "stevilo": 1,
-                        "Rw": 59,
+                        "Rw": 58,
                         "C": -2,
                         "Ctr": -6
                     }

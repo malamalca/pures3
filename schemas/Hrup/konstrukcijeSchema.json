@@ -8,11 +8,37 @@
             "id": {"type": "string"},
             "naziv": {"type": "string"},
             "tip": {"enum": ["vertikalna", "horizontalna"]},
+            "zahtevnost": {"enum": ["enostavna", "zahtevna"]},
             "povrsinskaMasa" : {
                 "oneOf": [
                     {"type": "number"},
                     {"type": "string"}
                 ]
+            },
+            "lastnosti": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "oneOf": [
+                            {"required": ["gostota"]},
+                            {"required": ["debelina"]}
+                        ]
+                    },
+                    {
+                        "oneOf": [
+                            {"required": ["hitrostLongitudinalnihValov"]},
+                            {"required": ["E", "poi"]}
+                        ]
+                    }
+                ],
+                "properties": {
+                    "debelina": {"type": "number"},
+                    "gostota": {"type": "number"},
+                    "E": {"type": "number"},
+                    "poi": {"type": "number"},
+                    "hitrostLongitudinalnihValov": {"type": "number"},
+                    "faktorNotranjegaDusenja": {"type": "number"}
+                }
             },
             "dodatniSloji": {
                 "type": "array",

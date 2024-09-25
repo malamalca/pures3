@@ -139,10 +139,6 @@ class Konstrukcija
             $this->Lnw = $this->tipKonstrukcije->Lnw($this->povrsinskaMasa, $this->R);
         }
 
-        //$this->Rw = Calc::izracunajRw($this->R);
-        //$this->C = Calc::izracunajC($this->R);
-        //$this->Ctr = Calc::izracunajCtr($this->R);
-
         // dodatni sloji
         foreach ($this->dodatniSloji as $dodatniSloj) {
             if (!isset($dodatniSloj->dR)) {

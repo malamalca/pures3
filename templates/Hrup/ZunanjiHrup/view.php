@@ -37,7 +37,7 @@
     </tr>
     <tr>
         <td class="w-20">Nivo hrupa v prostoru:</td>
-        <td class="w-10 right strong">L<sub>notri</sub>=</td>
+        <td class="w-10 right strong">L<sub>notri, max</sub>=</td>
         <td colspan="2" class="left strong"><?= h($prostor->Lmax) ?> dBA</td>
     </tr>
     <tr>
@@ -51,7 +51,7 @@
 ?>
     
     <table width="100%">
-    <tr class="title"><th colspan="4"><h3>Fasada <?= ($k+1) ?></h3></th></tr>
+    <tr class="title"><th colspan="4"><h2>Fasada <?= ($k+1) ?></h2></th></tr>
     <tr>
         <td class="w-20">Površina:</td>
         <td class="w-10 right strong">A=</td>
@@ -70,16 +70,16 @@
         <td colspan="4" class="left">
             <table border="1" width="100%">
                 <tr>
-                    <td class="center">Z. št.</td>
-                    <td class="left">Šifra</td>
-                    <td class="left">Naziv konstrukcije</td>
-                    <td class="center">Povr. masa<br/>[kg/m²]</td>
-                    <td class="center">R<sub>w</sub> (C; C<sub>tr</sub>)</td>
-                    <td class="center">R<sub>p,w</sub> (C; C<sub>tr</sub>)</td>
-                    <td class="center">Št.</td>
-                    <td class="center">Površina<br />[m²]</td>
-                    <td class="center">Razmerje površin<br />S<sub>i</sub>/S<sub>f</sub> ali 10/S<sub>f</sub></td>
-                    <td class="center">R<sub>p,w</sub>+C<?= $fasada->vplivPrometa ? '<sub>tr</sub>' : '' ?></td>
+                    <th class="center strong">Z. št.</th>
+                    <th class="left strong">Šifra</th>
+                    <th class="left strong">Naziv konstrukcije</th>
+                    <th class="center strong">Povr. masa<br/>[kg/m²]</th>
+                    <th class="center strong">R<sub>w</sub> (C; C<sub>tr</sub>)</th>
+                    <th class="center strong">R<sub>p,w</sub> (C; C<sub>tr</sub>)</th>
+                    <th class="center strong">Št.</th>
+                    <th class="center strong">Površina<br />[m²]</th>
+                    <th class="center strong">Razmerje površin<br />S<sub>i</sub>/S<sub>f</sub> ali 10/S<sub>f</sub></th>
+                    <th class="center strong">R<sub>p,w</sub>+C<?= $fasada->vplivPrometa ? '<sub>tr</sub>' : '' ?></th>
                 </tr>
             <?php
                 $k = 1;
@@ -177,10 +177,10 @@
                 }
             ?>
                 <tr>
-                    <td class="center">&nbsp;</td>
-                    <td class="right strong" colspan="7">Skupaj:</td>
-                    <td class="right strong">R'<sub>w</sub> = </td>
-                    <td class="center strong"><?= $this->numFormat($fasada->Rw, 1) ?> dB</td>
+                    <th class="center">&nbsp;</th>
+                    <th class="right strong" colspan="7">Skupaj:</th>
+                    <th class="right strong">R<sub>w</sub> = </th>
+                    <th class="center strong"><?= $this->numFormat($fasada->Rw, 1) ?> dB</th>
                 </tr>
             <table>
         </td>
@@ -191,12 +191,12 @@
 ?>
 
 <table width="100%" border="1">
-    <tr class="title"><th colspan="4"><h3>Skupaj za ovoj</h3></th></tr>
+    <tr class="title"><th colspan="4"><h3>Ovoj prostora</h3></th></tr>
     <tr>
-        <td class="strong">Z. št.:</td>
-        <td class="center strong">Površina fasade<br />[m²]</td>
-        <td class="center strong">Razmerje površin<br />S<sub>i</sub>/S<sub>f</sub></td>
-        <td class="center strong">Ocenjena izolirnost<br />R'<sub>w</sub></td>
+        <th class="strong">Z. št.:</th>
+        <th class="center strong">Površina fasade<br />[m²]</th>
+        <th class="center strong">Razmerje površin<br />S<sub>i</sub>/S<sub>f</sub></th>
+        <th class="center strong">Ocenjena izolirnost<br />R<sub>w</sub></th>
     </tr>
 <?php
     $i = 1;
@@ -213,10 +213,10 @@
     }
 ?>
     <tr>
-        <td class="center">&nbsp;</td>
-        <td class="right strong">Skupaj ovoj:</td>
-        <td class="right strong">R'<sub>w</sub> = </td>
-        <td class="center strong"><?= $this->numFormat($prostor->Rw + 10 * log10($prostor->Sf / $prostor->Af) - $prostor->korekcijaBocnegaPrenosa, 1) ?> dB</td>
+        <th class="center">&nbsp;</th>
+        <th class="right strong">Skupaj ovoj:</th>
+        <th class="right strong">R<sub>w</sub> = </th>
+        <th class="center strong"><?= $this->numFormat($prostor->Rw + 10 * log10($prostor->Sf / $prostor->Af) - $prostor->korekcijaBocnegaPrenosa, 1) ?> dB</th>
     </tr>
 </table>
 

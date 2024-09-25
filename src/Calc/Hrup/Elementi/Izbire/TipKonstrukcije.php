@@ -35,21 +35,48 @@ enum TipKonstrukcije: string
         if ($this == TipKonstrukcije::Zahtevna) {
             if (empty($lastnosti->debelina)) {
                 $lastnosti->debelina = $povrsinskaMasa / $lastnosti->gostota;
+            } elseif (empty($lastnosti->gostota)) {
+                $lastnosti->gostota = $povrsinskaMasa / $lastnosti->debelina;
             }
+            // enačbe
+            // E - young's modulus
+            // µ - Poisson’s ratio
+            // h - debelina
+            // Bp is the bending stiffness per unit width for a single-leaf (Nm)
+
+            // The speed of sound for longitudinal waves, cL
+            // cL = sqrt(E / (m' * (1 - µ^2)))
+
+            // The speed of sound for bending waves cB
+            // cB = sqrt(2*π*f) * pow(E * h^2 / (12 * m' * (1 - µ^2)), 1/4)
+
             // kritična frekvenca
+            // $fc = c0^2 / (2*π) * sqrt(m' / Bp) = c0^2 / π * sqrt(3 * m' * (1 - µ^2) / (E * h^3))
+
+            // imam dve možnosti za izračun kritične frekvence:
+            // 1. če imam podano hitrostLongitudinalnihValov
+            // 2. če nimam podane hitrostLongitudinalnihValov, potem potrebujem Youngov Modul in Poissonov količnik
+
+            if (empty($lastnosti->hitrostLongitudinalnihValov)) {
+                $lastnosti->hitrostLongitudinalnihValov =
+                    sqrt($lastnosti->E / ($lastnosti->gostota * (1.0 - pow($lastnosti->poi, 2))));
+            }
+
+            // kritična frekvenca po ISO 12354-1
             $fcrit = pow(Calc::HITROST_ZVOKA, 2) /
-                (1.8 * $lastnosti->hitrostLongitudinalnihValov * $lastnosti->debelina);
+                (Pi() / sqrt(3) * $lastnosti->hitrostLongitudinalnihValov * $lastnosti->debelina);
 
-            //$E = 68000000000;  // young
-            //$poi = 0.23; // poisson
+            // kritična frekvenca po literaturi
+            // $E = 26 * pow(10, 9);  // young [N/m2]
+            // $poi = 0.2; // poisson []
+            // $B = ($E * pow($lastnosti->debelina, 3)) / (12.0 * (1.0 - pow($poi, 2)));     // Rigidez del material [Nm^2]
+            // $fc = pow(Calc::HITROST_ZVOKA, 2) / (2 * pi()) * sqrt($povrsinskaMasa / $B);
 
-            //$B = ($E * pow($lastnosti->debelina, 3)) / (12.0 * (1.0 - pow($poi, 2)));                        // Rigidez del material [Nm^2]
-            //$fc = pow(Calc::HITROST_ZVOKA, 2) / (2 * pi()) * sqrt($povrsinskaMasa / $B);          // Frecuencia crítica [Hz]
             $f11 = pow(Calc::HITROST_ZVOKA, 2) / (4 * $fcrit) *
                 ((1 / pow(self::DOLZINA_ROBA_1, 2)) + (1 / pow(self::DOLZINA_ROBA_2, 2)));
 
-            //$fcrit = $fc;
-            $fc = $fcrit;
+            // frekvenca platoja
+            $fp = $lastnosti->hitrostLongitudinalnihValov / (5.5 * $lastnosti->debelina);
 
             // izračun faktorja sevanja "radiation factor"
             foreach (Calc::FREKVENCE_TERCE as $fq) {
@@ -67,9 +94,6 @@ enum TipKonstrukcije: string
                 if ($faktorSevanja > 2) {
                     $faktorSevanja = 2;
                 }
-
-                // frekvenca platoja
-                $fp = $lastnosti->hitrostLongitudinalnihValov / (5.5 * $lastnosti->debelina);
 
                 // Da bi upoštevali tudi druge vrste valov, ki so relevantni pri debelih stenah in/ali pri višjih frekvencah,
                 // se nad kritično frekvenco ta frekvenca pri računu nadomesti z efektivno kritično frekvenco
