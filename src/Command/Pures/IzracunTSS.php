@@ -47,6 +47,7 @@ class IzracunTSS extends Command
 
                 $elektrikaPoConah[$sistem->idCone] =
                     array_sum_values($elektrikaPoConah[$sistem->idCone], $prezracevalniSistem->potrebnaEnergija);
+
                 $TSSSistemiPrezracevanjaOut[] = $prezracevalniSistem->export();
             }
             App::saveProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje', $TSSSistemiPrezracevanjaOut);
@@ -66,6 +67,7 @@ class IzracunTSS extends Command
 
                 $elektrikaPoConah[$sistem->idCone] =
                     array_sum_values($elektrikaPoConah[$sistem->idCone], $razsvetljava->potrebnaEnergija);
+
                 $TSSSistemiRazsvetljavaOut[] = $razsvetljava->export();
             }
             App::saveProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava', $TSSSistemiRazsvetljavaOut);
@@ -96,6 +98,7 @@ class IzracunTSS extends Command
                     $elektrikaPoConah[$sistemOgrevanja->idCone],
                     $sistemOgrevanja->potrebnaElektricnaEnergija
                 );
+
                 $elektrikaPoConah[$sistemOgrevanja->idCone] =
                     array_sum_values(
                         $elektrikaPoConah[$sistemOgrevanja->idCone],

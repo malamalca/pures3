@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\Hrup\ZunanjiHrup;
 
 use App\Calc\Hrup\Elementi\Konstrukcija;
+use App\Lib\Calc;
 use App\Lib\EvalMath;
 
 class ZunanjaKonstrukcija
@@ -15,6 +16,8 @@ class ZunanjaKonstrukcija
     public float $Rw = 0;
     public float $C = 0;
     public float $Ctr = 0;
+
+    public array $R;
 
     private array $options = [];
 
@@ -36,9 +39,19 @@ class ZunanjaKonstrukcija
         $this->options = $options;
         $this->konstrukcija = $konstrukcija;
 
-        $this->Rw = $this->konstrukcija->Rw + $this->konstrukcija->dR;
-        $this->C = $this->konstrukcija->C;
-        $this->Ctr = $this->konstrukcija->Ctr;
+        $this->R = $konstrukcija->R;
+
+        array_walk($this->R, function ($value, $key) {
+            $this->R[$key] = $value + $this->konstrukcija->dR;
+        });
+
+        $this->Rw = Calc::Rw($this->R);
+        $this->C = Calc::C(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
+        $this->Ctr = Calc::Ctr(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
+
+        //$this->Rw = $this->konstrukcija->Rw + $this->konstrukcija->dR;
+        //$this->C = $this->konstrukcija->C;
+        //$this->Ctr = $this->konstrukcija->Ctr;
 
         if ($config) {
             $this->parseConfig($config);

@@ -7,7 +7,14 @@
     <a class="button" href="<?= App::url('/pures/izkazi/podrocjeGf/' . $projectId) ?>">Področje GF</a>
     <a class="button active" href="<?= App::url('/pures/izkazi/podrocjeSNES/' . $projectId) ?>">Področje SNES</a>
 </p>
-<h1>Energijska učinkovitost energetsko manj stavbe –<br />
+
+<?php
+    if ($stavba->vrsta == 'nezahtevna') {
+        return;
+    }
+?>
+
+<h1>Energijska učinkovitost energetsko manj stavbe -<br />
 za področje TSS</h1>
 
 <table border="1" cellpadding="3" width="100%">

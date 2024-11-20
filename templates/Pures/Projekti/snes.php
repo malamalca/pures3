@@ -7,6 +7,9 @@
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
 
+<?php
+    if ($stavba->vrsta != 'nezahtevna') {
+?>
 <h1>Analiza sNES "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 <table border="1">
     <tr>
@@ -432,3 +435,6 @@
         <td class="center"><?= $this->numFormat($stavba->k_exp, 1) ?></td>
     </tr>
 </table>
+<?php
+    }
+?>

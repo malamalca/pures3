@@ -9,6 +9,7 @@ use App\Calc\Hrup\Elementi\OknaVrata;
 use App\Calc\Hrup\ZunanjiHrup\Izbire\KoeficientStropa;
 use App\Calc\Hrup\ZunanjiHrup\Izbire\OblikaFasade;
 use App\Calc\Hrup\ZunanjiHrup\Izbire\VisinaLinijePogleda;
+use App\Lib\Calc;
 use App\Lib\EvalMath;
 
 class Fasada
@@ -80,6 +81,7 @@ class Fasada
                                     $konstrukcijaConfig->idKonstrukcije
                                 ));
                             }
+
                             $konstrukcija = new ZunanjaKonstrukcija(
                                 new Konstrukcija($libKonstrukcija),
                                 $konstrukcijaConfig
@@ -177,34 +179,85 @@ class Fasada
     {
         $this->Rw = 0;
         $sumTau = 0;
-        foreach ($this->konstrukcije as $konstrukcija) {
-            $konstrukcija->analiza();
-            $Rw = $konstrukcija->Rw + ($this->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C);
+        $sumTau = [];
+        foreach ($this->konstrukcije as $zunanjaKonstrukcija) {
+            $zunanjaKonstrukcija->analiza();
 
-            $sumTau += $konstrukcija->povrsina * $konstrukcija->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
-                $konstrukcija->stevilo;
+            //$sumTau = array_map(function($R_fq) use ($zunanjaKonstrukcija) {
+            //    $R = $R_fq + ($this->vplivPrometa ? $zunanjaKonstrukcija->Ctr : $zunanjaKonstrukcija->C);
+            //    //return $zunanjaKonstrukcija->povrsina * $zunanjaKonstrukcija->stevilo / $this->povrsina * pow(10, -$R / 10) * $zunanjaKonstrukcija->stevilo;
+            //}, $zunanjaKonstrukcija->R);
+            //$Rw = $konstrukcija->Rw + ($this->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C);
+
+            array_walk($zunanjaKonstrukcija->R, function ($R, $fq) use ($zunanjaKonstrukcija, &$sumTau) {
+
+                $R_c = $R + ($this->vplivPrometa ? $zunanjaKonstrukcija->Ctr : $zunanjaKonstrukcija->C);
+                $R_c = $R;
+                if (!isset($sumTau[$fq])) {
+                    $sumTau[$fq] = 0;
+                }
+                $sumTau[$fq] += $zunanjaKonstrukcija->povrsina *
+                    $zunanjaKonstrukcija->stevilo / $this->povrsina *
+                    pow(10, -$R_c / 10) * $zunanjaKonstrukcija->stevilo;
+            });
+
+            //$sumTau += $konstrukcija->povrsina * $konstrukcija->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
+            //    $konstrukcija->stevilo;
         }
         foreach ($this->oknaVrata as $oknaVrata) {
             $oknaVrata->analiza();
-            $Rw = $oknaVrata->Rw + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);
+            array_walk($oknaVrata->R, function ($R, $fq) use ($oknaVrata, &$sumTau) {
 
-            $sumTau += $oknaVrata->povrsina * $oknaVrata->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
-                $oknaVrata->stevilo;
+                $R_c = $R + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);
+                $R_c = $R;
+                if (!isset($sumTau[$fq])) {
+                    $sumTau[$fq] = 0;
+                }
+                $sumTau[$fq] += $oknaVrata->povrsina *
+                    $oknaVrata->stevilo / $this->povrsina *
+                    pow(10, -$R_c / 10) * $oknaVrata->stevilo;
+            });
+
+            //$Rw = $oknaVrata->Rw + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);
+
+            //$sumTau += $oknaVrata->povrsina * $oknaVrata->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
+            //    $oknaVrata->stevilo;
         }
         foreach ($this->maliElementi as $maliElement) {
             $maliElement->analiza();
-            $Rw = $maliElement->Rw + ($this->vplivPrometa ? $maliElement->Ctr : $maliElement->C);
+            array_walk($maliElement->R, function ($R, $fq) use ($maliElement, &$sumTau) {
 
-            $sumTau += 10 / $this->povrsina * pow(10, -$Rw / 10) * $maliElement->stevilo;
+                $R_c = $R + ($this->vplivPrometa ? $maliElement->Ctr : $maliElement->C);
+                $R_c = $R;
+                if (!isset($sumTau[$fq])) {
+                    $sumTau[$fq] = 0;
+                }
+                $sumTau[$fq] += $maliElement->povrsina *
+                    $maliElement->stevilo / $this->povrsina *
+                    pow(10, -$R_c / 10) * $maliElement->stevilo;
+            });
+
+            //$Rw = $maliElement->Rw + ($this->vplivPrometa ? $maliElement->Ctr : $maliElement->C);
+
+            //$sumTau += 10 / $this->povrsina * pow(10, -$Rw / 10) * $maliElement->stevilo;
         }
 
-        $this->Rw = -10 * log10($sumTau);
         $this->deltaL_fasada = $this->deltaL_fasada ?? $this->oblikaFasade->faktorOblike(
             $this->koeficientStropa ?? null,
             $this->visinaLinijePogleda ?? null
         );
 
-        $this->Rw = $this->Rw + $this->deltaL_fasada;
+        $this->R = array_map(fn($sumTauFq) => -10 * log10($sumTauFq) + $this->deltaL_fasada, $sumTau);
+
+        $this->Rw = Calc::Rw($this->R);
+
+        /*$this->Rw = -10 * log10($sumTau);
+        $this->deltaL_fasada = $this->deltaL_fasada ?? $this->oblikaFasade->faktorOblike(
+            $this->koeficientStropa ?? null,
+            $this->visinaLinijePogleda ?? null
+        );
+
+        $this->Rw = $this->Rw + $this->deltaL_fasada;*/
     }
 
     /**

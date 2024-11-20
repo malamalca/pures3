@@ -15,7 +15,7 @@ class CalcTest extends TestCase
     {
         $R = [20.4, 16.3, 17.7, 22.6, 22.4, 22.7, 24.8, 26.6, 28.0, 30.5, 31.8, 32.5, 33.4, 33.0, 31.0, 25.5];
 
-        $Rw = Calc::izracunajRw($R);
+        $Rw = Calc::Rw($R);
 
         $this->assertEquals(30, $Rw);
     }
@@ -24,7 +24,7 @@ class CalcTest extends TestCase
     {
         $R = [20.4, 16.3, 17.7, 22.6, 22.4, 22.7, 24.8, 26.6, 28.0, 30.5, 31.8, 32.5, 33.4, 33.0, 31.0, 25.5];
 
-        $C = Calc::izracunajC($R);
+        $C = Calc::C($R);
 
         $this->assertEquals(-2, $C);
     }
@@ -33,7 +33,7 @@ class CalcTest extends TestCase
     {
         $R = [20.4, 16.3, 17.7, 22.6, 22.4, 22.7, 24.8, 26.6, 28.0, 30.5, 31.8, 32.5, 33.4, 33.0, 31.0, 25.5];
 
-        $Ctr = Calc::izracunajCtr($R);
+        $Ctr = Calc::Ctr($R);
 
         $this->assertEquals(-3, $Ctr);
     }

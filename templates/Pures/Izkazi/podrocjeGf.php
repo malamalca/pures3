@@ -10,11 +10,15 @@
 <?php
     if ($stavba->vrsta == 'zahtevna') {
 ?>
-    <h1>Energijska učinkovitost energetsko zahtevne stavbe – za področje gradbene fizike</h1>
+    <h1>Energijska učinkovitost energetsko zahtevne stavbe - za področje gradbene fizike</h1>
+<?php
+    } elseif ($stavba->vrsta == 'nezahtevna') {
+?>
+    <h1>Energijska učinkovitost energetsko nezahtevne stavbe - za področje gradbene fizike</h1>
 <?php
     } else {
 ?>
-    <h1>Energijska učinkovitost energetsko manj zahtevne stavbe – za področje gradbene fizike</h1>
+    <h1>Energijska učinkovitost energetsko manj zahtevne stavbe - za področje gradbene fizike</h1>
 <?php
     }
 ?>
@@ -27,6 +31,30 @@
     </tr>
     </thead>
     <?php
+        if ($stavba->vrsta == 'nezahtevna') {
+            // cone ne obstajajo
+            $cona = new \stdClass();
+            $cona->naziv = "Vse cone";
+            $cona->ovoj = new \stdClass();
+            $cona->ovoj->netransparentneKonstrukcije = [];
+            $cona->ovoj->transparentneKonstrukcije = [];
+
+            foreach ($ntKons as $kons) {
+                $elementOvoja = new \stdClass();
+                $elementOvoja->idKonstrukcije = $kons->id;
+                $elementOvoja->U = $kons->U;
+                $cona->ovoj->netransparentneKonstrukcije[] = $elementOvoja;
+            }
+            foreach ($tKons as $kons) {
+                $elementOvoja = new \stdClass();
+                $elementOvoja->idKonstrukcije = $kons->id;
+                $elementOvoja->U = $kons->Ud ?? $kons->Ug;
+                $cona->ovoj->transparentneKonstrukcije[] = $elementOvoja;
+            }
+
+            $cone = [$cona];
+        }
+
         $i = 0;
         foreach ($cone as $cona) {
     ?>
@@ -77,6 +105,9 @@
 </table>
 
 <!-- ---------------------------------------------------------------------------- -->
+<?php
+    if ($stavba->vrsta != 'nezahtevna') {
+?>
 <table border="1" cellpadding="3" width="100%">
     <thead>
     <tr>
@@ -94,6 +125,9 @@
         <td colspan="3">Natančnejši izračun</td>
     </tr>
 </table>
+<?php
+    }
+?>
 
 <!-- ---------------------------------------------------------------------------- -->
 <table border="1" cellpadding="3" width="100%">
@@ -143,6 +177,12 @@
         }
     ?>
 </table>
+
+<?php
+    if ($stavba->vrsta == 'nezahtevna') {
+        return;
+    }
+?>
 
 <!-- ---------------------------------------------------------------------------- -->
 <?php

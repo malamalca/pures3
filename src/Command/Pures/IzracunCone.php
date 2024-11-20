@@ -6,6 +6,7 @@ namespace App\Command\Pures;
 use App\Calc\GF\Cone\Cona;
 use App\Core\App;
 use App\Core\Command;
+use App\Core\Log;
 
 class IzracunCone extends Command
 {
@@ -33,21 +34,22 @@ class IzracunCone extends Command
 
         /** @var array $coneIn */
         $coneIn = App::loadProjectData('Pures', $projectId, 'cone');
-        if (!$coneIn) {
-            throw new \Exception('Ni podatkov o conah.');
-        }
-        if (!$this->validateSchema(json: $coneIn, schema: 'cone', area: 'Pures')) {
-            throw new \Exception('Napake v opisu cone.');
-        }
+        if ($coneIn) {
+            if (!$this->validateSchema(json: $coneIn, schema: 'cone', area: 'Pures')) {
+                throw new \Exception('Napake v opisu cone.');
+            }
 
-        $coneOut = [];
-        foreach ($coneIn as $conaConfig) {
-            $cona = new Cona($konstrukcije, $conaConfig);
-            $cona->analiza($okolje);
-            $coneOut[] = $cona->export();
-        }
+            $coneOut = [];
+            foreach ($coneIn as $conaConfig) {
+                $cona = new Cona($konstrukcije, $conaConfig);
+                $cona->analiza($okolje);
+                $coneOut[] = $cona->export();
+            }
 
-        App::saveProjectCalculation('Pures', $projectId, 'cone', $coneOut);
+            App::saveProjectCalculation('Pures', $projectId, 'cone', $coneOut);
+        } else {
+            Log::info('Ni podatka o conah.');
+        }
 
         if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
             $referencneKonstrukcije = new \stdClass();

@@ -6,6 +6,9 @@
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
 </p>
 
+<?php
+    if ($stavba->vrsta != 'nezahtevna') {
+?>
 <h1>Analiza Projekta "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
 <table border="1">
     <tr>
@@ -161,3 +164,6 @@
         <td colspan="4" class="math">`Q'_(C,nd,an)=Q_(C,nd,an)/A_(use)=<?= $this->numFormat($stavba->skupnaEnergijaHlajenje, 1, '.') ?>/<?= $this->numFormat($stavba->ogrevanaPovrsina, 1, '.') ?>=<?= $this->numFormat($stavba->specLetniHlad, 3, '.') ?>`</td>
     </tr>
 </table>
+<?php
+    }
+?>

@@ -188,16 +188,21 @@ class Ogrevanje extends TSSInterface
         );
 
         $dejanskaEnergija = array_subtract_values($this->potrebnaEnergija, $this->obnovljivaEnergija);
+
         $this->energijaPoEnergentih[$sistem->energent->value] = array_sum($dejanskaEnergija);
 
         $elektricnaEnergija = array_sum($this->potrebnaElektricnaEnergija);
         if (count($this->potrebnaElektricnaEnergija) > 0 && $elektricnaEnergija != 0) {
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] = $elektricnaEnergija;
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] =
+                ($this->energijaPoEnergentih[TSSVrstaEnergenta::Elektrika->value] ?? 0) +
+                $elektricnaEnergija;
         }
 
         $obnovljivaEnergija = array_sum($this->obnovljivaEnergija);
         if (count($this->obnovljivaEnergija) > 0 && $obnovljivaEnergija != 0) {
-            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] = $obnovljivaEnergija;
+            $this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] =
+                ($this->energijaPoEnergentih[TSSVrstaEnergenta::Okolje->value] ?? 0) +
+                $obnovljivaEnergija;
         }
     }
 

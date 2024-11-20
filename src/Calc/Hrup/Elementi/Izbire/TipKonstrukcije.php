@@ -220,7 +220,7 @@ enum TipKonstrukcije: string
         }
 
         if ($this == TipKonstrukcije::Zahtevna) {
-            $Rw = Calc::izracunajRw($R);
+            $Rw = Calc::Rw($R);
         }
 
         return $Rw;
@@ -242,7 +242,7 @@ enum TipKonstrukcije: string
         }
 
         if ($this == TipKonstrukcije::Zahtevna) {
-            $C = Calc::izracunajC($R);
+            $C = Calc::C($R);
         }
 
         return $C;
@@ -270,7 +270,7 @@ enum TipKonstrukcije: string
         }
 
         if ($this == TipKonstrukcije::Zahtevna) {
-            $Ctr = Calc::izracunajCtr($R);
+            $Ctr = Calc::Ctr($R);
         }
 
         return $Ctr;

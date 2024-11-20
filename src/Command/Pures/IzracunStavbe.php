@@ -26,7 +26,7 @@ class IzracunStavbe extends Command
         $okolje = App::loadProjectCalculation('Pures', $projectId, 'okolje');
 
         $stavba = StavbaFactory::create($splosniPodatki->stavba->vrsta, $splosniPodatki->stavba);
-        $stavba->cone = App::loadProjectCalculation('Pures', $projectId, 'cone');
+        $stavba->cone = App::loadProjectCalculation('Pures', $projectId, 'cone') ?? [];
         $stavba->analiza($okolje);
 
         $stavba->sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS);

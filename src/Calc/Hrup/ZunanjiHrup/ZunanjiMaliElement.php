@@ -12,6 +12,7 @@ class ZunanjiMaliElement
     public float $povrsina = 0;
     public ?float $dolzina;
     public int $stevilo = 1;
+    public array $R = [];
     public float $Rw = 0;
     public float $C = 0;
     public float $Ctr = 0;
@@ -36,6 +37,7 @@ class ZunanjiMaliElement
         $this->options = $options;
         $this->maliElement = $maliElement;
 
+        $this->R = $this->maliElement->R;
         $this->Rw = $this->maliElement->Rw;
         $this->C = $this->maliElement->C;
         $this->Ctr = $this->maliElement->Ctr;

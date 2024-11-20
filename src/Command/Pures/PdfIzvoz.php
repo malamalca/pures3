@@ -44,110 +44,123 @@ class PdfIzvoz extends Command
             'ntKons',
             App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'netransparentne') ?? []
         );
-        $view->set(
-            'sistemiOgrevanja',
-            (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje')
-        );
-        $view->set(
-            'sistemiRazsvetljave',
-            (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava')
-        );
-        $view->set(
-            'sistemiPrezracevanja',
-            (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje')
-        );
-        $view->set('sistemiSTPE', (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika'));
 
-        $vgrajeniSistemi = [];
+        if ($stavba->vrsta == 'nezahtevna') {
+            $energentiSistema = json_decode(json_encode($stavba->vgrajeniSistemi), true);
+            $vgrajeniSistemi = array_keys(get_object_vars($stavba->vgrajeniSistemi));
+            $view->set('sistemiOgrevanja', []);
+            $view->set('sistemiRazsvetljave', []);
+            $view->set('sistemiPrezracevanja', []);
+            $view->set('sistemiSTPE', []);
+        } else {
+            $view->set(
+                'sistemiOgrevanja',
+                (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje')
+            );
+            $view->set(
+                'sistemiRazsvetljave',
+                (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava')
+            );
+            $view->set(
+                'sistemiPrezracevanja',
+                (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje')
+            );
+            $view->set(
+                'sistemiSTPE',
+                (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika')
+            );
 
-        $tssOgrevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
-        $tssHlajenje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'hlajenje');
-        $tssRazsvetljava = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
-        $tssPrezracevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
-        $tssFotovoltaika = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
+            $vgrajeniSistemi = [];
 
-        $energentiSistema = [];
-        if ($tssOgrevanje) {
-            foreach ($tssOgrevanje as $sistem) {
-                /** @var \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem */
-                if (isset($sistem->ogrevanje)) {
-                    $vgrajeniSistemi[] = 'ogrevanje';
-                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                        $energentiSistema['ogrevanje'][] = $energent;
+            $tssOgrevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
+            $tssHlajenje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'hlajenje');
+            $tssRazsvetljava = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
+            $tssPrezracevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
+            $tssFotovoltaika = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
+
+            $energentiSistema = [];
+            if ($tssOgrevanje) {
+                foreach ($tssOgrevanje as $sistem) {
+                    /** @var \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem */
+                    if (isset($sistem->ogrevanje)) {
+                        $vgrajeniSistemi[] = 'ogrevanje';
+                        foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                            $energentiSistema['ogrevanje'][] = $energent;
+                        }
+                    }
+                    if (isset($sistem->tsv)) {
+                        $vgrajeniSistemi[] = 'tsv';
+                        foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                            $energentiSistema['tsv'][] = $energent;
+                        }
+                    }
+                    if (isset($sistem->hlajenje)) {
+                        $vgrajeniSistemi[] = 'hlajenje';
+                        foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                            $energentiSistema['hlajenje'][] = $energent;
+                        }
+                    }
+                    if (!isset($sistem->ogrevanje) && !isset($sistem->tsv) && !isset($sistem->hlajenje)) {
+                        $vgrajeniSistemi[] = 'ogrevanje';
+                        foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                            $energentiSistema['ogrevanje'][] = $energent;
+                        }
                     }
                 }
-                if (isset($sistem->tsv)) {
-                    $vgrajeniSistemi[] = 'tsv';
-                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                        $energentiSistema['tsv'][] = $energent;
-                    }
+                if (isset($energentiSistema['ogrevanje'])) {
+                    $energentiSistema['ogrevanje'] = array_unique($energentiSistema['ogrevanje']);
                 }
-                if (isset($sistem->hlajenje)) {
-                    $vgrajeniSistemi[] = 'hlajenje';
+                if (isset($energentiSistema['tsv'])) {
+                    $energentiSistema['tsv'] = array_unique($energentiSistema['tsv']);
+                }
+                if (isset($energentiSistema['hlajenje'])) {
+                    $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
+                }
+            }
+
+            if ($tssHlajenje) {
+                $vgrajeniSistemi[] = 'hlajenje';
+                $energentiSistema['hlajenje'] = [];
+                foreach ($tssHlajenje as $sistem) {
                     foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                         $energentiSistema['hlajenje'][] = $energent;
                     }
                 }
-                if (!isset($sistem->ogrevanje) && !isset($sistem->tsv) && !isset($sistem->hlajenje)) {
-                    $vgrajeniSistemi[] = 'ogrevanje';
-                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                        $energentiSistema['ogrevanje'][] = $energent;
-                    }
-                }
-            }
-            if (isset($energentiSistema['ogrevanje'])) {
-                $energentiSistema['ogrevanje'] = array_unique($energentiSistema['ogrevanje']);
-            }
-            if (isset($energentiSistema['tsv'])) {
-                $energentiSistema['tsv'] = array_unique($energentiSistema['tsv']);
-            }
-            if (isset($energentiSistema['hlajenje'])) {
                 $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
             }
-        }
 
-        if ($tssHlajenje) {
-            $vgrajeniSistemi[] = 'hlajenje';
-            $energentiSistema['hlajenje'] = [];
-            foreach ($tssHlajenje as $sistem) {
-                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                    $energentiSistema['hlajenje'][] = $energent;
+            if ($tssRazsvetljava) {
+                $vgrajeniSistemi[] = 'razsvetljava';
+                $energentiSistema['razsvetljava'] = [];
+                foreach ($tssRazsvetljava as $sistem) {
+                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                        $energentiSistema['razsvetljava'][] = $energent;
+                    }
                 }
+                $energentiSistema['razsvetljava'] = array_unique($energentiSistema['razsvetljava']);
             }
-            $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
-        }
 
-        if ($tssRazsvetljava) {
-            $vgrajeniSistemi[] = 'razsvetljava';
-            $energentiSistema['razsvetljava'] = [];
-            foreach ($tssRazsvetljava as $sistem) {
-                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                    $energentiSistema['razsvetljava'][] = $energent;
+            if ($tssPrezracevanje) {
+                $vgrajeniSistemi[] = 'prezracevanje';
+                $energentiSistema['prezracevanje'] = [];
+                foreach ($tssPrezracevanje as $sistem) {
+                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                        $energentiSistema['prezracevanje'][] = $energent;
+                    }
                 }
+                $energentiSistema['prezracevanje'] = array_unique($energentiSistema['prezracevanje']);
             }
-            $energentiSistema['razsvetljava'] = array_unique($energentiSistema['razsvetljava']);
-        }
 
-        if ($tssPrezracevanje) {
-            $vgrajeniSistemi[] = 'prezracevanje';
-            $energentiSistema['prezracevanje'] = [];
-            foreach ($tssPrezracevanje as $sistem) {
-                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                    $energentiSistema['prezracevanje'][] = $energent;
+            if ($tssFotovoltaika) {
+                $vgrajeniSistemi[] = 'fotovoltaika';
+                $energentiSistema['fotovoltaika'] = [];
+                foreach ($tssFotovoltaika as $sistem) {
+                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
+                        $energentiSistema['fotovoltaika'][] = $energent;
+                    }
                 }
+                $energentiSistema['fotovoltaika'] = array_unique($energentiSistema['fotovoltaika']);
             }
-            $energentiSistema['prezracevanje'] = array_unique($energentiSistema['prezracevanje']);
-        }
-
-        if ($tssFotovoltaika) {
-            $vgrajeniSistemi[] = 'fotovoltaika';
-            $energentiSistema['fotovoltaika'] = [];
-            foreach ($tssFotovoltaika as $sistem) {
-                foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                    $energentiSistema['fotovoltaika'][] = $energent;
-                }
-            }
-            $energentiSistema['fotovoltaika'] = array_unique($energentiSistema['fotovoltaika']);
         }
 
         $view->set('energentiSistema', $energentiSistema);
@@ -197,7 +210,7 @@ class PdfIzvoz extends Command
             $pdf->newPage((string)$view->render('Konstrukcije', 'view'));
         }
 
-        foreach ($view->get('cone') as $cona) {
+        foreach ((array)$view->get('cone') as $cona) {
             $view->set('cona', $cona);
             $pdf->newPage((string)$view->render('Cone', 'ovoj'));
             $pdf->newPage((string)$view->render('Cone', 'analiza'));

@@ -127,6 +127,10 @@ class Konstrukcija
                 $this->R = $this->tipKonstrukcije->R($this->povrsinskaMasa, $this->lastnosti);
             }
             $this->Rw = $this->tipKonstrukcije->Rw($this->povrsinskaMasa, $this->R);
+        } else {
+            if (empty($this->R)) {
+                $this->R = [500 => $this->Rw];
+            }
         }
         if (empty($this->C)) {
             $this->C = $this->tipKonstrukcije->C($this->povrsinskaMasa, $this->R);

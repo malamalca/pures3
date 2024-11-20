@@ -112,68 +112,105 @@ class Calc
      * @param array $R Izolativnost po frekvencah
      * @return int
      */
-    public static function izracunajRw(array $R)
+    // phpcs:ignore
+    public static function Rw(array $R)
     {
-        // 717-1
-        $shift = -40;
-        $shiftSum = 0;
-
-        $R = array_values($R);
-
-        while (($shift < 40) && ($shiftSum < 32)) {
-            $shiftSum = 0;
-            foreach (self::FREKVENCE_TERCE as $ix => $fq) {
-                //var_dump($R[$ix] . ' | ' . (self::RF[$ix] + $shift) . ' | ' . ((($R[$ix] - (self::RF[$ix] + $shift)) < 0) ? (-$R[$ix] + (self::RF[$ix] + $shift)) : ''));
-                if ($R[$ix] - (self::RF[$ix] + $shift) < 0) {
-                    $shiftSum += (-$R[$ix] + self::RF[$ix] + $shift);
-                }
-            }
-
-            $shift++;
+        if (count($R) == 1) {
+            return $R[500];
         }
 
-        $result = 52 + $shift - 2;
+        if (count($R) == 16) {
+            // 717-1
+            $shift = -40;
+            $shiftSum = 0;
 
-        return $result;
+            $R = array_values($R);
+
+            while (($shift < 40) && ($shiftSum < 32)) {
+                $shiftSum = 0;
+                foreach (self::FREKVENCE_TERCE as $ix => $fq) {
+                    //var_dump($R[$ix] . ' | ' . (self::RF[$ix] + $shift) . ' | ' . ((($R[$ix] - (self::RF[$ix] + $shift)) < 0) ? (-$R[$ix] + (self::RF[$ix] + $shift)) : ''));
+                    if ($R[$ix] - (self::RF[$ix] + $shift) < 0) {
+                        $shiftSum += (-$R[$ix] + self::RF[$ix] + $shift);
+                    }
+                }
+
+                $shift++;
+            }
+
+            $result = 52 + $shift - 2;
+
+            return $result;
+        }
+
+        return -1;
     }
 
     /**
      * Iz izolativnosti po frekvencah izračuna C
      *
      * @param array $R Izolativnost po frekvencah
+     * @param float $povrsinskaMasa Površinska masa elementa
      * @return float
      */
-    public static function izracunajC(array $R)
+    // phpcs:ignore
+    public static function C(array $R, float $povrsinskaMasa = 0)
     {
-        $sumTau = 0;
-        $R = array_values($R);
+        if (count($R) == 1) {
+            $C = $povrsinskaMasa > 200 ? -2 : -1;
 
-        foreach (self::FREKVENCE_TERCE as $ix => $fq) {
-            $sumTau += pow(10, (-self::SPQ_C[$ix] - $R[$ix]) / 10);
+            return $C;
+        }
+        if (count($R) == 16) {
+            $sumTau = 0;
+            $R = array_values($R);
+
+            foreach (self::FREKVENCE_TERCE as $ix => $fq) {
+                $sumTau += pow(10, (-self::SPQ_C[$ix] - $R[$ix]) / 10);
+            }
+
+            $C = -(self::Rw($R) - round((-10 * log10($sumTau)), 0));
+
+            return $C;
         }
 
-        $C = -(self::izracunajRw($R) - round((-10 * log10($sumTau)), 0));
-
-        return $C;
+        return -1;
     }
 
     /**
      * Iz izolativnosti po frekvencah izračuna Ctr
      *
      * @param array $R Izolativnost po frekvencah
+     * @param float $povrsinskaMasa Površinska masa elementa
      * @return float
      */
-    public static function izracunajCtr(array $R)
+    // phpcs:ignore
+    public static function Ctr(array $R, float $povrsinskaMasa = 0)
     {
-        $sumTau = 0;
-        $R = array_values($R);
+        if (count($R) == 1) {
+            $Ctr = round(16 - 9 * log10($povrsinskaMasa), 0);
+            if ($Ctr > -1) {
+                $Ctr = -1;
+            }
+            if ($Ctr < -7) {
+                $Ctr = -7;
+            }
 
-        foreach (self::FREKVENCE_TERCE as $ix => $fq) {
-            $sumTau += pow(10, (-self::SPQ_CTR[$ix] - $R[$ix]) / 10);
+            return $Ctr;
+        }
+        if (count($R) == 16) {
+            $sumTau = 0;
+            $R = array_values($R);
+
+            foreach (self::FREKVENCE_TERCE as $ix => $fq) {
+                $sumTau += pow(10, (-self::SPQ_CTR[$ix] - $R[$ix]) / 10);
+            }
+
+            $Ctr = -(self::Rw($R) - round((-10 * log10($sumTau)), 0));
+
+            return $Ctr;
         }
 
-        $Ctr = -(self::izracunajRw($R) - round((-10 * log10($sumTau)), 0));
-
-        return $Ctr;
+        return -1;
     }
 }

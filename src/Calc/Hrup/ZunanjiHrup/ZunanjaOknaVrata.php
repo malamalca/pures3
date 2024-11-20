@@ -11,6 +11,7 @@ class ZunanjaOknaVrata
     public string $idOknaVrata;
     public float $povrsina = 0;
     public int $stevilo = 1;
+    public array $R = [];
     public float $Rw = 0;
     public float $C = 0;
     public float $Ctr = 0;
@@ -35,6 +36,7 @@ class ZunanjaOknaVrata
         $this->options = $options;
         $this->oknaVrata = $oknaVrata;
 
+        $this->R = $this->oknaVrata->R;
         $this->Rw = $this->oknaVrata->Rw + $this->oknaVrata->dR;
         $this->C = $this->oknaVrata->C;
         $this->Ctr = $this->oknaVrata->Ctr;

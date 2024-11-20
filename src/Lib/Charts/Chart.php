@@ -293,7 +293,7 @@ class Chart
 
         foreach ($this->data['category'] as $k => $value) {
             if ($equalSpacing) {
-                $gridX = $offsetX + ($sirinaGrafa / count($this->data['category'])) * $k;
+                $gridX = $offsetX + ($sirinaGrafa / (count($this->data['category']) - 1)) * $k;
             } else {
                 $gridX = $offsetX + $value * $scaleX;
             }

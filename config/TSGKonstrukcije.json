@@ -219,10 +219,19 @@
         "id": "113.4",
         "sifra": "EPS100",
         "opis": "EPS 100",
-        "lambda": 0.039,
+        "lambda": 0.035,
         "gostota": 15,
         "specificnaToplota": 1260,
         "difuzijskaUpornost": 25
+    },
+    {
+        "id": "113.5",
+        "sifra": "stiroestrih",
+        "opis": "Stiroestrih PolitermBlu 250 kg/m3",
+        "lambda": 0.067,
+        "gostota": 250,
+        "specificnaToplota": 1260,
+        "difuzijskaUpornost": 6.9
     },
     {
         "id": "114",

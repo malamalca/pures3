@@ -99,7 +99,9 @@
         "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 460,
         "lastnosti": null,
-        "R": [],
+        "R": {
+            "500": 57
+        },
         "Rw": 57,
         "dR": 0,
         "C": -2,
@@ -113,7 +115,9 @@
         "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 175,
         "lastnosti": null,
-        "R": [],
+        "R": {
+            "500": 42
+        },
         "Rw": 42,
         "dR": 0,
         "C": -1,
@@ -127,7 +131,9 @@
         "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 67,
         "lastnosti": null,
-        "R": [],
+        "R": {
+            "500": 33
+        },
         "Rw": 33,
         "dR": 0,
         "C": -1,
@@ -141,7 +147,9 @@
         "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 230,
         "lastnosti": null,
-        "R": [],
+        "R": {
+            "500": 46
+        },
         "Rw": 46,
         "dR": 0,
         "C": -2,
@@ -155,7 +163,9 @@
         "tipKonstrukcije": "enostavna",
         "povrsinskaMasa": 287,
         "lastnosti": null,
-        "R": [],
+        "R": {
+            "500": 49
+        },
         "Rw": 49,
         "dR": 14,
         "C": -2,

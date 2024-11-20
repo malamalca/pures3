@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF;
 
 use App\Calc\GF\Stavbe\ManjzahtevnaStavba;
+use App\Calc\GF\Stavbe\NezahtevnaStavba;
 use App\Calc\GF\Stavbe\ZahtevnaStavba;
 
 class StavbaFactory
@@ -18,6 +19,8 @@ class StavbaFactory
     public static function create($type, $options)
     {
         switch ($type) {
+            case 'nezahtevna':
+                return new NezahtevnaStavba($options);
             case 'manjzahtevna':
                 return new ManjzahtevnaStavba($options);
             case 'zahtevna':

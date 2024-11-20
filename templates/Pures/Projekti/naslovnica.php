@@ -32,7 +32,15 @@ Pravilniku o spremembah Pravilnika o učinkoviti rabi energije v stavbah (Uradni
         <td class="w-70"><h3><?= h($splosniPodatki->stavba->naziv) ?></h3></td>
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
-
+    <tr>
+        <td class="w-30">Projektant elaborata:</td>
+        <td class="w-70"><?= h($splosniPodatki->projektant) ?></td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
         <td class="w-30">Izdelovalec elaborata:</td>
         <td class="w-70"><?= h($splosniPodatki->izdelovalec) ?></td>
