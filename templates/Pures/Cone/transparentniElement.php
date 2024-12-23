@@ -81,4 +81,35 @@
         <td class="center"><?= $this->numFormat($kons->g_sh, 2) ?></td>
         <td>-</td>
     </tr>
+    <tr>
+        <td rowspan="6">Stransko senčenje</td>
+        <td title="Dolžina zgornjega previsa">L<sub>sh,zgoraj</sub></td>
+        <td class="center"><?= $this->numFormat($kons->stranskoSencenje->zgorajDolzina, 2) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td title="Višina od stekla do previsa">H<sub>sh,zgoraj</sub></td>
+        <td class="center"><?= $this->numFormat($kons->stranskoSencenje->zgorajRazdalja, 2) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td title="Dolžina stranskega senčenja">L<sub>sh,left</sub></td>
+        <td class="center"><?= $this->numFormat($kons->stranskoSencenje->levoDolzina, 2) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td title="Razdalja od stekla do stranskega elementa">D<sub>sh,left</sub></td>
+        <td class="center"><?= $this->numFormat($kons->stranskoSencenje->levoRazdalja, 2) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td title="Dolžina stranskega senčenja">L<sub>sh,right</sub></td>
+        <td class="center"><?= $this->numFormat($kons->stranskoSencenje->desnoDolzina, 2) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td title="Razdalja od stekla do stranskega elementa">D<sub>sh,right</sub></td>
+        <td class="center"><?= $this->numFormat($kons->stranskoSencenje->desnoRazdalja, 2) ?></td>
+        <td>m</td>
+    </tr>
 </table

@@ -87,11 +87,15 @@ class NetransparentenElementOvoja extends ElementOvoja
         }
 
         if (!empty($config->debelinaStene)) {
-            $this->debelinaStene = $config->debelinaStene;
+            $this->debelinaStene = gettype($config->debelinaStene) == 'string' ?
+                (float)$EvalMath->e($config->debelinaStene) :
+                $config->debelinaStene;
         }
 
         if (!empty($config->globina)) {
-            $this->globina = $config->globina;
+            $this->globina = gettype($config->globina) == 'string' ?
+                (float)$EvalMath->e($config->globina) :
+                $config->globina;
         }
 
         if (!empty($config->obodniPsi)) {
@@ -113,13 +117,19 @@ class NetransparentenElementOvoja extends ElementOvoja
             $this->U_zid_nadTerenom = $config->U_zid_nadTerenom;
         }
         if (!empty($config->visinaNadTerenom)) {
-            $this->visinaNadTerenom = $config->visinaNadTerenom;
+            $this->visinaNadTerenom = gettype($config->visinaNadTerenom) == 'string' ?
+                (float)$EvalMath->e($config->visinaNadTerenom) :
+                $config->visinaNadTerenom;
         }
         if (!empty($config->prostorninaKleti)) {
-            $this->prostorninaKleti = $config->prostorninaKleti;
+            $this->prostorninaKleti = gettype($config->prostorninaKleti) == 'string' ?
+                (float)$EvalMath->e($config->prostorninaKleti) :
+                $config->prostorninaKleti;
         }
         if (!empty($config->izmenjavaZraka)) {
-            $this->izmenjavaZraka = $config->izmenjavaZraka;
+            $this->izmenjavaZraka = gettype($config->izmenjavaZraka) == 'string' ?
+                (float)$EvalMath->e($config->izmenjavaZraka) :
+                $config->izmenjavaZraka;
         }
     }
 
@@ -213,7 +223,6 @@ class NetransparentenElementOvoja extends ElementOvoja
                 }
             } else {
                 // konstrukcija proti zemljini
-                // TODO: stene, ostale horizontale
 
                 // toplotni tok proti tlom
                 $this->izracunTokaProtiZemljini($mesec, $okolje, $temperature);

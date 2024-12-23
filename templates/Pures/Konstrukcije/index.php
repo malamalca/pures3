@@ -19,7 +19,7 @@
     </tr>
     <tr>
         <?= implode(PHP_EOL, array_map(fn($kons) =>
-            '<td class="left">' . h($kons->naziv) . '</td>', $konstrukcije)) ?>
+            '<td class="left"><b>' . h($kons->naziv) . '</b></td>', $konstrukcije)) ?>
     </tr>
     <tr>
         <?= implode(PHP_EOL, array_map(fn($kons) =>

@@ -98,7 +98,7 @@ class Ogrevanje extends TSSInterface
                     throw new \Exception(sprintf('Prenosnik ogrevanja "%s" ne obstaja', $prenosnikId));
                 }
 
-                $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje);
+                $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['rezim' => $this->rezim]);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $prenosnik->toplotneIzgube);
                 $this->potrebnaElektricnaEnergija =

@@ -180,6 +180,7 @@ class Fasada
         $this->Rw = 0;
         $sumTau = 0;
         $sumTau = [];
+
         foreach ($this->konstrukcije as $zunanjaKonstrukcija) {
             $zunanjaKonstrukcija->analiza();
 
@@ -206,6 +207,7 @@ class Fasada
         }
         foreach ($this->oknaVrata as $oknaVrata) {
             $oknaVrata->analiza();
+
             array_walk($oknaVrata->R, function ($R, $fq) use ($oknaVrata, &$sumTau) {
 
                 $R_c = $R + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);

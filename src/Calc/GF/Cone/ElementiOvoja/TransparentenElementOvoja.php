@@ -15,12 +15,15 @@ class TransparentenElementOvoja extends ElementOvoja
     public float $visinaStekla = 0;
     public float $sirinaStekla = 0;
 
+    // lahko se overrida določilo iz TSG
+    public bool $dobitekSS = true;
+
     public float $g = 0;
     public float $faktorSencil = 0;
     public float $g_sh = 0;
 
     public array $sencenjeOvir;
-    public \stdClass $stranskoSencenje;
+    public StranskoSencenje $stranskoSencenje;
 
     /**
      * Loads configuration from json|stdClass
@@ -59,6 +62,10 @@ class TransparentenElementOvoja extends ElementOvoja
             }
         }
 
+        if (isset($config->dobitekSS)) {
+            $this->dobitekSS = (bool)$config->dobitekSS;
+        }
+
         /** @var \stdClass $config */
         if (!empty($config->A) && !empty($config->B) && !empty($config->sirinaOkvirja)) {
             $config->sirinaStekla = $config->A - $config->sirinaOkvirja * 2;
@@ -89,8 +96,13 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->sencenjeOvir = $config->sencenjeOvir;
         }
 
+        $this->stranskoSencenje = new StranskoSencenje();
+        if (!empty($this->konstrukcija->stranskoSencenje)) {
+            $this->stranskoSencenje->merge($this->konstrukcija->stranskoSencenje);
+        }
+
         if (!empty($config->stranskoSencenje)) {
-            $this->stranskoSencenje = $config->stranskoSencenje;
+            $this->stranskoSencenje->merge($config->stranskoSencenje);
         }
 
         switch ($this->konstrukcija->vrsta) {
@@ -164,127 +176,132 @@ class TransparentenElementOvoja extends ElementOvoja
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
-            /** ============================================================================================= */
-            /** 1. Senčenje nadstreška in stranskih ovir */
+            if ($this->dobitekSS) {
+                /** ============================================================================================= */
+                /** 1. Senčenje nadstreška in stranskih ovir */
 
-            $D_ovh = $this->stranskoSencenje->zgorajDolzina ?? 0;
-            $L_ovh = $this->stranskoSencenje->zgorajRazdalja ?? 0;
+                $D_ovh = $this->stranskoSencenje->zgorajDolzina;
+                $L_ovh = $this->stranskoSencenje->zgorajRazdalja;
 
-            $D_stena_l = $this->stranskoSencenje->levoDolzina ?? 0;
-            $L_stena_l = $this->stranskoSencenje->levoRazdalja ?? 0;
+                $D_stena_l = $this->stranskoSencenje->levoDolzina;
+                $L_stena_l = $this->stranskoSencenje->levoRazdalja;
 
-            $D_stena_d = $this->stranskoSencenje->desnoDolzina ?? 0;
-            $L_stena_d = $this->stranskoSencenje->desnoRazdalja ?? 0;
+                $D_stena_d = $this->stranskoSencenje->desnoDolzina;
+                $L_stena_d = $this->stranskoSencenje->desnoRazdalja;
 
-            $W = $this->sirinaStekla;
-            $H = $this->visinaStekla;
-            $zemljepisnaSirina = 40;
-            $deklinacija = Configure::read('lookups.transparentne.mesecnaDeklinacija.' . $mesec);
+                $W = $this->sirinaStekla;
+                $H = $this->visinaStekla;
+                $zemljepisnaSirina = 40;
+                $deklinacija = Configure::read('lookups.transparentne.mesecnaDeklinacija.' . $mesec);
 
-            $delezObsevanja = Configure::read('lookups.transparentne.delezObsevanja.' .
-                $this->orientacija . '.' . $mesec) / 100;
+                $delezObsevanja = Configure::read('lookups.transparentne.delezObsevanja.' .
+                    $this->orientacija . '.' . $mesec) / 100;
 
-            $P1_ovh = $H ? $D_ovh / $H : 0;
-            $P2_ovh = $H ? $L_ovh / $H : 0;
+                $P1_ovh = $H ? $D_ovh / $H : 0;
+                $P2_ovh = $H ? $L_ovh / $H : 0;
 
-            $P1_stena_l = $W ? $D_stena_l / $W : 0;
-            $P2_stena_l = $W ? $L_stena_l / $W : 0;
+                $P1_stena_l = $W ? $D_stena_l / $W : 0;
+                $P2_stena_l = $W ? $L_stena_l / $W : 0;
 
-            $P1_stena_d = $W ? $D_stena_d / $W : 0;
-            $P2_stena_d = $W ? $L_stena_d / $W : 0;
+                $P1_stena_d = $W ? $D_stena_d / $W : 0;
+                $P2_stena_d = $W ? $L_stena_d / $W : 0;
 
-            // dolžina sence nadstreška
-            // po standardu je malo drugačna enačba:
-            // TODO: preveri razlike
-            // $h_ovh = $H - $H * (($A1 + $B1 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh +
-            //    ($A2 + $B2 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh * $P2_ovh);
+                // dolžina sence nadstreška
+                // po standardu je malo drugačna enačba:
+                // TODO: preveri razlike
+                // $h_ovh = $H - $H * (($A1 + $B1 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh +
+                //    ($A2 + $B2 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh * $P2_ovh);
 
-            $h_ovh = $H - $H * (1 + (($A1 + $B1 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh +
-                ($A2 + $B2 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh * $P2_ovh));
+                $h_ovh = $H - $H * (1 + (($A1 + $B1 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh +
+                    ($A2 + $B2 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh * $P2_ovh));
 
-            $h_ovh = $h_ovh > $H ? $H : ($h_ovh < 0 ? 0 : $h_ovh);
+                $h_ovh = $h_ovh > $H ? $H : ($h_ovh < 0 ? 0 : $h_ovh);
 
-            $w_fin_l = $W -
-                $W * (1 + (($A1_stena + $B1_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_l +
-                ($A2_stena + $B2_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_l * $P2_stena_l));
+                $w_fin_l = $W -
+                    $W * (1 + (($A1_stena + $B1_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_l +
+                    ($A2_stena + $B2_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_l * $P2_stena_l));
 
-            $w_fin_l = ($w_fin_l > $W ? $W : ($w_fin_l < 0 ? 0 : $w_fin_l)) * $faktorOrientacije['l'];
+                $w_fin_l = ($w_fin_l > $W ? $W : ($w_fin_l < 0 ? 0 : $w_fin_l)) * $faktorOrientacije['l'];
 
-            $w_fin_d = $W -
-                $W * (1 + (($A1_stena + $B1_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_d +
-                ($A2_stena + $B2_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_d * $P2_stena_d));
+                $w_fin_d = $W -
+                    $W * (1 + (($A1_stena + $B1_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_d +
+                    ($A2_stena + $B2_stena * ($zemljepisnaSirina - $deklinacija)) * $P1_stena_d * $P2_stena_d));
 
-            $w_fin_d = ($w_fin_d > $W ? $W : ($w_fin_d < 0 ? 0 : $w_fin_d)) * $faktorOrientacije['d'];
+                $w_fin_d = ($w_fin_d > $W ? $W : ($w_fin_d < 0 ? 0 : $w_fin_d)) * $faktorOrientacije['d'];
 
-            $w_fin = $w_fin_l + $w_fin_d < 0 ? 0 : $w_fin_l + $w_fin_d;
+                $w_fin = $w_fin_l + $w_fin_d < 0 ? 0 : $w_fin_l + $w_fin_d;
 
-            $Fsh_ov = $H * $W > 0 ? ($H - $h_ovh) * ($W - $w_fin) / ($H * $W) : 0;
+                $Fsh_ov = $H * $W > 0 ? ($H - $h_ovh) * ($W - $w_fin) / ($H * $W) : 0;
 
-            /** ============================================================================================= */
-            /** 2. Senčenje drugih objektov */
-            $h_k_skupaj = 0;
-            if (!empty($this->sencenjeOvir)) {
+                /** ============================================================================================= */
+                /** 2. Senčenje drugih objektov */
                 $h_k_skupaj = 0;
-                foreach ($this->sencenjeOvir as $ovira) {
-                    $visinskiKot =
-                        atan(($ovira->visinaOvire - $ovira->visinaNadTerenom) / $ovira->oddaljenostOvire)
-                        * 180 / pi();
+                if (!empty($this->sencenjeOvir)) {
+                    $h_k_skupaj = 0;
+                    foreach ($this->sencenjeOvir as $ovira) {
+                        $visinskiKot =
+                            atan(($ovira->visinaOvire - $ovira->visinaNadTerenom) / $ovira->oddaljenostOvire)
+                            * 180 / pi();
 
-                    $visinaSonca = $visineSonca[$this->orientacija][$ovira->kvadrant][$mesec];
+                        $visinaSonca = $visineSonca[$this->orientacija][$ovira->kvadrant][$mesec];
 
-                    $h_k_obst = $ovira->visinaOvire - $ovira->visinaNadTerenom -
-                        $ovira->oddaljenostOvire * tan(deg2rad($visinaSonca));
-                    if ($h_k_obst < 0) {
-                        $h_k_obst = 0;
+                        $h_k_obst = $ovira->visinaOvire - $ovira->visinaNadTerenom -
+                            $ovira->oddaljenostOvire * tan(deg2rad($visinaSonca));
+                        if ($h_k_obst < 0) {
+                            $h_k_obst = 0;
+                        }
+                        if ($h_k_obst > $H) {
+                            $h_k_obst = $H;
+                        }
+
+                        $obdobje = $mesec > 4 && $mesec < 9 ? 'hlajenje' : 'ogrevanje';
+                        $h_k_skupaj += $h_k_obst *
+                            $faktorjiSencenjaOvir[$this->orientacija][$ovira->kvadrant][$obdobje];
                     }
-                    if ($h_k_obst > $H) {
-                        $h_k_obst = $H;
-                    }
 
-                    $obdobje = $mesec > 4 && $mesec < 9 ? 'hlajenje' : 'ogrevanje';
-                    $h_k_skupaj += $h_k_obst *
-                        $faktorjiSencenjaOvir[$this->orientacija][$ovira->kvadrant][$obdobje];
+                    $Fsh_obst = ($H - $h_k_skupaj) * $W / ($W * $H);
                 }
 
-                $Fsh_obst = ($H - $h_k_skupaj) * $W / ($W * $H);
+                /** ============================================================================================= */
+                /** Skupni faktor senčenja */
+                /** Celice AH27:AS27 */
+                $h_ovh = $h_ovh + $h_k_skupaj;
+                if ($h_ovh > $H) {
+                    $h_ovh = $H;
+                }
+
+                /* celice AH63:AS63 */
+                $Fsh = $H * $W > 0 ? ($H - $h_ovh) * ($W - $w_fin) / ($W * $H) : 0;
+
+                $this->faktorSencenja[$mesec] = 1 - $delezObsevanja + $Fsh * $delezObsevanja;
+
+                // izračun solarnih dobitkov
+                $Fsky = $this->naklon < 45 ? 1 : 0.5;
+                $hri = 4.14;
+                $dTsky = 11;
+                $Rse = 0.04;
+                $Fic = 0.9; // faktor vpadnega kota. TSG stran 71
+
+                // mesečna prehodnost sevanja zaradi zasteklitve s senčili
+                $g = $this->g;
+                $g_sh_ogrevanje = $g;
+                $g_sh_hlajenje = $g * $this->faktorSencil;
+
+                // sevanje elementa proti nebu za trenutni mesec
+                $Qsol_ogrevanje = $g_sh_ogrevanje * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
+                    $this->faktorSencenja[$mesec] * $this->soncnoObsevanje[$mesec] * $stDni;
+                $Qsol_hlajenje = $g_sh_hlajenje * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
+                    $this->faktorSencenja[$mesec] * $this->soncnoObsevanje[$mesec] * $stDni;
+
+                $Qsky = $Fsky * $Rse * ($this->U + $cona->deltaPsi) * $this->povrsina *
+                    $hri * $dTsky * $stDni * 24;
+
+                $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol_ogrevanje - $Qsky) / 1000 * $this->stevilo;
+                $this->solarniDobitkiHlajenje[$mesec] = ($Qsol_hlajenje - $Qsky) / 1000 * $this->stevilo;
+            } else {
+                $this->solarniDobitkiOgrevanje[$mesec] = 0;
+                $this->solarniDobitkiHlajenje[$mesec] = 0;
             }
-
-            /** ============================================================================================= */
-            /** Skupni faktor senčenja */
-            /** Celice AH27:AS27 */
-            $h_ovh = $h_ovh + $h_k_skupaj;
-            if ($h_ovh > $H) {
-                $h_ovh = $H;
-            }
-
-            /* celice AH63:AS63 */
-            $Fsh = $H * $W > 0 ? ($H - $h_ovh) * ($W - $w_fin) / ($W * $H) : 0;
-
-            $this->faktorSencenja[$mesec] = 1 - $delezObsevanja + $Fsh * $delezObsevanja;
-
-            // izračun solarnih dobitkov
-            $Fsky = $this->naklon < 45 ? 1 : 0.5;
-            $hri = 4.14;
-            $dTsky = 11;
-            $Rse = 0.04;
-            $Fic = 0.9; // faktor vpadnega kota. TSG stran 71
-
-            // mesečna prehodnost sevanja zaradi zasteklitve s senčili
-            $g = $this->g;
-            $g_sh_ogrevanje = $g;
-            $g_sh_hlajenje = $g * $this->faktorSencil;
-
-            // sevanje elementa proti nebu za trenutni mesec
-            $Qsol_ogrevanje = $g_sh_ogrevanje * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
-                $this->faktorSencenja[$mesec] * $this->soncnoObsevanje[$mesec] * $stDni;
-            $Qsol_hlajenje = $g_sh_hlajenje * $Fic * $this->povrsina * (1 - $this->delezOkvirja) *
-                $this->faktorSencenja[$mesec] * $this->soncnoObsevanje[$mesec] * $stDni;
-
-            $Qsky = $Fsky * $Rse * ($this->U + $cona->deltaPsi) * $this->povrsina *
-                $hri * $dTsky * $stDni * 24;
-
-            $this->solarniDobitkiOgrevanje[$mesec] = ($Qsol_ogrevanje - $Qsky) / 1000 * $this->stevilo;
-            $this->solarniDobitkiHlajenje[$mesec] = ($Qsol_hlajenje - $Qsky) / 1000 * $this->stevilo;
 
             // transmisijske izgube
             $this->transIzgubeOgrevanje[$mesec] = $this->H_ogrevanje * 24 / 1000 *
@@ -310,9 +327,13 @@ class TransparentenElementOvoja extends ElementOvoja
         $elementOvoja->sirinaStekla = $this->sirinaStekla;
         $elementOvoja->visinaStekla = $this->visinaStekla;
 
+        $elementOvoja->dobitekSS = $this->dobitekSS;
+
         $elementOvoja->g = $this->g;
         $elementOvoja->faktorSencil = $this->faktorSencil;
         $elementOvoja->g_sh = $this->g_sh;
+
+        $elementOvoja->stranskoSencenje = $this->stranskoSencenje;
 
         if (isset($elementOvoja->sencenjeOvir)) {
             $elementOvoja->sencenjeOvir = $this->sencenjeOvir;

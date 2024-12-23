@@ -46,8 +46,11 @@ class ZunanjaKonstrukcija
         });
 
         $this->Rw = Calc::Rw($this->R);
-        $this->C = Calc::C(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
-        $this->Ctr = Calc::Ctr(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
+        $this->C =
+            $this->konstrukcija->C ?? Calc::C(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
+
+        $this->Ctr =
+            $this->konstrukcija->Ctr ?? Calc::Ctr(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
 
         //$this->Rw = $this->konstrukcija->Rw + $this->konstrukcija->dR;
         //$this->C = $this->konstrukcija->C;
