@@ -45,7 +45,7 @@ class Cona
     public \stdClass $razsvetljava;
     public \stdClass $prezracevanje;
     public \stdClass $ovoj;
-    public \stdClass $TSV;
+    public ?\stdClass $TSV = null;
     public \stdClass $uravnavanjeVlage;
 
     public array $deltaTOgrevanje = [];
