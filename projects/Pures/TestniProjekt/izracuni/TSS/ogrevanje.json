@@ -50,7 +50,7 @@
         ],
         "vracljiveIzgube": [],
         "energijaPoEnergentih": {
-            "elektrika": 2159.64343545164,
+            "elektrika": 4123.35946701276,
             "okolje": 3662.515176362106
         },
         "letnaUcinkovitostOgrHlaTsv": 0.351274568265532,
@@ -101,7 +101,7 @@
                 "TC"
             ],
             "energijaPoEnergentih": {
-                "elektrika": 2159.64343545164,
+                "elektrika": 4123.35946701276,
                 "okolje": 3662.515176362106
             },
             "potrebnaEnergija": [

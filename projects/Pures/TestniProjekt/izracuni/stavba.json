@@ -37,26 +37,26 @@
     "specEnergijaRazvlazevanje": 0,
     "dovoljenaSpecLetnaToplota": 25,
     "dovoljenSpecKoeficientTransmisijskihIzgub": 0.3262248338564675,
-    "neutezenaDovedenaEnergija": 8952.208943284064,
-    "utezenaDovedenaEnergija": 16886.749593667006,
-    "skupnaPrimarnaEnergija": 16886.749593667006,
-    "neobnovljivaPrimarnaEnergija": 7934.540650382939,
-    "obnovljivaPrimarnaEnergija": 8952.208943284064,
-    "izpustCO2": 2221.6713821072226,
+    "neutezenaDovedenaEnergija": 10915.924974845186,
+    "utezenaDovedenaEnergija": 21796.039672569805,
+    "skupnaPrimarnaEnergija": 21796.039672569805,
+    "neobnovljivaPrimarnaEnergija": 10880.114697724619,
+    "obnovljivaPrimarnaEnergija": 10915.924974845186,
+    "izpustCO2": 3046.4321153628935,
     "skupnaOddanaElektricnaEnergija": 0,
     "skupnaProizvedenaPorabljenaElektricnaEnergija": 0,
     "skupnaProizvedenaElektricnaEnergija": 0,
     "skupnaOddanaToplota": 0,
     "faktorUjemanja": 0,
-    "ROVE": 53.01321544225058,
+    "ROVE": 50.082148586758244,
     "minROVE": 50,
-    "specificnaPrimarnaEnergija": 105.54218496041878,
-    "korigiranaSpecificnaPrimarnaEnergija": 126.65062195250253,
+    "specificnaPrimarnaEnergija": 136.22524795356128,
+    "korigiranaSpecificnaPrimarnaEnergija": 163.47029754427354,
     "dovoljenaSpecificnaPrimarnaEnergija": 75,
     "dovoljenaKorigiranaSpecificnaPrimarnaEnergija": 75,
     "energijaTSSPoEnergentih": {
         "ogrevanje": {
-            "elektrika": 4319.28687090328,
+            "elektrika": 8246.71893402552,
             "okolje": 7325.030352724212
         },
         "prezracevanje": {
@@ -94,12 +94,6 @@
             "notranjiViri": {
                 "ogrevanje": 4.1,
                 "hlajenje": 4.1
-            },
-            "TSV": {
-                "steviloOseb": 2.425,
-                "dnevnaKolicina": 40.71,
-                "toplaVodaT": 42,
-                "hladnaVodaT": 10
             },
             "razsvetljava": {
                 "faktorDnevneSvetlobe": 0.05,
@@ -354,7 +348,7 @@
                                                 1925.854746747039,
                                                 1962.067158746442,
                                                 2036.2850954709381,
-                                                2112.949431930758,
+                                                2112.9494319307573,
                                                 2458.771911905663,
                                                 2731.3215057259167,
                                                 2927.3509526011308,
@@ -5081,7 +5075,7 @@
                                                 761.6847465171074,
                                                 853.2526039639015,
                                                 1065.953794123886,
-                                                1324.0099184729993,
+                                                1324.0099184729995,
                                                 1766.1774858796227,
                                                 2097.1611010588063,
                                                 2346.8812812515644,
@@ -5544,7 +5538,7 @@
                                 2881.3311170511965,
                                 3061.687488234804,
                                 3061.687488234804,
-                                2710.3175870197583,
+                                2710.317587019758,
                                 2320.9920746804623,
                                 2311.462449716373,
                                 2305.128392143575
@@ -5803,9 +5797,18 @@
                         "dolzinaOkvirja": 1,
                         "sirinaStekla": 0,
                         "visinaStekla": 0,
+                        "dobitekSS": true,
                         "g": 0.5,
                         "faktorSencil": 1,
-                        "g_sh": 0.5
+                        "g_sh": 0.5,
+                        "stranskoSencenje": {
+                            "zgorajDolzina": 0,
+                            "zgorajRazdalja": 0,
+                            "levoDolzina": 0,
+                            "levoRazdalja": 0,
+                            "desnoDolzina": 0,
+                            "desnoRazdalja": 0
+                        }
                     },
                     {
                         "id": "O1",
@@ -5922,9 +5925,18 @@
                         "dolzinaOkvirja": 16.2,
                         "sirinaStekla": 5.8,
                         "visinaStekla": 2.3,
+                        "dobitekSS": true,
                         "g": 0.6,
                         "faktorSencil": 0.05,
-                        "g_sh": 0.03
+                        "g_sh": 0.03,
+                        "stranskoSencenje": {
+                            "zgorajDolzina": 0.2,
+                            "zgorajRazdalja": 0,
+                            "levoDolzina": 0.2,
+                            "levoRazdalja": 0,
+                            "desnoDolzina": 0.2,
+                            "desnoRazdalja": 0
+                        }
                     },
                     {
                         "id": "O2",
@@ -6041,9 +6053,18 @@
                         "dolzinaOkvirja": 8.2,
                         "sirinaStekla": 1.8,
                         "visinaStekla": 2.3,
+                        "dobitekSS": true,
                         "g": 0.6,
                         "faktorSencil": 0.3,
-                        "g_sh": 0.18
+                        "g_sh": 0.18,
+                        "stranskoSencenje": {
+                            "zgorajDolzina": 0.2,
+                            "zgorajRazdalja": 0,
+                            "levoDolzina": 0.2,
+                            "levoRazdalja": 0,
+                            "desnoDolzina": 0.2,
+                            "desnoRazdalja": 0
+                        }
                     },
                     {
                         "id": "O3",
@@ -6160,9 +6181,18 @@
                         "dolzinaOkvirja": 3.6,
                         "sirinaStekla": 0.9,
                         "visinaStekla": 0.9,
+                        "dobitekSS": true,
                         "g": 0.6,
                         "faktorSencil": 0.3,
-                        "g_sh": 0.18
+                        "g_sh": 0.18,
+                        "stranskoSencenje": {
+                            "zgorajDolzina": 0.2,
+                            "zgorajRazdalja": 0,
+                            "levoDolzina": 0.2,
+                            "levoRazdalja": 0,
+                            "desnoDolzina": 0.2,
+                            "desnoRazdalja": 0
+                        }
                     },
                     {
                         "id": "O4",
@@ -6279,12 +6309,22 @@
                         "dolzinaOkvirja": 3.6,
                         "sirinaStekla": 0.9,
                         "visinaStekla": 0.9,
+                        "dobitekSS": true,
                         "g": 0.6,
                         "faktorSencil": 0.3,
-                        "g_sh": 0.18
+                        "g_sh": 0.18,
+                        "stranskoSencenje": {
+                            "zgorajDolzina": 0.2,
+                            "zgorajRazdalja": 0,
+                            "levoDolzina": 0.2,
+                            "levoRazdalja": 0,
+                            "desnoDolzina": 0.2,
+                            "desnoRazdalja": 0
+                        }
                     }
                 ]
             },
+            "TSV": {},
             "deltaTOgrevanje": [
                 21,
                 19,
@@ -6611,7 +6651,7 @@
             ],
             "vracljiveIzgube": [],
             "energijaPoEnergentih": {
-                "elektrika": 2159.64343545164,
+                "elektrika": 4123.35946701276,
                 "okolje": 3662.515176362106
             },
             "letnaUcinkovitostOgrHlaTsv": 0.351274568265532,
@@ -6662,7 +6702,7 @@
                     "TC"
                 ],
                 "energijaPoEnergentih": {
-                    "elektrika": 2159.64343545164,
+                    "elektrika": 4123.35946701276,
                     "okolje": 3662.515176362106
                 },
                 "potrebnaEnergija": [
