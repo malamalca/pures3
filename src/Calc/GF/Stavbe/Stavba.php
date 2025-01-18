@@ -5,6 +5,7 @@ namespace App\Calc\GF\Stavbe;
 
 use App\Calc\GF\Stavbe\Izbire\VrstaGradnje;
 use App\Calc\GF\Stavbe\Izbire\VrstaZahtevnosti;
+use stdClass;
 
 abstract class Stavba
 {
@@ -12,7 +13,7 @@ abstract class Stavba
     public string $lokacija;
     public string $KO;
     public array $parcele;
-    public \stdClass $koordinate;
+    public stdClass $koordinate;
     public string $klasifikacija;
 
     public VrstaGradnje $tip;
@@ -25,10 +26,10 @@ abstract class Stavba
     /**
      * Class Constructor
      *
-     * @param string|\stdClass $config Configuration
+     * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function __construct($config = null)
+    public function __construct(?stdClass $config)
     {
         if ($config) {
             $this->parseConfig($config);
@@ -38,15 +39,11 @@ abstract class Stavba
     /**
      * Loads configuration from json|stdClass
      *
-     * @param string|\stdClass $config Configuration
+     * @param \stdClass|null $config Configuration
      * @return void
      */
-    protected function parseConfig($config)
+    protected function parseConfig(?stdClass $config)
     {
-        if (is_string($config)) {
-            $config = json_decode($config);
-        }
-
         $this->naziv = $config->naziv;
         $this->lokacija = $config->lokacija;
         $this->KO = $config->KO;

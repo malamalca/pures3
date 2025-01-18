@@ -25,7 +25,7 @@ class IzkaziController extends Controller
         App::set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
 
         if ($stavba->vrsta == 'nezahtevna') {
-            $energentiSistema = json_decode(json_encode($stavba->vgrajeniSistemi), true);
+            $energentiSistema = json_decode((string)json_encode($stavba->vgrajeniSistemi), true);
             $vgrajeniSistemi = array_keys(get_object_vars($stavba->vgrajeniSistemi));
         } else {
             $vgrajeniSistemi = [];

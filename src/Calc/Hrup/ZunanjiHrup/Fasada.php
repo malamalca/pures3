@@ -14,6 +14,7 @@ use App\Lib\EvalMath;
 
 class Fasada
 {
+    public array $R;
     public float $Rw = 0;
     public ?float $deltaL_fasada;
     public float $povrsina = 0;
@@ -179,68 +180,64 @@ class Fasada
     {
         $this->Rw = 0;
         $sumTau = 0;
-        $sumTau = [];
+        $sumTauArr = [];
 
         foreach ($this->konstrukcije as $zunanjaKonstrukcija) {
             $zunanjaKonstrukcija->analiza();
 
-            //$sumTau = array_map(function($R_fq) use ($zunanjaKonstrukcija) {
-            //    $R = $R_fq + ($this->vplivPrometa ? $zunanjaKonstrukcija->Ctr : $zunanjaKonstrukcija->C);
-            //    //return $zunanjaKonstrukcija->povrsina * $zunanjaKonstrukcija->stevilo / $this->povrsina * pow(10, -$R / 10) * $zunanjaKonstrukcija->stevilo;
-            //}, $zunanjaKonstrukcija->R);
-            //$Rw = $konstrukcija->Rw + ($this->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C);
-
-            array_walk($zunanjaKonstrukcija->R, function ($R, $fq) use ($zunanjaKonstrukcija, &$sumTau) {
+            array_walk($zunanjaKonstrukcija->R, function ($R, $fq) use ($zunanjaKonstrukcija, &$sumTauArr) {
 
                 $R_c = $R + ($this->vplivPrometa ? $zunanjaKonstrukcija->Ctr : $zunanjaKonstrukcija->C);
-                $R_c = $R;
-                if (!isset($sumTau[$fq])) {
-                    $sumTau[$fq] = 0;
+                //$R_c = $R;
+                if (!isset($sumTauArr[$fq])) {
+                    $sumTauArr[$fq] = 0;
                 }
-                $sumTau[$fq] += $zunanjaKonstrukcija->povrsina *
+                $sumTauArr[$fq] += $zunanjaKonstrukcija->povrsina *
                     $zunanjaKonstrukcija->stevilo / $this->povrsina *
                     pow(10, -$R_c / 10) * $zunanjaKonstrukcija->stevilo;
             });
 
-            //$sumTau += $konstrukcija->povrsina * $konstrukcija->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
-            //    $konstrukcija->stevilo;
+            //$Rw = $zunanjaKonstrukcija->Rw + ($this->vplivPrometa ? $zunanjaKonstrukcija->Ctr : $zunanjaKonstrukcija->C);
+            //$sumTau += $zunanjaKonstrukcija->povrsina *
+            //    $zunanjaKonstrukcija->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
+            //    $zunanjaKonstrukcija->stevilo;
         }
+
         foreach ($this->oknaVrata as $oknaVrata) {
             $oknaVrata->analiza();
 
-            array_walk($oknaVrata->R, function ($R, $fq) use ($oknaVrata, &$sumTau) {
+            array_walk($oknaVrata->R, function ($R, $fq) use ($oknaVrata, &$sumTauArr) {
 
                 $R_c = $R + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);
-                $R_c = $R;
-                if (!isset($sumTau[$fq])) {
-                    $sumTau[$fq] = 0;
+                //$R_c = $R;
+                if (!isset($sumTauArr[$fq])) {
+                    $sumTauArr[$fq] = 0;
                 }
-                $sumTau[$fq] += $oknaVrata->povrsina *
+                $sumTauArr[$fq] += $oknaVrata->povrsina *
                     $oknaVrata->stevilo / $this->povrsina *
                     pow(10, -$R_c / 10) * $oknaVrata->stevilo;
             });
 
             //$Rw = $oknaVrata->Rw + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);
-
             //$sumTau += $oknaVrata->povrsina * $oknaVrata->stevilo / $this->povrsina * pow(10, -$Rw / 10) *
             //    $oknaVrata->stevilo;
         }
+
         foreach ($this->maliElementi as $maliElement) {
             $maliElement->analiza();
-            array_walk($maliElement->R, function ($R, $fq) use ($maliElement, &$sumTau) {
+
+            array_walk($maliElement->R, function ($R, $fq) use ($maliElement, &$sumTauArr) {
 
                 $R_c = $R + ($this->vplivPrometa ? $maliElement->Ctr : $maliElement->C);
-                $R_c = $R;
-                if (!isset($sumTau[$fq])) {
-                    $sumTau[$fq] = 0;
+                //$R_c = $R;
+                if (!isset($sumTauArr[$fq])) {
+                    $sumTauArr[$fq] = 0;
                 }
-                $sumTau[$fq] += $maliElement->povrsina *
-                    $maliElement->stevilo / $this->povrsina *
+                $sumTauArr[$fq] += 10 / $this->povrsina *
                     pow(10, -$R_c / 10) * $maliElement->stevilo;
             });
 
             //$Rw = $maliElement->Rw + ($this->vplivPrometa ? $maliElement->Ctr : $maliElement->C);
-
             //$sumTau += 10 / $this->povrsina * pow(10, -$Rw / 10) * $maliElement->stevilo;
         }
 
@@ -249,8 +246,7 @@ class Fasada
             $this->visinaLinijePogleda ?? null
         );
 
-        $this->R = array_map(fn($sumTauFq) => -10 * log10($sumTauFq) + $this->deltaL_fasada, $sumTau);
-
+        $this->R = array_map(fn($sumTauFq) => -10 * log10($sumTauFq) + $this->deltaL_fasada, $sumTauArr);
         $this->Rw = Calc::Rw($this->R);
 
         /*$this->Rw = -10 * log10($sumTau);

@@ -198,6 +198,15 @@
         "difuzijskaUpornost": 2000
     },
     {
+        "id": "91.4",
+        "sifra": "cementnaHidroizolacija",
+        "opis": "Večplastna bitumenska hidroizolacija",
+        "lambda": 1.7,
+        "gostota": 1700,
+        "specificnaToplota": 1500,
+        "difuzijskaUpornost": 1800
+    },
+    {
         "id": "92",
         "sifra": "PVCtrakovi",
         "opis": "PVC strešni trakovi, mehki",

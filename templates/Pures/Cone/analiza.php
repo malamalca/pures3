@@ -8,6 +8,56 @@
 <a class="button" href="<?= App::url('/pures/cone/ovoj/' . $projectId . '/' . $cona->id) ?>">Analiza ovoja cone "<?= $cona->id ?>"</a>
 </p>
 
+<h1>Splošni podatki cone "<?= h($cona->naziv) ?>"</h1>
+<table border="1">
+    <tr>
+        <td colspan="2">Klasifikacija</td>
+        <td class="left"><?= h($cona->klasifikacija) ?></td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>Bruto ogrevana prostornina cone</td>
+        <td>V<sub>e</sub></td>
+        <td class="center"><?= $this->numFormat($cona->brutoProstornina, 1) ?></td>
+        <td>m³</td>
+    </tr>
+    <tr>
+        <td>Neto prostornina cone</td>
+        <td>V<sub>neto</sub></td>
+        <td class="center"><?= $this->numFormat($cona->netoProstornina, 1) ?></td>
+        <td>m³</td>
+    </tr>
+    <tr>
+        <td>Kondicionirana površina cone</td>
+        <td>A<sub>use</sub></td>
+        <td class="center"><?= $this->numFormat($cona->ogrevanaPovrsina, 1) ?></td>
+        <td>m²</td>
+    </tr>
+    <tr>
+        <td>Dolžina cone</td>
+        <td>D</td>
+        <td class="center"><?= $this->numFormat($cona->dolzina, 1) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td>Širina cone</td>
+        <td>Š</td>
+        <td class="center"><?= $this->numFormat($cona->sirina, 1) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td>Etažna višina</td>
+        <td>H<sub>floor</sub></td>
+        <td class="center"><?= $this->numFormat($cona->etaznaVisina, 1) ?></td>
+        <td>m</td>
+    </tr>
+    <tr>
+        <td>Število etaž</td>
+        <td>n<sub>floor</sub></td>
+        <td class="center"><?= $this->numFormat($cona->steviloEtaz, 1) ?></td>
+        <td>-</td>
+    </tr>
+</table>
 <h1>Analiza cone "<?= h($cona->naziv) ?>"</h1>
 <table border="1">
 <thead>

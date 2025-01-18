@@ -7,6 +7,8 @@ use App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja;
 use App\Calc\GF\Cone\ElementiOvoja\TransparentenElementOvoja;
 use App\Calc\GF\Cone\Izbire\VrstaIzpostavljenostiFasad;
 use App\Calc\GF\Cone\Izbire\VrstaLegeStavbe;
+use App\Calc\GF\Cone\KlasifikacijeCone\KlasifikacijaCone;
+use App\Calc\GF\Cone\KlasifikacijeCone\KlasifikacijaConeFactory;
 use App\Calc\GF\TSS\Razsvetljava\Razsvetljava;
 use App\Core\Log;
 use App\Lib\Calc;
@@ -16,7 +18,7 @@ class Cona
 {
     public string $id;
     public string $naziv;
-    public string $klasifikacija;
+    public KlasifikacijaCone $klasifikacija;
     protected array $options = [];
 
     public float $brutoProstornina = 0;
@@ -40,10 +42,10 @@ class Cona
 
     public \stdClass $infiltracija;
     public \stdClass $notranjiViri;
-    public \stdClass $TSV;
     public \stdClass $razsvetljava;
     public \stdClass $prezracevanje;
     public \stdClass $ovoj;
+    public ?\stdClass $TSV = null;
     public \stdClass $uravnavanjeVlage;
 
     public array $deltaTOgrevanje = [];
@@ -173,6 +175,9 @@ class Cona
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
             switch ($prop->getName()) {
+                case 'klasifikacija':
+                    $this->klasifikacija = KlasifikacijaConeFactory::create($config->klasifikacija);
+                    break;
                 case 'infiltracija':
                     if (isset($config->infiltracija)) {
                         $this->infiltracija = $config->infiltracija;
@@ -614,48 +619,16 @@ class Cona
      */
     public function izracunTSV()
     {
-        if (empty($this->TSV->steviloOseb)) {
-            switch ($this->klasifikacija) {
-                case 'St-1':
-                    $this->TSV->steviloOseb = 0.025 * $this->ogrevanaPovrsina;
-                    if ($this->TSV->steviloOseb > 1.75) {
-                        $this->TSV->steviloOseb = 1.75 + 0.3 * ($this->TSV->steviloOseb - 1.75);
-                    }
-                    break;
-                case 'St-2':
-                case 'St-3':
-                    if ($this->ogrevanaPovrsina > 50) {
-                        $this->TSV->steviloOseb = 0.035 * $this->ogrevanaPovrsina;
-                        if ($this->TSV->steviloOseb > 1.75) {
-                            $this->TSV->steviloOseb = 1.75 + 0.3 * (0.035 * $this->ogrevanaPovrsina - 1.75);
-                        }
-                    } else {
-                        $this->TSV->steviloOseb = 1.75 - 0.01875 * (50 - $this->ogrevanaPovrsina);
-                        if ($this->TSV->steviloOseb > 1.75) {
-                            $this->TSV->steviloOseb = 1.75 + 0.3 * (0.035 * $this->ogrevanaPovrsina - 1.75);
-                        }
-                    }
-                    break;
-                default:
-                    throw new \Exception('TSV: Klasifikacija cone je neveljavna');
+        if (!is_null($this->TSV)) {
+            $this->skupnaEnergijaTSV = 0;
+            foreach (array_keys(Calc::MESECI) as $mesec) {
+                $this->energijaTSV[$mesec] = $this->klasifikacija->izracunTSVZaMesec($mesec, $this);
+                $this->skupnaEnergijaTSV += $this->energijaTSV[$mesec];
             }
-        }
-        if (empty($this->TSV->dnevnaKolicina)) {
-            $this->TSV->dnevnaKolicina = min(40.71, 3.26 * $this->ogrevanaPovrsina / $this->TSV->steviloOseb);
-        }
-
-        $this->TSV->toplaVodaT = $this->TSV->toplaVodaT ?? 42;
-        $this->TSV->hladnaVodaT = $this->TSV->hladnaVodaT ?? 10;
-
-        $this->skupnaEnergijaTSV = 0;
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
-
-            $this->energijaTSV[$mesec] = 0.001 * $this->TSV->dnevnaKolicina * $this->TSV->steviloOseb * 4.2 / 3.6 *
-                ($this->TSV->toplaVodaT - $this->TSV->hladnaVodaT) * $stDni -
-                ($this->vrnjeneIzgubeVTSV[$mesec] ?? 0);
-
-            $this->skupnaEnergijaTSV += $this->energijaTSV[$mesec];
+        } else {
+            foreach (array_keys(Calc::MESECI) as $mesec) {
+                $this->energijaTSV[$mesec] = 0;
+            }
         }
     }
 
@@ -781,7 +754,9 @@ class Cona
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
-            if ($prop->getName() == 'ovoj') {
+            if ($prop->getName() == 'klasifikacija') {
+                $cona->klasifikacija = $this->klasifikacija->export();
+            } elseif ($prop->getName() == 'ovoj') {
                 $cona->ovoj = new \stdClass();
                 $cona->ovoj->netransparentneKonstrukcije = [];
                 $cona->ovoj->transparentneKonstrukcije = [];
@@ -802,7 +777,9 @@ class Cona
             } elseif ($prop->getName() == 'uravnavanjeVlage') {
                 //TODO:
             } else {
-                $cona->{$prop->getName()} = $prop->getValue($this);
+                if ($prop->isInitialized($this)) {
+                    $cona->{$prop->getName()} = $prop->getValue($this);
+                }
             }
         }
 

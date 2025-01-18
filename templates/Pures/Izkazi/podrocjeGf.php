@@ -74,8 +74,8 @@
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->U, 2) ?></td>
         <td class="w-10 center">
             <span title="U < <?= $this->numFormat($konstrukcija->TSG->Umax, 2) ?>">
-            <b class="<?= $elementOvoja->U < $konstrukcija->TSG->Umax ? 'green' : 'red' ?>">
-            <?= $elementOvoja->U < $konstrukcija->TSG->Umax ? '&#10003;' : '&#10006;' ?>
+            <b class="<?= round($elementOvoja->U, 2) <= $konstrukcija->TSG->Umax ? 'green' : 'red' ?>">
+            <?= round($elementOvoja->U, 2) <= $konstrukcija->TSG->Umax ? '&#10003;' : '&#10006;' ?>
             </b></span>
         </td>
     </tr>
@@ -92,8 +92,8 @@
         <td class="w-20 center"><?= $this->numFormat($elementOvoja->U, 2) ?></td>
         <td class="w-10 center">
             <span title="U < <?= $this->numFormat($konstrukcija->TSG->Umax, 2) ?>">
-            <b class="<?= $elementOvoja->U < $konstrukcija->TSG->Umax ? 'green' : 'red' ?>">
-            <?= $elementOvoja->U < $konstrukcija->TSG->Umax ? '&#10003;' : '&#10006;' ?>
+            <b class="<?= round($elementOvoja->U, 2) <= $konstrukcija->TSG->Umax ? 'green' : 'red' ?>">
+            <?= round($elementOvoja->U, 2) <= $konstrukcija->TSG->Umax ? '&#10003;' : '&#10006;' ?>
             </b></span>
         </td>
     </tr>

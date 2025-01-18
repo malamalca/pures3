@@ -7,7 +7,7 @@
         "properties" : {
             "id": {"type": "string"},
             "naziv": {"type": "string"},
-            "klasifikacija" : {"type": "string"},
+            "klasifikacija" : {"type": "string", "enum": ["St-1", "St-2", "St-3", "Go-1", "Ho-1", "Po-1", "In-1", "Sd-1", "Ra-1", "Kn-1", "Iz-1", "Iz-2", "Bo-1", "Sp-1"]},
 
             "brutoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
             "netoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}]},

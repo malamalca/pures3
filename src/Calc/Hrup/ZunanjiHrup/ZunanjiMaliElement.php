@@ -87,6 +87,9 @@ class ZunanjiMaliElement
     {
         if (!empty($this->dolzina)) {
             $this->Rw += round(-10 * log10($this->dolzina), 0);
+            array_walk($this->R, function ($R, $fq) {
+                $this->R[$fq] += round(-10 * log10($this->dolzina), 0);
+            });
         }
     }
 

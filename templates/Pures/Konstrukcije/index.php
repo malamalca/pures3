@@ -31,6 +31,6 @@
     </tr>
     <tr>
         <?= implode(PHP_EOL, array_map(fn($kons) =>
-            '<td class="left' . ($kons->U < $kons->TSG->Umax ? '' : ' red') . '">U = ' . $this->numFormat($kons->U, 2) . ' W/m²K</td>', $konstrukcije)) ?>
+            '<td class="left' . (round($kons->U, 2) <= $kons->TSG->Umax ? '' : ' red') . '">U = ' . $this->numFormat($kons->U, 2) . ' W/m²K</td>', $konstrukcije)) ?>
     </tr>
 </table>

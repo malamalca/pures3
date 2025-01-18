@@ -46,7 +46,7 @@ class PdfIzvoz extends Command
         );
 
         if ($stavba->vrsta == 'nezahtevna') {
-            $energentiSistema = json_decode(json_encode($stavba->vgrajeniSistemi), true);
+            $energentiSistema = json_decode((string)json_encode($stavba->vgrajeniSistemi), true);
             $vgrajeniSistemi = array_keys(get_object_vars($stavba->vgrajeniSistemi));
             $view->set('sistemiOgrevanja', []);
             $view->set('sistemiRazsvetljave', []);

@@ -17,6 +17,7 @@ class ZunanjiHrupFasadaTest extends TestCase
                 "naziv": "Dvojna opeka (120-50-100) mm",
                 "povrsinskaMasa": 400,
                 "Rw": 57,
+                "R": {"500":57},
                 "C": -2,
                 "Ctr": -6
             }
@@ -29,6 +30,7 @@ class ZunanjiHrupFasadaTest extends TestCase
                 "naziv": "Okna (les) s stekli (6-12-4) mm",
                 "vrsta": "okno",
                 "Rw": 33,
+                "R": {"500":33},
                 "C": -1,
                 "Ctr": -4,
                 "dR": 0
@@ -38,6 +40,7 @@ class ZunanjiHrupFasadaTest extends TestCase
                 "naziv": "Okno 6 mm",
                 "vrsta": "okno",
                 "Rw": 32,
+                "R": {"500":32},
                 "C": -1,
                 "Ctr": -2,
                 "dR": 0
@@ -50,6 +53,7 @@ class ZunanjiHrupFasadaTest extends TestCase
                 "id": "prezracevalnaOdprtina1m",
                 "naziv": "Vstopna odprtina za zrak; 6 dm³/s, 1 m",
                 "Rw": 37,
+                "R": {"500":37},
                 "C": -1,
                 "Ctr": -3
             }

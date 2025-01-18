@@ -41,6 +41,7 @@ class XmlIzvoz extends Command
         $export['tss']['prezracevanje'] = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
         $export['tss']['fotovoltaika'] = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
 
+        /** @var \DOMDocument $xml */
         $xml = Xml::fromArray(['PHPures' => $export], ['format' => 'tags', 'return' => 'domdocument']);
         $xml->preserveWhiteSpace = false;
         $xml->formatOutput = true;

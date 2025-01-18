@@ -42,6 +42,7 @@
         "cs-fix": "phpcbf --colors",
         "stan": "phpstan analyse src/",
         "test": "phpunit --colors=always",
+        "psalm": "psalm",
         "check": [
             "@test",
             "@cs-check",

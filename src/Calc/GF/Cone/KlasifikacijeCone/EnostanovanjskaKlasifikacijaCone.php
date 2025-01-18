@@ -1,0 +1,53 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Calc\GF\Cone\KlasifikacijeCone;
+
+use App\Calc\GF\Cone\Cona;
+
+class EnostanovanjskaKlasifikacijaCone extends KlasifikacijaCone
+{
+    protected string $code = 'St-1';
+    protected int $toplaVodaT = 42;
+    protected int $hladnaVodaT = 10;
+
+    /**
+     * @inheritDoc
+     */
+    public function izracunTSVZaMesec(int $mesec, Cona $cona): float
+    {
+        $toplaVodaT = $this->TSV->toplaVodaT ?? $this->toplaVodaT;
+        $hladnaVodaT = $this->TSV->hladnaVodaT ?? $this->hladnaVodaT;
+
+        if (empty($cona->TSV->steviloOseb)) {
+            $steviloOseb = 0.025 * $cona->ogrevanaPovrsina;
+            if ($steviloOseb > 1.75) {
+                $steviloOseb = 1.75 + 0.3 * ($steviloOseb - 1.75);
+            }
+        } else {
+            $steviloOseb = $cona->TSV->steviloOseb;
+        }
+
+        if (empty($cona->TSV->dnevnaKolicina)) {
+            $dnevnaKolicina = min(40.71, 3.26 * $cona->ogrevanaPovrsina / $steviloOseb);
+        } else {
+            $dnevnaKolicina = $cona->TSV->dnevnaKolicina;
+        }
+
+        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+
+        $energijaTSV = 0.001 * $dnevnaKolicina * $steviloOseb * 4.2 / 3.6 *
+            ($toplaVodaT - $hladnaVodaT) * $stDni -
+            ($cona->vrnjeneIzgubeVTSV[$mesec] ?? 0);
+
+        return $energijaTSV;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function export()
+    {
+        return $this->code;
+    }
+}

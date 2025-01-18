@@ -13,10 +13,10 @@ class NezahtevnaStavba extends Stavba
     /**
      * Loads configuration from json|stdClass
      *
-     * @param string|\stdClass $config Configuration
+     * @param \stdClass|null $config Configuration
      * @return void
      */
-    protected function parseConfig($config)
+    protected function parseConfig(?stdClass $config)
     {
         parent::parseConfig($config);
         $this->ogrevanaPovrsina = $config->ogrevanaPovrsina;
