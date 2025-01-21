@@ -80,12 +80,12 @@ class Konstrukcija
                     if (isset($config->R)) {
                         //$this->R = (array)json_decode((string)json_encode($config->R), true);
                         $Rarr = (array)json_decode((string)json_encode($config->R), true);
-                        if (sizeof($Rarr) == 1) {
-                            $this->R[500] = isset($Rarr[500]) ? $Rarr[500] : $Rarr[0];
+                        if (count($Rarr) == 1) {
+                            $this->R[500] = $Rarr[500] ?? $Rarr[0];
                         }
-                        if (sizeof($Rarr) == sizeof(Calc::FREKVENCE_TERCE)) {
+                        if (count($Rarr) == count(Calc::FREKVENCE_TERCE)) {
                             foreach (Calc::FREKVENCE_TERCE as $i => $fq) {
-                                $this->R[$fq] = isset($Rarr[$fq]) ? $Rarr[$fq] : $Rarr[$i];
+                                $this->R[$fq] = $Rarr[$fq] ?? $Rarr[$i];
                             }
                         }
                     }

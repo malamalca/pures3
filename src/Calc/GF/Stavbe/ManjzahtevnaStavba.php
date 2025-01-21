@@ -265,7 +265,7 @@ class ManjzahtevnaStavba extends Stavba
         if ($this->ROVE > 100) {
             $this->ROVE = 100;
         }
-        
+
         $this->minROVE = 50 * $this->X_OVE();
 
         $this->specificnaPrimarnaEnergija =
