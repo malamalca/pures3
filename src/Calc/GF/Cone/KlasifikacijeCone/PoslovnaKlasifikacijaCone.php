@@ -7,7 +7,10 @@ use App\Calc\GF\Cone\Cona;
 
 class PoslovnaKlasifikacijaCone extends KlasifikacijaCone
 {
-    protected string $code = 'Po-1';
+    public string $code = 'Po-1';
+
+    public float $notranjaTOgrevanje = 22;
+    public float $notranjaTHlajenje = 25;
 
     /**
      * @inheritDoc

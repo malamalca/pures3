@@ -247,6 +247,7 @@ class Fasada
         );
 
         $this->R = array_map(fn($sumTauFq) => -10 * log10($sumTauFq) + $this->deltaL_fasada, $sumTauArr);
+
         $this->Rw = Calc::Rw($this->R);
 
         /*$this->Rw = -10 * log10($sumTau);

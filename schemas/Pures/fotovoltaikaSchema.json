@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items" : {
+        "type" : "object",
+        "required": ["id", "idCone", "vrsta", "orientacija", "naklon"],
+        "oneOf": [
+            {"required": ["povrsina"]},
+            {"required": ["nazivnaMoc"]}
+        ],
+        "properties": {
+            "id": {"type": "string"},
+            "idCone": {"type": "string"},
+            "vrsta": {"enum": ["monokristalne", "polikristalne", "amorfne", "CuInGaSe", "CdTe", "ostale"]},
+            "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]},
+            "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90]},
+            "povrsina": {"type": "number"},
+            "nazivnaMoc": {"type": "number"},
+            "sencenje": {"type": "boolean"},
+            "vgradnja": {"enum": ["neprezracavani", "zmernoPrezracevani", "dobroPrezracevani"]},
+            "kontrolniFaktor": {"type": "number"},
+
+            "oddajaVOmrezje": {"type": "boolean"},
+            "vgrajenHranilnik": {"type": "boolean"},
+            "ogrevanjeTSV": {"type": "boolean"}
+        }
+    }
+}

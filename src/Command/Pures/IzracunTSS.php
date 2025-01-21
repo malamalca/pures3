@@ -117,6 +117,10 @@ class IzracunTSS extends Command
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $TSSFotonapetostniSistemi = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'fotovoltaika') ?? [];
         if (count($TSSFotonapetostniSistemi) > 0) {
+            if (!$this->validateSchema(json: $TSSFotonapetostniSistemi, schema: 'fotovoltaika', area: 'Pures')) {
+                return;
+            }
+
             $TSSFotonapetostniSistemiOut = [];
             foreach ($TSSFotonapetostniSistemi as $sistem) {
                 $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);

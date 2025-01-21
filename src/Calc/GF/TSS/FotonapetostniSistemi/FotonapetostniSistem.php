@@ -25,7 +25,10 @@ class FotonapetostniSistem
     public float $koeficientMoci;
     public float $koeficientVgradnje;
 
-    public bool $vplivUjemanja = false;
+    public bool $oddajaVOmrezje;
+    public bool $vgrajenHranilnik;
+    public bool $ogrevanjeTSV;
+    public bool $vplivUjemanja;
 
     public float $nazivnaMoc;
 
@@ -66,21 +69,33 @@ class FotonapetostniSistem
 
         $this->id = $config->id;
         $this->idCone = $config->idCone;
-        $this->povrsina = $config->povrsina;
         $this->orientacija = $config->orientacija;
         $this->naklon = $config->naklon;
 
-        $this->sencenje = (bool)$config->sencenje;
+        $this->sencenje = (bool)($config->sencenje ?? false);
+        $this->kontrolniFaktor = (float)($config->kontrolniFaktor ?? 1);
 
-        $this->kontrolniFaktor = $config->kontrolniFaktor;
-
-        $this->vrsta = VrstaSoncnihCelic::from($config->vrsta);
+        $this->vrsta = VrstaSoncnihCelic::from($config->vrsta ?? 'monokristalne');
         $this->koeficientMoci = $this->vrsta->koeficientMoci();
-        $this->vgradnja = VrstaVgradnje::from($config->vgradnja);
-        $this->koeficientVgradnje = $this->vgradnja->koeficientVgradnje();
-        $this->nazivnaMoc = $this->povrsina * $this->koeficientMoci;
 
-        $this->vplivUjemanja = (bool)($config->vplivUjemanja ?? false);
+        $this->vgradnja = VrstaVgradnje::from($config->vgradnja ?? 'neprezracavani');
+        $this->koeficientVgradnje = $this->vgradnja->koeficientVgradnje();
+
+        if (isset($config->nazivnaMoc) && !isset($config->povrsina)) {
+            $this->povrsina = $config->nazivnaMoc / $this->koeficientMoci;
+            $this->nazivnaMoc = $config->nazivnaMoc;
+        } else {
+            $this->nazivnaMoc = $this->povrsina * $this->koeficientMoci;
+        }
+
+        $this->oddajaVOmrezje = (bool)($config->oddajaVOmrezje ?? true);
+        $this->vgrajenHranilnik = (bool)($config->vgrajenHranilnik ?? false);
+        $this->ogrevanjeTSV = (bool)($config->ogrevanjeTSV ?? false);
+
+        $this->vplivUjemanja =
+            $this->oddajaVOmrezje == false &&
+            $this->vgrajenHranilnik == false &&
+            $this->ogrevanjeTSV == false;
     }
 
     /**
@@ -131,7 +146,7 @@ class FotonapetostniSistem
             $this->porabljenaEnergija[$mesec] = $this->faktorUjemanja[$mesec] *
                 min($this->proizvedenaElektricnaEnergija[$mesec], $potrebnaEnergija[$mesec]);
 
-            if ($this->vplivUjemanja) {
+            if ($this->oddajaVOmrezje == false) {
                 $this->oddanaElektricnaEnergija[$mesec] = 0;
             } else {
                 $this->oddanaElektricnaEnergija[$mesec] = $this->kontrolniFaktor *

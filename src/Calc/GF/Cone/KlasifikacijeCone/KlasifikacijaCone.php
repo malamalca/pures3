@@ -7,6 +7,9 @@ use App\Calc\GF\Cone\Cona;
 
 abstract class KlasifikacijaCone
 {
+    public float $notranjaTOgrevanje;
+    public float $notranjaTHlajenje;
+
     /**
      * Izračun energije za TSV za specifični mesec
      *

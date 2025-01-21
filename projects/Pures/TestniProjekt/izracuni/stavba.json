@@ -37,26 +37,26 @@
     "specEnergijaRazvlazevanje": 0,
     "dovoljenaSpecLetnaToplota": 25,
     "dovoljenSpecKoeficientTransmisijskihIzgub": 0.3262248338564675,
-    "neutezenaDovedenaEnergija": 10915.924974845186,
-    "utezenaDovedenaEnergija": 21796.039672569805,
-    "skupnaPrimarnaEnergija": 21796.039672569805,
-    "neobnovljivaPrimarnaEnergija": 10880.114697724619,
-    "obnovljivaPrimarnaEnergija": 10915.924974845186,
-    "izpustCO2": 3046.4321153628935,
+    "neutezenaDovedenaEnergija": 8952.208943284066,
+    "utezenaDovedenaEnergija": 16886.749593667006,
+    "skupnaPrimarnaEnergija": 16886.749593667006,
+    "neobnovljivaPrimarnaEnergija": 7934.54065038294,
+    "obnovljivaPrimarnaEnergija": 8952.208943284066,
+    "izpustCO2": 2221.671382107223,
     "skupnaOddanaElektricnaEnergija": 0,
     "skupnaProizvedenaPorabljenaElektricnaEnergija": 0,
     "skupnaProizvedenaElektricnaEnergija": 0,
     "skupnaOddanaToplota": 0,
     "faktorUjemanja": 0,
-    "ROVE": 50.082148586758244,
+    "ROVE": 53.0132154422506,
     "minROVE": 50,
-    "specificnaPrimarnaEnergija": 136.22524795356128,
-    "korigiranaSpecificnaPrimarnaEnergija": 163.47029754427354,
+    "specificnaPrimarnaEnergija": 105.54218496041878,
+    "korigiranaSpecificnaPrimarnaEnergija": 126.65062195250253,
     "dovoljenaSpecificnaPrimarnaEnergija": 75,
     "dovoljenaKorigiranaSpecificnaPrimarnaEnergija": 75,
     "energijaTSSPoEnergentih": {
         "ogrevanje": {
-            "elektrika": 8246.71893402552,
+            "elektrika": 4319.286870903281,
             "okolje": 7325.030352724212
         },
         "prezracevanje": {
@@ -6622,18 +6622,18 @@
                 1383.4377052925347
             ],
             "potrebnaElektricnaEnergija": [
-                544.2168376298483,
-                347.64069445871104,
-                197.40232939079314,
-                83.40310810460339,
-                13.306726720556894,
+                30.937795293606488,
+                26.586306358009974,
+                27.6460659558293,
+                19.899536659528255,
+                3.0737876995435416,
                 0,
                 0,
                 0,
-                13.110353489986652,
-                108.28557950380905,
-                331.09103225251283,
-                521.1867739008187
+                2.9110731121174793,
+                25.820634163411388,
+                28.210588389912637,
+                30.841616258561263
             ],
             "obnovljivaEnergija": [
                 865.8682641773431,
@@ -6651,27 +6651,27 @@
             ],
             "vracljiveIzgube": [],
             "energijaPoEnergentih": {
-                "elektrika": 4123.35946701276,
+                "elektrika": 2159.6434354516405,
                 "okolje": 3662.515176362106
             },
-            "letnaUcinkovitostOgrHlaTsv": 0.351274568265532,
+            "letnaUcinkovitostOgrHlaTsv": 0.5415835898803257,
             "minLetnaUcinkovitostOgrHlaTsv": 0.5,
             "ogrevanje": {
                 "id": null,
                 "toplotneIzgube": [],
                 "potrebnaElektricnaEnergija": [
-                    544.2168376298483,
-                    347.64069445871104,
-                    197.40232939079314,
-                    83.40310810460339,
-                    13.306726720556894,
+                    30.937795293606488,
+                    26.586306358009974,
+                    27.6460659558293,
+                    19.899536659528255,
+                    3.0737876995435416,
                     0,
                     0,
                     0,
-                    13.110353489986652,
-                    108.28557950380905,
-                    331.09103225251283,
-                    521.1867739008187
+                    2.9110731121174793,
+                    25.820634163411388,
+                    28.210588389912637,
+                    30.841616258561263
                 ],
                 "obnovljivaEnergija": [
                     865.8682641773431,
@@ -6702,7 +6702,7 @@
                     "TC"
                 ],
                 "energijaPoEnergentih": {
-                    "elektrika": 4123.35946701276,
+                    "elektrika": 2159.6434354516405,
                     "okolje": 3662.515176362106
                 },
                 "potrebnaEnergija": [
@@ -6890,18 +6890,18 @@
                     },
                     "potrebnaElektricnaEnergija": {
                         "ogrevanje": [
-                            515.686554078682,
-                            322.56270658417765,
-                            170.53968050013552,
-                            63.79062073773939,
-                            10.27752635706732,
+                            2.4075117424401666,
+                            1.5083184834765573,
+                            0.7834170651716718,
+                            0.28704929266424944,
+                            0.04458733605396792,
                             0,
                             0,
                             0,
-                            10.243855245618954,
-                            82.83716186845493,
-                            304.2898015333693,
-                            492.6481882742084
+                            0.04457486774978184,
+                            0.3722165280572741,
+                            1.4093576707691011,
+                            2.3030306319509153
                         ]
                     },
                     "obnovljivaEnergija": {

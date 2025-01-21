@@ -5,31 +5,53 @@
         "type" : "object",
         "required": ["id", "naziv", "klasifikacija", "prezracevanje"],
         "properties" : {
-            "id": {"type": "string"},
-            "naziv": {"type": "string"},
-            "klasifikacija" : {"type": "string", "enum": ["St-1", "St-2", "St-3", "Go-1", "Ho-1", "Po-1", "In-1", "Sd-1", "Ra-1", "Kn-1", "Iz-1", "Iz-2", "Bo-1", "Sp-1"]},
+            "id": {"type": "string", "description": "Šifra cone"},
+            "naziv": {"type": "string", "description": "Naziv cone"},
+            "klasifikacija" : {
+                "enum": ["St-1", "St-2", "St-3", "Go-1", "Ho-1", "Po-1", "In-1", "Sd-1", "Ra-1", "Kn-1", "Iz-1", "Iz-2", "Bo-1", "Sp-1"],
+                "description": "Klasifikacija cone po standardu SIST ISO 18523-1"
+            },
 
-            "brutoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
-            "netoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
-            "ogrevanaPovrsina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
-            "dolzina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
-            "sirina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
-            "etaznaVisina": {"oneOf": [{"type": "number"}, {"type": "string"}]},
-            "steviloEtaz": {"type": "integer"},
+            "brutoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}], "description": "Šifra cone"},
+            "netoProstornina": {"oneOf": [{"type": "number"}, {"type": "string"}], "description": "Prostornina zraka v kondicionirani coni v V [m³]"},
+            "ogrevanaPovrsina": {"oneOf": [{"type": "number"}, {"type": "string"}], "description": "Kondicionirana površina cone A<sub>use</sub> [m²]"},
+            "dolzina": {"oneOf": [{"type": "number"}, {"type": "string"}], "description": "Dolžina cone D [m]"},
+            "sirina": {"oneOf": [{"type": "number"}, {"type": "string"}], "description": "Širina cone Š [m]"},
+            "etaznaVisina": {"oneOf": [{"type": "number"}, {"type": "string"}], "description": "Etažna višina cone H [m]"},
+            "steviloEtaz": {"type": "integer", "description": "Število etaž v coni n [-]"},
 
-            "notranjaTOgrevanje": {"type": "number"},
-            "notranjaTHlajenje": {"type": "number"},
-            "zunanjaT": {"type": "number"},
+            "deltaPsi": {"type": "number", "description": "Dodatek spec. koeficientu transmisijskih toplotnih izgub zaradi toplotnih mostov ΔΨ<sub>tb</sub> [W/(m²K)]"},
 
-            "toplotnaKapaciteta": {"oneOf": [{"type": "number"}, {"enum": ["zeloLahkeKonstrukcije", "lahkeKonstrukcije", "srednjeTezkeKonstrukcije", "tezkeKonstrukcije", "zeloTezkeKonstrukcije"]}]},
+            "notranjaTOgrevanje": {"type": "number", "description": "Notranja operativna temperatura v času ogrevanja θ<sub>op</sub> [°C]"},
+            "notranjaTHlajenje": {"type": "number", "description": "Notranja operativna temperatura v času hlajenja θ<sub>op</sub> [°C]"},
+
+            "toplotnaKapaciteta": {
+                "oneOf": [
+                    {"type": "number"},
+                    {"enum": ["zeloLahkeKonstrukcije", "lahkeKonstrukcije", "srednjeTezkeKonstrukcije", "tezkeKonstrukcije", "zeloTezkeKonstrukcije"]}
+                ],
+                "description": "Specifična toplotna kapaciteta na m2 uporabne površine C [J/m²K]"
+            },
 
             "infiltracija": {
                 "type": "object",
                 "required": ["n50", "lega", "zavetrovanost"],
                 "properties": {
-                    "n50": {"type": "number"},
-                    "lega": {"oneOf": [{"type": "integer"}, {"enum": ["naPodezelju", "visokaStavbaVMestu", "naPodezeljuMedDrevesi", "obkrozenaStavbaVMestu", "stavbaVPredmestju", "povprecnaStavbaVMestu", "stavbaVGozdu"]}]},
-                    "zavetrovanost": {"oneOf": [{"type": "integer"}, {"enum": ["izpostavljenaEnaFasada", "izpostavljenihVecFasad"]}]}
+                    "n50": {"type": "number", "description": "Stopnja tesnosti stavbe n<sub>50</sub> [h<sup>-1</sup>]"},
+                    "lega": {
+                        "oneOf": [
+                            {"type": "integer"},
+                            {"enum": ["naPodezelju", "visokaStavbaVMestu", "naPodezeljuMedDrevesi", "obkrozenaStavbaVMestu", "stavbaVPredmestju", "povprecnaStavbaVMestu", "stavbaVGozdu"]}
+                        ],
+                        "description": "Lega stavbe za izračun vpliva vetra"
+                    },
+                    "zavetrovanost": {
+                        "oneOf": [
+                            {"type": "integer"},
+                            {"enum": ["izpostavljenaEnaFasada", "izpostavljenihVecFasad"]}
+                        ],
+                        "description": "Število izpostavljenih površin/fasad"
+                    }
                 }
             },
 
@@ -37,8 +59,8 @@
                 "type": "object",
                 "required": ["ogrevanje", "hlajenje"],
                 "properties": {
-                    "ogrevanje": {"type": "number"},
-                    "hlajenje": {"type": "number"}
+                    "ogrevanje": {"type": "number", "description": "Specifični senzibilni toplotni tok v času ogrevanja cone q<sub>s</sub> [W/m²]"},
+                    "hlajenje": {"type": "number", "description": "Specifični senzibilni toplotni tok v času hlajenja cone q<sub>s</sub> [W/m²]"}
                 }
             },
 
@@ -53,19 +75,19 @@
                             {"required": ["volumenDovedenegaZraka"]}
                         ],
                         "properties": {
-                            "vrsta": {"const": "naravno"},
+                            "vrsta": {"const": "naravno", "description": "Vrsta prezračevanja (naravno/prisilno/rekuperacija)"},
                             "izmenjava": {
                                 "type": "object",
                                 "properties": {
-                                    "ogrevanje": {"type": "number"},
-                                    "hlajenje": {"type": "number"}
+                                    "ogrevanje": {"type": "number", "description": "Število izmenjav zraka v času ogrevanja n [1/h]"},
+                                    "hlajenje": {"type": "number", "description": "Število izmenjav zraka v času hlajenja n [1/h]"}
                                 }
                             },
                             "volumenDovedenegaZraka": {
                                 "type": "object",
                                 "properties": {
-                                    "ogrevanje": {"type": "number"},
-                                    "hlajenje": {"type": "number"}
+                                    "ogrevanje": {"type": "number", "description": "Količina dovedenega zraka v času ogrevanja V [m³/h]"},
+                                    "hlajenje": {"type": "number", "description": "Količina dovedenega zraka v času hlajenja V [m³/h]"}
                                 }
                             }
                         }
@@ -78,20 +100,23 @@
                             {"required": ["volumenDovedenegaZraka"]}
                         ],
                         "properties": {
-                            "vrsta": {"const": "mehansko"},
-                            "regulacija": {"enum": ["brez", "senzorPrisotnosti", "senzorCO2", "senzorStevilaLjudi"]},
+                            "vrsta": {"const": "mehansko", "description": "Vrsta prezračevanja (naravno/prisilno/rekuperacija)"},
+                            "regulacija": {
+                                "enum": ["brez", "senzorPrisotnosti", "senzorCO2", "senzorStevilaLjudi"],
+                                "description": "Vrsta regulacije prezračevanja (brez/senzorPrisotnosti/senzorCO2/senzorStevilaLjudi)"
+                            },
                             "izmenjava": {
                                 "type": "object",
                                 "properties": {
-                                    "ogrevanje": {"type": "number"},
-                                    "hlajenje": {"type": "number"}
+                                    "ogrevanje": {"type": "number", "description": "Število izmenjav zraka v času ogrevanja n [1/h]"},
+                                    "hlajenje": {"type": "number", "description": "Število izmenjav zraka v času hlajenja n [1/h]"}
                                 }
                             },
                             "volumenDovedenegaZraka": {
                                 "type": "object",
                                 "properties": {
-                                    "ogrevanje": {"type": "number"},
-                                    "hlajenje": {"type": "number"}
+                                    "ogrevanje": {"type": "number", "description": "Količina dovedenega zraka v času ogrevanja V [m³/h]"},
+                                    "hlajenje": {"type": "number", "description": "Količina dovedenega zraka v času hlajenja V [m³/h]"}
                                 }
                             }
                         }
@@ -104,9 +129,12 @@
                             {"required": ["volumenDovedenegaZraka"]}
                         ],
                         "properties": {
-                            "vrsta": {"const": "rekuperacija"},
-                            "izkoristek": {"type": "number"},
-                            "regulacija": {"enum": ["brez", "senzorPrisotnosti", "senzorCO2", "senzorStevilaLjudi"]},
+                            "vrsta": {"const": "rekuperacija", "description": "Vrsta prezračevanja (naravno/prisilno/rekuperacija)"},
+                            "izkoristek": {"type": "number", "description": "Referenčni izkoristek vračanja toplote prezračevalnega sistema z rekuperacijo η<sub>V</sub> [-]"},
+                            "regulacija": {
+                                "enum": ["brez", "senzorPrisotnosti", "senzorCO2", "senzorStevilaLjudi"],
+                                "description": "Vrsta regulacije prezračevanja (brez/senzorPrisotnosti/senzorCO2/senzorStevilaLjudi)"
+                            },
                             "izmenjava": {
                                 "type": "object",
                                 "properties": {
@@ -129,10 +157,10 @@
             "TSV": {
                 "type": "object",
                 "properties": {
-                    "steviloOseb": {"type": "number"},
-                    "dnevnaKolicina": {"type": "number"},
-                    "toplaVodaT": {"type": "number"},
-                    "hladnaVodaT": {"type": "number"}
+                    "steviloOseb": {"type": "number", "description": "Število oseb/uporabnikov cone n<sub>os</sub> [-]"},
+                    "dnevnaKolicina": {"type": "number", "description": "Dnevna količina tople sanitarne vode po osebi V<sub>W,os,d</sub> [lit/d]"},
+                    "toplaVodaT": {"type": "number", "description": "Temperatura TSV na iztočnem mestu θ<sub>w,h</sub> °C."},
+                    "hladnaVodaT": {"type": "number", "description": "Temperatura hladne vodovodne vode na vstopu v stavbo θ<sub>w,h</sub> °C."}
                 }
             },
 
@@ -140,22 +168,22 @@
                 "type": "object",
                 "required": ["faktorDnevneSvetlobe"],
                 "properties": {
-                    "faktorDnevneSvetlobe": {"type": "number"},
-                    "mocSvetilk": {"type": "number"},
-                    "faktorZmanjsanjaSvetlobnegaToka": {"type": "number"},
-                    "faktorPrisotnosti": {"type": "number"},
-                    "ucinkovitostViraSvetlobe": {"type": "number"},
-                    "osvetlitevDelovnePovrsine": {"type": "number"},
-                    "faktorZmanjsaneOsvetlitveDelovnePovrsine": {"type": "number"},
-                    "faktorVzdrzevanja": {"type": "number"},
-                    "faktorNaravneOsvetlitve": {"type": "number"},
-                    "letnoUrPodnevi": {"type": "number"},
-                    "letnoUrPonoci": {"type": "number"},
+                    "faktorDnevneSvetlobe": {"type": "number", "description": "Faktor dnevne svetlobe FDS<sub>T</sub> [-]"},
+                    "mocSvetilk": {"type": "number", "description": "Specifična električna moč svetill na enoto kondicionirane površine cone P'<sub>L,zn</sub> W/m²"},
+                    "faktorZmanjsanjaSvetlobnegaToka": {"type": "number", "description": "Faktor zmanjšanja svetlobnega toka F<sub>C,zn</sub> [-]"},
+                    "faktorPrisotnosti": {"type": "number", "description": "Faktor prisotnosti uporabnikov F<sub>O,zn</sub> [-]"},
+                    "ucinkovitostViraSvetlobe": {"type": "number", "description": "Energijska učinkovitost vira svetlobe η<sub>L</sub> [lm/W]"},
+                    "osvetlitevDelovnePovrsine": {"type": "number", "description": "Projektirana osvetlitev delovne površine E<sub>task</sub> [lx]"},
+                    "faktorZmanjsaneOsvetlitveDelovnePovrsine": {"type": "number", "description": "Faktor zmanjšane osvetlitve delovne površine F<sub>CA</sub> [-]"},
+                    "faktorVzdrzevanja": {"type": "number", "description": "Faktor vzdrževanja svetilk F<sub>MF</sub> [-]"},
+                    "faktorNaravneOsvetlitve": {"type": "number", "description": "Faktor naravne osvetlitve cone F<sub>D,zn</sub> [-]"},
+                    "letnoUrPodnevi": {"type": "number", "description": "Letno število ur delovanje električne razsvetljave v dnevnem času t<sub>D</sub> [-]"},
+                    "letnoUrPonoci": {"type": "number", "description": "Letno število ur delovanje električne razsvetljave v nočnem času t<sub>D</sub> [-]"},
                     "varnostna": {
                         "type": "object",
                         "properties": {
-                            "energijaZaPolnjenje": {"type": "number"},
-                            "energijaZaDelovanje": {"type": "number"}
+                            "energijaZaPolnjenje": {"type": "number", "description": "Dovedena energija za polnjenje baterij varnostnih sijalk na m² uporabne površine W<sub>pe,zn,an</sub> [kWh/m²an]"},
+                            "energijaZaDelovanje": {"type": "number", "description": "Dovedena energija za regulacijo delovanja varnostnih sijalk na m² uporabne površine W<sub>pe,zn,an</sub> [kWh/m²an]"}
                         }
                     }
                 }

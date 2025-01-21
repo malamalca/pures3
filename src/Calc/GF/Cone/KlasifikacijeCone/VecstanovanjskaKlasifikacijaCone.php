@@ -7,9 +7,13 @@ use App\Calc\GF\Cone\Cona;
 
 class VecstanovanjskaKlasifikacijaCone extends KlasifikacijaCone
 {
-    protected string $code = 'St-1';
-    protected int $toplaVodaT = 42;
-    protected int $hladnaVodaT = 10;
+    public string $code = 'St-2';
+
+    public float $notranjaTOgrevanje = 20;
+    public float $notranjaTHlajenje = 26;
+
+    public int $toplaVodaT = 42;
+    public int $hladnaVodaT = 10;
 
     /**
      * @inheritDoc

@@ -5,6 +5,7 @@ namespace App\Calc\Hrup\Elementi;
 
 use App\Calc\Hrup\Elementi\Izbire\TipKonstrukcije;
 use App\Calc\Hrup\Elementi\Izbire\VrstaDodatnegaSloja;
+use App\Lib\Calc;
 use App\Lib\EvalMath;
 use stdClass;
 
@@ -77,7 +78,16 @@ class Konstrukcija
                     break;
                 case 'R':
                     if (isset($config->R)) {
-                        $this->R = (array)json_decode((string)json_encode($config->R), true);
+                        //$this->R = (array)json_decode((string)json_encode($config->R), true);
+                        $Rarr = (array)json_decode((string)json_encode($config->R), true);
+                        if (sizeof($Rarr) == 1) {
+                            $this->R[500] = isset($Rarr[500]) ? $Rarr[500] : $Rarr[0];
+                        }
+                        if (sizeof($Rarr) == sizeof(Calc::FREKVENCE_TERCE)) {
+                            foreach (Calc::FREKVENCE_TERCE as $i => $fq) {
+                                $this->R[$fq] = isset($Rarr[$fq]) ? $Rarr[$fq] : $Rarr[$i];
+                            }
+                        }
                     }
                     break;
                 case 'dodatniSloji':

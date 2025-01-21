@@ -255,7 +255,17 @@ class ManjzahtevnaStavba extends Stavba
             return;
         }
 
-        $this->ROVE = $this->obnovljivaPrimarnaEnergija / $this->skupnaPrimarnaEnergija * 100;
+        if ($this->skupnaPrimarnaEnergija < 0) {
+            // če je fotovoltaika je skupnaPrimarna energija LAHKO manjša kot nič
+            //$this->ROVE = ($this->obnovljivaPrimarnaEnergija - $this->skupnaPrimarnaEnergija) / (-$this->skupnaPrimarnaEnergija) * 100;
+            $this->ROVE = 100;
+        } else {
+            $this->ROVE = $this->obnovljivaPrimarnaEnergija / $this->skupnaPrimarnaEnergija * 100;
+        }
+        if ($this->ROVE > 100) {
+            $this->ROVE = 100;
+        }
+        
         $this->minROVE = 50 * $this->X_OVE();
 
         $this->specificnaPrimarnaEnergija =
