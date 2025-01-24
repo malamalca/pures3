@@ -85,6 +85,7 @@ class FotonapetostniSistem
             $this->povrsina = $config->nazivnaMoc / $this->koeficientMoci;
             $this->nazivnaMoc = $config->nazivnaMoc;
         } else {
+            $this->povrsina = $config->povrsina;
             $this->nazivnaMoc = $this->povrsina * $this->koeficientMoci;
         }
 

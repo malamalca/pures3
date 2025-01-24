@@ -9,20 +9,21 @@
             {"required": ["nazivnaMoc"]}
         ],
         "properties": {
-            "id": {"type": "string"},
-            "idCone": {"type": "string"},
-            "vrsta": {"enum": ["monokristalne", "polikristalne", "amorfne", "CuInGaSe", "CdTe", "ostale"]},
-            "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]},
-            "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90]},
-            "povrsina": {"type": "number"},
-            "nazivnaMoc": {"type": "number"},
-            "sencenje": {"type": "boolean"},
-            "vgradnja": {"enum": ["neprezracavani", "zmernoPrezracevani", "dobroPrezracevani"]},
-            "kontrolniFaktor": {"type": "number"},
+            "id": {"type": "string", "description": "Id fotonapetostnega sistema"},
+            "idCone": {"type": "string", "description": "Šifra cone"},
+            "vrsta": {"enum": ["monokristalne", "polikristalne", "amorfne", "CuInGaSe", "CdTe", "ostale"], "description": "Vrsta sončnih celic"},
+            "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"], "description": "Orientacija PV modulov"},
+            "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90], "description": "Naklon PV modulov [°]"},
+            "povrsina": {"type": "number", "description": "Površina PV modulov A<sub>PV</sub> [m²]"},
+            "nazivnaMoc": {"type": "number", "description": "Nazivna moč fotonapetostnega sistema P<sub>pk</sub> [kW]"},
+            "sencenje": {"type": "boolean", "description": "Senčenje PV modulov (true/false)"},
+            "sencenjeFaktorji": {"type": "array", "items": {"type": "number"}, "minItems": 12, "maxItems": 12, "description": "Faktorji senčenja sistema F<sub>sh,op</sub> [-]"},
+            "vgradnja": {"enum": ["neprezracavani", "zmernoPrezracevani", "dobroPrezracevani"], "description": "Način vgradnje PV modulov (neprezracevani/zmernoPrezracevani/dobroPrezracevani)"},
+            "kontrolniFaktor": {"type": "number", "description": "Kontrolni faktor k<sub>exp</sub> [-]"},
 
-            "oddajaVOmrezje": {"type": "boolean"},
-            "vgrajenHranilnik": {"type": "boolean"},
-            "ogrevanjeTSV": {"type": "boolean"}
+            "oddajaVOmrezje": {"type": "boolean", "description": "PV sistem je povezan z omrežjem (true/false)"},
+            "vgrajenHranilnik": {"type": "boolean", "description": "Baterija je vgrajena in je kapacitete > 0,1 kWh/m² Ause (true/false)"},
+            "ogrevanjeTSV": {"type": "boolean", "description": "PV je namenjen segrevanju TSV z uporovnim grelnikom in hranilnikom s kapaciteto > 75% dnevne rabe toplote (true/false)"}
         }
     }
 }

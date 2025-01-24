@@ -3,6 +3,7 @@
     "type": "array",
     "items" : {
         "type" : "object",
+        "additionalProperties": false,
         "required": ["id", "naziv", "klasifikacija", "prezracevanje"],
         "properties" : {
             "id": {"type": "string", "description": "Šifra cone"},
@@ -169,7 +170,7 @@
                 "required": ["faktorDnevneSvetlobe"],
                 "properties": {
                     "faktorDnevneSvetlobe": {"type": "number", "description": "Faktor dnevne svetlobe FDS<sub>T</sub> [-]"},
-                    "mocSvetilk": {"type": "number", "description": "Specifična električna moč svetill na enoto kondicionirane površine cone P'<sub>L,zn</sub> W/m²"},
+                    "mocSvetilk": {"type": "number", "description": "Specifična električna moč svetil na enoto kondicionirane površine cone P'<sub>L,zn</sub> [W/m²]"},
                     "faktorZmanjsanjaSvetlobnegaToka": {"type": "number", "description": "Faktor zmanjšanja svetlobnega toka F<sub>C,zn</sub> [-]"},
                     "faktorPrisotnosti": {"type": "number", "description": "Faktor prisotnosti uporabnikov F<sub>O,zn</sub> [-]"},
                     "ucinkovitostViraSvetlobe": {"type": "number", "description": "Energijska učinkovitost vira svetlobe η<sub>L</sub> [lm/W]"},

@@ -7,24 +7,23 @@
                 "type" : "object",
                 "required": ["id", "naziv", "vrsta", "Uf", "Ug", "g", "Psi"],
                 "properties" : {
-                    "id": {"type": "string"},
-                    "naziv": {"type": "string"},
-                    "vrsta" : {
-                        "enum" : [0, 1]
-                    },
-                    "Uf": {"type": "number"},
-                    "Ug": {"type": "number"},
-                    "g": {"type": "number"},
-                    "Psi": {"type": "number"},
+                    "id": {"type": "string", "description": "Id oznaka elementa"},
+                    "naziv": {"type": "string", "description": "Naziv elementa"},
+                    "vrsta" : {"enum" : [0, 1], "description": "Vrsta elementa po TSG (0-okno/1-strešno okno)"},
+                    "Uf": {"type": "number", "description": "Toplotna prehodnost okvirja U<sub>d</sub> [W/m²K]"},
+                    "Ug": {"type": "number", "description": "Toplotna prehodnost stekla U<sub>d</sub> [W/m²K]"},
+                    "g": {"type": "number", "description": "Faktor prehoda celotnega sončnega sevanja g [-]"},
+                    "Psi": {"type": "number", "description": "Linijski toplotni most medstekelnega distančnika ψ [W/mK]"},
                     "stranskoSencenje": {
                         "type": "object",
+                        "description": "Senčenje zaradi nadstreškov in stranskih ovir",
                         "properties": {
-                            "zgorajDolzina": {"type": "number"},
-                            "zgorajRazdalja": {"type": "number"},
-                            "levoDolzina": {"type": "number"},
-                            "levoRazdalja": {"type": "number"},
-                            "desnoDolzina": {"type": "number"},
-                            "desnoRazdalja": {"type": "number"}
+                            "zgorajDolzina": {"type": "number", "description": "Dolžina/globina nadstreška D<sub>ovh</sub> [m]"},
+                            "zgorajRazdalja": {"type": "number", "description": "Vertikalna razdalja od stekla do nadstreška L<sub>ovh</sub> [m]"},
+                            "levoDolzina": {"type": "number", "description": "Dolžina/globina ovire levo D<sub>fin,l</sub> [m]"},
+                            "levoRazdalja": {"type": "number", "description": "Razdalja do ovire levo L<sub>fin,l</sub> [m]"},
+                            "desnoDolzina": {"type": "number", "description": "Dolžina/globina ovire desno D<sub>fin,d</sub> [m]"},
+                            "desnoRazdalja": {"type": "number", "description": "Razdalja do ovire desno L<sub>fin,d</sub> [m]"}
                         }
                     }
                 }
@@ -33,12 +32,10 @@
                 "type" : "object",
                 "required": ["id", "naziv", "vrsta", "Ud"],
                 "properties" : {
-                    "id": {"type": "string"},
-                    "naziv": {"type": "string"},
-                    "vrsta" : {
-                        "enum" : [2, 3]
-                    },
-                    "Ud": {"type": "number"}
+                    "id": {"type": "string", "description": "Id oznaka elementa"},
+                    "naziv": {"type": "string", "description": "Naziv elementa"},
+                    "vrsta" : {"enum" : [2, 3], "description": "Vrsta elementa po TSG (2-vrata/3-garažna vrata)"},
+                    "Ud": {"type": "number", "description": "Toplotna prehodnost U<sub>d</sub> [W/m²K]"}
                 }
             }
         ]

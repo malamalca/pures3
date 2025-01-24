@@ -20,6 +20,14 @@
             {
                 "fileMatch": ["cone.json"],
                 "url": "https://raw.githubusercontent.com/malamalca/pures3/refs/heads/main/schemas/Pures/coneSchema.json",
+            },
+            {
+                "fileMatch": ["transparentne.json"],
+                "url": "https://raw.githubusercontent.com/malamalca/pures3/refs/heads/main/schemas/Pures/oknavrataSchema.json",
+            },
+            {
+                "fileMatch": ["fotovoltaika.json"],
+                "url": "https://raw.githubusercontent.com/malamalca/pures3/refs/heads/main/schemas/Pures/fotovoltaikaSchema.json",
             }
         ]
     }
