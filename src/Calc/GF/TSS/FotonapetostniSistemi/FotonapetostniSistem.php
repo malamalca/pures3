@@ -11,7 +11,6 @@ use App\Lib\Calc;
 class FotonapetostniSistem
 {
     public string $id;
-    public string $idCone;
     public string $tss = 'fotovoltaika';
 
     public float $povrsina;
@@ -68,7 +67,6 @@ class FotonapetostniSistem
         }
 
         $this->id = $config->id;
-        $this->idCone = $config->idCone;
         $this->orientacija = $config->orientacija;
         $this->naklon = $config->naklon;
 
@@ -103,12 +101,11 @@ class FotonapetostniSistem
      * Analiza podsistema
      *
      * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
-     * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
-    public function analiza($potrebnaEnergija, $cona, $okolje, $params = [])
+    public function analiza($potrebnaEnergija, $okolje, $params = [])
     {
         $this->potrebnaEnergija = $potrebnaEnergija;
 

@@ -5,7 +5,7 @@ namespace App\Command\Pures;
 
 use App\Calc\GF\TSS\FotonapetostniSistemi\FotonapetostniSistem;
 use App\Calc\GF\TSS\Razsvetljava\Razsvetljava;
-use App\Calc\GF\TSS\SistemOgrevanjaFactory;
+use App\Calc\GF\TSS\SistemOHTFactory;
 use App\Calc\GF\TSS\SistemPrezracevanjaFactory;
 use App\Core\App;
 use App\Core\Command;
@@ -74,44 +74,44 @@ class IzracunTSS extends Command
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        $TSSSistemiOgrevanje = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'ogrevanje') ?? [];
-        if (count($TSSSistemiOgrevanje) > 0) {
-            $TSSSistemiOgrevanjeOut = [];
+        $TSSSistemiOHT = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'ogrevanje') ?? [];
+        if (count($TSSSistemiOHT) > 0) {
+            $TSSSistemiOHTOut = [];
             $vracljiveIzgubeVOgrevanje = [];
-            foreach ($TSSSistemiOgrevanje as $sistem) {
+            foreach ($TSSSistemiOHT as $sistem) {
                 $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
-                    throw new \Exception('TSS Ogrevanje: Cona ne obstaja.');
+                    throw new \Exception('TSS OHT: Cona ne obstaja.');
                 }
 
-                $sistemOgrevanja = SistemOgrevanjaFactory::create($sistem->vrsta, $sistem);
-                if (!$sistemOgrevanja) {
-                    throw new \Exception(sprintf('TSS Ogrevanje: Sistem "%s" ne obstaja.', $sistem->id));
+                $sistemOHT = SistemOHTFactory::create($sistem->vrsta, $sistem);
+                if (!$sistemOHT) {
+                    throw new \Exception(sprintf('TSS OHT: Sistem "%s" ne obstaja.', $sistem->id));
                 }
 
-                $sistemOgrevanja->vracljiveIzgubeVOgrevanje = $vracljiveIzgubeVOgrevanje;
-                $sistemOgrevanja->analiza($cona, $okolje);
+                $sistemOHT->vracljiveIzgubeVOgrevanje = $vracljiveIzgubeVOgrevanje;
+                $sistemOHT->analiza($cona, $okolje);
 
-                $vracljiveIzgubeVOgrevanje = $sistemOgrevanja->vracljiveIzgubeVOgrevanje;
+                $vracljiveIzgubeVOgrevanje = $sistemOHT->vracljiveIzgubeVOgrevanje;
 
-                $elektrikaPoConah[$sistemOgrevanja->idCone] = array_sum_values(
-                    $elektrikaPoConah[$sistemOgrevanja->idCone],
-                    $sistemOgrevanja->potrebnaElektricnaEnergija
+                $elektrikaPoConah[$sistemOHT->idCone] = array_sum_values(
+                    $elektrikaPoConah[$sistemOHT->idCone],
+                    $sistemOHT->potrebnaElektricnaEnergija
                 );
 
-                $elektrikaPoConah[$sistemOgrevanja->idCone] =
+                $elektrikaPoConah[$sistemOHT->idCone] =
                     array_sum_values(
-                        $elektrikaPoConah[$sistemOgrevanja->idCone],
+                        $elektrikaPoConah[$sistemOHT->idCone],
                         array_subtract_values(
-                            $sistemOgrevanja->potrebnaEnergija,
-                            $sistemOgrevanja->obnovljivaEnergija
+                            $sistemOHT->potrebnaEnergija,
+                            $sistemOHT->obnovljivaEnergija
                         )
                     );
 
-                $TSSSistemiOgrevanjeOut[] = $sistemOgrevanja->export();
+                $TSSSistemiOHTOut[] = $sistemOHT->export();
             }
 
-            App::saveProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje', $TSSSistemiOgrevanjeOut);
+            App::saveProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje', $TSSSistemiOHTOut);
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,20 +122,27 @@ class IzracunTSS extends Command
             }
 
             $TSSFotonapetostniSistemiOut = [];
+            $celotnaElektrikaVsehCon = [];
+            foreach ($elektrikaPoConah as $conaId => $conaElektrika) {
+                $celotnaElektrikaVsehCon = array_sum_values($celotnaElektrikaVsehCon, $conaElektrika);
+            }
             foreach ($TSSFotonapetostniSistemi as $sistem) {
-                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
-                if (!$cona) {
-                    throw new \Exception('TSS Fotovoltaika: Cona ne obstaja.');
-                }
-
                 $fotonapetostniSistem = new FotonapetostniSistem($sistem);
-                $fotonapetostniSistem->analiza(
-                    $elektrikaPoConah[$sistem->idCone],
-                    $cona,
-                    $okolje
-                );
+                $fotonapetostniSistem->analiza($celotnaElektrikaVsehCon, $okolje);
 
                 $sistem->energijaPoEnergentih = $fotonapetostniSistem->energijaPoEnergentih;
+
+                // odštej v stavbi porabljeno energijo tega fotonapetostnega sistema, da se zmanjša
+                // potrebna električna energija za naslednji fotonapetostni sistem (če jih je več)
+                array_subtract_values($celotnaElektrikaVsehCon, $fotonapetostniSistem->porabljenaEnergija);
+                array_walk(
+                    $celotnaElektrikaVsehCon,
+                    function ($potrebnaEnergija, $mesec) use ($celotnaElektrikaVsehCon) {
+                        if ($potrebnaEnergija < 0) {
+                            $celotnaElektrikaVsehCon[$mesec] = 0;
+                        }
+                    }
+                );
 
                 $TSSFotonapetostniSistemiOut[] = $fotonapetostniSistem;
             }

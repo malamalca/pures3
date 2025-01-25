@@ -10,8 +10,8 @@
                     "id": {"type": "string", "description": "Id oznaka elementa"},
                     "naziv": {"type": "string", "description": "Naziv elementa"},
                     "vrsta" : {"enum" : [0, 1], "description": "Vrsta elementa po TSG (0-okno/1-strešno okno)"},
-                    "Uf": {"type": "number", "description": "Toplotna prehodnost okvirja U<sub>d</sub> [W/m²K]"},
-                    "Ug": {"type": "number", "description": "Toplotna prehodnost stekla U<sub>d</sub> [W/m²K]"},
+                    "Uf": {"type": "number", "description": "Toplotna prehodnost okvirja U<sub>f</sub> [W/m²K]"},
+                    "Ug": {"type": "number", "description": "Toplotna prehodnost stekla U<sub>g</sub> [W/m²K]"},
                     "g": {"type": "number", "description": "Faktor prehoda celotnega sončnega sevanja g [-]"},
                     "Psi": {"type": "number", "description": "Linijski toplotni most medstekelnega distančnika ψ [W/mK]"},
                     "stranskoSencenje": {

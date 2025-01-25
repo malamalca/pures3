@@ -48,13 +48,13 @@ class PdfIzvoz extends Command
         if ($stavba->vrsta == 'nezahtevna') {
             $energentiSistema = json_decode((string)json_encode($stavba->vgrajeniSistemi), true);
             $vgrajeniSistemi = array_keys(get_object_vars($stavba->vgrajeniSistemi));
-            $view->set('sistemiOgrevanja', []);
+            $view->set('sistemiOHT', []);
             $view->set('sistemiRazsvetljave', []);
             $view->set('sistemiPrezracevanja', []);
             $view->set('sistemiSTPE', []);
         } else {
             $view->set(
-                'sistemiOgrevanja',
+                'sistemiOHT',
                 (array)App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje')
             );
             $view->set(
@@ -72,16 +72,15 @@ class PdfIzvoz extends Command
 
             $vgrajeniSistemi = [];
 
-            $tssOgrevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
-            $tssHlajenje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'hlajenje');
+            $tssOHT = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
             $tssRazsvetljava = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
             $tssPrezracevanje = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
             $tssFotovoltaika = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
 
             $energentiSistema = [];
-            if ($tssOgrevanje) {
-                foreach ($tssOgrevanje as $sistem) {
-                    /** @var \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem */
+            if ($tssOHT) {
+                foreach ($tssOHT as $sistem) {
+                    /** @var \App\Calc\GF\TSS\OHTSistemi\OHTSistem $sistem */
                     if (isset($sistem->ogrevanje)) {
                         $vgrajeniSistemi[] = 'ogrevanje';
                         foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
@@ -116,17 +115,6 @@ class PdfIzvoz extends Command
                 if (isset($energentiSistema['hlajenje'])) {
                     $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
                 }
-            }
-
-            if ($tssHlajenje) {
-                $vgrajeniSistemi[] = 'hlajenje';
-                $energentiSistema['hlajenje'] = [];
-                foreach ($tssHlajenje as $sistem) {
-                    foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
-                        $energentiSistema['hlajenje'][] = $energent;
-                    }
-                }
-                $energentiSistema['hlajenje'] = array_unique($energentiSistema['hlajenje']);
             }
 
             if ($tssRazsvetljava) {
@@ -216,15 +204,10 @@ class PdfIzvoz extends Command
             $pdf->newPage((string)$view->render('Cone', 'analiza'));
         }
 
-        foreach ($view->get('sistemiOgrevanja') as $sistem) {
+        foreach ($view->get('sistemiOHT') as $sistem) {
             $view->set('sistem', $sistem);
-            $view->set('sistemi', $view->get('sistemiOgrevanja'));
-            $pdf->newPage((string)$view->render('TSS', 'ogrevanje'));
-        }
-        foreach ($view->get('sistemiHlajenja') ?? [] as $sistem) {
-            $view->set('sistem', $sistem);
-            $view->set('sistemi', $view->get('sistemiHlajenja'));
-            $pdf->newPage((string)$view->render('TSS', 'hlajenje'));
+            $view->set('sistemi', $view->get('sistemiOHT'));
+            $pdf->newPage((string)$view->render('TSS', 'oht'));
         }
 
         foreach ($view->get('sistemiPrezracevanja') as $sistem) {

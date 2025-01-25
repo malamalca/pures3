@@ -47,7 +47,7 @@ class TSSController extends Controller
      * @param string $sistemId Id
      * @return void
      */
-    public function ogrevanje($projectId, $sistemId)
+    public function oht($projectId, $sistemId)
     {
         App::set('projectId', $projectId);
 

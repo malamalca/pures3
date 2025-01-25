@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Test\Pures\TSS\OgrevalniSistemi;
+namespace App\Test\Pures\TSS\OHTSistemi;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\ToplovodniOHTSistem;
+use App\Calc\GF\TSS\OHTSistemi\ToplovodniOHTSistem;
 use PHPUnit\Framework\TestCase;
 
 final class ToplovodniOHTSistemVrocevodTest extends TestCase

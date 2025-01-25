@@ -34,7 +34,7 @@ class ProjektiController extends Controller
         App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
         App::set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
 
-        App::set('sistemiOgrevanja', App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje'));
+        App::set('sistemiOHT', App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje'));
         App::set(
             'sistemiPrezracevanja',
             App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje')

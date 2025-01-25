@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Test\Pures\TSS\KoncniPrenosniki;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
 use PHPUnit\Framework\TestCase;
 
 final class PloskovnoOgrevaloTest extends TestCase

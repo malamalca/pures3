@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem;
+use App\Calc\GF\TSS\OHTSistemi\OHTSistem;
 
 abstract class TSSInterface
 {
@@ -24,7 +24,7 @@ abstract class TSSInterface
      * Analiza podsistema
      *
      * @param array $toplotneIzgube Potrebna energija predhodnih TSS
-     * @param \App\Calc\GF\TSS\OgrevalniSistemi\OHTSistem $sistem Podatki sistema
+     * @param \App\Calc\GF\TSS\OHTSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun

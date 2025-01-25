@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Test\Pures\TSS\OgrevalniSistemi;
+namespace App\Test\Pures\TSS\OHTSistemi;
 
-use App\Calc\GF\TSS\OgrevalniSistemi\NeposredniElektricniOHTSistem;
+use App\Calc\GF\TSS\OHTSistemi\NeposredniElektricniOHTSistem;
 use PHPUnit\Framework\TestCase;
 
 final class NeposrednoElektricniOHTSistemTest extends TestCase

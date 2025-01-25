@@ -182,7 +182,7 @@ za področje TSS</h1>
 <table border="1" cellpadding="3" width="100%">
     <?php
         $maxEnergentov = 1;
-        foreach ($sistemiOgrevanja as $sistem) {
+        foreach ($sistemiOHT as $sistem) {
             if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
                 $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
             }
@@ -207,7 +207,7 @@ za področje TSS</h1>
 
     <?php
         $i = 1;
-        foreach ($sistemiOgrevanja as $sistem) {
+        foreach ($sistemiOHT as $sistem) {
             if (isset($sistem->ogrevanje->energijaPoEnergentih)) {
     ?>
 
@@ -246,7 +246,7 @@ za področje TSS</h1>
 <table border="1" cellpadding="3" width="100%">
     <?php
         $maxEnergentov = 1;
-        foreach ($sistemiOgrevanja as $sistem) {
+        foreach ($sistemiOHT as $sistem) {
             if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
                 $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
             }
@@ -270,7 +270,7 @@ za področje TSS</h1>
 
     <?php
         $i = 1;
-        foreach ($sistemiOgrevanja as $sistem) {
+        foreach ($sistemiOHT as $sistem) {
             if (isset($sistem->tsv->energijaPoEnergentih)) {
     ?>
 
@@ -315,7 +315,8 @@ za področje TSS</h1>
         <td class="w-20 center">ustrezno</td>
     </tr>
     <?php
-        foreach ($sistemiOgrevanja as $sistem) {
+        foreach ($sistemiOHT as $sistem) {
+            if ($sistem->jeOgrevalniSistem) {
     ?>
     <tr>
         <td class="w-60" colspan="2"><?= h($sistem->id) ?></td>
@@ -328,6 +329,7 @@ za področje TSS</h1>
         </td>
     </tr>
     <?php
+            }
         }
     ?>
 </table>
@@ -344,11 +346,12 @@ za področje TSS</h1>
 
 <!-- HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE-HLAJENJE -->
 <table border="1" cellpadding="3" width="100%">
+
     <?php
         $maxEnergentov = 1;
-        foreach ($sistemiOgrevanja as $sistem) {
-            if (count((array)$sistem->energijaPoEnergentih) > $maxEnergentov) {
-                $maxEnergentov = count((array)$sistem->energijaPoEnergentih);
+        foreach ($sistemiOHT as $sistem) {
+            if (isset($sistem->hlajenje->energijaPoEnergentih) && count((array)$sistem->hlajenje->energijaPoEnergentih) > $maxEnergentov) {
+                $maxEnergentov = count((array)$sistem->hlajenje->energijaPoEnergentih);
             }
         }
         $cellWidth = (int)round(50/$maxEnergentov, 0);
@@ -370,9 +373,8 @@ za področje TSS</h1>
 
     <?php
         $i = 1;
-        foreach ($sistemiOgrevanja as $sistem) {
-            if (isset($sistem->energijaPoEnergentih->hlajenje)) {
-                $sistemEnergijaPoEnergentih = $sistem->energijaPoEnergentih->hlajenje;
+        foreach ($sistemiOHT as $sistem) {
+            if (isset($sistem->hlajenje->energijaPoEnergentih)) {
     ?>
 
     <tr>
@@ -380,7 +382,7 @@ za področje TSS</h1>
         <td class="w-35" rowspan="2"><?= h($sistem->id) ?></td>
         <td class="w-10 center">vrsta</td>
         <?php
-            foreach ($sistemEnergijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->hlajenje->energijaPoEnergentih as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= h($vrstaEnergenta) ?></td>
         <?php
@@ -391,7 +393,7 @@ za področje TSS</h1>
     <tr>
         <td class="w-10 center">količina</td>
         <?php
-            foreach ($sistemEnergijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
+            foreach ($sistem->hlajenje->energijaPoEnergentih  as $vrstaEnergenta => $energijaEnergenta) {
         ?>
             <td class="w-<?= $cellWidth ?> center"><?= $this->numFormat($energijaEnergenta, 0) ?></td>
         <?php

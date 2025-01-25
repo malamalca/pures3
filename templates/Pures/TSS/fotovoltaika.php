@@ -15,10 +15,6 @@
 <h1>Analiza fotonapetostnega sistema "<?= h($sistem->id) ?>"</h1>
 <table border="1">
     <tr>
-        <td colspan="2">Toplotna Cona:</td>
-        <td colspan="2"><?= $sistem->idCone ?></td>
-    </tr>
-    <tr>
         <td>Površina PV modulov:</td>
         <td>A<sub>PV</sub></td>
         <td><?= $sistem->povrsina ?></td>

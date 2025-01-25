@@ -5,11 +5,11 @@
         "type" : "object",
         "required": ["id", "naziv", "vrsta", "materiali"],
         "properties" : {
-            "id": {"type": "string"},
-            "naziv": {"type": "string"},
-            "vrsta" : {"type": "integer"},
-            "Rsi" : {"type": "number"},
-            "Rse" : {"type": "number"},
+            "id": {"type": "string", "description": "Id oznaka elementa"},
+            "naziv": {"type": "string", "description": "Naziv elementa"},
+            "vrsta" : {"type": "integer", "description": "Vrsta elementa po TSG"},
+            "Rsi" : {"type": "number", "description": "Toplotna upornost na prenos toplote notranje površine elementa [m²K/W]"},
+            "Rse" : {"type": "number", "description": "Toplotna upornost na prenos toplote zunanje površine elementa [m²K/W]"},
             "materiali": {
                 "type": "array",
                 "items": {
@@ -22,22 +22,22 @@
                                 {"required": ["debelina", "difuzijskaUpornost"]}
                             ],
                             "properties": {
-                                "opis": {"type": "string"},
-                                "debelina": {"type": "number"},
-                                "lambda": {"type": "number"},
-                                "gostota": {"type": "number"},
-                                "specificnaToplota": {"type": "number"},
-                                "difuzijskaUpornost": {"type": "number"},
-                                "Sd": {"type": "number"}
+                                "opis": {"type": "string", "description": "Opis/naziv materiala"},
+                                "debelina": {"type": "number", "description": "Debelina materiala d [m]"},
+                                "lambda": {"type": "number", "description": "Toplotna prevodnost materiala λ [W/mK]"},
+                                "gostota": {"type": "number", "description": "Gostota materiala [kg/m³]"},
+                                "specificnaToplota": {"type": "number", "description": "Specificna toplota materiala c [J/kgK]"},
+                                "difuzijskaUpornost": {"type": "number", "description": "Difuzijska upornost prehodu vodne pare µ [-]"},
+                                "Sd": {"type": "number", "description": "Relativna difuzijska upornost s<sub>d</sub> [m]"}
                             }
                         },
                         {
                             "type": "object",
                             "required": ["sifra"],
                             "properties": {
-                                "sifra": {"type": "string"},
-                                "debelina": {"type": "number"},
-                                "lambda": {"type": "number"}
+                                "sifra": {"type": "string", "description": "Šifra materiala iz knjižnice"},
+                                "debelina": {"type": "number", "description": "Debelina materiala d [m]"},
+                                "lambda": {"type": "number", "description": "Toplotna prevodnost materiala λ [W/mK]"}
                             }
                         }
                     ]

@@ -91,14 +91,16 @@ class View
      * Element function
      *
      * @param string $element Element name
+     * @param array $additionalVars Additional (local) variables
      * @return string|false
      */
-    public function element($element)
+    public function element($element, $additionalVars = [])
     {
         $App = App::getInstance();
 
         $templatePath = TEMPLATES;
         $templateName = $element;
+
         $templateFile = realpath($templatePath . $templateName . '.php');
 
         if (
@@ -108,10 +110,11 @@ class View
             die(sprintf('Template "%s" does not exist', $templateName . '.php'));
         }
 
+        extract($additionalVars);
         extract($this->_vars);
 
         ob_start();
-        include $templateFile;
+        require $templateFile;
         $contents = ob_get_contents();
         ob_end_clean();
 
