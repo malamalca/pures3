@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Hlajenje;
 
-use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\HladilniKoncniPrenosnik;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Konvektor;
 
-class StenskiKonvektor extends HladilniKoncniPrenosnik
+class StenskiKonvektor extends Konvektor
 {
     public float $deltaT_str = -0.4;
     public float $deltaT_emb = 0.0;

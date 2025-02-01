@@ -6,7 +6,6 @@ namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaHidravlicnegaUravnotezenja;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaIzolacijePloskovnihOgreval;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaSistemaPloskovnihOgreval;
-use App\Lib\Calc;
 
 class PloskovnoOgrevalo extends KoncniPrenosnik
 {
@@ -31,7 +30,7 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
      * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function __construct(\stdClass $config = null)
+    public function __construct(?\stdClass $config = null)
     {
         parent::__construct($config);
 
@@ -40,7 +39,7 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
 
         $this->hidravlicnoUravnotezenje =
             VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');
-        
+
         // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
         $this->deltaT_hydr = $this->hidravlicnoUravnotezenje->deltaTHydr($this);
 

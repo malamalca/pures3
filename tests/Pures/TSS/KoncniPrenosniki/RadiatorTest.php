@@ -49,7 +49,7 @@ final class RadiatorTest extends TestCase
         $izgube = $koncniPrenosnik->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje);
 
         $this->assertEquals(0.4, $koncniPrenosnik->deltaT_str);
-        
+
         $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
         $expected = [74.70, 51.07, 33.81, 16.04, 4.16, 0.00, 0.00, 0.00, 4.65, 23.33, 61.88, 78.57];
         $this->assertEquals($expected, $roundedResult);

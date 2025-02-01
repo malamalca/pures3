@@ -100,9 +100,7 @@ abstract class RazvodOgrevanje extends Razvod
             $stUr = 24 * $stDni;
 
             // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
-            $steviloUr = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
-                1 :
-                $sistem->povprecnaObremenitev[$mesec] / 0.05);
+            $steviloUr = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
             // Qh,in,em - potrebna dovedena toplota v ogrevala [kWh] (enačba 60)
             $potrebnaToplotaOgrevala = $vneseneIzgube[$mesec];
@@ -165,7 +163,7 @@ abstract class RazvodOgrevanje extends Razvod
 
         if (!empty($this->crpalka)) {
             $hidravlicnaMoc = $this->izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona, $okolje);
-            $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc, $okolje);
+            $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc);
             $this->crpalka->moc = $this->crpalka->moc ?? $hidravlicnaMoc;
 
             // možnosti sta elektrika in toplota
@@ -189,9 +187,7 @@ abstract class RazvodOgrevanje extends Razvod
                 $stUr = 24 * $stDni;
 
                 // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
-                $steviloUr = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
-                    1 :
-                    $sistem->povprecnaObremenitev[$mesec] / 0.05);
+                $steviloUr = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
                 // Qh,in,em - potrebna dovedena toplota v ogrevala [kWh] (enačba 60)
                 $potrebnaToplotaOgrevala = $vneseneIzgube[$mesec];

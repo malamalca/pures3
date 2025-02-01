@@ -30,10 +30,26 @@ class SplitHladilniOHTSistem extends OHTSistem
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function standardnaMoc($cona, $okolje): float
     {
         return $this->generatorji[0]->nazivnaMoc;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function steviloUrDelovanja($mesec, $cona, $okolje): float
+    {
+        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+        $stUr = 24 * $stDni;
+
+        // betaH - Izračun povprečnih obremenitev podsistemov
+        $povprecnaObremenitev = $cona->energijaOgrevanje[$mesec] / ($this->standardnaMoc($cona, $okolje) * $stUr);
+
+        $ret = $stUr * ($povprecnaObremenitev > 0.05 ? 1 : $povprecnaObremenitev / 0.05);
+
+        return $ret;
     }
 }

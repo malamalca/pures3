@@ -186,9 +186,7 @@ class Kotel extends Generator
 
             // th – mesečne obratovalne ure – čas [h/M]
             // enačba 43
-            $stUrOgrevanje = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
-                1 :
-                $sistem->povprecnaObremenitev[$mesec] / 0.05);
+            $stUrOgrevanje = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
             $Fc = $this->regulacija->faktorRegulacije($mesec, $cona, $okolje);
 
@@ -365,9 +363,7 @@ class Kotel extends Generator
                 $stUr = $stDni * 24;
 
                 // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
-                $stUrOgrevanje = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
-                    1 :
-                    $sistem->povprecnaObremenitev[$mesec] / 0.05);
+                $stUrOgrevanje = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
                 // Moč pomožnih električnih naprav za kotel v odvisnosti od obremenitve kotla
                 if ($this->beta_h_g[$mesec] < $beta_h_g_test_Pint) {

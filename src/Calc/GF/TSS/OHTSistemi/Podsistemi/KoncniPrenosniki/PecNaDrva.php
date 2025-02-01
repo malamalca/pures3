@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki;
 
-use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaRegulacijeTemperature;
 use App\Lib\Calc;
 
 class PecNaDrva extends KoncniPrenosnik
@@ -30,6 +29,7 @@ class PecNaDrva extends KoncniPrenosnik
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         $this->deltaT_str = $cona->steviloEtaz > 1 ? 1.4 : 0.9;
+
         return parent::toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params);
     }
 

@@ -16,7 +16,7 @@ abstract class KoncniPrenosnik extends TSSInterface
      * Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
      * temperature variation based on not balanced hydraulic systems (K)
      *
-     * @var $deltaT_hydr Δθhydr
+     * @var float $deltaT_hydr Δθhydr
      */
     public float $deltaT_hydr;
 
@@ -24,7 +24,7 @@ abstract class KoncniPrenosnik extends TSSInterface
      * Δθctr - deltaTemp za regulacijo temperature; prvi stolpec sevala, drugi stolpec toplovod, h<4m
      * temperature variation based on control variation
      *
-     * @var $deltaT_ctr Δθctr
+     * @var float $deltaT_ctr Δθctr
      */
     public float $deltaT_ctr;
 
@@ -68,7 +68,7 @@ abstract class KoncniPrenosnik extends TSSInterface
 
     /**
      * Moč pomožnih sistemov (črpake, ventilatorji,..)
-     * 
+     *
      * @var float $mocAux
      */
     public float $mocAux = 0.0;
@@ -102,7 +102,7 @@ abstract class KoncniPrenosnik extends TSSInterface
      * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function __construct(\stdClass $config = null)
+    public function __construct(?\stdClass $config = null)
     {
         $this->id = $config->id;
 
@@ -156,15 +156,14 @@ abstract class KoncniPrenosnik extends TSSInterface
             [$this->deltaT_hydr, $this->deltaT_ctr, $this->deltaT_emb, $this->deltaT_str, $this->deltaT_im]
         );
 
-        $notranjaT = (!empty($params['namen']) && $params['namen'] == 'hlajenje') ?
+        $notranjaT = !empty($params['namen']) && $params['namen'] == 'hlajenje' ?
             $cona->notranjaTHlajenje : $cona->notranjaTOgrevanje;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            
-            try {
-                $faktorDeltaT = $deltaT / ($notranjaT - $okolje->zunanjaT[$mesec] - $this->deltaT_sol);
-            } catch (\DivisionByZeroError $e) {
+            if (($notranjaT - $okolje->zunanjaT[$mesec] - $this->deltaT_sol) == 0.0) {
                 $faktorDeltaT = 0.0;
+            } else {
+                $faktorDeltaT = $deltaT / ($notranjaT - $okolje->zunanjaT[$mesec] - $this->deltaT_sol);
             }
 
             $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
@@ -189,12 +188,9 @@ abstract class KoncniPrenosnik extends TSSInterface
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUrNaMesec = $stDni * 24;
 
-            // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
-            $steviloUrDelovanja = $stUrNaMesec * 
-                ($sistem->povprecnaObremenitev[$mesec] > 0.05 ? 1 : $sistem->povprecnaObremenitev[$mesec] / 0.05);
-
             $this->potrebnaElektricnaEnergija[$mesec] =
-                ($this->steviloRegulatorjev * $this->mocRegulatorja + $this->mocAux) * $steviloUrDelovanja / 1000;
+                ($this->steviloRegulatorjev * $this->mocRegulatorja + $this->mocAux) *
+                $sistem->steviloUrDelovanja($mesec, $cona, $okolje) / 1000;
         }
 
         return $this->potrebnaElektricnaEnergija;

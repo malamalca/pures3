@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji;
 
-use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\Izbire\VrstaHlajenjaHladilnegaSistema;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\Izbire\VrstaHladilnegaKompresorja;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\Izbire\VrstaHlajenjaHladilnegaSistema;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\Izbire\VrstaRegulacijeHladilnegaKompresorja;
 use App\Calc\GF\TSS\TSSPorociloNiz;
 use App\Calc\GF\TSS\TSSPorociloPodatek;
@@ -120,18 +120,22 @@ class HladilniKompresor extends Generator
                 // f_C,pl
                 $f_Cpl = $potrebnaEnergija / $stUrNaMesec / $this->nazivnaMoc;
 
-                $temperaturaOkoljaKondenzatorja = $this->kondenzatorVKanalu ? $cona->notranjaTHlajenje : $okolje->zunanjaT[$mesec];
+                $temperaturaOkoljaKondenzatorja =
+                $this->kondenzatorVKanalu ? $cona->notranjaTHlajenje : $okolje->zunanjaT[$mesec];
 
                 $idx = (int)(($f_Cpl > 1 ? 1 : round($f_Cpl, 1)) * 10 - 1);
 
-                if (!isset($this->performanceLevels[$this->vrstaKompresorja->getOrdinal()][$this->vrstaRegulacije->getOrdinal()][$idx])) {
-                    throw new \exception('Kombinacija kompresor/regulacija ne obstaja.');
+                $vrstaKompresorja = $this->vrstaKompresorja->getOrdinal();
+
+                if (!isset($this->performanceLevels[$vrstaKompresorja][$this->vrstaRegulacije->getOrdinal()][$idx])) {
+                    throw new \Exception('Kombinacija kompresor/regulacija ne obstaja.');
                 }
-                $f_C_pl_k = $this->performanceLevels[$this->vrstaKompresorja->getOrdinal()][$this->vrstaRegulacije->getOrdinal()][$idx];
+                $f_C_pl_k = $this->performanceLevels[$vrstaKompresorja][$this->vrstaRegulacije->getOrdinal()][$idx];
 
                 $a = $this->vrstaKompresorja->faktorA($this->vrstaHlajenja);
 
-                $f_hr_pl = $a[0] + $a[1] * $temperaturaOkoljaKondenzatorja + $a[2] * pow($temperaturaOkoljaKondenzatorja, 2);
+                $f_hr_pl =
+                    $a[0] + $a[1] * $temperaturaOkoljaKondenzatorja + $a[2] * pow($temperaturaOkoljaKondenzatorja, 2);
 
                 $PLV = $f_C_pl_k * $f_hr_pl * 1 * 1;
 
@@ -139,15 +143,31 @@ class HladilniKompresor extends Generator
                 $this->korekcijskiFaktorEER[$mesec] =
                     (273.15 + $this->TizhodnegaZraka - $this->vrstaHlajenja->deltaTnaUparjalniku()) /
                         (
-                            (273.15 + $temperaturaOkoljaKondenzatorja + $this->vrstaHlajenja->deltaTnaKondenzatorju($this->kondenzatorVKanalu)) -
+                            (
+                                273.15 +
+                                $temperaturaOkoljaKondenzatorja +
+                                $this->vrstaHlajenja->deltaTnaKondenzatorju($this->kondenzatorVKanalu)
+                            ) -
                             (273.15 + $this->TizhodnegaZraka - $this->vrstaHlajenja->deltaTnaUparjalniku())
                         )
                     /
                     (
-                        (273.15 + $this->vrstaHlajenja->TnaIzstopuIzUparjalnika() - $this->vrstaHlajenja->deltaTnaUparjalniku()) /
                         (
-                            (273.15 + $this->vrstaHlajenja->TzaHlajenjeKondenzatorja() + $this->vrstaHlajenja->deltaTnaKondenzatorju($this->kondenzatorVKanalu)) -
-                            (273.15 + $this->vrstaHlajenja->TnaIzstopuIzUparjalnika() - $this->vrstaHlajenja->deltaTnaUparjalniku())
+                            273.15 +
+                            $this->vrstaHlajenja->TnaIzstopuIzUparjalnika() -
+                            $this->vrstaHlajenja->deltaTnaUparjalniku()
+                        ) /
+                        (
+                            (
+                                273.15 +
+                                $this->vrstaHlajenja->TzaHlajenjeKondenzatorja() +
+                                $this->vrstaHlajenja->deltaTnaKondenzatorju($this->kondenzatorVKanalu)
+                            ) -
+                            (
+                                273.15 +
+                                $this->vrstaHlajenja->TnaIzstopuIzUparjalnika() -
+                                $this->vrstaHlajenja->deltaTnaUparjalniku()
+                            )
                         )
                     );
 
@@ -161,8 +181,6 @@ class HladilniKompresor extends Generator
             // potrebna energija za hlajenje
             $this->toplotneIzgube['hlajenje'][$mesec] = $E_C_gen_el_in;
         }
-
-        return $this->toplotneIzgube;
     }
 
     /**
@@ -186,7 +204,8 @@ class HladilniKompresor extends Generator
 
                 if ($vneseneIzgube[$mesec] > 0) {
                     $this->potrebnaElektricnaEnergija[$mesec] =
-                        $this->stUrDelovanjaNaDan[$mesec] * $stDni * $this->steviloRegulatorjev * $this->mocRegulatorja * 0.001;
+                        $this->stUrDelovanjaNaDan[$mesec] * $stDni *
+                        $this->steviloRegulatorjev * $this->mocRegulatorja * 0.001;
                 } else {
                     $this->potrebnaElektricnaEnergija[$mesec] = 0;
                 }
@@ -196,8 +215,6 @@ class HladilniKompresor extends Generator
                 $this->potrebnaElektricnaEnergija[$mesec] = 0;
             }
         }
-
-        return $this->potrebnaElektricnaEnergija;
     }
 
     /**
@@ -234,43 +251,9 @@ class HladilniKompresor extends Generator
         );
         $this->porociloPodatki[] = new TSSPorociloPodatek(
             '',
-            'Vrsta hladilne naprave',
-            $this->vrstaIdx == 0 ? 'Split' : 'MultiSplit',
-            ''
-        );
-        $this->porociloPodatki[] = new TSSPorociloPodatek(
-            '',
             'Vrsta regulacije',
-            $this->vrstaRegulacije == 0 ? 'Inverter' : 'On/Off',
+            $this->vrstaRegulacije->getOrdinal() == 0 ? 'Inverter' : 'On/Off',
             ''
-        );
-
-        $this->porociloPodatki[] = new TSSPorociloPodatek(
-            'ϑ<sub>C,gen,hr,req,in,n</sub>',
-            'Nazivna temperatura vode ali zraka za hlajenje kondezatorja',
-            $this->TzaHlajenjeKondenzatorja,
-            '°C'
-        );
-
-        $this->porociloPodatki[] = new TSSPorociloPodatek(
-            'ϑ<sub>C,gen,req,out,n</sub>',
-            'Nazivna temperatura nosilca hladu na izstopu iz uparjalnika',
-            $this->TnaIzstopuIzUparjalnika,
-            '°C'
-        );
-
-        $this->porociloPodatki[] = new TSSPorociloPodatek(
-            'Δϑ<sub>cond</sub>',
-            'Temperaturna razlika na kondenzatorju',
-            $this->deltaTnaKondenzatorju,
-            'K'
-        );
-
-        $this->porociloPodatki[] = new TSSPorociloPodatek(
-            'Δϑ<sub>evap</sub>',
-            'Temperaturna razlika na uparjalniku',
-            $this->deltaTnaUparjalniku,
-            'K'
         );
 
         $this->porociloPodatki[] = new TSSPorociloPodatek(

@@ -11,7 +11,6 @@ use App\Calc\GF\TSS\OHTSistemi\Sistemi\Hlajenje;
 use App\Calc\GF\TSS\OHTSistemi\Sistemi\Ogrevanje;
 use App\Calc\GF\TSS\OHTSistemi\Sistemi\TSV;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
-use App\Lib\Calc;
 
 abstract class OHTSistem
 {
@@ -129,17 +128,17 @@ abstract class OHTSistem
      * @param \stdClass $okolje Podatki okolja
      * @return float
      */
-    abstract function standardnaMoc($cona, $okolje): float;
+    abstract public function standardnaMoc($cona, $okolje): float;
 
     /**
-     * Funkcija mora vrniti povprecno obrementev sistema
+     * Funkcija mora vrniti število ur delovanja
      *
      * @param int $mesec Mesec
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
      * @return float
      */
-    abstract function povprecnaObremenitev($mesec, $cona, $okolje): float;
+    abstract public function steviloUrDelovanja($mesec, $cona, $okolje): float;
 
     /**
      * Glavna metoda za analizo ogrevalnega sistema

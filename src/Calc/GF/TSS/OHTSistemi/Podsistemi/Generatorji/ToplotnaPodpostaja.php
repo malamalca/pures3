@@ -143,9 +143,7 @@ class ToplotnaPodpostaja extends Generator
 
             // th – mesečne obratovalne ure – čas [h/M]
             // enačba 43
-            $stUrOgrevanje = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
-                1 :
-                $sistem->povprecnaObremenitev[$mesec] / 0.05);
+            $stUrOgrevanje = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
             $Fc = $this->regulacija->faktorRegulacije($mesec, $cona, $okolje);
 
@@ -244,9 +242,7 @@ class ToplotnaPodpostaja extends Generator
 
                 // th – mesečne obratovalne ure – čas [h/M]
                 // enačba 43
-                $stUrOgrevanje = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
-                    1 :
-                    $sistem->povprecnaObremenitev[$mesec] / 0.05);
+                $stUrOgrevanje = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
                 $this->potrebnaElektricnaEnergija['ogrevanje'][$mesec] = 10 * $stUrOgrevanje / 24 / $stDni;
 

@@ -166,7 +166,6 @@ final class DvocevniRazvodTest extends TestCase
         }
         EOT;
         $sistem = new ToplovodniOHTSistem($configSistem);
-        $sistem->init($cona, $okolje);
 
         $configPrenosnika = <<<EOT
         {
@@ -241,7 +240,6 @@ final class DvocevniRazvodTest extends TestCase
         }
         EOT;
         $sistem = new ToplovodniOHTSistem($configSistem);
-        $sistem->init($cona, $okolje);
 
         $configPrenosnika = <<<EOT
         {

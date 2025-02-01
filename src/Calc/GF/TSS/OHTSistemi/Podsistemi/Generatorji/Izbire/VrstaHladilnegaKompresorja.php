@@ -32,7 +32,8 @@ enum VrstaHladilnegaKompresorja: string
     /**
      * a0, a1, a2
      *
-     * @return float
+     * @param \App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\Izbire\VrstaHlajenjaHladilnegaSistema $vrstaSistema Vrsta sistema
+     * @return array
      */
     public function faktorA(VrstaHlajenjaHladilnegaSistema $vrstaSistema)
     {
@@ -45,8 +46,6 @@ enum VrstaHladilnegaKompresorja: string
                 3 => [2.91, -0.08224, 0.00071],
             ],
             // vodno hlajen
-            1 => [
-            ]
         ];
 
         return $ret[$vrstaSistema->getOrdinal()][$this->getOrdinal()];

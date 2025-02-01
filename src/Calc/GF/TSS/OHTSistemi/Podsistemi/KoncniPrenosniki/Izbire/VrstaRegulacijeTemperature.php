@@ -47,7 +47,7 @@ enum VrstaRegulacijeTemperature: string
      * Δθctr - deltaTemp za regulacijo temperature; prvi stolpec sevala, drugi stolpec toplovod, h<4m
      * temperature variation based on control variation
      *
-     * @param \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik Končni prenosnik
+     * @param \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik Končni prenosnik
      * @return float
      */
     public function deltaTCtr(KoncniPrenosnik $prenosnik)
@@ -64,26 +64,26 @@ enum VrstaRegulacijeTemperature: string
                 $ret = [2.5, 1.6, 0.7, 0.7, 0.5];
 
                 return $ret[$this->getOrdinal()];
-                
+
             case \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\ElektricnoOgrevalo::class:
                 if ($this == VrstaRegulacijeTemperature::P_krmilnik) {
                     return 1.5;
                 }
-        
+
                 if ($this == VrstaRegulacijeTemperature::PI_krmilnik) {
                     return 1.1;
                 }
-        
+
                 throw new \Exception(sprintf('Regulacija "%s" za električno ogrevalo ni podprta', $this->toString()));
             case \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\PecNaDrva::class:
                 if ($this == VrstaRegulacijeTemperature::TermostatNaPeci) {
                     return 2.5;
                 }
-        
+
                 if ($this == VrstaRegulacijeTemperature::SobniTermostat) {
                     return 2;
                 }
-        
+
                 throw new \Exception(sprintf('Regulacija "%s" za peč na drva ni podprta', $this->toString()));
             default:
                 throw new \Exception(sprintf('Unknown Class "%s" for deltaTCtr()', get_class($prenosnik)));

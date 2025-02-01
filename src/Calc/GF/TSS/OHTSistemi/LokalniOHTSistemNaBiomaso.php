@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OHTSistemi;
 
-use App\Lib\Calc;
-
 class LokalniOHTSistemNaBiomaso extends OHTSistem
 {
     public float $nazivnaMoc;
@@ -37,7 +35,7 @@ class LokalniOHTSistemNaBiomaso extends OHTSistem
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function standardnaMoc($cona, $okolje): float
     {
@@ -52,17 +50,18 @@ class LokalniOHTSistemNaBiomaso extends OHTSistem
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function povprecnaObremenitev($mesec, $cona, $okolje): float
+    public function steviloUrDelovanja($mesec, $cona, $okolje): float
     {
-        $standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
-            ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT) / 1000;
+        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+        $stUr = 24 * $stDni;
 
-        if ($this->nazivnaMoc < $standardnaMoc) {
-            $standardnaMoc = $this->nazivnaMoc;
-        }
+        // betaH - Izračun povprečnih obremenitev podsistemov
+        $povprecnaObremenitev = $cona->energijaOgrevanje[$mesec] / ($this->standardnaMoc($cona, $okolje) * $stUr);
 
-        return $standardnaMoc;
+        $ret = $stUr * ($povprecnaObremenitev > 0.05 ? 1 : $povprecnaObremenitev / 0.05);
+
+        return $ret;
     }
 }

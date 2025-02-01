@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki;
 
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaHidravlicnegaUravnotezenja;
-use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaNamestitve;
-use App\Lib\Calc;
 
 class Konvektor extends KoncniPrenosnik
 {
+    public string $vrsta = 'Ogrevalni konvektor';
+
     public float $deltaT_emb = 0.0;
     public float $deltaT_sol = 0.0;
     public float $deltaT_im = 0.0;
@@ -16,7 +16,6 @@ class Konvektor extends KoncniPrenosnik
 
     public float $exponentOgrevala = 1.1;
 
-    protected VrstaNamestitve $namestitev;
     protected VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
 
     /**
@@ -25,11 +24,9 @@ class Konvektor extends KoncniPrenosnik
      * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function __construct(\stdClass $config = null)
+    public function __construct(?\stdClass $config = null)
     {
         parent::__construct($config);
-
-        $this->namestitev = VrstaNamestitve::from($config->namestitev);
 
         $this->hidravlicnoUravnotezenje =
             VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');

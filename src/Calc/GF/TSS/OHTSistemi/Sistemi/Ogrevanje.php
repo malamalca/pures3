@@ -84,7 +84,6 @@ class Ogrevanje extends TSSInterface
             $spremembaCone->izracunFaktorjaIzkoristka();
             $spremembaCone->izracunEnergijeOgrevanjeHlajanje();
             $cona = $spremembaCone->export();
-            $sistem->init($cona, $okolje);
 
             $vracljiveIzgube = $this->vrnjeneIzgubeVOgrevanje;
 

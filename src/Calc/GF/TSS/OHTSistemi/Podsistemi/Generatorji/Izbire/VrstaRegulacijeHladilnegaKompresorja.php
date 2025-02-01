@@ -26,23 +26,4 @@ enum VrstaRegulacijeHladilnegaKompresorja: string
 
         return $lookup[$this->getOrdinal()];
     }
-
-    /**
-     * Korekcijski faktor za upoštevanje vrste regulacije fc.
-     * Tabela 12
-     *
-     * @param int $mesec Mesec
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
-     * @return float
-     */
-    public function faktorRegulacije($mesec, $cona, $okolje)
-    {
-        if ($this == VrstaRegulacijeKotla::KonstantnaTemperatura) {
-            return 0;
-        } else {
-            return ($okolje->zunanjaT[$mesec] - $okolje->projektnaZunanjaT) /
-                ($cona->notranjaTOgrevanje / $okolje->projektnaZunanjaT);
-        }
-    }
 }

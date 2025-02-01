@@ -257,9 +257,10 @@ class RazvodTSV extends Razvod
      * Izračun potrebne električne energije
      *
      * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return float
      */
-    public function izracunHidravlicneMoci($cona)
+    public function izracunHidravlicneMoci($cona, $okolje)
     {
         $Lmax = $this->getProperty(RazvodAbstractProperties::Lmax, ['cona' => $cona]);
 

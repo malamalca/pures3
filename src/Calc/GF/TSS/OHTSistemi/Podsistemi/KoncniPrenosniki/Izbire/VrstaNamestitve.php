@@ -11,4 +11,21 @@ enum VrstaNamestitve: string
     case ObZunanjemZidu = 'zunanjeStene';
     case ObZunanjemZiduZasteklitevBrezSevalneZascite = 'zasteklitevBrezZascite';
     case ObZunanjemZiduZasteklitevSSevalnoZascite = 'zasteklitevZZascito';
+
+    /**
+     * Friendly name
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        $lookup = [
+            'Ob notranji steni',
+            'Ob zunanjem zidu',
+            'Ob zunanjem zidu - zasteklitev brez sevalne zaščite',
+            'Ob zunanjem zidu - zasteklitev s sevalno zaščito',
+        ];
+
+        return $lookup[$this->getOrdinal()];
+    }
 }

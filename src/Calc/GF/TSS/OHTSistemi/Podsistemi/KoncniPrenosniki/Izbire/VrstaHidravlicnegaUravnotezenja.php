@@ -37,7 +37,7 @@ enum VrstaHidravlicnegaUravnotezenja: string
      * Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
      * temperature variation based on not balanced hydraulic systems (K)
      *
-     * @param \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik Končni prenosnik
+     * @param \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik Končni prenosnik
      * @return float
      */
     public function deltaTHydr(KoncniPrenosnik $prenosnik): float
@@ -47,17 +47,15 @@ enum VrstaHidravlicnegaUravnotezenja: string
             case \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Hlajenje\StropniKonvektor::class:
                 $do10Prenosnikov = [-0.6, -0.3, -0.2, -0.1, -0.0];
                 $nad10Prenosnikov = [-0.6, -0.4, -0.3, -0.2, -0.0];
-        
+
                 if ($prenosnik->stevilo <= 10) {
                     return $do10Prenosnikov[$this->getOrdinal()];
                 } else {
                     return $nad10Prenosnikov[$this->getOrdinal()];
-                } 
-
-                break;
+                }
             case \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo::class:
             case \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Radiator::class:
-                case \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Konvektor::class:
+            case \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Konvektor::class:
                 $do10Prenosnikov = [0.6, 0.3, 0.2, 0.1, 0];
                 $nad10Prenosnikov = [0.6, 0.4, 0.3, 0.2, 0];
 
@@ -65,9 +63,7 @@ enum VrstaHidravlicnegaUravnotezenja: string
                     return $do10Prenosnikov[$this->getOrdinal()];
                 } else {
                     return $nad10Prenosnikov[$this->getOrdinal()];
-                } 
-
-                break;
+                }
             default:
                 throw new \Exception(sprintf('Unknown Class "%s" for deltaTHydr()', get_class($prenosnik)));
         }

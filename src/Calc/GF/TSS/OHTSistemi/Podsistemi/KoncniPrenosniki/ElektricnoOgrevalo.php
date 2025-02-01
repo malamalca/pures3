@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki;
 
-use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaRegulacijeTemperature;
 use App\Lib\Calc;
 
 class ElektricnoOgrevalo extends KoncniPrenosnik
 {
     public string $vrsta = 'Električna ogrevala';
+
     public float $deltaT_hydr = 0.0;
     public float $deltaT_emb = 0.0;
     public float $deltaT_str = 0.0;

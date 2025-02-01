@@ -98,7 +98,6 @@ final class HladilniKonvektorTest extends TestCase
         $sistem = new \App\Calc\GF\TSS\OHTSistemi\HladilniSistemSHladnoVodo();
         $sistem->generatorji = [$generator];
         $sistem->povprecnaObremenitev = [0, 0, 0, 0, 0, 0, 0.002083, 0.002083, 0, 0, 0, 0];
-        //$sistem->init();
 
         $koncniPrenosnik = new StropniKonvektor(json_decode($config));
 

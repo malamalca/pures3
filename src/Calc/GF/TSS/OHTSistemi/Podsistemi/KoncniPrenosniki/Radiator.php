@@ -5,7 +5,6 @@ namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki;
 
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaHidravlicnegaUravnotezenja;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaNamestitve;
-use App\Lib\Calc;
 
 class Radiator extends KoncniPrenosnik
 {
@@ -27,7 +26,7 @@ class Radiator extends KoncniPrenosnik
      * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function __construct(\stdClass $config = null)
+    public function __construct(?\stdClass $config = null)
     {
         parent::__construct($config);
 
@@ -58,7 +57,7 @@ class Radiator extends KoncniPrenosnik
         // Δθstr - deltaTemp Str (polje Q208)
         $this->deltaT_str = (self::DELTAT_NAMESTITEV[$this->namestitev->getOrdinal()] +
             self::DELTAT_REZIM[$rezim->getOrdinal()]) / 2;
-        
+
         return parent::toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params);
     }
 
@@ -71,6 +70,7 @@ class Radiator extends KoncniPrenosnik
     {
         $sistem = parent::export();
         $sistem->hidravlicnoUravnotezenje = $this->hidravlicnoUravnotezenje->toString();
+        $sistem->namestitev = $this->namestitev->toString();
 
         return $sistem;
     }

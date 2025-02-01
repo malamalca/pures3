@@ -30,6 +30,7 @@ enum VrstaHlajenjaHladilnegaSistema: string
      *
      * @return float
      */
+    // phpcs:ignore
     public function TzaHlajenjeKondenzatorja()
     {
         return 35.0;
@@ -40,6 +41,7 @@ enum VrstaHlajenjaHladilnegaSistema: string
      *
      * @return float
      */
+    // phpcs:ignore
     public function TnaIzstopuIzUparjalnika()
     {
         return 7.0;
