@@ -161,7 +161,8 @@ class Kotel extends Generator
      */
     private function toplotneIzgubeOgrevanje($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $rezimRazvoda = $params['rezim'];
+        $namen = $params['namen'] ?? 'ogrevanje';
+        $rezimRazvoda = $sistem->{$namen}->rezim;
 
         $izk100 = $this->tip->izkoristekPolneObremenitve($this->nazivnaMoc);
         $f_kor100 = $this->tip->korekcijskiFaktorIzkoristkaPolneObremenitve();

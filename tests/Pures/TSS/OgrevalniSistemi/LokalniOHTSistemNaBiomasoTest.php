@@ -28,7 +28,7 @@ final class LokalniOHTSistemNaBiomasoTest extends TestCase
             "prenosniki": [{
                 "id": "kamin",
                 "vrsta": "pecNaDrva",
-                "regulacija": "termostatNaPeci",
+                "regulacijaTemperature": "termostatNaPeci",
                 "prezracevanaCona": false,
                 "mocRegulatorja": 1,
                 "steviloRegulatorjev": 3

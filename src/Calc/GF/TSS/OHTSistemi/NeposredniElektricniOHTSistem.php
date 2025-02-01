@@ -36,28 +36,17 @@ class NeposredniElektricniOHTSistem extends OHTSistem
     }
 
     /**
-     * Inicializacija parametrov sistema
-     *
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
-     * @return void
+     * @inheritdoc
      */
-    public function init($cona, $okolje)
+    public function standardnaMoc($cona, $okolje): float
     {
-        $this->standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
+        $standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
             ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT) / 1000;
 
-        $moc = $this->standardnaMoc;
-        if ($this->nazivnaMoc < $this->standardnaMoc) {
-            $moc = $this->nazivnaMoc;
+        if ($this->nazivnaMoc < $standardnaMoc) {
+            $standardnaMoc = $this->nazivnaMoc;
         }
 
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
-            $stUr = 24 * $stDni;
-
-            // betaH - Izračun povprečnih obremenitev podsistemov
-            $this->povprecnaObremenitev[$mesec] = $cona->energijaOgrevanje[$mesec] / ($moc * $stUr);
-        }
+        return $standardnaMoc;
     }
 }

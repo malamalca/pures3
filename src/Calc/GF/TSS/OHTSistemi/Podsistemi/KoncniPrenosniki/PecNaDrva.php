@@ -10,20 +10,12 @@ class PecNaDrva extends KoncniPrenosnik
 {
     public string $vrsta = 'Peč ali kamin na drva, krušna peč';
 
-    protected VrstaRegulacijeTemperature $regulacija;
+    public float $deltaT_hydr = 0.0;
+    public float $deltaT_emb = 0.0;
+    public float $deltaT_im = 0.0;
+    public float $deltaT_sol = 0.0;
 
-    /**
-     * Loads configuration from json|stdClass
-     *
-     * @param \stdClass|null $config Configuration
-     * @return void
-     */
-    public function parseConfig($config)
-    {
-        parent::parseConfig($config);
-
-        $this->regulacija = VrstaRegulacijeTemperature::from($config->regulacija);
-    }
+    public int $stEtaz = 1;
 
     /**
      * Izračun toplotnih izgub končnega prenosnika
@@ -37,17 +29,8 @@ class PecNaDrva extends KoncniPrenosnik
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $deltaTStr = $cona->steviloEtaz > 1 ? 1.4 : 0.9;
-        $deltaTCtr = $this->regulacija->deltaTCtrPecNaDrva();
-        $deltaT = $deltaTStr + $deltaTCtr;
-
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            $faktorDeltaT = $deltaT / ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
-
-            $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
-        }
-
-        return $this->toplotneIzgube;
+        $this->deltaT_str = $cona->steviloEtaz > 1 ? 1.4 : 0.9;
+        return parent::toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params);
     }
 
     /**

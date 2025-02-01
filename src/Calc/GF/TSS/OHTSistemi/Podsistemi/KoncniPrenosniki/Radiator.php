@@ -12,24 +12,32 @@ class Radiator extends KoncniPrenosnik
     public const DELTAT_REZIM = [0.4, 0.5, 0.7];
     public const DELTAT_NAMESTITEV = [1.3, 0.3, 1.7, 1.2];
 
+    public float $deltaT_emb = 0.0;
+    public float $deltaT_sol = 0.0;
+    public float $deltaT_im = 0.0;
+
     public float $exponentOgrevala = 1.33;
 
     protected VrstaNamestitve $namestitev;
     protected VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
 
     /**
-     * Loads configuration from json|stdClass
+     * Class Constructor
      *
      * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function parseConfig($config)
+    public function __construct(\stdClass $config = null)
     {
-        parent::parseConfig($config);
+        parent::__construct($config);
 
         $this->namestitev = VrstaNamestitve::from($config->namestitev);
+
         $this->hidravlicnoUravnotezenje =
             VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');
+
+        // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
+        $this->deltaT_hydr = $this->hidravlicnoUravnotezenje->deltaTHydr($this);
     }
 
     /**
@@ -44,33 +52,14 @@ class Radiator extends KoncniPrenosnik
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $rezim = $params['rezim'];
-
-        // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
-        $deltaT_hydr = parent::DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_DO_10[$this->hidravlicnoUravnotezenje->getOrdinal()];
-
-        // Δθctr - deltaTemp za regulacijo temperature; prvi stolpec sevala, drugi stolpec toplovod, h<4m
-        $deltaT_ctr = parent::DELTAT_REGULACIJE_TEMPERATURE[$this->regulacijaTemperature->getOrdinal()];
-
-        // Δθemb - deltaTemp za izolacijo (polje R206)
-        $deltaT_emb = 0;
+        /** @var \App\Calc\GF\TSS\OHTSistemi\Izbire\VrstaRezima $rezim */
+        $rezim = $sistem->ogrevanje->rezim;
 
         // Δθstr - deltaTemp Str (polje Q208)
-        $deltaT_str = self::DELTAT_NAMESTITEV[$this->namestitev->getOrdinal()] +
-            self::DELTAT_REZIM[$rezim->getOrdinal()];
-
-        $deltaT = $deltaT_hydr + $deltaT_ctr + $deltaT_emb + $deltaT_str;
-
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            if ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec] != 0.0) {
-                $faktorDeltaT = $deltaT / ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
-            } else {
-                $faktorDeltaT = $deltaT;
-            }
-            $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
-        }
-
-        return $this->toplotneIzgube;
+        $this->deltaT_str = (self::DELTAT_NAMESTITEV[$this->namestitev->getOrdinal()] +
+            self::DELTAT_REZIM[$rezim->getOrdinal()]) / 2;
+        
+        return parent::toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params);
     }
 
     /**

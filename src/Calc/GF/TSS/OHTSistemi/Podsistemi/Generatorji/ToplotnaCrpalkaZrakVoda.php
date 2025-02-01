@@ -93,8 +93,8 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         $dejanskaMoc = [];
         $cop = [];
         $this->E_tc = [];
-        $rezimRazvoda = $params['rezim'];
-        $namen = $params['namen'];
+        $namen = $params['namen'] ?? 'ogrevanje';
+        $rezimRazvoda = $sistem->{$namen}->rezim;
 
         $rezimi = self::REZIMI;
 
@@ -222,8 +222,8 @@ class ToplotnaCrpalkaZrakVoda extends Generator
     {
         $dejanskaMoc = [];
         $cop = [];
-        $rezimRazvoda = $params['rezim'];
-        $namen = $params['namen'];
+        $namen = $params['namen'] ?? 'ogrevanje';
+        $rezimRazvoda = $sistem->{$namen}->rezim;
 
         foreach (self::REZIMI as $ix => $rezim) {
             $dejanskaMoc[$rezim] = self::RELATIVNA_MOC[$rezimRazvoda->temperaturaPonora()][$ix] * $this->nazivnaMoc;

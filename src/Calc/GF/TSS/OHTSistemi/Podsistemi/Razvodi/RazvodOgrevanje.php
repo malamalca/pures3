@@ -89,8 +89,11 @@ abstract class RazvodOgrevanje extends Razvod
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $prenosnik = $params['prenosnik'];
-        $rezim = $params['rezim'];
+        if (!empty($this->idPrenosnika)) {
+            $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
+        }
+
+        $rezim = $sistem->ogrevanje->rezim;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
@@ -106,8 +109,8 @@ abstract class RazvodOgrevanje extends Razvod
 
             // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-]
             // enačba (63)
-            $betaI = $sistem->standardnaMoc * $steviloUr > 0 ?
-                $potrebnaToplotaOgrevala / ($sistem->standardnaMoc * $steviloUr) :
+            $betaI = $sistem->standardnaMoc($cona, $okolje) * $steviloUr > 0 ?
+                $potrebnaToplotaOgrevala / ($sistem->standardnaMoc($cona, $okolje) * $steviloUr) :
                 0;
 
             // θ m - povprečna temperatura ogrevnega medija [°C]
@@ -152,13 +155,17 @@ abstract class RazvodOgrevanje extends Razvod
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        /** @var \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
-        $prenosnik = $params['prenosnik'] ?? null;
-        $rezim = $params['rezim'] ?? null;
+        if (!empty($this->idPrenosnika)) {
+            /** @var \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
+            $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
+        } else {
+            $prenosnik = null;
+        }
+        $rezim = $sistem->ogrevanje->rezim ?? null;
 
         if (!empty($this->crpalka)) {
-            $hidravlicnaMoc = $this->izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona);
-            $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc);
+            $hidravlicnaMoc = $this->izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona, $okolje);
+            $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc, $okolje);
             $this->crpalka->moc = $this->crpalka->moc ?? $hidravlicnaMoc;
 
             // možnosti sta elektrika in toplota
@@ -191,8 +198,8 @@ abstract class RazvodOgrevanje extends Razvod
 
                 // βh,d,a – povprečna letna obremenitev razvodnega omrežja [-]
                 // enačba (63)
-                $betaI = $sistem->standardnaMoc * $steviloUr > 0 ?
-                    $potrebnaToplotaOgrevala / ($sistem->standardnaMoc * $steviloUr) :
+                $betaI = $sistem->standardnaMoc($cona, $okolje) * $steviloUr > 0 ?
+                    $potrebnaToplotaOgrevala / ($sistem->standardnaMoc($cona, $okolje) * $steviloUr) :
                     0;
 
                 // Wh,d,aux - Potrebna električna energija za razvodni podsistem
@@ -277,9 +284,10 @@ abstract class RazvodOgrevanje extends Razvod
      * @param \App\Calc\GF\TSS\OHTSistemi\Izbire\VrstaRezima|null $rezim Podatki režima
      * @param \App\Calc\GF\TSS\OHTSistemi\OHTSistem $sistem Podatki sistema
      * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return float
      */
-    public function izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona)
+    public function izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona, $okolje)
     {
         $Lmax = $this->getProperty(RazvodAbstractProperties::Lmax, ['cona' => $cona]);
 
@@ -307,7 +315,7 @@ abstract class RazvodOgrevanje extends Razvod
         // enačba (66)
         $volumskiPretok = 0;
         if ($deltaT_HK > 0) {
-            $volumskiPretok = $sistem->standardnaMoc / (1.15 * $deltaT_HK);
+            $volumskiPretok = $sistem->standardnaMoc($cona, $okolje) / (1.15 * $deltaT_HK);
         }
 
         // Hidravlična moč v načrtovani obratovalni točk

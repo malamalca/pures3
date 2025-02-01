@@ -25,14 +25,6 @@ abstract class OHTSistem
     public TSSVrstaEnergenta $energent;
 
     /**
-     * QN – standardna potrebna toplotna moč za ogrevanje (cone) – moč ogreval, skladno s SIST
-     * EN 12831 ali z drugimi enakovrednimi, v stroki priznanimi računskimi metodami [kW]
-     *
-     * @var float $standardnaMoc
-     */
-    public float $standardnaMoc;
-
-    /**
      * Povprecna obremenitev podsistemov
      */
     public array $povprecnaObremenitev;
@@ -129,25 +121,25 @@ abstract class OHTSistem
     }
 
     /**
-     * Inicializacija parametrov sistema
+     * Funkcija mora vrniti standardno moč
+     * QN – standardna potrebna toplotna moč za ogrevanje ali hlajenje (cone) – skladno s SIST
+     * EN 12831 ali z drugimi enakovrednimi, v stroki priznanimi računskimi metodami [kW]
      *
      * @param \stdClass $cona Podatki cone
      * @param \stdClass $okolje Podatki okolja
-     * @return void
+     * @return float
      */
-    public function init($cona, $okolje)
-    {
-        $this->standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
-            ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT) / 1000;
+    abstract function standardnaMoc($cona, $okolje): float;
 
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
-            $stUr = 24 * $stDni;
-
-            // betaH - Izračun povprečnih obremenitev podsistemov
-            $this->povprecnaObremenitev[$mesec] = $cona->energijaOgrevanje[$mesec] / ($this->standardnaMoc * $stUr);
-        }
-    }
+    /**
+     * Funkcija mora vrniti povprecno obrementev sistema
+     *
+     * @param int $mesec Mesec
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @return float
+     */
+    abstract function povprecnaObremenitev($mesec, $cona, $okolje): float;
 
     /**
      * Glavna metoda za analizo ogrevalnega sistema
@@ -158,8 +150,6 @@ abstract class OHTSistem
      */
     public function analiza($cona, $okolje)
     {
-        $this->init($cona, $okolje);
-
         $this->energijaPoEnergentih = [];
 
         $this->potrebnaEnergija = [];

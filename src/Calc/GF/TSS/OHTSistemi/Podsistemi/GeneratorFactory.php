@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi;
 
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\ElektricniGrelnik;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\HladilniKompresor;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\Kotel;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\SplitSistemKlima;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZrakVoda;
@@ -34,6 +35,8 @@ class GeneratorFactory
                 return new ElektricniGrelnik($options);
             case 'splitHlajenje':
                 return new SplitSistemKlima($options);
+            case 'hladilniKompresor':
+                return new HladilniKompresor($options);
             default:
                 throw new \Exception(sprintf('Generator : Vrsta "%s" ne obstaja', $type));
         }

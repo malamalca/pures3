@@ -28,7 +28,7 @@ final class NeposrednoElektricniOHTSistemTest extends TestCase
             "prenosniki": [{
                 "id": "IRPanel",
                 "vrsta": "elektricnoOgrevalo",
-                "regulacija": "P-krmilnik",
+                "regulacijaTemperature": "P-krmilnik",
                 "prezracevanaCona": false,
                 "mocRegulatorja": 1,
                 "steviloRegulatorjev": 3

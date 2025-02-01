@@ -30,14 +30,10 @@ class SplitHladilniOHTSistem extends OHTSistem
     }
 
     /**
-     * Export v json
-     *
-     * @return \stdClass
+     * @inheritdoc
      */
-    public function export()
+    public function standardnaMoc($cona, $okolje): float
     {
-        $data = parent::export();
-
-        return $data;
+        return $this->generatorji[0]->nazivnaMoc;
     }
 }

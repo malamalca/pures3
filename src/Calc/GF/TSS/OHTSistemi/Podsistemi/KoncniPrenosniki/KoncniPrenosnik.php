@@ -9,31 +9,90 @@ use App\Lib\Calc;
 
 abstract class KoncniPrenosnik extends TSSInterface
 {
-    public const DELTAT_REGULACIJE_TEMPERATURE = [2.5, 1.6, 0.7, 0.7, 0.5];
-    public const DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_DO_10 = [0.6, 0.3, 0.2, 0.1, 0];
-    public const DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_NAD_10 = [0.6, 0.4, 0.3, 0.2, 0];
-
     public string $vrsta = 'Končni prenosnik';
+    public string $namen = 'ogrevanje';
 
+    /**
+     * Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
+     * temperature variation based on not balanced hydraulic systems (K)
+     *
+     * @var $deltaT_hydr Δθhydr
+     */
+    public float $deltaT_hydr;
+
+    /**
+     * Δθctr - deltaTemp za regulacijo temperature; prvi stolpec sevala, drugi stolpec toplovod, h<4m
+     * temperature variation based on control variation
+     *
+     * @var $deltaT_ctr Δθctr
+     */
+    public float $deltaT_ctr;
+
+    /**
+     * Δθstr - deltaTemp Str (polje Q208)
+     * spatial variation of temperature due to stratification (K)
+     * glede na vrsto končnega prenosnika
+     * - Ventilatorski konvektor - stenski -0,4
+     * - Ventilatorski konvektor - stropni  0,0
+     * - Podno hlajenje -0,7
+     * - Stensko hlajenje -0,4
+     * - Stropno hlajenje 0
+     */
+    public float $deltaT_str;
+
+    /**
+     * Δθemb - deltaTemp za izolacijo (polje R206)
+     * temperature variation based on an additional heat loss of embedded emitters (K)
+     * glede na vrsto končnega prenostnika
+     * - Ventilatorski konvektor - stenski  0,0
+     * - Ventilatorski konvektor - stropni  0,0
+     * - Podno hlajenje -0,7
+     * - Stensko hlajenje -0,4
+     * - Stropno hlajenje -0,2
+     */
+    public float $deltaT_emb;
+
+    /**
+     * Δθim
+     * temperature variation based on intermittent operation and based on the type of the emission system
+     */
+    public float $deltaT_im;
+
+    /**
+     * Δθe,sol
+     * Temperature variation for consideration of solar and internal gains
+     * - average proportion of window area or internal loads (e.g. residential buildings) Δθe,sol = 8 K
+     * - high proportion of window area or internal loads (e.g. office buildings) Δθe,sol = 12 K
+     */
+    public float $deltaT_sol;
+
+    /**
+     * Moč pomožnih sistemov (črpake, ventilatorji,..)
+     * 
+     * @var float $mocAux
+     */
+    public float $mocAux = 0.0;
+
+    // za ogrevala
     public float $exponentOgrevala;
 
     // ΔpFBH – dodatek pri ploskovnem ogrevanju, če ni proizvajalčevega podatka je 25 kPa vključno z ventili in razvodom (kPa)
     public float $deltaP_FBH = 1;
 
     /**
-     * @var int $steviloOgreval
+     * @var int $stevilo
      */
-    protected int $steviloOgreval = 1;
+    public int $stevilo = 1;
 
     /**
      * @var int $steviloRegulatorjev
      */
-    protected int $steviloRegulatorjev = 0;
+    public int $steviloRegulatorjev = 0;
 
     /**
      * @var float $mocRegulatorja
      */
-    protected float $mocRegulatorja = 0;
+    public float $mocRegulatorja = 0;
 
     public VrstaRegulacijeTemperature $regulacijaTemperature;
 
@@ -43,28 +102,25 @@ abstract class KoncniPrenosnik extends TSSInterface
      * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function __construct($config = null)
-    {
-        if ($config) {
-            $this->parseConfig($config);
-        }
-    }
-
-    /**
-     * Loads configuration from json|stdClass
-     *
-     * @param null|\stdClass $config Configuration
-     * @return void
-     */
-    public function parseConfig($config)
+    public function __construct(\stdClass $config = null)
     {
         $this->id = $config->id;
 
-        $this->steviloOgreval = $config->steviloOgreval ?? 1;
+        $this->stevilo = $config->stevilo ?? 1;
         $this->steviloRegulatorjev = $config->steviloRegulatorjev ?? 0;
         $this->mocRegulatorja = $config->mocRegulatorja ?? 0;
 
         $this->regulacijaTemperature = VrstaRegulacijeTemperature::from($config->regulacijaTemperature ?? 'centralna');
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // VENTILATORJI, ČRPALKE,...
+        if (!empty($config->mocAux)) {
+            $this->mocAux = $config->mocAux;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // VREDNOSTI deltaT glede na podizbire
+        $this->deltaT_ctr = $this->regulacijaTemperature->deltaTCtr($this);
     }
 
     /**
@@ -94,7 +150,28 @@ abstract class KoncniPrenosnik extends TSSInterface
      * @param array $params Dodatni parametri za izračun
      * @return array
      */
-    abstract public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
+    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
+    {
+        $deltaT = array_sum(
+            [$this->deltaT_hydr, $this->deltaT_ctr, $this->deltaT_emb, $this->deltaT_str, $this->deltaT_im]
+        );
+
+        $notranjaT = (!empty($params['namen']) && $params['namen'] == 'hlajenje') ?
+            $cona->notranjaTHlajenje : $cona->notranjaTOgrevanje;
+
+        foreach (array_keys(Calc::MESECI) as $mesec) {
+            
+            try {
+                $faktorDeltaT = $deltaT / ($notranjaT - $okolje->zunanjaT[$mesec] - $this->deltaT_sol);
+            } catch (\DivisionByZeroError $e) {
+                $faktorDeltaT = 0.0;
+            }
+
+            $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
+        }
+
+        return $this->toplotneIzgube;
+    }
 
     /**
      * Izračun potrebne električne energije
@@ -110,15 +187,14 @@ abstract class KoncniPrenosnik extends TSSInterface
     {
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
-            $stUr = $stDni * 24;
+            $stUrNaMesec = $stDni * 24;
 
             // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
-            $steviloUr = $stUr * ($sistem->povprecnaObremenitev[$mesec] > 0.05 ?
-                1 :
-                $sistem->povprecnaObremenitev[$mesec] / 0.05);
+            $steviloUrDelovanja = $stUrNaMesec * 
+                ($sistem->povprecnaObremenitev[$mesec] > 0.05 ? 1 : $sistem->povprecnaObremenitev[$mesec] / 0.05);
 
             $this->potrebnaElektricnaEnergija[$mesec] =
-                $steviloUr * $this->steviloRegulatorjev * $this->mocRegulatorja / 1000;
+                ($this->steviloRegulatorjev * $this->mocRegulatorja + $this->mocAux) * $steviloUrDelovanja / 1000;
         }
 
         return $this->potrebnaElektricnaEnergija;

@@ -162,8 +162,8 @@ class RazvodTSV extends Razvod
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         if (!empty($this->crpalka)) {
-            $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($cona);
-            $this->crpalka->moc = $this->crpalka->moc ?? $this->izracunHidravlicneMoci($cona);
+            $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($cona, $okolje);
+            $this->crpalka->moc = $this->crpalka->moc ?? $this->izracunHidravlicneMoci($cona, $okolje);
 
             // z – čas delovanja črpalke (v urah na dan) [h]
             // enačba (142)
@@ -237,17 +237,18 @@ class RazvodTSV extends Razvod
      * Izračun faktorja rabe energije črpalke e_w,d
      *
      * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
      * @return float
      */
-    public function izracunFaktorjaRabeEnergijeCrpalke($cona)
+    public function izracunFaktorjaRabeEnergijeCrpalke($cona, $okolje)
     {
         // (enačba 68, spodaj)
         // (enačba 147, spodaj)
         $faktorCrpalkaPoProjektu = 1;
 
         $fe_crpalke = !empty($this->crpalka->moc) ?
-            $this->crpalka->moc / $this->izracunHidravlicneMoci($cona) :
-            1.25 + pow(200 / $this->izracunHidravlicneMoci($cona), 0.5) * $faktorCrpalkaPoProjektu;
+            $this->crpalka->moc / $this->izracunHidravlicneMoci($cona, $okolje) :
+            1.25 + pow(200 / $this->izracunHidravlicneMoci($cona, $okolje), 0.5) * $faktorCrpalkaPoProjektu;
 
         return $fe_crpalke;
     }

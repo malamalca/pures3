@@ -94,7 +94,7 @@ class Hlajenje extends TSSInterface
                     throw new \Exception(sprintf('Prenosnik hlajenja "%s" ne obstaja', $prenosnikId));
                 }
 
-                $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje);
+                $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $prenosnik->toplotneIzgube);
                 $this->potrebnaElektricnaEnergija =
@@ -110,15 +110,7 @@ class Hlajenje extends TSSInterface
                     throw new \Exception(sprintf('Razvod hlajenja "%s" ne obstaja', $razvodId));
                 }
 
-                $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
-
-                $razvod->analiza(
-                    $this->potrebnaEnergija,
-                    $sistem,
-                    $cona,
-                    $okolje,
-                    ['prenosnik' => $prenosnik]
-                );
+                $razvod->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube);
                 $this->potrebnaElektricnaEnergija =
@@ -134,7 +126,7 @@ class Hlajenje extends TSSInterface
                     throw new \Exception(sprintf('Hranilnik hlajenja "%s" ne obstaja', $hranilnikId));
                 }
 
-                $hranilnik->analiza([], $sistem, $cona, $okolje);
+                $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube);
                 $this->potrebnaElektricnaEnergija =
                     array_sum_values($this->potrebnaElektricnaEnergija, $hranilnik->potrebnaElektricnaEnergija);
@@ -149,13 +141,7 @@ class Hlajenje extends TSSInterface
                     throw new \Exception(sprintf('Generator hlajenja "%s" ne obstaja', $generatorId));
                 }
 
-                $generator->analiza(
-                    $this->potrebnaEnergija,
-                    $sistem,
-                    $cona,
-                    $okolje,
-                    ['namen' => 'hlajenje']
-                );
+                $generator->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
 
                 $this->potrebnaEnergija =
                     array_sum_values($this->potrebnaEnergija, $generator->toplotneIzgube['hlajenje']);

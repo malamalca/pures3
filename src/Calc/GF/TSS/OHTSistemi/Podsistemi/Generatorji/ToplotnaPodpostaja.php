@@ -82,7 +82,7 @@ class ToplotnaPodpostaja extends Generator
      */
     private function toplotneIzgubeTSV($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $rezimRazvoda = $params['rezim'];
+        $rezimRazvoda = $sistem->tsv->rezim;
 
         $temperaturaOkolice =
             $this->lokacija == VrstaLokacijeNamestitve::OgrevanProstor ? $cona->notranjaTOgrevanje : 13;
@@ -128,9 +128,8 @@ class ToplotnaPodpostaja extends Generator
      */
     private function toplotneIzgubeOgrevanje($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $namen = $params['namen'];
-
-        $rezimRazvoda = $params['rezim'];
+        $namen = $params['namen'] ?? 'ogrevanje';
+        $rezimRazvoda = $sistem->{$namen}->rezim;
 
         $temperaturaOkolice =
             $this->lokacija == VrstaLokacijeNamestitve::OgrevanProstor ? $cona->notranjaTOgrevanje : 13;

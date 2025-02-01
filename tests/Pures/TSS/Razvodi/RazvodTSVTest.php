@@ -53,6 +53,9 @@ final class RazvodTSVTest extends TestCase
         $cona->etaznaVisina = 3;
         $cona->notranjaTOgrevanje = 20;
 
+        $okolje = new \stdClass();
+        $okolje->projektnaZunanjaT = -13;
+
         $config = <<<EOT
         {
             "vrsta": "toplavoda",
@@ -68,7 +71,7 @@ final class RazvodTSVTest extends TestCase
 
         $razvodTSV = new RazvodTSV($config);
 
-        $hidravlicnaMoc = $razvodTSV->izracunHidravlicneMoci($cona);
+        $hidravlicnaMoc = $razvodTSV->izracunHidravlicneMoci($cona, $okolje);
 
         $this->assertEquals(0.844, round($hidravlicnaMoc, 3));
     }
@@ -84,6 +87,9 @@ final class RazvodTSVTest extends TestCase
         $cona->etaznaVisina = 3;
         $cona->notranjaTOgrevanje = 20;
 
+        $okolje = new \stdClass();
+        $okolje->projektnaZunanjaT = -13;
+
         $config = <<<EOT
         {
             "vrsta": "toplavoda",
@@ -99,7 +105,7 @@ final class RazvodTSVTest extends TestCase
 
         $razvodTSV = new RazvodTSV($config);
 
-        $faktor_fe = $razvodTSV->izracunFaktorjaRabeEnergijeCrpalke($cona);
+        $faktor_fe = $razvodTSV->izracunFaktorjaRabeEnergijeCrpalke($cona, $okolje);
 
         $this->assertEquals(16.642, round($faktor_fe, 3));
     }

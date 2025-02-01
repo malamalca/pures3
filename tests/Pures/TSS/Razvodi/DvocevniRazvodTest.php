@@ -7,6 +7,7 @@ use App\Calc\GF\TSS\OHTSistemi\Izbire\VrstaRezima;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\PloskovnoOgrevalo;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Razvodi\DvocevniRazvod;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Razvodi\Izbire\VrstaRazvodnihCevi;
+use App\Calc\GF\TSS\OHTSistemi\Sistemi\Ogrevanje;
 use App\Calc\GF\TSS\OHTSistemi\ToplovodniOHTSistem;
 use PHPUnit\Framework\TestCase;
 
@@ -77,12 +78,12 @@ final class DvocevniRazvodTest extends TestCase
         EOT;
         $prenosnik = new PloskovnoOgrevalo(json_decode($configPrenosnika));
 
-        $cona = new \stdClass();
-        $cona->dolzina = 10;
-        $cona->sirina = 8;
-        $cona->steviloEtaz = 3;
-        $cona->etaznaVisina = 3;
-        $cona->notranjaTOgrevanje = 20;
+        /** @var array $coneIn */
+        $coneIn = json_decode(file_get_contents(PROJECTS . 'Pures' . DS . 'TestniProjekt' . DS . 'izracuni' . DS . 'cone.json'));
+        $cona = $coneIn[0];
+
+        $okolje = new \stdClass();
+        $okolje->projektnaZunanjaT = -13;
 
         $config = <<<EOT
         {
@@ -103,7 +104,7 @@ final class DvocevniRazvodTest extends TestCase
 
         $rezim = VrstaRezima::from('40/30');
 
-        $hidravlicnaMoc = $razvod->izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona);
+        $hidravlicnaMoc = $razvod->izracunHidravlicneMoci($prenosnik, $rezim, $sistem, $cona, $okolje);
 
         $this->assertEquals(6.737, round($hidravlicnaMoc, 3));
     }
@@ -203,9 +204,13 @@ final class DvocevniRazvodTest extends TestCase
 
         $rezim = VrstaRezima::from('40/30');
 
+        $sistem->koncniPrenosniki = [$prenosnik];
+        $sistem->ogrevanje = new Ogrevanje();
+        $sistem->ogrevanje->rezim = $rezim;
+
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
-        $izgube = $razvod->toplotneIzgube($preneseneIzgube, $sistem, $cona, null, ['prenosnik' => $prenosnik, 'rezim' => $rezim]);
+        $izgube = $razvod->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje);
         $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
 
         $expected = [246.28, 162.67, 100.07, 43.58, 6.69, 0.00, 0.00, 0.00, 6.44, 58.22, 169.72, 247.51];
@@ -274,9 +279,13 @@ final class DvocevniRazvodTest extends TestCase
 
         $rezim = VrstaRezima::from('40/30');
 
+        $sistem->koncniPrenosniki = [$prenosnik];
+        $sistem->ogrevanje = new Ogrevanje();
+        $sistem->ogrevanje->rezim = $rezim;
+
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
-        $potrebnaElektrika = $razvod->potrebnaElektricnaEnergija($preneseneIzgube, $sistem, $cona, null, ['prenosnik' => $prenosnik, 'rezim' => $rezim]);
+        $potrebnaElektrika = $razvod->potrebnaElektricnaEnergija($preneseneIzgube, $sistem, $cona, $okolje);
 
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektrika);
 

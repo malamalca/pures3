@@ -91,7 +91,7 @@ class TSV extends TSSInterface
                     throw new \Exception(sprintf('Razvod TSV "%s" ne obstaja', $razvodId));
                 }
 
-                $razvod->analiza([], $sistem, $cona, $okolje);
+                $razvod->analiza([], $sistem, $cona, $okolje, ['namen' => 'tsv']);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube);
 
@@ -112,7 +112,7 @@ class TSV extends TSSInterface
                     throw new \Exception(sprintf('Hranilnik TSV "%s" ne obstaja', $hranilnikId));
                 }
 
-                $hranilnik->analiza([], $sistem, $cona, $okolje);
+                $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'tsv']);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube);
 
@@ -136,13 +136,7 @@ class TSV extends TSSInterface
                     $this->potrebnaEnergija = array_subtract_values($this->potrebnaEnergija, $vracljiveIzgubeTSV);
                 }
 
-                $generator->analiza(
-                    $this->potrebnaEnergija,
-                    $sistem,
-                    $cona,
-                    $okolje,
-                    ['namen' => 'tsv', 'rezim' => $this->rezim]
-                );
+                $generator->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'tsv']);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $generator->toplotneIzgube['tsv']);
 

@@ -15,4 +15,15 @@ class ToplozracniOHTSistem extends OHTSistem
     public function analiza($cona, $okolje)
     {
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function standardnaMoc($cona, $okolje): float
+    {
+        $standardnaMoc = ($cona->specTransmisijskeIzgube + $cona->specVentilacijskeIzgube) *
+            ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT) / 1000;
+
+        return $standardnaMoc;
+    }
 }

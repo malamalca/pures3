@@ -98,7 +98,7 @@ class Ogrevanje extends TSSInterface
                     throw new \Exception(sprintf('Prenosnik ogrevanja "%s" ne obstaja', $prenosnikId));
                 }
 
-                $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['rezim' => $this->rezim]);
+                $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $prenosnik->toplotneIzgube);
                 $this->potrebnaElektricnaEnergija =
@@ -114,15 +114,7 @@ class Ogrevanje extends TSSInterface
                     throw new \Exception(sprintf('Razvod ogrevanja "%s" ne obstaja', $razvodId));
                 }
 
-                $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $razvod->idPrenosnika);
-
-                $razvod->analiza(
-                    $this->potrebnaEnergija,
-                    $sistem,
-                    $cona,
-                    $okolje,
-                    ['prenosnik' => $prenosnik, 'rezim' => $this->rezim]
-                );
+                $razvod->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube);
                 $this->potrebnaElektricnaEnergija =
@@ -138,7 +130,7 @@ class Ogrevanje extends TSSInterface
                     throw new \Exception(sprintf('Hranilnik ogrevanja "%s" ne obstaja', $hranilnikId));
                 }
 
-                $hranilnik->analiza([], $sistem, $cona, $okolje);
+                $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube);
                 $this->potrebnaElektricnaEnergija =
                     array_sum_values($this->potrebnaElektricnaEnergija, $hranilnik->potrebnaElektricnaEnergija);
@@ -153,13 +145,7 @@ class Ogrevanje extends TSSInterface
                     throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
                 }
 
-                $generator->analiza(
-                    $this->potrebnaEnergija,
-                    $sistem,
-                    $cona,
-                    $okolje,
-                    ['namen' => 'ogrevanje', 'rezim' => $this->rezim]
-                );
+                $generator->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
                 $this->potrebnaEnergija =
                     array_sum_values($this->potrebnaEnergija, $generator->toplotneIzgube['ogrevanje']);

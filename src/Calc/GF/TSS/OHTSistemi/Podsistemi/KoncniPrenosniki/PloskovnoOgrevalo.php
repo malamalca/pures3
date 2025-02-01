@@ -15,6 +15,9 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
 
     public string $vrsta = 'Ploskovna ogrevala';
 
+    public float $deltaT_im = 0.0;
+    public float $deltaT_sol = 0.0;
+
     public float $exponentOgrevala = 1.1;
     public float $deltaP_FBH = 25;
 
@@ -23,61 +26,30 @@ class PloskovnoOgrevalo extends KoncniPrenosnik
     protected VrstaHidravlicnegaUravnotezenja $hidravlicnoUravnotezenje;
 
     /**
-     * Loads configuration from json|stdClass
+     * Class Constructor
      *
      * @param \stdClass|null $config Configuration
      * @return void
      */
-    public function parseConfig($config)
+    public function __construct(\stdClass $config = null)
     {
-        parent::parseConfig($config);
+        parent::__construct($config);
 
         $this->sistemOgreval = VrstaSistemaPloskovnihOgreval::from($config->sistem);
         $this->izolacija = VrstaIzolacijePloskovnihOgreval::from($config->izolacija);
 
         $this->hidravlicnoUravnotezenje =
             VrstaHidravlicnegaUravnotezenja::from($config->hidravlicnoUravnotezenje ?? 'neuravnotezeno');
-    }
-
-    /**
-     * Izračun toplotnih izgub končnega prenosnika
-     *
-     * @param array $vneseneIzgube Vnešene izgube predhodnih TSS
-     * @param \App\Calc\GF\TSS\OHTSistemi\OHTSistem $sistem Podatki sistema
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki
-     * @param array $params Dodatni parametri za izračun
-     * @return array
-     */
-    public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
-    {
+        
         // Δθhydr - deltaTemp za hidravlično uravnoteženje sistema; prvi stolpec za stOgreval <= 10, drugi za > 10
-        $deltaT_hydr = parent::DELTAT_HIDRAVLICNEGA_URAVNOTEZENJA_DO_10[$this->hidravlicnoUravnotezenje->getOrdinal()];
-
-        // Δθctr - deltaTemp za regulacijo temperature; prvi stolpec sevala, drugi stolpec toplovod, h<4m
-        $deltaT_ctr = parent::DELTAT_REGULACIJE_TEMPERATURE[$this->regulacijaTemperature->getOrdinal()];
+        $this->deltaT_hydr = $this->hidravlicnoUravnotezenje->deltaTHydr($this);
 
         // Δθemb - deltaTemp za izolacijo (polje R206)
-        $deltaT_emb = (self::DELTAT_VRSTE_SISTEMOV[$this->sistemOgreval->getOrdinal()] +
+        $this->deltaT_emb = (self::DELTAT_VRSTE_SISTEMOV[$this->sistemOgreval->getOrdinal()] +
             self::DELTAT_SPECIFICNIH_IZGUB[$this->izolacija->getOrdinal()]) / 2;
 
         // Δθstr - deltaTemp Str (polje Q208)
-        $deltaT_str = self::DELTAT_VRSTE_SISTEMOV[$this->sistemOgreval->getOrdinal()];
-
-        // polje G244
-        $deltaT = $deltaT_hydr + $deltaT_ctr + $deltaT_emb + $deltaT_str;
-
-        foreach (array_keys(Calc::MESECI) as $mesec) {
-            if ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec] != 0.0) {
-                $faktorDeltaT = $deltaT / ($cona->notranjaTOgrevanje - $okolje->zunanjaT[$mesec]);
-            } else {
-                $faktorDeltaT = $deltaT;
-            }
-
-            $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
-        }
-
-        return $this->toplotneIzgube;
+        $this->deltaT_str = self::DELTAT_VRSTE_SISTEMOV[$this->sistemOgreval->getOrdinal()];
     }
 
     /**
