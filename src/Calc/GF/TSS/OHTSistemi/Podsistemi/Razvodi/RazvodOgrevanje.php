@@ -89,6 +89,8 @@ abstract class RazvodOgrevanje extends Razvod
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         if (!empty($this->idPrenosnika)) {
             $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
         }
@@ -134,8 +136,8 @@ abstract class RazvodOgrevanje extends Razvod
                 ) *
                 $steviloUr * ($temperaturaRazvoda - $temperaturaIzvenOvoja) / 1000;
 
-            $this->toplotneIzgube[$mesec] = $izgubeZnotrajOvoja + $izgubeZunajOvoja;
-            $this->vracljiveIzgube[$mesec] = $izgubeZnotrajOvoja;
+            $this->toplotneIzgube[$namen][$mesec] = $izgubeZnotrajOvoja + $izgubeZunajOvoja;
+            $this->vracljiveIzgube[$namen][$mesec] = $izgubeZnotrajOvoja;
         }
 
         return $this->toplotneIzgube;
@@ -153,6 +155,8 @@ abstract class RazvodOgrevanje extends Razvod
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         if (!empty($this->idPrenosnika)) {
             /** @var \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
             $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
@@ -199,7 +203,7 @@ abstract class RazvodOgrevanje extends Razvod
                     0;
 
                 // Wh,d,aux - Potrebna električna energija za razvodni podsistem
-                $potrebnaElektricnaEnergija[$mesec] = 0;
+                $potrebnaElektricnaEnergija[$namen][$mesec] = 0;
 
                 if (
                     ($sistem instanceof ToplovodniOHTSistem) ||
@@ -221,7 +225,8 @@ abstract class RazvodOgrevanje extends Razvod
                         // Wh,d,aux - Potrebna električna energija za razvodni podsistem
                         // za sisteme brez prekinitve
                         // enačba (61)
-                        $this->potrebnaElektricnaEnergija[$mesec] = $potrebnaHidravlicnaEnergija * $faktorRabeEnergije;
+                        $this->potrebnaElektricnaEnergija[$namen][$mesec] =
+                            $potrebnaHidravlicnaEnergija * $faktorRabeEnergije;
 
                         // TODO: kaj pa za sisteme s prekinitvijo
                         // za prekinitev ogrevanja je korekturni faktor 1
@@ -233,11 +238,11 @@ abstract class RazvodOgrevanje extends Razvod
                         //    (1.03 * $steviloUr + $korekturniFaktorPriZnizanju * $steviloUrOgrevanja) / $steviloUrOgrevanja;
                         //$vrnjenaElektricnaEnergija = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
                     } else {
-                        $this->potrebnaElektricnaEnergija[$mesec] = 0;
+                        $this->potrebnaElektricnaEnergija[$namen][$mesec] = 0;
                     }
                 }
 
-                $this->vracljiveIzgubeAux[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
+                $this->vracljiveIzgubeAux[$namen][$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$namen][$mesec];
 
                 //$razvod->vrnjenaElektricnaEnergijaVOgrevanje[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
                 //$razvod->vracljivaElektricnaEnergijaVZrak[$mesec] = 0.25 * $razvod->potrebnaElektricnaEnergija[$mesec];
@@ -246,8 +251,8 @@ abstract class RazvodOgrevanje extends Razvod
         } else {
             // brez črpalke
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $this->potrebnaElektricnaEnergija[$mesec] = 0;
-                $this->vracljiveIzgubeAux[$mesec] = 0;
+                $this->potrebnaElektricnaEnergija[$namen][$mesec] = 0;
+                $this->vracljiveIzgubeAux[$namen][$mesec] = 0;
             }
         }
 

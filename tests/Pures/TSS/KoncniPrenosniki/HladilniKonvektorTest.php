@@ -54,13 +54,13 @@ final class HladilniKonvektorTest extends TestCase
         $letneZahteveC = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 36.05, 37.18, 0.00, 0.00, 0.00, 0.00];
 
         $izgube = $koncniPrenosnik->toplotneIzgube($letneZahteveC, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['hlajenje']);
 
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 19.47, 20.08, 0.00, 0.00, 0.00, 0.00];
         $this->assertEquals($expected, $roundedResult);
 
         $elektricneIzgube = $koncniPrenosnik->potrebnaElektricnaEnergija($letneZahteveC, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
-        $roundedResult = array_map(fn($el) => round($el, 2), $elektricneIzgube);
+        $roundedResult = array_map(fn($el) => round($el, 2), $elektricneIzgube['hlajenje']);
 
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.31, 0.31, 0.00, 0.00, 0.00, 0.00];
         $this->assertEquals($expected, $roundedResult);
@@ -111,13 +111,13 @@ final class HladilniKonvektorTest extends TestCase
         $letneZahteveC = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 36.05, 37.18, 0.00, 0.00, 0.00, 0.00];
 
         $izgube = $koncniPrenosnik->toplotneIzgube($letneZahteveC, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['hlajenje']);
 
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 7.21, 7.44, 0.00, 0.00, 0.00, 0.00];
         $this->assertEquals($expected, $roundedResult);
 
         $elektricneIzgube = $koncniPrenosnik->potrebnaElektricnaEnergija($letneZahteveC, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
-        $roundedResult = array_map(fn($el) => round($el, 2), $elektricneIzgube);
+        $roundedResult = array_map(fn($el) => round($el, 2), $elektricneIzgube['hlajenje']);
 
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.31, 0.31, 0.00, 0.00, 0.00, 0.00];
         $this->assertEquals($expected, $roundedResult);

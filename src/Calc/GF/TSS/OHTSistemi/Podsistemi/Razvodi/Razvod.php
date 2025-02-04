@@ -11,9 +11,9 @@ abstract class Razvod extends TSSInterface
 {
     public string $sistem = 'razvod';
 
-    public ElementRazvoda $horizontalniVod;
-    public ElementRazvoda $dvizniVod;
-    public ElementRazvoda $prikljucniVod;
+    public ?ElementRazvoda $horizontalniVod;
+    public ?ElementRazvoda $dvizniVod;
+    public ?ElementRazvoda $prikljucniVod;
 
     public ?string $idPrenosnika;
 
@@ -99,9 +99,18 @@ abstract class Razvod extends TSSInterface
         $sistem->sistem = $this->sistem;
 
         $sistem->vodi = [];
-        $sistem->vodi[] = $this->horizontalniVod->export();
-        $sistem->vodi[] = $this->dvizniVod->export();
-        $sistem->vodi[] = $this->prikljucniVod->export();
+
+        if (!empty($this->horizontalniVod)) {
+            $sistem->vodi[] = $this->horizontalniVod->export();
+        }
+
+        if (!empty($this->dvizniVod)) {
+            $sistem->vodi[] = $this->dvizniVod->export();
+        }
+
+        if (!empty($this->prikljucniVod)) {
+            $sistem->vodi[] = $this->prikljucniVod->export();
+        }
 
         return $sistem;
     }

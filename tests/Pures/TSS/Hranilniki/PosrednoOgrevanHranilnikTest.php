@@ -23,10 +23,10 @@ final class PosrednoOgrevanHranilnikTest extends TestCase
         }
         EOT;
 
-        $razvod = new PosrednoOgrevanHranilnik($config);
+        $hranilnik = new PosrednoOgrevanHranilnik($config);
 
-        $izgube = $razvod->toplotneIzgube([], null, $cona, null);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $izgube = $hranilnik->toplotneIzgube([], null, $cona, null, ['namen' => 'tsv']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['tsv']);
 
         $expected = [54.67, 49.38, 54.67, 52.90, 54.67, 52.90, 54.67, 54.67, 52.90, 54.67, 52.90, 54.67];
 

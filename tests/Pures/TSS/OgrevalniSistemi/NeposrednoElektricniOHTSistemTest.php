@@ -41,12 +41,12 @@ final class NeposrednoElektricniOHTSistemTest extends TestCase
         $sistem->analiza($cona, $okolje);
 
         $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube;
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov['ogrevanje']);
         $expected = [89.54, 61.89, 41.88, 20.31, 5.42, 0.00, 0.00, 0.00, 6.17, 29.94, 75.39, 94.22];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergija = $sistem->koncniPrenosniki[0]->potrebnaElektricnaEnergija;
-        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
+        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija['ogrevanje']);
         $expected = [2.23, 2.02, 2.23, 1.78, 0.26, 0.00, 0.00, 0.00, 0.25, 2.23, 2.16, 2.23];
         $this->assertEquals($expected, $roundedResult);
 

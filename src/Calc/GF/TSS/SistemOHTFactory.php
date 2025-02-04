@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS;
 
+use App\Calc\GF\TSS\OHTSistemi\HladilniSistemSHladnoVodo;
 use App\Calc\GF\TSS\OHTSistemi\LokalniOHTSistemNaBiomaso;
 use App\Calc\GF\TSS\OHTSistemi\NeposredniElektricniOHTSistem;
 use App\Calc\GF\TSS\OHTSistemi\SplitHladilniOHTSistem;
@@ -32,6 +33,9 @@ class SistemOHTFactory
         }
         if ($type == 'splitHlajenje') {
             return new SplitHladilniOHTSistem($options);
+        }
+        if ($type == 'hladilni') {
+            return new HladilniSistemSHladnoVodo($options);
         }
 
         return null;

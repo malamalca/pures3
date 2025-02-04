@@ -167,8 +167,8 @@ final class RazvodTSVTest extends TestCase
 
         $razvodTSV = new RazvodTSV($config);
 
-        $izgube = $razvodTSV->toplotneIzgube(null, null, $cona, null);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $izgube = $razvodTSV->toplotneIzgube(null, null, $cona, null, ['namen' => 'tsv']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['tsv']);
 
         $expected = [457.26, 413.00, 457.26, 442.51, 457.26, 442.51, 457.26, 457.26, 442.51, 457.26, 442.51, 457.26];
 
@@ -201,8 +201,8 @@ final class RazvodTSVTest extends TestCase
 
         $razvodTSV = new RazvodTSV($config);
 
-        $izgube = $razvodTSV->potrebnaElektricnaEnergija(null, null, $cona, null);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $izgube = $razvodTSV->potrebnaElektricnaEnergija(null, null, $cona, null, ['namen' => 'tsv']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['tsv']);
 
         $expected = [6.99, 6.31, 6.99, 6.76, 6.99, 6.76, 6.99, 6.99, 6.76, 6.99, 6.76, 6.99];
 

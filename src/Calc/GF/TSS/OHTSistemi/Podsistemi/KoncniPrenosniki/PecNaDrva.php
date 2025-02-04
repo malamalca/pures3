@@ -46,7 +46,7 @@ class PecNaDrva extends KoncniPrenosnik
     public function vracljiveIzgubeAux($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $this->vracljiveIzgubeAux[$mesec] = 0;
+            $this->vracljiveIzgubeAux['ogrevanje'][$mesec] = 0;
         }
 
         return $this->vracljiveIzgubeAux;

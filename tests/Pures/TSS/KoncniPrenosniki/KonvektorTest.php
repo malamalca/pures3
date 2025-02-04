@@ -47,9 +47,9 @@ final class KonvektorTest extends TestCase
 
         $preneseneIzgube = [1206.707, 746.368, 390.117, 135.734, 19.220, 0.000, 0.000, 0.000, 17.903, 179.496, 761.644, 1208.785];
 
-        $izgube = $koncniPrenosnik->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje);
+        $izgube = $koncniPrenosnik->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['ogrevanje']);
         $expected = [51.72, 35.35, 23.41, 11.11, 2.88, 0.00, 0.00, 0.00, 3.22, 16.15, 42.84, 54.40];
         $this->assertEquals($expected, $roundedResult);
     }

@@ -6,6 +6,7 @@ namespace App\Calc\GF\TSS\OHTSistemi\Sistemi;
 use App\Calc\GF\Cone\Cona;
 use App\Calc\GF\TSS\OHTSistemi\OHTSistem;
 use App\Calc\GF\TSS\TSSInterface;
+use App\Calc\GF\TSS\TSSPorociloNiz;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
 class Hlajenje extends TSSInterface
@@ -95,12 +96,16 @@ class Hlajenje extends TSSInterface
 
                 $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
 
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $prenosnik->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $prenosnik->toplotneIzgube['hlajenje']);
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values($this->potrebnaElektricnaEnergija, $prenosnik->potrebnaElektricnaEnergija);
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $prenosnik->potrebnaElektricnaEnergija['hlajenje']
+                    );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgube);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgubeAux);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgube['hlajenje'] ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgubeAux['hlajenje'] ?? []);
             }
 
             foreach ($this->razvodi as $razvodId) {
@@ -111,12 +116,16 @@ class Hlajenje extends TSSInterface
 
                 $razvod->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
 
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube['hlajenje']);
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values($this->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $razvod->potrebnaElektricnaEnergija['hlajenje']
+                    );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgube);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgubeAux);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgube['hlajenje'] ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgubeAux['hlajenje'] ?? []);
             }
 
             foreach ($this->hranilniki as $hranilnikId) {
@@ -126,12 +135,16 @@ class Hlajenje extends TSSInterface
                 }
 
                 $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube['hlajenje']);
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values($this->potrebnaElektricnaEnergija, $hranilnik->potrebnaElektricnaEnergija);
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $hranilnik->potrebnaElektricnaEnergija['hlajenje']
+                    );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube['hlajenje']);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux['hlajenje']);
             }
 
             foreach ($this->generatorji as $generatorId) {
@@ -150,8 +163,8 @@ class Hlajenje extends TSSInterface
                     $generator->potrebnaElektricnaEnergija['hlajenje']
                 );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgube ?? []);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgubeAux ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgube['hlajenje'] ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgubeAux['hlajenje'] ?? []);
 
                 $this->obnovljivaEnergija =
                     array_sum_values($this->obnovljivaEnergija, $generator->obnovljivaEnergija['hlajenje']);
@@ -199,6 +212,13 @@ class Hlajenje extends TSSInterface
     {
         $sistem = parent::export();
         $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
+        $sistem->porociloNizi[] = new TSSPorociloNiz(
+            'Q<sub>C,environment,del</sub>; Q<sub>C,an,environment,del</sub>',
+            'Obnovljiva energija',
+            $this->obnovljivaEnergija,
+            2,
+            true
+        );
 
         return $sistem;
     }

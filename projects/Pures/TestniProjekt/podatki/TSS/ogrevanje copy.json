@@ -1,54 +1,5 @@
 [
     {
-        "id": "HLA",
-        "idCone": "Cona1",
-        "vrsta": "hladilni",
-        "tip": "zracnoHlajen",
-        "energent": "elektrika",
-        
-        "hlajenje": {
-            "generatorji": ["KOMPRESOR"],
-            "prenosniki": ["STENSKIKONVEKTORJI"],
-            "razvodi": ["RAZVODHLAJENJA"]
-        },
-
-        "generatorji": [
-            {
-                "id": "KOMPRESOR",
-                "vrsta": "hladilniKompresor",
-                "tip": "batni",
-                "vrstaRegulacije": "vecstopenjsko",
-                "nazivnaMoc": 6,
-                "EER": 4
-            }
-        ],
-
-        "razvodi": [
-            {
-                "id": "RAZVODHLAJENJA",
-                "vrsta": "hlajenje",
-                "idPrenosnika": "STENSKIKONVEKTORJI",
-                "crpalka": {
-                    "moc": 12
-                }
-            }
-        ],
-
-        "prenosniki": [
-            {
-                "id": "STENSKIKONVEKTORJI",
-                "vrsta": "hladilniStenskiKonvektor",
-
-                "hidravlicnoUravnotezenje": "staticnoDviznihVodov",
-                "regulacijaTemperature": "referencniProstor",
-
-                "mocRegulatorja": 2,
-                "steviloRegulatorjev": 1,
-                "mocAux": 8
-            }
-        ]
-    },
-    {
         "id": "TC",
         "idCone": "Cona1",
         "vrsta": "toplovodni",

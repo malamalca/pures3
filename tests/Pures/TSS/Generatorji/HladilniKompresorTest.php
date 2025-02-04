@@ -50,12 +50,12 @@ final class HladilniKompresorTest extends TestCase
 
         // E_C
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 3.98, 4.10, 0.00, 0.00, 0.00, 0.00];
-        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->toplotneIzgube['hlajenje']));
+        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->E_C_gen));
 
         // Wctr,el,in
-        $generator->potrebnaElektricnaEnergija($letneZahteve, null, $cona, $okolje);
+        $generator->potrebnaElektricnaEnergija($letneZahteve, null, $cona, $okolje, ['namen' => 'hlajenje']);
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.16, 0.16, 0.00, 0.00, 0.00, 0.00];
-        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->potrebnaElektricnaEnergija));
+        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->potrebnaElektricnaEnergija['hlajenje']));
     }
 
     public function testPotrebnaEnergijaV2(): void
@@ -101,11 +101,11 @@ final class HladilniKompresorTest extends TestCase
 
         // E_C
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 4.87, 5.02, 0.00, 0.00, 0.00, 0.00];
-        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->toplotneIzgube['hlajenje']));
+        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->E_C_gen));
 
         // Wctr,el,in
-        $generator->potrebnaElektricnaEnergija($letneZahteve, null, $cona, $okolje);
+        $generator->potrebnaElektricnaEnergija($letneZahteve, null, $cona, $okolje, ['namen' => 'hlajenje']);
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.16, 0.16, 0.00, 0.00, 0.00, 0.00];
-        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->potrebnaElektricnaEnergija));
+        $this->assertEquals($expected, array_map(fn($el) => round($el, 2), $generator->potrebnaElektricnaEnergija['hlajenje']));
     }
 }

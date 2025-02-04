@@ -28,6 +28,7 @@ class HladilniKompresor extends Generator
 
     public array $korekcijskiFaktorEER = [0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0];
     public array $stUrDelovanjaNaDan = [0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0];
+    public array $E_C_gen = [0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0];
 
     private array $performanceLevels = [
         // VrstaHladilnegaKompresorja::Batni
@@ -121,7 +122,7 @@ class HladilniKompresor extends Generator
                 $f_Cpl = $potrebnaEnergija / $stUrNaMesec / $this->nazivnaMoc;
 
                 $temperaturaOkoljaKondenzatorja =
-                $this->kondenzatorVKanalu ? $cona->notranjaTHlajenje : $okolje->zunanjaT[$mesec];
+                    $this->kondenzatorVKanalu ? $cona->notranjaTHlajenje : $okolje->zunanjaT[$mesec];
 
                 $idx = (int)(($f_Cpl > 1 ? 1 : round($f_Cpl, 1)) * 10 - 1);
 
@@ -179,7 +180,10 @@ class HladilniKompresor extends Generator
             }
 
             // potrebna energija za hlajenje
-            $this->toplotneIzgube['hlajenje'][$mesec] = $E_C_gen_el_in;
+            $this->E_C_gen[$mesec] = $E_C_gen_el_in;
+            //$this->toplotneIzgube['hlajenje'][$mesec] = $E_C_gen_el_in;
+            $this->toplotneIzgube['hlajenje'][$mesec] =
+                        ($this->toplotneIzgube['hlajenje'][$mesec] ?? 0) + 0;
         }
     }
 
@@ -203,16 +207,16 @@ class HladilniKompresor extends Generator
                 $this->stUrDelovanjaNaDan[$mesec] = ceil($potrebnaEnergija / $stDni / $this->nazivnaMoc);
 
                 if ($vneseneIzgube[$mesec] > 0) {
-                    $this->potrebnaElektricnaEnergija[$mesec] =
+                    $this->potrebnaElektricnaEnergija['hlajenje'][$mesec] =
                         $this->stUrDelovanjaNaDan[$mesec] * $stDni *
                         $this->steviloRegulatorjev * $this->mocRegulatorja * 0.001;
                 } else {
-                    $this->potrebnaElektricnaEnergija[$mesec] = 0;
+                    $this->potrebnaElektricnaEnergija['hlajenje'][$mesec] = 0;
                 }
             }
         } else {
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $this->potrebnaElektricnaEnergija[$mesec] = 0;
+                $this->potrebnaElektricnaEnergija['hlajenje'][$mesec] = 0;
             }
         }
     }
@@ -232,7 +236,8 @@ class HladilniKompresor extends Generator
         $namen = $params['namen'];
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $this->obnovljivaEnergija[$namen][$mesec] = 0;
+            $this->obnovljivaEnergija['hlajenje'][$mesec] =
+                $vneseneIzgube[$mesec] - $this->toplotneIzgube['hlajenje'][$mesec] - $this->E_C_gen[$mesec];
         }
     }
 
@@ -276,6 +281,14 @@ class HladilniKompresor extends Generator
             $this->korekcijskiFaktorEER,
             2,
             false
+        );
+
+        $this->porociloNizi[] = new TSSPorociloNiz(
+            'E<sub>C,del,m</sub>; E<sub>C,del,an</sub>',
+            'Energija za delovanje',
+            $this->E_C_gen,
+            2,
+            true
         );
 
         $sistem = parent::export();

@@ -5,6 +5,7 @@ namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi;
 
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Razvodi\DvocevniRazvod;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Razvodi\EnocevniRazvod;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Razvodi\RazvodHlajenja;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Razvodi\RazvodTSV;
 
 class RazvodFactory
@@ -25,6 +26,8 @@ class RazvodFactory
                 return new EnocevniRazvod($options);
             case 'toplavoda':
                 return new RazvodTSV($options);
+            case 'hlajenje':
+                return new RazvodHlajenja($options);
             default:
                 throw new \Exception(sprintf('Razvod : Vrsta "%s" ne obstaja', $type));
         }

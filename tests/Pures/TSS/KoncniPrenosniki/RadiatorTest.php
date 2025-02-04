@@ -46,11 +46,11 @@ final class RadiatorTest extends TestCase
 
         $preneseneIzgube = [1206.707, 746.368, 390.117, 135.734, 19.220, 0.000, 0.000, 0.000, 17.903, 179.496, 761.644, 1208.785];
 
-        $izgube = $koncniPrenosnik->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje);
+        $izgube = $koncniPrenosnik->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
         $this->assertEquals(0.4, $koncniPrenosnik->deltaT_str);
 
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['ogrevanje']);
         $expected = [74.70, 51.07, 33.81, 16.04, 4.16, 0.00, 0.00, 0.00, 4.65, 23.33, 61.88, 78.57];
         $this->assertEquals($expected, $roundedResult);
     }

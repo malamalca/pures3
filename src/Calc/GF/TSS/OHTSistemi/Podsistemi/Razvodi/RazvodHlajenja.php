@@ -64,13 +64,9 @@ class RazvodHlajenja extends Razvod
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        if (!empty($this->idPrenosnika)) {
-            $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
-        }
-
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $izgubePrenosnika = $prenosnik->toplotneIzgube[$mesec] ?? 0;
-            $this->toplotneIzgube[$mesec] = ($vneseneIzgube[$mesec] + $izgubePrenosnika) * 0.05;
+            $this->toplotneIzgube['hlajenje'][$mesec] = $vneseneIzgube[$mesec] * 0.05;
+            $this->vracljiveIzgube['hlajenje'][$mesec] = 0;
         }
 
         return $this->toplotneIzgube;
@@ -92,21 +88,20 @@ class RazvodHlajenja extends Razvod
 
         if (!empty($this->crpalka) && !empty($generator->nazivnaMoc)) {
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
-                $stUr = 24 * $stDni;
-                $potrebnaEnergija = $cona->energijaHlajenje[$mesec] + $cona->energijaRazvlazevanje[$mesec];
-                $this->stUrDelovanjaNaDan[$mesec] = ceil($potrebnaEnergija / $stDni / $generator->nazivnaMoc);
+                $steviloUr = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
                 if ($vneseneIzgube[$mesec] > 0) {
-                    $this->potrebnaElektricnaEnergija[$mesec] =
-                        $this->stUrDelovanjaNaDan[$mesec] * $stDni * $this->crpalka->moc * 0.001;
+                    $this->potrebnaElektricnaEnergija['hlajenje'][$mesec] = $steviloUr * $this->crpalka->moc * 0.001;
                 } else {
-                    $this->potrebnaElektricnaEnergija[$mesec] = 0;
+                    $this->potrebnaElektricnaEnergija['hlajenje'][$mesec] = 0;
                 }
+
+                $this->vracljiveIzgubeAux['hlajenje'][$mesec] = 0;
             }
         } else {
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $this->potrebnaElektricnaEnergija[$mesec] = 0;
+                $this->potrebnaElektricnaEnergija['hlajenje'][$mesec] = 0;
+                $this->vracljiveIzgubeAux['hlajenje'][$mesec] = 0;
             }
         }
 

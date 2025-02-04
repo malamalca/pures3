@@ -41,12 +41,12 @@ final class LokalniOHTSistemNaBiomasoTest extends TestCase
         $sistem->analiza($cona, $okolje);
 
         $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube;
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov['ogrevanje']);
         $expected = [232.81, 160.90, 108.90, 52.81, 14.10, 0.00, 0.00, 0.00, 16.03, 77.86, 196.03, 244.98];
         $this->assertEquals($expected, $roundedResult);
 
         $potrebnaElektricnaEnergija = $sistem->koncniPrenosniki[0]->potrebnaElektricnaEnergija;
-        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
+        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija['ogrevanje']);
         $expected = [2.23, 2.02, 2.23, 1.78, 0.26, 0.00, 0.00, 0.00, 0.25, 2.23, 2.16, 2.23];
         $this->assertEquals($expected, $roundedResult);
 

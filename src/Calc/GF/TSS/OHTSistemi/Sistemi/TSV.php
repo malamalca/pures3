@@ -93,17 +93,21 @@ class TSV extends TSSInterface
 
                 $razvod->analiza([], $sistem, $cona, $okolje, ['namen' => 'tsv']);
 
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube['tsv']);
 
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values($this->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $razvod->potrebnaElektricnaEnergija['tsv']
+                    );
 
                 $this->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube);
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube['tsv']);
                 $this->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux);
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux['tsv']);
 
-                $vracljiveIzgubeTSV = array_sum_values($vracljiveIzgubeTSV, $razvod->vracljiveIzgubeTSV);
+                $vracljiveIzgubeTSV = array_sum_values($vracljiveIzgubeTSV, $razvod->vracljiveIzgubeTSV['tsv']);
             }
 
             foreach ($this->hranilniki as $hranilnikId) {
@@ -114,14 +118,16 @@ class TSV extends TSSInterface
 
                 $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'tsv']);
 
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube['tsv']);
 
                 $this->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube);
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube['tsv'] ?? []);
                 $this->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgubeAux);
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgubeAux['tsv'] ?? []);
 
-                $vracljiveIzgubeTSV = array_sum_values($vracljiveIzgubeTSV, $hranilnik->vracljiveIzgubeTSV);
+                $vracljiveIzgubeTSV =
+                    array_sum_values($vracljiveIzgubeTSV, $hranilnik->vracljiveIzgubeTSV['tsv'] ?? []);
             }
 
             foreach ($this->generatorji as $generatorId) {
@@ -149,11 +155,12 @@ class TSV extends TSSInterface
                 );
 
                 $this->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $generator->vracljiveIzgube ?? []);
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $generator->vracljiveIzgube['tsv'] ?? []);
                 $this->vracljiveIzgubeVOgrevanje =
-                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $generator->vracljiveIzgubeAux ?? []);
+                    array_sum_values($this->vracljiveIzgubeVOgrevanje, $generator->vracljiveIzgubeAux['tsv'] ?? []);
 
-                $vracljiveIzgubeTSV = array_sum_values($vracljiveIzgubeTSV, $generator->vracljiveIzgubeTSV);
+                $vracljiveIzgubeTSV =
+                    array_sum_values($vracljiveIzgubeTSV, $generator->vracljiveIzgubeTSV['tsv'] ?? []);
             }
         }
 

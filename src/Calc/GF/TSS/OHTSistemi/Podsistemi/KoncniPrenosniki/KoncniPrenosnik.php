@@ -152,6 +152,8 @@ abstract class KoncniPrenosnik extends TSSInterface
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         $deltaT = array_sum(
             [$this->deltaT_hydr, $this->deltaT_ctr, $this->deltaT_emb, $this->deltaT_str, $this->deltaT_im]
         );
@@ -166,7 +168,7 @@ abstract class KoncniPrenosnik extends TSSInterface
                 $faktorDeltaT = $deltaT / ($notranjaT - $okolje->zunanjaT[$mesec] - $this->deltaT_sol);
             }
 
-            $this->toplotneIzgube[$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
+            $this->toplotneIzgube[$namen][$mesec] = $vneseneIzgube[$mesec] * $faktorDeltaT;
         }
 
         return $this->toplotneIzgube;
@@ -184,11 +186,13 @@ abstract class KoncniPrenosnik extends TSSInterface
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stUrNaMesec = $stDni * 24;
 
-            $this->potrebnaElektricnaEnergija[$mesec] =
+            $this->potrebnaElektricnaEnergija[$namen][$mesec] =
                 ($this->steviloRegulatorjev * $this->mocRegulatorja + $this->mocAux) *
                 $sistem->steviloUrDelovanja($mesec, $cona, $okolje) / 1000;
         }
@@ -208,12 +212,14 @@ abstract class KoncniPrenosnik extends TSSInterface
      */
     public function vracljiveIzgubeAux($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        if (empty($this->potrebnaElektricnaEnergija)) {
-            $this->potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = []);
-        }
+        $namen = $params['namen'];
+
+        //if (empty($this->potrebnaElektricnaEnergija)) {
+        //    $this->potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params);
+        //}
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $this->vracljiveIzgubeAux[$mesec] = $this->potrebnaElektricnaEnergija[$mesec];
+            $this->vracljiveIzgubeAux[$namen][$mesec] = $this->potrebnaElektricnaEnergija[$namen][$mesec];
         }
 
         return $this->vracljiveIzgubeAux;

@@ -31,6 +31,10 @@ class KoncniPrenosnikFactory
                 return new ElektricnoOgrevalo($options);
             case 'pecNaDrva':
                 return new PecNaDrva($options);
+            case 'hladilniStenskiKonvektor':
+                return new \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Hlajenje\StenskiKonvektor($options);
+            case 'hladilniStropniKonvektor':
+                return new \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Hlajenje\StropniKonvektor($options);
             default:
                 throw new \Exception(sprintf('Končni prenosniki : Vrsta "%s" ne obstaja', $type));
         }

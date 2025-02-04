@@ -80,6 +80,8 @@ class RazvodTSV extends Razvod
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         if (isset($this->crpalka) && empty($this->crpalka->casDelovanja)) {
             // z – čas delovanja cirkulacijske črpalke (v urah na dan) [h]
             // enačba (142)
@@ -140,10 +142,11 @@ class RazvodTSV extends Razvod
                 $stDni * $steviloUrBrezCirkulacije *
                 ($temperaturaCevovodaBrezCirkulacije - $temperaturaIzvenOvoja) / 1000;
 
-            $this->toplotneIzgube[$mesec] = $izgubeZnotrajOvoja_Cirkulacija + $izgubeZunajOvoja_Cirkulacija +
+            $this->toplotneIzgube[$namen][$mesec] = $izgubeZnotrajOvoja_Cirkulacija + $izgubeZunajOvoja_Cirkulacija +
                 $izgubeZnotrajOvoja_BrezCirkulacije + $izgubeZunajOvoja_BrezCirkulacije;
 
-            $this->vracljiveIzgube[$mesec] = $izgubeZnotrajOvoja_Cirkulacija + $izgubeZnotrajOvoja_BrezCirkulacije;
+            $this->vracljiveIzgube[$namen][$mesec] =
+                $izgubeZnotrajOvoja_Cirkulacija + $izgubeZnotrajOvoja_BrezCirkulacije;
         }
 
         return $this->toplotneIzgube;
@@ -161,6 +164,8 @@ class RazvodTSV extends Razvod
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'] ?? 'tsv';
+
         if (!empty($this->crpalka)) {
             $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($cona, $okolje);
             $this->crpalka->moc = $this->crpalka->moc ?? $this->izracunHidravlicneMoci($cona, $okolje);
@@ -192,23 +197,24 @@ class RazvodTSV extends Razvod
 
                 // W_w,d,aux - Potrebna električna energija za razvodni podsistem
                 // enačba (140)
-                $this->potrebnaElektricnaEnergija[$mesec] =
+                $this->potrebnaElektricnaEnergija[$namen][$mesec] =
                     $potrebnaHidravlicnaEnergija * $fe_crpalke * $faktorRabeEnergije;
 
                 // enačba (149)
                 // todo: excel tega ne upošteva
-                $this->vracljiveIzgubeTSV[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
+                $this->vracljiveIzgubeTSV[$namen][$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$namen][$mesec];
 
                 // Delež vrnjene energije v okoliški zrak
                 // todo: upoštevaj možnost, da črpalka ni v ogrevanem prostoru/coni
                 // enačba (150)
-                $this->vracljiveIzgubeAux[$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$mesec];
+                $this->vracljiveIzgubeAux[$namen][$mesec] = 0.25 * $this->potrebnaElektricnaEnergija[$namen][$mesec];
             }
         } else {
             // brez črpalke
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $this->potrebnaElektricnaEnergija[$mesec] = 0;
-                $this->vracljiveIzgubeAux[$mesec] = 0;
+                $this->potrebnaElektricnaEnergija[$namen][$mesec] = 0;
+                $this->vracljiveIzgubeAux[$namen][$mesec] = 0;
+                $this->vracljiveIzgubeTSV[$namen][$mesec] = 0;
             }
         }
 

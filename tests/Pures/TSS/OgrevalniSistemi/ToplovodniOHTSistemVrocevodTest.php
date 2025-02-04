@@ -82,17 +82,17 @@ final class ToplovodniOHTSistemVrocevodTest extends TestCase
         $sistem->analiza($cona, $okolje);
         $data = $sistem->generatorji[0]->export();
 
-        $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube;
+        $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov);
         $expected = [90.25, 62.44, 42.70, 21.83, 6.49, 0.00, 0.00, 0.00, 7.35, 30.40, 74.76, 94.61];
         $this->assertEquals($expected, $roundedResult);
 
-        $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube;
+        $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubeRazvoda);
         $expected = [213.83, 143.11, 91.08, 41.57, 7.30, 0.00, 0.00, 0.00, 7.12, 53.13, 147.84, 214.28];
         $this->assertEquals($expected, $roundedResult);
 
-        $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija;
+        $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [27.69, 24.33, 26.06, 17.85, 2.90, 0.00, 0.00, 0.00, 2.74, 22.60, 25.99, 27.69];
         $this->assertEquals($expected, $roundedResult);
@@ -179,17 +179,17 @@ final class ToplovodniOHTSistemVrocevodTest extends TestCase
         $sistem->analiza($cona, $okolje);
         $data = $sistem->generatorji[0]->export();
 
-        $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube;
+        $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube['tsv'];
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubeRazvoda);
         $expected = [179.49, 162.12, 179.49, 173.70, 179.49, 173.70, 179.49, 179.49, 173.70, 179.49, 173.70, 179.49];
         $this->assertEquals($expected, $roundedResult);
 
-        $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija;
+        $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija['tsv'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00];
         $this->assertEquals($expected, $roundedResult);
 
-        $izgubeHranilnika = $sistem->hranilniki[0]->toplotneIzgube;
+        $izgubeHranilnika = $sistem->hranilniki[0]->toplotneIzgube['tsv'];
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubeHranilnika);
         $expected = [54.67, 49.38, 54.67, 52.90, 54.67, 52.90, 54.67, 54.67, 52.90, 54.67, 52.90, 54.67];
         $this->assertEquals($expected, $roundedResult);

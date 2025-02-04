@@ -229,7 +229,7 @@ abstract class OHTSistem
         if (!empty($this->hlajenje)) {
             $skupnaDovedenaEnergijaOgrHlaTsv += $cona->skupnaEnergijaHlajenje;
 
-            $this->hlajenje->vrnjeneIzgubeVOgrevanje = $this->vracljiveIzgubeVOgrevanje;
+            //$this->hlajenje->vrnjeneIzgubeVOgrevanje = $this->vracljiveIzgubeVOgrevanje;
             $this->hlajenje->analiza([], $this, $cona, $okolje);
 
             $this->potrebnaEnergija =
@@ -292,14 +292,23 @@ abstract class OHTSistem
         $sistem->letnaUcinkovitostOgrHlaTsv = $this->letnaUcinkovitostOgrHlaTsv;
         $sistem->minLetnaUcinkovitostOgrHlaTsv = $this->minLetnaUcinkovitostOgrHlaTsv;
 
+        $sistem->porociloPodatki = [];
+        $sistem->porociloNizi = [];
+
         if (!empty($this->ogrevanje)) {
-            $sistem->ogrevanje = $this->ogrevanje;
+            $sistem->ogrevanje = $this->ogrevanje->export();
+            $sistem->porociloNizi = array_merge($sistem->porociloNizi, $sistem->ogrevanje->porociloNizi);
+            $sistem->porociloPodatki = array_merge($sistem->porociloPodatki, $sistem->ogrevanje->porociloPodatki);
         }
         if (!empty($this->tsv)) {
-            $sistem->tsv = $this->tsv;
+            $sistem->tsv = $this->tsv->export();
+            $sistem->porociloNizi = array_merge($sistem->porociloNizi, $sistem->tsv->porociloNizi);
+            $sistem->porociloPodatki = array_merge($sistem->porociloPodatki, $sistem->tsv->porociloPodatki);
         }
         if (!empty($this->hlajenje)) {
-            $sistem->hlajenje = $this->hlajenje;
+            $sistem->hlajenje = $this->hlajenje->export();
+            $sistem->porociloNizi = array_merge($sistem->porociloNizi, $sistem->hlajenje->porociloNizi);
+            $sistem->porociloPodatki = array_merge($sistem->porociloPodatki, $sistem->hlajenje->porociloPodatki);
         }
 
         if (!empty($this->koncniPrenosniki)) {

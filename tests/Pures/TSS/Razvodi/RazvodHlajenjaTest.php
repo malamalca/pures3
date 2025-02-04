@@ -37,21 +37,22 @@ final class RazvodHlajenjaTest extends TestCase
         $generator->id = 'KOMPRESOR';
         $generator->nazivnaMoc = 6;
 
-        $sistem = new \stdClass();
+        $sistem = new \App\Calc\GF\TSS\OHTSistemi\HladilniSistemSHladnoVodo();
+        $sistem->generatorji = [$generator];
         $sistem->koncniPrenosniki = [$prenosnik];
         $sistem->generatorji = [$generator];
 
-        $letneZahteveC = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 36.05, 37.18, 0.00, 0.00, 0.00, 0.00];
+        $letneZahteveC = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 36.05 + 19.47, 37.18 + 20.08, 0.00, 0.00, 0.00, 0.00];
 
         $razvodHlajenja = new RazvodHlajenja(json_decode($config));
-        $izgube = $razvodHlajenja->toplotneIzgube($letneZahteveC, $sistem, $cona, $okolje);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $izgube = $razvodHlajenja->toplotneIzgube($letneZahteveC, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['hlajenje']);
 
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 2.78, 2.86, 0.00, 0.00, 0.00, 0.00];
         $this->assertEquals($expected, $roundedResult);
 
-        $elektricneIzgube = $razvodHlajenja->potrebnaElektricnaEnergija($letneZahteveC, $sistem, $cona, $okolje);
-        $roundedResult = array_map(fn($el) => round($el, 2), $elektricneIzgube);
+        $elektricneIzgube = $razvodHlajenja->potrebnaElektricnaEnergija($letneZahteveC, $sistem, $cona, $okolje, ['namen' => 'hlajenje']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $elektricneIzgube['hlajenje']);
 
         $expected = [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.93, 0.93, 0.00, 0.00, 0.00, 0.00];
         $this->assertEquals($expected, $roundedResult);

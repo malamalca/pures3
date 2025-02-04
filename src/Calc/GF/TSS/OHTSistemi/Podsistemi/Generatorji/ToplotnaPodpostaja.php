@@ -112,7 +112,7 @@ class ToplotnaPodpostaja extends Generator
             $this->vneseneIzgube['tsv'][$mesec] = $vneseneIzgube[$mesec];
             $this->toplotneIzgube['tsv'][$mesec] = $Q_w_DO_l;
 
-            $this->vracljiveIzgube[$mesec] = 0;
+            $this->vracljiveIzgube['tsv'][$mesec] = 0;
         }
     }
 
@@ -168,7 +168,7 @@ class ToplotnaPodpostaja extends Generator
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             $this->vneseneIzgube['ogrevanje'][$mesec] = $vneseneIzgube[$mesec];
             $this->toplotneIzgube['ogrevanje'][$mesec] = $Q_h_DO_l;
-            $this->vracljiveIzgube[$mesec] = $Q_h_DO_l;
+            $this->vracljiveIzgube['ogrevanje'][$mesec] = $Q_h_DO_l;
         }
     }
 
@@ -220,8 +220,10 @@ class ToplotnaPodpostaja extends Generator
 
                             ////////////////////////////////////////////////////////////////////////////////////////////
                             $this->potrebnaElektricnaEnergija['tsv'][$mesec] = $W_w_s_aux;
-                            $this->vracljiveIzgubeAux[$mesec] = ($this->vracljiveIzgubeAux[$mesec] ?? 0) + $Q_w_rwh_s;
-                            $this->vracljiveIzgubeTSV[$mesec] = ($this->vracljiveIzgubeTSV[$mesec] ?? 0) + $Q_w_rww_s;
+                            $this->vracljiveIzgubeAux['tsv'][$mesec] =
+                                ($this->vracljiveIzgubeAux['tsv'][$mesec] ?? 0) + $Q_w_rwh_s;
+                            $this->vracljiveIzgubeTSV['tsv'][$mesec] =
+                                ($this->vracljiveIzgubeTSV['tsv'][$mesec] ?? 0) + $Q_w_rww_s;
                         }
                     }
                 }
@@ -232,7 +234,7 @@ class ToplotnaPodpostaja extends Generator
                 $this->potrebnaElektricnaEnergija['tsv'][$mesec] =
                     ($this->potrebnaElektricnaEnergija['tsv'][$mesec] ?? 0) + $W_w_g_aux;
 
-                $this->vracljiveIzgubeAux[$mesec] = ($this->vracljiveIzgubeAux[$mesec] ?? 0) +
+                $this->vracljiveIzgubeAux['tsv'][$mesec] = ($this->vracljiveIzgubeAux['tsv'][$mesec] ?? 0) +
                     ($this->lokacija == VrstaLokacijeNamestitve::OgrevanProstor ? $W_w_g_aux : 0);
             }
         } else {
@@ -246,7 +248,8 @@ class ToplotnaPodpostaja extends Generator
 
                 $this->potrebnaElektricnaEnergija['ogrevanje'][$mesec] = 10 * $stUrOgrevanje / 24 / $stDni;
 
-                $this->vracljiveIzgubeAux[$mesec] = $this->lokacija == VrstaLokacijeNamestitve::OgrevanProstor ?
+                $this->vracljiveIzgubeAux['ogrevanje'][$mesec] =
+                    $this->lokacija == VrstaLokacijeNamestitve::OgrevanProstor ?
                     $this->potrebnaElektricnaEnergija['ogrevanje'][$mesec] * 0.6 :
                     $this->potrebnaElektricnaEnergija['ogrevanje'][$mesec] * (1 - 0.3) * 0.6;
             }

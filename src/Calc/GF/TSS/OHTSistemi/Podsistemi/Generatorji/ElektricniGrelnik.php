@@ -71,7 +71,7 @@ class ElektricniGrelnik extends Generator
             $this->vneseneIzgube['tsv'][$mesec] = 0;
             $this->toplotneIzgube['tsv'][$mesec] = 0;
 
-            $this->vracljiveIzgube[$mesec] = 0;
+            $this->vracljiveIzgube['tsv'][$mesec] = 0;
         }
     }
 
@@ -91,7 +91,7 @@ class ElektricniGrelnik extends Generator
             $this->vneseneIzgube['ogrevanje'][$mesec] = 0;
             $this->toplotneIzgube['ogrevanje'][$mesec] = 0;
 
-            $this->vracljiveIzgube[$mesec] = 0;
+            $this->vracljiveIzgube['ogrevanje'][$mesec] = 0;
         }
     }
 

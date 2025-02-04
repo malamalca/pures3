@@ -99,12 +99,18 @@ class Ogrevanje extends TSSInterface
 
                 $prenosnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $prenosnik->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $prenosnik->toplotneIzgube['ogrevanje'] ?? []);
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values($this->potrebnaElektricnaEnergija, $prenosnik->potrebnaElektricnaEnergija);
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $prenosnik->potrebnaElektricnaEnergija['ogrevanje'] ?? []
+                    );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgube);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgubeAux);
+                $vracljiveIzgube =
+                    array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgube['ogrevanje'] ?? []);
+                $vracljiveIzgube =
+                    array_sum_values($vracljiveIzgube, $prenosnik->vracljiveIzgubeAux['ogrevanje'] ?? []);
             }
 
             foreach ($this->razvodi as $razvodId) {
@@ -115,12 +121,16 @@ class Ogrevanje extends TSSInterface
 
                 $razvod->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube['ogrevanje'] ?? []);
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values($this->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija);
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $razvod->potrebnaElektricnaEnergija['ogrevanje'] ?? []
+                    );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgube);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgubeAux);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgube['ogrevanje'] ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $razvod->vracljiveIzgubeAux['ogrevanje'] ?? []);
             }
 
             foreach ($this->hranilniki as $hranilnikId) {
@@ -130,12 +140,16 @@ class Ogrevanje extends TSSInterface
                 }
 
                 $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
-                $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube);
+                $this->potrebnaEnergija =
+                    array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube['ogrevanje']);
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values($this->potrebnaElektricnaEnergija, $hranilnik->potrebnaElektricnaEnergija);
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $hranilnik->potrebnaElektricnaEnergija['ogrevanje']
+                    );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube['ogrevanje']);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux['ogrevanje']);
             }
 
             foreach ($this->generatorji as $generatorId) {
@@ -154,8 +168,9 @@ class Ogrevanje extends TSSInterface
                     $generator->potrebnaElektricnaEnergija['ogrevanje']
                 );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgube ?? []);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgubeAux ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $generator->vracljiveIzgube['ogrevanje'] ?? []);
+                $vracljiveIzgube =
+                    array_sum_values($vracljiveIzgube, $generator->vracljiveIzgubeAux['ogrevanje'] ?? []);
 
                 $this->obnovljivaEnergija =
                     array_sum_values($this->obnovljivaEnergija, $generator->obnovljivaEnergija['ogrevanje']);

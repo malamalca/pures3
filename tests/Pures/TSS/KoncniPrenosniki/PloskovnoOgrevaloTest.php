@@ -45,8 +45,8 @@ final class PloskovnoOgrevaloTest extends TestCase
 
         $preneseneIzgube = [1206.707, 746.368, 390.117, 135.734, 19.220, 0.000, 0.000, 0.000, 17.903, 179.496, 761.644, 1208.785];
 
-        $izgube = $koncniPrenosnik->toplotneIzgube($preneseneIzgube, null, $cona, $okolje);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $izgube = $koncniPrenosnik->toplotneIzgube($preneseneIzgube, null, $cona, $okolje, ['namen' => 'ogrevanje']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['ogrevanje']);
 
         $expected = [106.31, 72.67, 48.11, 22.83, 5.93, 0.00, 0.00, 0.00, 6.62, 33.21, 88.07, 111.81];
 

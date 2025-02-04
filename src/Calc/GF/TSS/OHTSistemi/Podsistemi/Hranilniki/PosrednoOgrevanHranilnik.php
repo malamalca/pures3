@@ -68,6 +68,8 @@ class PosrednoOgrevanHranilnik extends Hranilnik
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         // f - vpliv cevne povezave med hranilnikom in grelnikom in hranilnikom. Če sta
         // nameščena v istem prostoru, je fpovezava = 1,2. V nasprotnem primeru je fpovezava = 1,
         // toplotne izgube se izračunajo posebej po metodologiji opisani v poglavju 8.2.1.1. in
@@ -87,7 +89,8 @@ class PosrednoOgrevanHranilnik extends Hranilnik
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
-            $this->toplotneIzgube[$mesec] = $f_povezava * (50 - $temperaturaOkolice) / 45 * $stDni * $dnevneIzgube;
+            $this->toplotneIzgube[$namen][$mesec] =
+                $f_povezava * (50 - $temperaturaOkolice) / 45 * $stDni * $dnevneIzgube;
         }
 
         $this->vracljiveIzgube = $this->toplotneIzgube;

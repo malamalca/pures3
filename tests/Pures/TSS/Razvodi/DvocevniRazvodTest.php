@@ -209,8 +209,8 @@ final class DvocevniRazvodTest extends TestCase
 
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
-        $izgube = $razvod->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje);
-        $roundedResult = array_map(fn($el) => round($el, 2), $izgube);
+        $izgube = $razvod->toplotneIzgube($preneseneIzgube, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['ogrevanje']);
 
         $expected = [246.28, 162.67, 100.07, 43.58, 6.69, 0.00, 0.00, 0.00, 6.44, 58.22, 169.72, 247.51];
 
@@ -283,9 +283,9 @@ final class DvocevniRazvodTest extends TestCase
 
         $preneseneIzgube = [1315.89, 821.00, 439.53, 159.18, 25.31, 0.00, 0.00, 0.00, 24.71, 213.60, 852.09, 1323.62];
 
-        $potrebnaElektrika = $razvod->potrebnaElektricnaEnergija($preneseneIzgube, $sistem, $cona, $okolje);
+        $potrebnaElektrika = $razvod->potrebnaElektricnaEnergija($preneseneIzgube, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
 
-        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektrika);
+        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektrika['ogrevanje']);
 
         $expected = [28.14, 24.59, 26.17, 18.67, 2.65, 0.00, 0.00, 0.00, 2.47, 24.69, 26.29, 28.16];
 

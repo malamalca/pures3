@@ -1,5 +1,442 @@
 [
     {
+        "id": "HLA",
+        "idCone": "Cona1",
+        "tss": "oht",
+        "vrsta": "hladilni",
+        "energent": "elektrika",
+        "jeOgrevalniSistem": true,
+        "potrebnaEnergija": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            58.29091603416876,
+            60.12736955352406,
+            0,
+            0,
+            0,
+            0
+        ],
+        "potrebnaEnergijaHlajenje": [],
+        "potrebnaElektricnaEnergija": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.6819999999999999,
+            0.6819999999999999,
+            0,
+            0,
+            0,
+            0
+        ],
+        "obnovljivaEnergija": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            55.150972480956455,
+            56.88850217510555,
+            0,
+            0,
+            0,
+            0
+        ],
+        "vracljiveIzgube": [],
+        "energijaPoEnergentih": {
+            "elektrika": 7.7428109316308165,
+            "okolje": 112.039474656062
+        },
+        "letnaUcinkovitostOgrHlaTsv": 0.5573460732510566,
+        "minLetnaUcinkovitostOgrHlaTsv": 0.5,
+        "porociloPodatki": [],
+        "porociloNizi": [
+            {
+                "naziv": "Q<sub>C,environment,del<\/sub>; Q<sub>C,an,environment,del<\/sub>",
+                "opis": "Obnovljiva energija",
+                "vrednosti": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    55.150972480956455,
+                    56.88850217510555,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "decimalke": 2,
+                "vsota": true
+            }
+        ],
+        "hlajenje": {
+            "id": null,
+            "toplotneIzgube": [],
+            "potrebnaElektricnaEnergija": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0.6819999999999999,
+                0.6819999999999999,
+                0,
+                0,
+                0,
+                0
+            ],
+            "obnovljivaEnergija": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                55.150972480956455,
+                56.88850217510555,
+                0,
+                0,
+                0,
+                0
+            ],
+            "vracljiveIzgube": [],
+            "vracljiveIzgubeTSV": [],
+            "vracljiveIzgubeAux": [],
+            "porociloNizi": [
+                {
+                    "naziv": "Q<sub>C,environment,del<\/sub>; Q<sub>C,an,environment,del<\/sub>",
+                    "opis": "Obnovljiva energija",
+                    "vrednosti": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        55.150972480956455,
+                        56.88850217510555,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "decimalke": 2,
+                    "vsota": true
+                }
+            ],
+            "porociloPodatki": [],
+            "energijaPoEnergentih": {
+                "elektrika": 7.7428109316308165,
+                "okolje": 112.039474656062
+            }
+        },
+        "prenosniki": [
+            {
+                "id": "STENSKIKONVEKTORJI",
+                "toplotneIzgube": {
+                    "hlajenje": [
+                        -0,
+                        -0,
+                        -0,
+                        -0,
+                        0,
+                        0,
+                        19.466354148701996,
+                        20.079641038282617,
+                        0,
+                        -0,
+                        -0,
+                        -0
+                    ]
+                },
+                "potrebnaElektricnaEnergija": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.31,
+                        0.31,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "obnovljivaEnergija": [],
+                "vracljiveIzgube": [],
+                "vracljiveIzgubeTSV": [],
+                "vracljiveIzgubeAux": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.31,
+                        0.31,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "porociloNizi": [],
+                "porociloPodatki": [],
+                "vrsta": "Ogrevalni konvektor",
+                "regulacijaTemperature": "Temperatura referenčnega prostora",
+                "hidravlicnoUravnotezenje": "Statično uravnoteženje dvižnih vodov"
+            }
+        ],
+        "razvodi": [
+            {
+                "id": "RAZVODHLAJENJA",
+                "toplotneIzgube": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        2.775757906388989,
+                        2.8632080739773365,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "potrebnaElektricnaEnergija": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.372,
+                        0.372,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "obnovljivaEnergija": [],
+                "vracljiveIzgube": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "vracljiveIzgubeTSV": [],
+                "vracljiveIzgubeAux": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "porociloNizi": [],
+                "porociloPodatki": [],
+                "sistem": "hladnavoda",
+                "vodi": []
+            }
+        ],
+        "generatorji": [
+            {
+                "id": "KOMPRESOR",
+                "toplotneIzgube": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "potrebnaElektricnaEnergija": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "obnovljivaEnergija": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        55.150972480956455,
+                        56.88850217510555,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "vracljiveIzgube": [],
+                "vracljiveIzgubeTSV": [],
+                "vracljiveIzgubeAux": [],
+                "porociloNizi": [
+                    {
+                        "naziv": "t<sub>C,gen,op,d<\/sub>",
+                        "opis": "Število ur delovanja na dan",
+                        "vrednosti": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            1,
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        "decimalke": 1,
+                        "vsota": true
+                    },
+                    {
+                        "naziv": "f<sub>EER,corr<\/sub>",
+                        "opis": "Korekcijski faktor ERR",
+                        "vrednosti": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            3.0724299349504527,
+                            3.0724299349504527,
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        "decimalke": 2,
+                        "vsota": false
+                    },
+                    {
+                        "naziv": "E<sub>C,del,m<\/sub>; E<sub>C,del,an<\/sub>",
+                        "opis": "Energija za delovanje",
+                        "vrednosti": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            3.1399435532123072,
+                            3.238867378418513,
+                            0,
+                            0,
+                            0,
+                            0
+                        ],
+                        "decimalke": 2,
+                        "vsota": true
+                    }
+                ],
+                "porociloPodatki": [
+                    {
+                        "naziv": "EER<sub>n<\/sub>",
+                        "opis": "Nazivni faktor energijske učinkovitosti",
+                        "vrednost": 4,
+                        "enota": "kW\/kW",
+                        "decimalke": 1
+                    },
+                    {
+                        "naziv": "",
+                        "opis": "Vrsta regulacije",
+                        "vrednost": "On\/Off",
+                        "enota": "",
+                        "decimalke": 1
+                    },
+                    {
+                        "naziv": "ϑ<sub>C,gen,req,out<\/sub>",
+                        "opis": "Temperatura vpihovanega zraka ali ohlajene vode",
+                        "vrednost": 20,
+                        "enota": "°C",
+                        "decimalke": 1
+                    }
+                ],
+                "vneseneIzgube": {
+                    "hlajenje": [
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        58.29091603416876,
+                        60.12736955352406,
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                },
+                "nazivnaMoc": 6
+            }
+        ]
+    },
+    {
         "id": "TC",
         "idCone": "Cona1",
         "tss": "oht",
@@ -20,6 +457,7 @@
             915.7445595175474,
             1383.4377052925347
         ],
+        "potrebnaEnergijaHlajenje": [],
         "potrebnaElektricnaEnergija": [
             30.937795293606488,
             26.586306358009974,
@@ -55,6 +493,8 @@
         },
         "letnaUcinkovitostOgrHlaTsv": 0.5415835898803257,
         "minLetnaUcinkovitostOgrHlaTsv": 0.5,
+        "porociloPodatki": [],
+        "porociloNizi": [],
         "ogrevanje": {
             "id": null,
             "toplotneIzgube": [],
@@ -89,153 +529,143 @@
             "vracljiveIzgube": [],
             "vracljiveIzgubeTSV": [],
             "vracljiveIzgubeAux": [],
-            "rezim": "40\/30",
-            "razvodi": [
-                "ogrevanje"
-            ],
-            "prenosniki": [
-                "TALNO"
-            ],
-            "hranilniki": [],
-            "generatorji": [
-                "TC"
-            ],
+            "porociloNizi": [],
+            "porociloPodatki": [],
             "energijaPoEnergentih": {
                 "elektrika": 2159.6434354516405,
                 "okolje": 3662.515176362106
-            },
-            "potrebnaEnergija": [
-                1379.147306513585,
-                887.6698977088977,
-                512.5369791275906,
-                206.27900291045944,
-                35.34420865310225,
-                0,
-                0,
-                0,
-                34.89009365819562,
-                271.18145454131366,
-                915.7445595175474,
-                1383.4377052925347
-            ],
-            "vrnjeneIzgubeVOgrevanje": []
+            }
         },
         "prenosniki": [
             {
                 "id": "TALNO",
-                "toplotneIzgube": [
-                    93.77514300538293,
-                    65.54354817464903,
-                    45.73299934989106,
-                    23.308343515361802,
-                    6.5854005002022316,
-                    0,
-                    0,
-                    0,
-                    7.470725315898046,
-                    33.259534850267244,
-                    78.89130625625405,
-                    98.37954785232152
-                ],
-                "potrebnaElektricnaEnergija": [
-                    0.744,
-                    0.672,
-                    0.744,
-                    0.5523724360091229,
-                    0.08512582740233954,
-                    0,
-                    0,
-                    0,
-                    0.08047494274037145,
-                    0.7165459977362049,
-                    0.72,
-                    0.744
-                ],
+                "toplotneIzgube": {
+                    "ogrevanje": [
+                        93.77514300538293,
+                        65.54354817464903,
+                        45.73299934989106,
+                        23.308343515361802,
+                        6.5854005002022316,
+                        0,
+                        0,
+                        0,
+                        7.470725315898046,
+                        33.259534850267244,
+                        78.89130625625405,
+                        98.37954785232152
+                    ]
+                },
+                "potrebnaElektricnaEnergija": {
+                    "ogrevanje": [
+                        0.744,
+                        0.672,
+                        0.744,
+                        0.5523724360091229,
+                        0.08512582740233954,
+                        0,
+                        0,
+                        0,
+                        0.08047494274037145,
+                        0.7165459977362049,
+                        0.72,
+                        0.744
+                    ]
+                },
                 "obnovljivaEnergija": [],
                 "vracljiveIzgube": [],
                 "vracljiveIzgubeTSV": [],
-                "vracljiveIzgubeAux": [
-                    0.744,
-                    0.672,
-                    0.744,
-                    0.5523724360091229,
-                    0.08512582740233954,
-                    0,
-                    0,
-                    0,
-                    0.08047494274037145,
-                    0.7165459977362049,
-                    0.72,
-                    0.744
-                ],
+                "vracljiveIzgubeAux": {
+                    "ogrevanje": [
+                        0.744,
+                        0.672,
+                        0.744,
+                        0.5523724360091229,
+                        0.08512582740233954,
+                        0,
+                        0,
+                        0,
+                        0.08047494274037145,
+                        0.7165459977362049,
+                        0.72,
+                        0.744
+                    ]
+                },
                 "porociloNizi": [],
                 "porociloPodatki": [],
                 "vrsta": "Ploskovna ogrevala",
-                "regulacijaTemperature": "S temperaturo referenčnega prostora",
+                "regulacijaTemperature": "Temperatura referenčnega prostora",
                 "hidravlicnoUravnotezenje": "Statično uravnoteženje dvižnih vodov"
             }
         ],
         "razvodi": [
             {
                 "id": "ogrevanje",
-                "toplotneIzgube": [
-                    220.89756723088223,
-                    148.97639530812347,
-                    95.99587694074499,
-                    44.38050876321667,
-                    7.400752476568455,
-                    0,
-                    0,
-                    0,
-                    7.22821883987042,
-                    58.140650230142384,
-                    154.55006401801492,
-                    221.4954779556561
-                ],
-                "potrebnaElektricnaEnergija": [
-                    27.78628355116632,
-                    24.405987874533416,
-                    26.118648890657628,
-                    19.060114930854883,
-                    2.9440745360872342,
-                    0,
-                    0,
-                    0,
-                    2.7860233016273264,
-                    24.73187163761791,
-                    26.081230719143537,
-                    27.79458562661035
-                ],
+                "toplotneIzgube": {
+                    "ogrevanje": [
+                        220.89756723088223,
+                        148.97639530812347,
+                        95.99587694074499,
+                        44.38050876321667,
+                        7.400752476568455,
+                        0,
+                        0,
+                        0,
+                        7.22821883987042,
+                        58.140650230142384,
+                        154.55006401801492,
+                        221.4954779556561
+                    ]
+                },
+                "potrebnaElektricnaEnergija": {
+                    "ogrevanje": [
+                        27.78628355116632,
+                        24.405987874533416,
+                        26.118648890657628,
+                        19.060114930854883,
+                        2.9440745360872342,
+                        0,
+                        0,
+                        0,
+                        2.7860233016273264,
+                        24.73187163761791,
+                        26.081230719143537,
+                        27.79458562661035
+                    ]
+                },
                 "obnovljivaEnergija": [],
-                "vracljiveIzgube": [
-                    195.56863353753496,
-                    128.73621855677013,
-                    77.18476941483378,
-                    31.817697667631435,
-                    5.435413778314498,
-                    0,
-                    0,
-                    0,
-                    5.3581605640923735,
-                    41.81425653417376,
-                    133.12860112972882,
-                    196.13534309794773
-                ],
+                "vracljiveIzgube": {
+                    "ogrevanje": [
+                        195.56863353753496,
+                        128.73621855677013,
+                        77.18476941483378,
+                        31.817697667631435,
+                        5.435413778314498,
+                        0,
+                        0,
+                        0,
+                        5.3581605640923735,
+                        41.81425653417376,
+                        133.12860112972882,
+                        196.13534309794773
+                    ]
+                },
                 "vracljiveIzgubeTSV": [],
-                "vracljiveIzgubeAux": [
-                    6.94657088779158,
-                    6.101496968633354,
-                    6.529662222664407,
-                    4.765028732713721,
-                    0.7360186340218086,
-                    0,
-                    0,
-                    0,
-                    0.6965058254068316,
-                    6.182967909404478,
-                    6.520307679785884,
-                    6.948646406652587
-                ],
+                "vracljiveIzgubeAux": {
+                    "ogrevanje": [
+                        6.94657088779158,
+                        6.101496968633354,
+                        6.529662222664407,
+                        4.765028732713721,
+                        0.7360186340218086,
+                        0,
+                        0,
+                        0,
+                        0.6965058254068316,
+                        6.182967909404478,
+                        6.520307679785884,
+                        6.948646406652587
+                    ]
+                },
                 "porociloNizi": [],
                 "porociloPodatki": [],
                 "sistem": "dvocevni",
@@ -340,7 +770,8 @@
                             302.8804438626002,
                             490.3451576422575
                         ],
-                        "decimalke": 1
+                        "decimalke": 1,
+                        "vsota": true
                     }
                 ],
                 "porociloPodatki": [

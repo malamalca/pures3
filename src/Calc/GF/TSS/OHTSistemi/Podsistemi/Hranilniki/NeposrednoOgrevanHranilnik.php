@@ -67,6 +67,8 @@ class NeposrednoOgrevanHranilnik extends Hranilnik
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        $namen = $params['namen'];
+
         $temperaturaOkolice = $this->znotrajOvoja ? $cona->notranjaTOgrevanje : 13;
 
         // q w,s,l - dnevne toplotne izgube hranilnika v stanju obratovalne pripravljenosti [kWh]. Podatek
@@ -82,7 +84,7 @@ class NeposrednoOgrevanHranilnik extends Hranilnik
 
             $UA = $dnevneIzgube * (55 - $temperaturaOkolice) / 45 * 1000 / 24 / (60 - $temperaturaOkolice);
 
-            $this->toplotneIzgube[$mesec] = $dnevneIzgube * (55 - $temperaturaOkolice) / 45 * $stDni;
+            $this->toplotneIzgube[$namen][$mesec] = $dnevneIzgube * (55 - $temperaturaOkolice) / 45 * $stDni;
         }
 
         $this->vracljiveIzgube = $this->toplotneIzgube;

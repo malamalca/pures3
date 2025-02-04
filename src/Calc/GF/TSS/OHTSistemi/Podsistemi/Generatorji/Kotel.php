@@ -145,7 +145,7 @@ class Kotel extends Generator
             $Q_w_g_rwg_env = $this->tip->faktorIzgubSkoziOvoj() * $q_w_g_T * $this->nazivnaMoc / $izk100 *
                 ($t_w_100 * $stDniTSV + ($stUrNaDanTSV - $t_w_100) * ($stDniTSV - $d_h_rod));
 
-            $this->vracljiveIzgube[$mesec] = ($this->vracljiveIzgube[$mesec] ?? 0) + $Q_w_g_rwg_env;
+            $this->vracljiveIzgube['tsv'][$mesec] = ($this->vracljiveIzgube['tsv'][$mesec] ?? 0) + $Q_w_g_rwg_env;
         }
     }
 
@@ -255,7 +255,7 @@ class Kotel extends Generator
 
             // Toplotne izgube skozi ovoj generatorja toplote
             // enačba 106
-            $this->vracljiveIzgube[$mesec] = $Q_h_g_P0_cor *
+            $this->vracljiveIzgube['ogrevanje'][$mesec] = $Q_h_g_P0_cor *
                 (1 - $this->tip->delezVrnjenihIzgubSkoziOvoj($this->lokacija)) *
                 $this->tip->faktorIzgubSkoziOvoj() * $stUrOgrevanje;
 
@@ -322,9 +322,11 @@ class Kotel extends Generator
 
                             $this->potrebnaElektricnaEnergija['tsv'][$mesec] = $W_w_s_aux;
 
-                            $this->vracljiveIzgubeAux[$mesec] = ($this->vracljiveIzgubeAux[$mesec] ?? 0) + $Q_w_rwh_s;
+                            $this->vracljiveIzgubeAux['tsv'][$mesec] =
+                                ($this->vracljiveIzgubeAux['tsv'][$mesec] ?? 0) + $Q_w_rwh_s;
 
-                            $this->vracljiveIzgubeTSV[$mesec] = ($this->vracljiveIzgubeTSV[$mesec] ?? 0) + $Q_w_rww_s;
+                            $this->vracljiveIzgubeTSV['tsv'][$mesec] =
+                                ($this->vracljiveIzgubeTSV['tsv'][$mesec] ?? 0) + $Q_w_rww_s;
                         }
                     }
                 }
@@ -348,8 +350,8 @@ class Kotel extends Generator
                 $faktorLokacije = $this->lokacija == VrstaLokacijeNamestitve::OgrevanProstor ? 1 : 0;
 
                 // enačba
-                $this->vracljiveIzgubeAux[$mesec] =
-                    ($this->vracljiveIzgubeAux[$mesec] ?? 0) + $W_w_g_aux * (1 - 0.4) * $faktorLokacije;
+                $this->vracljiveIzgubeAux['tsv'][$mesec] =
+                    ($this->vracljiveIzgubeAux['tsv'][$mesec] ?? 0) + $W_w_g_aux * (1 - 0.4) * $faktorLokacije;
             }
         } else {
             $beta_h_g_test_Pint = $this->tip->vmesnaObremenitev();
@@ -391,7 +393,7 @@ class Kotel extends Generator
                 $this->potrebnaElektricnaEnergija['ogrevanje'][$mesec] = $potrebnaElektricnaEnergija;
 
                 // enačba 106
-                $this->vracljiveIzgubeAux[$mesec] = $potrebnaElektricnaEnergija *
+                $this->vracljiveIzgubeAux['ogrevanje'][$mesec] = $potrebnaElektricnaEnergija *
                     (1 - $this->tip->faktorRedukcijeVrnjeneEnergije($this->lokacija)) * (1 - 0.4);
             }
         }

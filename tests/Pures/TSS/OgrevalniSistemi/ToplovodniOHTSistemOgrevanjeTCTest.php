@@ -83,17 +83,17 @@ final class ToplovodniOHTSistemOgrevanjeTCTest extends TestCase
 
         $sistem->analiza($cona, $okolje);
 
-        $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube;
+        $izgubePrenosnikov = $sistem->koncniPrenosniki[0]->toplotneIzgube['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubePrenosnikov);
         $expected = [93.78, 65.54, 45.73, 23.31, 6.59, 0.00, 0.00, 0.00, 7.47, 33.26, 78.89, 98.38];
         $this->assertEquals($expected, $roundedResult);
 
-        $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube;
+        $izgubeRazvoda = $sistem->razvodi[0]->toplotneIzgube['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $izgubeRazvoda);
         $expected = [220.90, 148.98, 96.00, 44.38, 7.40, 0.00, 0.00, 0.00, 7.23, 58.14, 154.55, 221.50];
         $this->assertEquals($expected, $roundedResult);
 
-        $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija;
+        $potrebnaElektricnaEnergija = $sistem->razvodi[0]->potrebnaElektricnaEnergija['ogrevanje'];
         $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [27.79, 24.41, 26.12, 19.06, 2.94, 0.00, 0.00, 0.00, 2.79, 24.73, 26.08, 27.79];
         $this->assertEquals($expected, $roundedResult);
