@@ -242,14 +242,18 @@ class App
      */
     public static function getProjectFolder($area, $projectId, $subfolder = null)
     {
-        if (defined('CLI')) {
-            if (empty($projectId)) {
-                $destFolder = getcwd() . DS;
+        if (!empty($_ENV['PHPURESPROJECT'])) {
+            $destFolder = $_ENV['PHPURESPROJECT'] . DS;
+        } else {
+            if (defined('CLI')) {
+                if (empty($projectId)) {
+                    $destFolder = getcwd() . DS;
+                } else {
+                    $destFolder = PROJECTS . $area . DS . $projectId . DS;
+                }
             } else {
                 $destFolder = PROJECTS . $area . DS . $projectId . DS;
             }
-        } else {
-            $destFolder = PROJECTS . $area . DS . $projectId . DS;
         }
 
         if ($subfolder) {

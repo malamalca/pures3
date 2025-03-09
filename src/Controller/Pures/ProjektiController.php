@@ -15,6 +15,9 @@ class ProjektiController extends Controller
      */
     public function index()
     {
+        if (!empty($_ENV['PHPURESPROJECT'])) {
+            App::redirect(App::url('/pures/projekti/view/env'));
+        }
         $baseDir = PROJECTS . 'Pures' . DS;
         $dirs = array_filter((array)scandir($baseDir), fn($d) => is_dir($baseDir . $d) && !in_array($d, ['.', '..']));
         App::set('dirs', $dirs);
