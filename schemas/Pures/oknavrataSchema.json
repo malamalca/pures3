@@ -5,7 +5,10 @@
         "anyOf" : [
             {
                 "type" : "object",
-                "required": ["id", "naziv", "vrsta", "Uf", "Ug", "g", "Psi"],
+                "oneOf": [
+                    {"required": ["id", "naziv", "vrsta", "Uf", "Ug", "g"]},
+                    {"required": ["id", "naziv", "vrsta", "Uw"]}
+                ],
                 "properties" : {
                     "id": {"type": "string", "description": "Id oznaka elementa"},
                     "naziv": {"type": "string", "description": "Naziv elementa"},
