@@ -71,25 +71,31 @@
                     {
                         "type": "object",
                         "required": ["vrsta"],
-                        "oneOf": [
-                            {"required": ["izmenjava"]},
-                            {"required": ["volumenDovedenegaZraka"]}
-                        ],
                         "properties": {
                             "vrsta": {"const": "naravno", "description": "Vrsta prezračevanja (naravno/prisilno/rekuperacija)"},
                             "izmenjava": {
-                                "type": "object",
-                                "properties": {
-                                    "ogrevanje": {"type": "number", "description": "Število izmenjav zraka v času ogrevanja n [1/h]"},
-                                    "hlajenje": {"type": "number", "description": "Število izmenjav zraka v času hlajenja n [1/h]"}
-                                }
+                                "oneOf": [
+                                    {"type": "number"},
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "ogrevanje": {"type": "number", "description": "Število izmenjav zraka v času ogrevanja n [1/h]"},
+                                            "hlajenje": {"type": "number", "description": "Število izmenjav zraka v času hlajenja n [1/h]"}
+                                        }
+                                    }
+                                ]
                             },
                             "volumenDovedenegaZraka": {
-                                "type": "object",
-                                "properties": {
-                                    "ogrevanje": {"type": "number", "description": "Količina dovedenega zraka v času ogrevanja V [m³/h]"},
-                                    "hlajenje": {"type": "number", "description": "Količina dovedenega zraka v času hlajenja V [m³/h]"}
-                                }
+                                "oneOf": [
+                                    {"type": "number"},
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "ogrevanje": {"type": "number", "description": "Količina dovedenega zraka v času ogrevanja V [m³/h]"},
+                                            "hlajenje": {"type": "number", "description": "Količina dovedenega zraka v času hlajenja V [m³/h]"}
+                                        }
+                                    }
+                                ]
                             }
                         }
                     },

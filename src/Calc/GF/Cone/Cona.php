@@ -445,10 +445,34 @@ class Cona
         // poračun ventilacijskih izgub
         $faktorLokacije = $this->infiltracija->lega->koeficientVplivaVetra($this->infiltracija->zavetrovanost);
 
-        $volumenZrakaOgrevanje = $this->prezracevanje->volumenDovedenegaZraka->ogrevanje ??
-            $this->netoProstornina * $this->prezracevanje->izmenjava->ogrevanje;
-        $volumenZrakaHlajenje = $this->prezracevanje->volumenDovedenegaZraka->hlajenje ??
-            $this->netoProstornina * $this->prezracevanje->izmenjava->hlajenje;
+        if (
+            method_exists($this->klasifikacija, 'kolicinaSvezegaZrakaZaPrezracevanje') &&
+            !isset($this->prezracevanje->volumenDovedenegaZraka) &&
+            !isset($this->prezracevanje->izmenjava)
+        ) {
+            $volumenZrakaOgrevanje = $this->klasifikacija->kolicinaSvezegaZrakaZaPrezracevanje($this);
+            $volumenZrakaHlajenje = $this->klasifikacija->kolicinaSvezegaZrakaZaPrezracevanje($this);
+        } else {
+            if (isset($this->prezracevanje->volumenDovedenegaZraka)) {
+                if (is_float($this->prezracevanje->volumenDovedenegaZraka)) {
+                    $volumenZrakaOgrevanje = $this->prezracevanje->volumenDovedenegaZraka;
+                    $volumenZrakaHlajenje = $this->prezracevanje->volumenDovedenegaZraka;
+                } else {
+                    $volumenZrakaOgrevanje = $this->prezracevanje->volumenDovedenegaZraka->ogrevanje;
+                    $volumenZrakaHlajenje = $this->prezracevanje->volumenDovedenegaZraka->hlajenje;
+                }
+            } elseif (isset($this->prezracevanje->izmenjava)) {
+                if (is_float($this->prezracevanje->izmenjava)) {
+                    $volumenZrakaOgrevanje = $this->netoProstornina * $this->prezracevanje->izmenjava;
+                    $volumenZrakaHlajenje = $this->netoProstornina * $this->prezracevanje->izmenjava;
+                } else {
+                    $volumenZrakaOgrevanje = $this->netoProstornina * $this->prezracevanje->izmenjava->ogrevanje;
+                    $volumenZrakaHlajenje = $this->netoProstornina * $this->prezracevanje->izmenjava->hlajenje;
+                }
+            } else {
+                Log::warn(sprintf('Cona "%s" nima določenega prezračevalnega volumna.', $this->id));
+            }
+        }
 
         switch ($this->prezracevanje->vrsta) {
             case 'naravno':

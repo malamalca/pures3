@@ -22,8 +22,10 @@ class KlasifikacijaConeFactory
                 return new VecstanovanjskaKlasifikacijaCone();
             case 'Po-1':
                 return new PoslovnaKlasifikacijaCone();
+            case 'Kn-1':
+                return new KnjizniceMuzejiArhiviKlasifikacijaCone();
             default:
-                throw new \Exception('Vrsta stavbe ne obstaja.');
+                throw new \Exception(sprintf('Vrsta klasifikacije cone "%s" ne obstaja.', $type));
         }
     }
 }
