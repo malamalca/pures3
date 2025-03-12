@@ -250,8 +250,8 @@ class App
                 $destFolder = PROJECTS . $area . DS . $projectId . DS;
             }
         } else {
-            if (!empty($_ENV['PHPURESPROJECT'])) {
-                $destFolder = $_ENV['PHPURESPROJECT'] . DS;
+            if (!empty($_ENV['PHPURES_PROJECT'])) {
+                $destFolder = $_ENV['PHPURES_PROJECT'] . DS;
             } else {
                 $destFolder = PROJECTS . $area . DS . $projectId . DS;
             }
