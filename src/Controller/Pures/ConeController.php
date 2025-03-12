@@ -25,6 +25,23 @@ class ConeController extends Controller
     }
 
     /**
+     * Prikaz podatkov o transmisiji
+     *
+     * @param string $projectId Building name
+     * @param string $conaId Id cone
+     * @param string|null $ref Referenčna stavba
+     * @return void
+     */
+    public function transmisija($projectId, $conaId, $ref = null)
+    {
+        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone' . ($ref == 'ref' ? '_ref' : ''));
+
+        App::set('projectId', $projectId);
+        App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
+        App::set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
+    }
+
+    /**
      * Prikaz analize cone
      *
      * @param string $projectId Building name
