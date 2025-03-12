@@ -51,8 +51,7 @@
             if (isset($elementOvoja->konstrukcija->TSG->tip) && $elementOvoja->konstrukcija->TSG->tip != 'zunanja') {
                 $Tzun = 0;
             } else {
-                $Tzun = min($okolje->zunanjaT);
-                //$Tzun = -13;
+                $Tzun = $okolje->projektnaZunanjaT;
             }
             $Tdelta = abs($Tnotr) + abs($Tzun);
 
@@ -95,8 +94,7 @@
     </tr>
     <?php
         $Cair = 0.33;
-        $Tzun = min($okolje->zunanjaT);
-        //$Tzun = -13;
+        $Tzun = $okolje->projektnaZunanjaT;
         $deltaT = abs($Tzun) + abs($cona->notranjaTOgrevanje);
         $izkoristek = $cona->prezracevanje->izkoristek ?? 0;
 
