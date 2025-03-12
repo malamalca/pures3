@@ -31,6 +31,9 @@ class Cona
 
     public float $deltaPsi = 0;
 
+    public float $volumenZrakaOgrevanje = 0;
+    public float $volumenZrakaHlajenje = 0;
+
     public float $notranjaTOgrevanje;
     public float $notranjaTHlajenje;
 
@@ -364,7 +367,8 @@ class Cona
         }
         foreach ($this->ovoj->transparentneKonstrukcije as $elementOvoja) {
             $skupni_Uab += $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
-            $this->povrsinaOvoja += $elementOvoja->povrsina * $elementOvoja->stevilo;
+            $this->povrsinaOvoja += 
+                $elementOvoja->povrsina * (1 - $elementOvoja->delezOkvirja) * $elementOvoja->stevilo;
             $this->transparentnaPovrsina +=
                 $elementOvoja->povrsina * (1 - $elementOvoja->delezOkvirja) * $elementOvoja->stevilo;
         }
@@ -473,6 +477,9 @@ class Cona
                 Log::warn(sprintf('Cona "%s" nima določenega prezračevalnega volumna.', $this->id));
             }
         }
+
+        $this->volumenZrakaOgrevanje = $volumenZrakaOgrevanje ?? 0;
+        $this->volumenZrakaHlajenje = $volumenZrakaHlajenje ?? 0;
 
         switch ($this->prezracevanje->vrsta) {
             case 'naravno':

@@ -24,6 +24,8 @@ class KlasifikacijaConeFactory
                 return new PoslovnaKlasifikacijaCone();
             case 'Kn-1':
                 return new KnjizniceMuzejiArhiviKlasifikacijaCone();
+            case 'Go-1':
+                return new GostinskaKlasifikacijaCone();
             default:
                 throw new \Exception(sprintf('Vrsta klasifikacije cone "%s" ne obstaja.', $type));
         }

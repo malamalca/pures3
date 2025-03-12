@@ -25,8 +25,8 @@
         <td class="center"><?= $this->numFormat($stavba->neutezenaDovedenaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">
-            `E_(d el,an)=sum_(i=1)^n E_(de l,an,i)=`
+        <td colspan="4">
+            <span class="math">`E_(d el,an)=sum_(i=1)^n E_(de l,an,i)=`</span>
             <?php
             $cards = [];
             foreach($stavba->sistemi as $i => $sistem) {
@@ -60,8 +60,8 @@
         <td class="center"><?= $this->numFormat($stavba->utezenaDovedenaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">
-            `E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`
+        <td colspan="4">
+            <span class="math">`E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`</span>
             <?php
             $cards = [];
             foreach($stavba->sistemi as $i => $sistem) {
@@ -95,8 +95,8 @@
         <td class="center"><?= $this->numFormat($stavba->obnovljivaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">
-            `E_(P_(ren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"ren")=`
+        <td colspan="4">
+            <span class="math">`E_(P_(ren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"ren")=`</span>
             <?php
             $cards = [];
             foreach($stavba->sistemi as $i => $sistem) {
@@ -139,8 +139,8 @@
         <td class="center"><?= $this->numFormat($stavba->neobnovljivaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">
-            `E_(P_(nren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"nren")=`
+        <td colspan="4">
+            <span class="math">`E_(P_(nren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"nren")=`</span>
             <?php
             $cards = [];
             foreach($stavba->sistemi as $i => $sistem) {
@@ -183,8 +183,8 @@
         <td class="center"><?= $this->numFormat($stavba->skupnaPrimarnaEnergija, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">
-            `E_(P_(t ot,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`
+        <td colspan="4">
+            <span class="math">`E_(P_(t ot,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`</span>
             <?php
             $cards = [];
             foreach($stavba->sistemi as $i => $sistem) {
@@ -350,8 +350,9 @@
         <td class="center"><?= $this->numFormat($stavba->izpustCO2, 0) ?></td>
     </tr>
     <tr class="noprint">
-        <td colspan="4" class="math">
-            `M_("CO2,an)=sum_(i=1)^n E_(de l,i,an) * k_(CO2,i) + sum_(j=1)^m E_(pr,on-site,j,an) * k_(CO2,j) - sum_(k=1)^l k_(exp) * E_(exp,k,an) * k_(CO2,exp,k)=`<br />
+        <td colspan="4">
+            <span class="math">`M_("CO2,an)=sum_(i=1)^n E_(de l,i,an) * k_(CO2,i) + sum_(j=1)^m E_(pr,on-site,j,an) * k_(CO2,j) - sum_(k=1)^l k_(exp) * E_(exp,k,an) * k_(CO2,exp,k)=`</span>
+            <br />
             <?php
             $cards = [];
             foreach($stavba->sistemi as $i => $sistem) {

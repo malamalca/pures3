@@ -5,9 +5,9 @@ namespace App\Calc\GF\Cone\KlasifikacijeCone;
 
 use App\Calc\GF\Cone\Cona;
 
-class PoslovnaKlasifikacijaCone extends KlasifikacijaCone
+class GostinskaKlasifikacijaCone extends KlasifikacijaCone
 {
-    public string $code = 'Po-1';
+    public string $code = 'Go-1';
 
     public float $notranjaTOgrevanje = 22;
     public float $notranjaTHlajenje = 25;
@@ -20,24 +20,23 @@ class PoslovnaKlasifikacijaCone extends KlasifikacijaCone
         $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
 
         if (isset($cona->TSV->steviloOseb)) {
-            $energijaTSV = 0.4 * $cona->TSV->steviloOseb * $stDni;
+            $energijaTSV = 1.5 * $cona->TSV->steviloOseb * $stDni;
         } else {
-            $energijaTSV = 30 * $cona->ogrevanaPovrsina / 1000 * $stDni;
+            $energijaTSV = 1250 * $cona->ogrevanaPovrsina / 1000 * $stDni;
         }
 
         return $energijaTSV;
     }
 
-    
     /**
      * @inheritDoc
      */
     public function kolicinaSvezegaZrakaZaPrezracevanje(Cona $cona): float
     {
-        $stOseb = 0.06 * $cona->ogrevanaPovrsina;
-        $kolicinaZrakaNaOsebo = 16; // [m3/h] [7 l/s * 3600s / 1000 l/m3]
-        $faktorSocasneUporabe = 0.55;
-        $dnevnaUporabaStavbe = 14;  // [h]
+        $stOseb = 0.17 * $cona->ogrevanaPovrsina;
+        $kolicinaZrakaNaOsebo = 25.2; // [m3/h] [7 l/s * 3600s / 1000 l/m3]
+        $faktorSocasneUporabe = 0.46;
+        $dnevnaUporabaStavbe = 20;  // [h]
         $tedenskaUporabaStavbe = 7; // [dni/teden]
 
         $volumenZraka = $kolicinaZrakaNaOsebo * $faktorSocasneUporabe * $stOseb *

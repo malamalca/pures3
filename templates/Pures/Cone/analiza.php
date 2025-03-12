@@ -34,6 +34,18 @@
         <td>m²</td>
     </tr>
     <tr>
+        <td>Površina toplotnega ovoja cone</td>
+        <td>A<sub>ovoj</sub></td>
+        <td class="center"><?= $this->numFormat($cona->povrsinaOvoja, 1) ?></td>
+        <td>m²</td>
+    </tr>
+    <tr>
+        <td>Transp. površina v toplotnem ovoju stavbe</td>
+        <td>A<sub>trans</sub></td>
+        <td class="center"><?= $this->numFormat($cona->transparentnaPovrsina, 2) ?></td>
+        <td>m²</td>
+    </tr>
+    <tr>
         <td>Dolžina cone</td>
         <td>D</td>
         <td class="center"><?= $this->numFormat($cona->dolzina, 1) ?></td>
@@ -56,6 +68,29 @@
         <td>n<sub>floor</sub></td>
         <td class="center"><?= $this->numFormat($cona->steviloEtaz, 1) ?></td>
         <td>-</td>
+    </tr>
+</table>
+<h1>Drugi podatki cone "<?= h($cona->naziv) ?>"</h1>
+<table border="1">
+    <tr>
+        <td colspan="2">Sistem prezračevanja:</td>
+        <td class="center"><?= h($cona->prezracevanje->vrsta ?? 'nedefinirano') ?></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td colspan="4">Dotok svežega zraka: </td>
+    </tr>
+    <tr>
+        <td>- v času ogrevanja: </td>
+        <td>V<sub>air,h</sub></td>
+        <td class="center"><?= $this->numFormat($cona->volumenZrakaOgrevanje, 1) ?></td>
+        <td>m³/h</td>
+    </tr>
+    <tr>
+        <td>- v času hlajenja: </td>
+        <td>V<sub>air,c</sub></td>
+        <td class="center"><?= $this->numFormat($cona->volumenZrakaHlajenje, 1) ?></td>
+        <td>m³/h</td>
     </tr>
 </table>
 <h1>Analiza cone "<?= h($cona->naziv) ?>"</h1>

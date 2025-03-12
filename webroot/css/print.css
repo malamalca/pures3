@@ -45,7 +45,11 @@ table, tr, td, th, tbody, thead, tfoot {
     display: none;
 }
 
-.noprint {
+.noprint2 {
+    display: none;
+}
+
+.math {
     display: none;
 }
 
