@@ -8,6 +8,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute(['GET', 'POST'], '/pures/{controller}[/{action}[/{param1}[/{param2}[/{param3}]]]]', 'Pures');
     $r->addRoute(['GET', 'POST'], '/hrup/{controller}[/{action}[/{param1}[/{param2}]]]', 'Hrup');
     $r->addRoute(['GET'], '/project-image/{area}/{projectId}/{image}', 'ProjectImage');
+    $r->addRoute(['GET'], '/project-image/{area}/{image}', 'ProjectImage');
     $r->addRoute(['GET'], '/', 'Index');
 });
 
@@ -73,6 +74,15 @@ switch ($routeInfo[0]) {
             case 'ProjectImage':
                 $controllerName = 'App';
                 $vars['action'] = 'projectImage';
+
+                // za primere, ko ni podan projectId
+                $vars = [
+                    'area' => $vars['area'],
+                    'projectId' => $vars['projectId'] ?? '',
+                    'image' => $vars['image'],
+                    'action' => 'projectImage'
+                ];
+
                 $handler = $vars['area'];
                 break;
             case 'Index':

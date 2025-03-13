@@ -132,6 +132,16 @@ class App
                     $url_base = self::getProjectFolder($area, $projectId, 'podatki');
                     $params = '/' . $image;
                 }
+                if (count($parts) == 4) {
+                    $image = $parts[3];
+                    $projectId = null;
+                    $area = $parts[1];
+
+                    $url_base = self::getProjectFolder($area, $projectId, 'podatki');
+                    $params = '/' . $image;
+                }
+
+                $url_base = 'file:///' . strtr($url_base, DS, '/');
             }
         } else {
             $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
