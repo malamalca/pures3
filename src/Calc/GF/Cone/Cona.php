@@ -367,8 +367,9 @@ class Cona
         }
         foreach ($this->ovoj->transparentneKonstrukcije as $elementOvoja) {
             $skupni_Uab += $elementOvoja->U * $elementOvoja->povrsina * $elementOvoja->b * $elementOvoja->stevilo;
-            $this->povrsinaOvoja += 
-                $elementOvoja->povrsina * (1 - $elementOvoja->delezOkvirja) * $elementOvoja->stevilo;
+            $this->povrsinaOvoja += $elementOvoja->povrsina * $elementOvoja->stevilo;
+            //$this->povrsinaOvoja +=
+            //    $elementOvoja->povrsina * (1 - $elementOvoja->delezOkvirja) * $elementOvoja->stevilo;
             $this->transparentnaPovrsina +=
                 $elementOvoja->povrsina * (1 - $elementOvoja->delezOkvirja) * $elementOvoja->stevilo;
         }

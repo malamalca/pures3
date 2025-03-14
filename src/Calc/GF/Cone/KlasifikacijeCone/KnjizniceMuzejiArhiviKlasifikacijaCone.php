@@ -36,7 +36,7 @@ class KnjizniceMuzejiArhiviKlasifikacijaCone extends KlasifikacijaCone
         $stOseb = 0.06 * $cona->ogrevanaPovrsina;
         $kolicinaZrakaNaOsebo = 25.2; // [m3/h] [7 l/s * 3600s / 1000 l/m3]
         $faktorSocasneUporabe = 0.6;
-        $dnevnaUporabaStavbe = 14;  // [h]
+        $dnevnaUporabaStavbe = 14; // [h]
         $tedenskaUporabaStavbe = 7; // [dni/teden]
 
         $volumenZraka = $kolicinaZrakaNaOsebo * $faktorSocasneUporabe * $stOseb *
