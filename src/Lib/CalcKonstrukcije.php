@@ -153,11 +153,11 @@ class CalcKonstrukcije
             }
         }
 
-        $izracunKondentacije = !isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false;
-        $izracunKondentacije = !isset($options['referencnaStavba']) || !$options['referencnaStavba'];
-        $izracunKondentacije = $izracunKondentacije || !empty($options['izracunKondenzacije']);
+        $izracunKondenzacije = !isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false;
+        $izracunKondenzacije = !isset($options['referencnaStavba']) || !$options['referencnaStavba'];
+        $izracunKondenzacije = $izracunKondenzacije || !empty($options['izracunKondenzacije']);
 
-        if ($izracunKondentacije) {
+        if ($izracunKondenzacije) {
             $Sdt = 0;
             foreach ($kons->materiali as $material) {
                 foreach ($material->racunskiSloji as $sloj) {

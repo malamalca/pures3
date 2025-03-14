@@ -158,7 +158,7 @@
         <td class="w-5 center"><?= $i+1 ?></td>
         <td class="w-55"><?= h($konstrukcija->naziv) ?></td>
         <td class="w-10 center">
-            <i class="<?= empty($konstrukcija->gm) ? 'green' : 'black' ?>">
+            <i class="<?= empty($konstrukcija->gm) ? 'green' : (count(is_array($konstrukcija->gm) ? $konstrukcija->gm : get_object_vars($konstrukcija->gm)) < 12 ? 'black' : 'red') ?>">
             <?= empty($konstrukcija->gm) ? '&#10006;' : '&#10003;'  ?>
             </i>
         </td>
