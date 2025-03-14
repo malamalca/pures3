@@ -484,28 +484,28 @@ class Cona
 
         switch ($this->prezracevanje->vrsta) {
             case 'naravno':
-                $this->Hve_ogrevanje = 0.33 * $volumenZrakaOgrevanje;
-                $this->Hve_hlajenje = 0.33 * $volumenZrakaHlajenje;
+                $this->Hve_ogrevanje = 0.33 * $this->volumenZrakaOgrevanje;
+                $this->Hve_hlajenje = 0.33 * $this->volumenZrakaHlajenje;
                 break;
             case 'mehansko':
                 $Vinf_ogrevanje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
                     (1 + $this->infiltracija->zavetrovanost->faktorVetra() / $faktorLokacije *
-                    pow($volumenZrakaOgrevanje / ($this->netoProstornina * $this->infiltracija->n50), 2));
+                    pow($this->volumenZrakaOgrevanje / ($this->netoProstornina * $this->infiltracija->n50), 2));
                 $Vinf_hlajenje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
                     (1 + $this->infiltracija->zavetrovanost->faktorVetra() / $faktorLokacije *
-                    pow($volumenZrakaHlajenje / ($this->netoProstornina * $this->infiltracija->n50), 2));
+                    pow($this->volumenZrakaHlajenje / ($this->netoProstornina * $this->infiltracija->n50), 2));
 
                 $this->Hve_ogrevanje =
-                    0.33 * ($volumenZrakaOgrevanje + $Vinf_ogrevanje);
+                    0.33 * ($this->volumenZrakaOgrevanje + $Vinf_ogrevanje);
                 $this->Hve_hlajenje =
-                    0.33 * ($volumenZrakaHlajenje + $Vinf_hlajenje);
+                    0.33 * ($this->volumenZrakaHlajenje + $Vinf_hlajenje);
                 break;
             case 'rekuperacija':
                 $Vinf_ogrevanje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije;
                 $Vinf_hlajenje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije;
                 $this->Hve_ogrevanje = 0.33 * ($Vinf_ogrevanje +
-                    (1 - $this->prezracevanje->izkoristek) * $volumenZrakaOgrevanje);
-                $this->Hve_hlajenje = 0.33 * ($Vinf_hlajenje + $volumenZrakaHlajenje);
+                    (1 - $this->prezracevanje->izkoristek) * $this->volumenZrakaOgrevanje);
+                $this->Hve_hlajenje = 0.33 * ($Vinf_hlajenje + $this->volumenZrakaHlajenje);
                 break;
             default:
                 $this->Hve_ogrevanje = 0;

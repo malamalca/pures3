@@ -246,11 +246,11 @@ class App
      * Vrne lokacijo projekta
      *
      * @param string $area Področje izračuna
-     * @param string $projectId Id projekta
+     * @param string|null $projectId Id projekta
      * @param string|null $subfolder Podmapa s podaki ali z izračuni
      * @return string
      */
-    public static function getProjectFolder($area, $projectId, $subfolder = null)
+    public static function getProjectFolder(string $area, ?string $projectId, ?string $subfolder = null)
     {
         if (defined('CLI')) {
             if (empty($projectId)) {
