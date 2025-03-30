@@ -14,8 +14,26 @@
     }
 ?>
 
-<h1>Energijska učinkovitost energetsko manj stavbe -<br />
-za področje TSS</h1>
+
+
+<?php
+    if ($stavba->vrsta == 'zahtevna') {
+?>
+    <h1>Energijska učinkovitost energetsko zahtevne stavbe -<br />
+    za področje TSS</h1>
+<?php
+    } elseif ($stavba->vrsta == 'nezahtevna') {
+?>
+    <h1>Energijska učinkovitost energetsko nezahtevne stavbe -<br />
+    za področje TSS</h1>
+<?php
+    } else {
+?>
+    <h1>Energijska učinkovitost energetsko manj zahtevne stavbe -<br />
+    za področje TSS</h1>
+<?php
+    }
+?>
 
 <table border="1" cellpadding="3" width="100%">
     <tr class="title"><th colspan="4"><h3>Potrebna energija za zagotavljanje pogojev notranjega okolja:</h3></th></tr>

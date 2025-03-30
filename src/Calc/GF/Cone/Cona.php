@@ -49,7 +49,7 @@ class Cona
     public \stdClass $prezracevanje;
     public \stdClass $ovoj;
     public ?\stdClass $TSV = null;
-    public \stdClass $uravnavanjeVlage;
+    public ?\stdClass $uravnavanjeVlage = null;
 
     public array $deltaTOgrevanje = [];
     public array $deltaTHlajenje = [];

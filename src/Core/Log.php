@@ -48,7 +48,12 @@ class Log
 
             if ($addCliProcessor && is_a($handlerClass, '\Monolog\Handler\StreamHandler')) {
                 $handlerClass->pushProcessor(function ($entry) {
-                    $msg = $entry['message'];
+                    // če je vklopljen debug pokaže še php datoteko z mestom exceptiona
+                    if (Configure::read('debug') || empty($entry['context']['exception'])) {
+                        $msg = $entry['message'];
+                    } else {
+                        $msg = $entry['context']['exception']->getMessage();
+                    }
                     switch ($entry['level_name']) {
                         case 'ERROR':
                             $entry['message'] = "\033[31m$msg \033[0m";

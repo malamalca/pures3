@@ -54,9 +54,9 @@ class IzracunCone extends Command
         if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
             $referencneKonstrukcije = new \stdClass();
             $referencneKonstrukcije->netransparentne =
-                App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'netransparentne_ref');
+                App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'konstrukcije' . DS . 'netransparentne');
             $referencneKonstrukcije->transparentne =
-                App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'transparentne_ref');
+                App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'konstrukcije' . DS . 'transparentne');
 
             $coneOut = [];
             foreach ($coneIn as $conaConfig) {
@@ -65,7 +65,7 @@ class IzracunCone extends Command
                 $coneOut[] = $cona->export();
             }
 
-            App::saveProjectCalculation('Pures', $projectId, 'cone_ref', $coneOut);
+            App::saveProjectCalculation('Pures', $projectId, 'Ref' . DS . 'cone', $coneOut);
         }
     }
 }

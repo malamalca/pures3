@@ -76,6 +76,9 @@
     </tr>
     <?php
         }
+        foreach ($sistem->porociloPodatki as $podatek) {
+            echo $this->element('elements'. DS . 'porociloPodatek', ['podatek' => $podatek]);
+        }
     ?>
 </table>
 

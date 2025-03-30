@@ -13,15 +13,16 @@ class SistemPrezracevanjaFactory
      *
      * @param string $type Tip sistema
      * @param \stdClass|null $options Dodatne nastavitve
+     * @param bool $referencnaStavba Določa ali gre za referenčno stavbo ali ne
      * @return \App\Calc\GF\TSS\PrezracevalniSistemi\PrezracevalniSistem|null
      */
-    public static function create($type, $options)
+    public static function create($type, $options, bool $referencnaStavba = false)
     {
         switch ($type) {
             case 'centralni':
-                return new CentralniPrezracevalniSistem($options);
+                return new CentralniPrezracevalniSistem($options, $referencnaStavba);
             case 'lokalni':
-                return new LokalniPrezracevalniSistem($options);
+                return new LokalniPrezracevalniSistem($options, $referencnaStavba);
             default:
                 throw new \Exception('Vrsta prezračevalnega sistema ne obstaja.');
         }

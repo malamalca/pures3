@@ -32,7 +32,8 @@ class PdfIzvoz extends Command
         $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
         $view->set('stavba', $stavba);
         if ($stavba->vrsta == 'zahtevna') {
-            $view->set('refStavba', App::loadProjectCalculation('Pures', $projectId, 'stavba_ref'));
+            $refStavba = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba');
+            $view->set('refStavba', $refStavba);
         }
 
         $view->set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));

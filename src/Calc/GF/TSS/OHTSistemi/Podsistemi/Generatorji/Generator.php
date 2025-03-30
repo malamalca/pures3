@@ -9,6 +9,7 @@ abstract class Generator extends TSSInterface
 {
     public float $nazivnaMoc;
     public array $vneseneIzgube = [];
+    public array $nepokritaEnergija = [];
 
     /**
      * Class Constructor
@@ -36,7 +37,7 @@ abstract class Generator extends TSSInterface
         }
 
         $this->id = $config->id;
-        $this->nazivnaMoc = $config->nazivnaMoc;
+        $this->nazivnaMoc = $config->nazivnaMoc ?? 0;
     }
 
     /**

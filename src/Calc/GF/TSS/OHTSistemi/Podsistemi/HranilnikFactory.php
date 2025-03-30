@@ -5,6 +5,7 @@ namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi;
 
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Hranilniki\NeposrednoOgrevanHranilnik;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Hranilniki\PosrednoOgrevanHranilnik;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Hranilniki\SolarniSistemSPosrednoOgrevanimHranilnikom;
 
 class HranilnikFactory
 {
@@ -22,6 +23,8 @@ class HranilnikFactory
                 return new PosrednoOgrevanHranilnik($options);
             case 'neposrednoOgrevan':
                 return new NeposrednoOgrevanHranilnik($options);
+            case 'solarniPosrednoOgrevan':
+                return new SolarniSistemSPosrednoOgrevanimHranilnikom($options);
             default:
                 throw new \Exception(sprintf('Hranilnik : Vrsta "%s" ne obstaja', $type));
         }

@@ -22,6 +22,8 @@ class IzracunProjekta extends Command
         (new IzracunZunanjegaHrupa())->run($projectId);
         (new IzracunZracnegaHrupa())->run($projectId);
         (new IzracunUdarnegaHrupa())->run($projectId);
-        (new PdfIzvoz())->run($projectId);
+        if (!in_array('--noPdf', $args)) {
+            (new PdfIzvoz())->run($projectId);
+        }
     }
 }

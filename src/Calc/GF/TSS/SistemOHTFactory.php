@@ -18,24 +18,25 @@ class SistemOHTFactory
      *
      * @param string $type Tip sistema
      * @param \stdClass|null $options Dodatne nastavitve
+     * @param bool $referencnaStavba Določa ali gre za referenčno stavbo ali ne
      * @return \App\Calc\GF\TSS\OHTSistemi\OHTSistem|null
      */
-    public static function create($type, $options)
+    public static function create($type, $options, bool $referencnaStavba = false)
     {
         if ($type == 'toplovodni') {
-            return new ToplovodniOHTSistem($options);
+            return new ToplovodniOHTSistem($options, $referencnaStavba);
         }
         if ($type == 'lokalniBiomasa') {
-            return new LokalniOHTSistemNaBiomaso($options);
+            return new LokalniOHTSistemNaBiomaso($options, $referencnaStavba);
         }
         if ($type == 'neposrednoElektricni') {
-            return new NeposredniElektricniOHTSistem($options);
+            return new NeposredniElektricniOHTSistem($options, $referencnaStavba);
         }
         if ($type == 'splitHlajenje') {
-            return new SplitHladilniOHTSistem($options);
+            return new SplitHladilniOHTSistem($options, $referencnaStavba);
         }
         if ($type == 'hladilni') {
-            return new HladilniSistemSHladnoVodo($options);
+            return new HladilniSistemSHladnoVodo($options, $referencnaStavba);
         }
 
         return null;

@@ -10,9 +10,10 @@ use App\Calc\GF\TSS\OHTSistemi\Podsistemi\RazvodFactory;
 use App\Calc\GF\TSS\OHTSistemi\Sistemi\Hlajenje;
 use App\Calc\GF\TSS\OHTSistemi\Sistemi\Ogrevanje;
 use App\Calc\GF\TSS\OHTSistemi\Sistemi\TSV;
+use App\Calc\GF\TSS\TSSSistem;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 
-abstract class OHTSistem
+abstract class OHTSistem extends TSSSistem
 {
     public ?string $id;
     public ?string $idCone;
@@ -57,10 +58,12 @@ abstract class OHTSistem
      * Class Constructor
      *
      * @param string|\stdClass $config Configuration
+     * @param bool $referencnaStavba Določa ali gre za referenčno stavbo ali ne
      * @return void
      */
-    public function __construct($config = null)
+    public function __construct($config = null, bool $referencnaStavba = false)
     {
+        $this->referencnaStavba = $referencnaStavba;
         if ($config) {
             $this->parseConfig($config);
         }

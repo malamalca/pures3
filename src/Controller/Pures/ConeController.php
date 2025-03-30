@@ -18,7 +18,7 @@ class ConeController extends Controller
      */
     public function ovoj($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone' . ($ref == 'ref' ? '_ref' : ''));
+        $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
 
         App::set('projectId', $projectId);
         App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
@@ -34,7 +34,7 @@ class ConeController extends Controller
      */
     public function transmisija($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone' . ($ref == 'ref' ? '_ref' : ''));
+        $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
 
         App::set('projectId', $projectId);
         App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
@@ -51,7 +51,7 @@ class ConeController extends Controller
      */
     public function analiza($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone' . ($ref == 'ref' ? '_ref' : ''));
+        $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
 
         App::set('projectId', $projectId);
         App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));

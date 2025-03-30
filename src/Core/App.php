@@ -243,6 +243,33 @@ class App
     }
 
     /**
+     * Returns if phpures is run for local project
+     *
+     * @return bool
+     */
+    public static function isLocalProject()
+    {
+        return !empty($_ENV['PHPURES_PROJECT']) || !empty($_SERVER['HTTP_PHPURES_PROJECT']);
+    }
+
+    /**
+     * Returns local project path
+     *
+     * @return string
+     */
+    public static function getLocalProjectPath(): string
+    {
+        if (!empty($_ENV['PHPURES_PROJECT'])) {
+            return $_ENV['PHPURES_PROJECT'];
+        }
+        if (!empty($_SERVER['HTTP_PHPURES_PROJECT'])) {
+            return $_SERVER['HTTP_PHPURES_PROJECT'];
+        }
+
+        throw new \Exception('Not a local project.');
+    }
+
+    /**
      * Vrne lokacijo projekta
      *
      * @param string $area Področje izračuna
@@ -259,8 +286,8 @@ class App
                 $destFolder = PROJECTS . $area . DS . $projectId . DS;
             }
         } else {
-            if (!empty($_ENV['PHPURES_PROJECT'])) {
-                $destFolder = $_ENV['PHPURES_PROJECT'] . DS;
+            if (App::isLocalProject()) {
+                $destFolder = App::getLocalProjectPath() . DS;
             } else {
                 $destFolder = PROJECTS . $area . DS . $projectId . DS;
             }

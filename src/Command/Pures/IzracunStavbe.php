@@ -37,10 +37,13 @@ class IzracunStavbe extends Command
 
         if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
             $stavbaRef = StavbaFactory::create($splosniPodatki->stavba->vrsta, $splosniPodatki->stavba);
-            $stavbaRef->cone = App::loadProjectCalculation('Pures', $projectId, 'cone_ref');
+            $stavbaRef->cone = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'cone');
             $stavbaRef->analiza($okolje);
 
-            App::saveProjectCalculation('Pures', $projectId, 'stavba_ref', $stavbaRef->export());
+            $stavbaRef->sistemi = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'TSS' . DS);
+            $stavbaRef->analizaTSS();
+
+            App::saveProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba', $stavbaRef->export());
         }
     }
 }

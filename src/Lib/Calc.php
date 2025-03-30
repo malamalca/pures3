@@ -86,8 +86,14 @@ class Calc
      */
     public static function combineDeltaR($konstrukcija1, $idSloja1, $konstrukcija2, $idSloja2)
     {
-        $sloj1 = array_first($konstrukcija1->dodatniSloji, fn($sloj) => $sloj->id == $idSloja1);
-        $sloj2 = array_first($konstrukcija2->dodatniSloji, fn($sloj) => $sloj->id == $idSloja2);
+        $sloj1 = array_first(
+            $konstrukcija1->dodatniSloji,
+            fn($sloj) => isset($sloj->id) ? $sloj->id == $idSloja1 : false
+        );
+        $sloj2 = array_first(
+            $konstrukcija2->dodatniSloji,
+            fn($sloj) => isset($sloj->id) ? $sloj->id == $idSloja2 : false
+        );
 
         if (empty($sloj1->dR) && empty($sloj2->dR)) {
             return 0;

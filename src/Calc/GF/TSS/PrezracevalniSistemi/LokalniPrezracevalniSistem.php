@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF\TSS\PrezracevalniSistemi;
 
 use App\Calc\GF\TSS\PrezracevalniSistemi\Izbire\VrstaKrmiljenja;
+use App\Calc\GF\TSS\TSSPorociloPodatek;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
 
@@ -34,8 +35,8 @@ class LokalniPrezracevalniSistem extends PrezracevalniSistem
      * Analiza podsistema
      *
      * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
+     * @param null|\stdClass $cona Podatki cone
+     * @param null|\stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */
@@ -75,6 +76,16 @@ class LokalniPrezracevalniSistem extends PrezracevalniSistem
         $ret->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
         $ret->skupnaPotrebnaEnergija = $this->skupnaPotrebnaEnergija;
         $ret->energijaPoEnergentih = $this->energijaPoEnergentih;
+
+        $ret->porociloPodatki = [
+            new TSSPorociloPodatek(
+                'N',
+                'Število naprav',
+                $this->stevilo,
+                '-',
+                0
+            ),
+        ];
 
         return $ret;
     }

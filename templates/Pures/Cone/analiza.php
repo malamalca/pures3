@@ -70,13 +70,24 @@
         <td>-</td>
     </tr>
 </table>
-<h1>Drugi podatki cone "<?= h($cona->naziv) ?>"</h1>
+<h1>Drugi podatki cone</h1>
 <table border="1">
     <tr>
         <td colspan="2">Sistem prezračevanja:</td>
         <td class="center"><?= h($cona->prezracevanje->vrsta ?? 'nedefinirano') ?></td>
         <td>-</td>
     </tr>
+<?php
+    if (!empty($cona->prezracevanje->izkoristek)) {
+?>
+<tr>
+        <td colspan="2">Izkoristek prezračevanja:</td>
+        <td class="center"><?= $this->numFormat($cona->prezracevanje->izkoristek, 2) ?></td>
+        <td>-</td>
+    </tr>
+<?php
+    }
+?>
     <tr>
         <td colspan="4">Dotok svežega zraka: </td>
     </tr>

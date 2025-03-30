@@ -126,7 +126,8 @@ class IzkaziController extends Controller
         $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
         App::set('stavba', $stavba);
         if ($stavba->vrsta == 'zahtevna') {
-            App::set('refStavba', App::loadProjectCalculation('Pures', $projectId, 'stavba_ref'));
+            $refStavba = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba');
+            App::set('refStavba', $refStavba);
         }
 
         App::set(

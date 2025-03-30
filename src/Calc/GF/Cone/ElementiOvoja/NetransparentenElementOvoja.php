@@ -66,6 +66,10 @@ class NetransparentenElementOvoja extends ElementOvoja
             $this->dobitekSS = $config->dobitekSS;
         }
 
+        if (isset($config->idKonstrukcije)) {
+            $this->idKonstrukcije = $config->idKonstrukcije;
+        }
+
         if (isset($config->b)) {
             $this->b = $config->b;
         }
@@ -142,11 +146,15 @@ class NetransparentenElementOvoja extends ElementOvoja
      */
     public function analiza($cona, $okolje)
     {
-        if (empty($this->konstrukcija)) {
-            throw new \Exception(sprintf('Konstrukcija "%s" v ovoju ne obstaja.', $this->idKonstrukcije));
+        if (empty($this->konstrukcija) || (count(get_object_vars($this->konstrukcija)) == 0)) {
+            throw new \Exception(sprintf(
+                'Elementa ovoja z id="%1$s" je vezan na neobstoječo konstrukcijo "%2$s".',
+                $this->id,
+                $this->idKonstrukcije
+            ));
         }
         if (empty($this->konstrukcija->TSG)) {
-            throw new \Exception(sprintf('TSG podatki konstrukcije ovoja "%s" ne obstajajo.', $this->id));
+            throw new \Exception(sprintf('Konstrukcija elementa ovoja z id="%s" nima TSG podatkov.', $this->id));
         }
 
         if (!empty($this->konstrukcija->ogrRazvodT)) {

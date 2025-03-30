@@ -15,8 +15,12 @@ class ProjektiController extends Controller
      */
     public function index()
     {
-        if (!empty($_ENV['PHPURES_PROJECT'])) {
-            App::redirect('/pures/projekti/view/env');
+        if (App::isLocalProject()) {
+            if (file_exists(App::getLocalProjectPath() . DS . 'podatki' . DS . 'cone.json')) {
+                App::redirect('/pures/projekti/view/env');
+            } else {
+                App::redirect('/hrup/projekti/view/env');
+            }
         }
         $baseDir = PROJECTS . 'Pures' . DS;
         $dirs = array_filter((array)scandir($baseDir), fn($d) => is_dir($baseDir . $d) && !in_array($d, ['.', '..']));
@@ -84,7 +88,10 @@ class ProjektiController extends Controller
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
 
-        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba' . ($ref == 'ref' ? '_ref' : '')));
+        App::set(
+            'stavba',
+            App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'stavba')
+        );
     }
 
     /**

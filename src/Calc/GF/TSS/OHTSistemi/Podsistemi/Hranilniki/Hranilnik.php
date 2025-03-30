@@ -8,6 +8,7 @@ use App\Calc\GF\TSS\TSSInterface;
 abstract class Hranilnik extends TSSInterface
 {
     public float $volumen;
+    public int $stevilo = 1;
 
     /**
      * Class Constructor

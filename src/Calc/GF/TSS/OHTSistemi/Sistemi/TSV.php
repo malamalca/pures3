@@ -25,7 +25,9 @@ class TSV extends TSSInterface
 
     public array $energijaPoEnergentih = [];
     public array $potrebnaEnergija = [];
+
     public array $vracljiveIzgubeVOgrevanje = [];
+    public array $vracljiveIzgubeVTSV = [];
 
     /**
      * Class Constructor
@@ -75,11 +77,10 @@ class TSV extends TSSInterface
      */
     public function analiza($toplotneIzgube, OHTSistem $sistem, $cona, $okolje, $params = [])
     {
-        $vracljiveIzgubeTSV = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        $this->vracljiveIzgubeVTSV = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
-        // iteracija za vračljive izgube
         for ($i = 0; $i < $this->stevilo_iteracij; $i++) {
-            $this->potrebnaEnergija = array_subtract_values($cona->energijaTSV, $vracljiveIzgubeTSV);
+            $this->potrebnaEnergija = array_subtract_values($cona->energijaTSV, $this->vracljiveIzgubeVTSV);
             $this->potrebnaElektricnaEnergija = [];
             $this->obnovljivaEnergija = [];
             $this->vracljiveIzgube = [];
@@ -91,23 +92,21 @@ class TSV extends TSSInterface
                     throw new \Exception(sprintf('Razvod TSV "%s" ne obstaja', $razvodId));
                 }
 
-                $razvod->analiza([], $sistem, $cona, $okolje, ['namen' => 'tsv']);
+                $razvod->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'tsv']);
 
                 $this->potrebnaEnergija =
                     array_sum_values($this->potrebnaEnergija, $razvod->toplotneIzgube['tsv']);
 
                 $this->potrebnaElektricnaEnergija =
-                    array_sum_values(
-                        $this->potrebnaElektricnaEnergija,
-                        $razvod->potrebnaElektricnaEnergija['tsv']
-                    );
+                    array_sum_values($this->potrebnaElektricnaEnergija, $razvod->potrebnaElektricnaEnergija['tsv']);
 
                 $this->vracljiveIzgubeVOgrevanje =
                     array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgube['tsv']);
                 $this->vracljiveIzgubeVOgrevanje =
                     array_sum_values($this->vracljiveIzgubeVOgrevanje, $razvod->vracljiveIzgubeAux['tsv']);
 
-                $vracljiveIzgubeTSV = array_sum_values($vracljiveIzgubeTSV, $razvod->vracljiveIzgubeTSV['tsv']);
+                $this->vracljiveIzgubeVTSV =
+                    array_sum_values($this->vracljiveIzgubeVTSV, $razvod->vracljiveIzgubeTSV['tsv']);
             }
 
             foreach ($this->hranilniki as $hranilnikId) {
@@ -116,19 +115,28 @@ class TSV extends TSSInterface
                     throw new \Exception(sprintf('Hranilnik TSV "%s" ne obstaja', $hranilnikId));
                 }
 
-                $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'tsv']);
+                $hranilnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'tsv']);
 
                 $this->potrebnaEnergija =
                     array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube['tsv']);
+
+                $this->potrebnaElektricnaEnergija =
+                    array_sum_values(
+                        $this->potrebnaElektricnaEnergija,
+                        $hranilnik->potrebnaElektricnaEnergija['tsv'] ?? []
+                    );
 
                 $this->vracljiveIzgubeVOgrevanje =
                     array_sum_values($this->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgube['tsv'] ?? []);
                 $this->vracljiveIzgubeVOgrevanje =
                     array_sum_values($this->vracljiveIzgubeVOgrevanje, $hranilnik->vracljiveIzgubeAux['tsv'] ?? []);
 
-                $vracljiveIzgubeTSV =
-                    array_sum_values($vracljiveIzgubeTSV, $hranilnik->vracljiveIzgubeTSV['tsv'] ?? []);
+                $this->vracljiveIzgubeVTSV =
+                    array_sum_values($this->vracljiveIzgubeVTSV, $hranilnik->vracljiveIzgubeTSV['tsv'] ?? []);
             }
+
+            // generator lahko pokrije le del energije (npr solarni kolektroji); ostali generatorji pokrijejo ostalo
+            $nepokritaEnergija = $this->potrebnaEnergija;
 
             foreach ($this->generatorji as $generatorId) {
                 $generator = array_first($sistem->generatorji, fn($g) => $g->id == $generatorId);
@@ -139,10 +147,12 @@ class TSV extends TSSInterface
                 // kadar je več iteracij se vracljive izgube upoštevajo, kadar pa je samo ena se pa ne, zato
                 // je potreeben še en korak
                 if ($this->stevilo_iteracij == 1) {
-                    $this->potrebnaEnergija = array_subtract_values($this->potrebnaEnergija, $vracljiveIzgubeTSV);
+                    //$nepokritaEnergija = array_subtract_values($nepokritaEnergija, $this->vracljiveIzgubeVTSV);
                 }
 
-                $generator->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'tsv']);
+                $generator->analiza($nepokritaEnergija, $sistem, $cona, $okolje, ['namen' => 'tsv']);
+
+                $nepokritaEnergija = $generator->nepokritaEnergija['tsv'] ?? [];
 
                 $this->potrebnaEnergija = array_sum_values($this->potrebnaEnergija, $generator->toplotneIzgube['tsv']);
 
@@ -159,8 +169,8 @@ class TSV extends TSSInterface
                 $this->vracljiveIzgubeVOgrevanje =
                     array_sum_values($this->vracljiveIzgubeVOgrevanje, $generator->vracljiveIzgubeAux['tsv'] ?? []);
 
-                $vracljiveIzgubeTSV =
-                    array_sum_values($vracljiveIzgubeTSV, $generator->vracljiveIzgubeTSV['tsv'] ?? []);
+                $this->vracljiveIzgubeVTSV =
+                    array_sum_values($this->vracljiveIzgubeVTSV, $generator->vracljiveIzgubeTSV['tsv'] ?? []);
             }
         }
 

@@ -219,8 +219,8 @@ final class ToplovodniOHTSistemBiomasaTest extends TestCase
         $expected = [403.85, 364.76, 403.85, 390.82, 403.85, 390.82, 403.85, 403.85, 390.82, 403.85, 390.82, 403.85];
         $this->assertEquals($expected, $roundedResult);
 
-        $potrebnaElektricnaEnergijaSistema = $sistem->tsv->potrebnaElektricnaEnergija;
-        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergijaSistema);
+        $potrebnaElektricnaEnergija = $sistem->tsv->potrebnaElektricnaEnergija;
+        $roundedResult = array_map(fn($el) => round($el, 2), $potrebnaElektricnaEnergija);
         $expected = [15.20, 13.73, 15.20, 14.71, 15.20, 14.71, 15.20, 15.20, 14.71, 15.20, 14.71, 15.20];
         $this->assertEquals($expected, $roundedResult);
 

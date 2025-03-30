@@ -6,7 +6,9 @@ namespace App\Calc\GF\TSS\OHTSistemi\Podsistemi;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\ElektricniGrelnik;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\HladilniKompresor;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\Kotel;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\SolarniPaneli;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\SplitSistemKlima;
+use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaVodaVoda;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\ToplotnaCrpalkaZrakVoda;
 use App\Calc\GF\TSS\OHTSistemi\Podsistemi\Generatorji\ToplotnaPodpostaja;
 
@@ -25,6 +27,8 @@ class GeneratorFactory
             case 'TC_zrakvoda':
             case 'TC_zrakvodaTSV':
                 return new ToplotnaCrpalkaZrakVoda($options);
+            case 'TC_vodavoda':
+                return new ToplotnaCrpalkaVodaVoda($options);
             case 'toplotnaPodpostaja':
                 return new ToplotnaPodpostaja($options);
             case 'plinskiKotel':
@@ -37,6 +41,8 @@ class GeneratorFactory
                 return new SplitSistemKlima($options);
             case 'hladilniKompresor':
                 return new HladilniKompresor($options);
+            case 'solarniPaneli':
+                return new SolarniPaneli($options);
             default:
                 throw new \Exception(sprintf('Generator : Vrsta "%s" ne obstaja', $type));
         }

@@ -68,7 +68,7 @@ class IzracunKonstrukcij extends Command
                 App::saveProjectCalculation(
                     'Pures',
                     $projectId,
-                    'konstrukcije' . DS . 'netransparentne_ref',
+                    'Ref' . DS . 'konstrukcije' . DS . 'netransparentne',
                     $netransparentneKonsOut
                 );
             }
@@ -103,7 +103,7 @@ class IzracunKonstrukcij extends Command
                 App::saveProjectCalculation(
                     'Pures',
                     $projectId,
-                    'konstrukcije' . DS . 'transparentne_ref',
+                    'Ref' . DS . 'konstrukcije' . DS . 'transparentne',
                     $transparentneKonsOut
                 );
             }

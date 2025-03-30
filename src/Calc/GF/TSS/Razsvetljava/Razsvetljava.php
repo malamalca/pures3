@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\Razsvetljava;
 
+use App\Calc\GF\TSS\TSSSistem;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
 
-class Razsvetljava
+class Razsvetljava extends TSSSistem
 {
-    public ?string $id;
     public ?string $idCone;
     public string $tss = 'razsvetljava';
 
@@ -38,10 +38,12 @@ class Razsvetljava
      * Class Constructor
      *
      * @param string|\stdClass $config Configuration
+     * @param bool $referencnaStavba Določa ali gre za referenčno stavbo ali ne
      * @return void
      */
-    public function __construct($config = null)
+    public function __construct($config = null, bool $referencnaStavba = false)
     {
+        $this->referencnaStavba = $referencnaStavba;
         if ($config) {
             $this->parseConfig($config);
         }

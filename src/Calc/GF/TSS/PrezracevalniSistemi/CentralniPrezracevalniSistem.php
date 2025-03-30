@@ -57,8 +57,8 @@ class CentralniPrezracevalniSistem extends PrezracevalniSistem
      * Analiza podsistema
      *
      * @param array $potrebnaEnergija Potrebna energija predhodnih TSS
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
+     * @param null|\stdClass $cona Podatki cone
+     * @param null|\stdClass $okolje Podatki okolja
      * @param array $params Dodatni parametri za izračun
      * @return void
      */

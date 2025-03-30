@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\PrezracevalniSistemi;
 
-abstract class PrezracevalniSistem
+use App\Calc\GF\TSS\TSSSistem;
+
+abstract class PrezracevalniSistem extends TSSSistem
 {
-    public string $id;
+    public ?string $id;
     public string $idCone;
     public string $tss = 'prezracevanje';
     public string $vrsta;
@@ -21,10 +23,12 @@ abstract class PrezracevalniSistem
      * Class Constructor
      *
      * @param string|\stdClass $config Configuration
+     * @param bool $referencnaStavba Določa ali gre za referenčno stavbo ali ne
      * @return void
      */
-    public function __construct($config = null)
+    public function __construct($config = null, bool $referencnaStavba = false)
     {
+        $this->referencnaStavba = $referencnaStavba;
         if ($config) {
             $this->parseConfig($config);
         }
@@ -70,6 +74,9 @@ abstract class PrezracevalniSistem
         $ret->id = $this->id;
         $ret->idCone = $this->idCone;
         $ret->tss = $this->tss;
+
+        $ret->porociloPodatki = $this->porociloPodatki;
+        $ret->porociloNizi = $this->porociloNizi;
 
         return $ret;
     }

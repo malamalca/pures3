@@ -29,7 +29,7 @@ Configure::getInstance($config);
 
 // Display exceptions
 function echo_exception_handler($e) {
-    printf('Uncaught Exception %s: "%s" in %s:%s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
+    printf('Uncaught %s: "%s" in %s:%s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
 }
 
 if (Configure::read('debug')) {
