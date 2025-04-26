@@ -269,6 +269,7 @@ class HladilniKompresor extends Generator
         );
 
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'tCgen',
             't<sub>C,gen,op,d</sub>',
             'Število ur delovanja na dan',
             $this->stUrDelovanjaNaDan,
@@ -276,6 +277,7 @@ class HladilniKompresor extends Generator
         );
 
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'fEER',
             'f<sub>EER,corr</sub>',
             'Korekcijski faktor ERR',
             $this->korekcijskiFaktorEER,
@@ -284,6 +286,7 @@ class HladilniKompresor extends Generator
         );
 
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'Ec',
             'E<sub>C,del,m</sub>; E<sub>C,del,an</sub>',
             'Energija za delovanje',
             $this->E_C_gen,

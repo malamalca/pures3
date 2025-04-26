@@ -13,13 +13,18 @@ class TSSController extends Controller
      *
      * @param string $projectId Building name
      * @param string $sistemId Id
+     * @param string|null $ref Referenčna stavba - parameter mora biti 'ref', da se pokažejo podatki referenčne stavbe
      * @return void
      */
-    public function prezracevanje($projectId, $sistemId)
+    public function prezracevanje($projectId, $sistemId, $ref = null)
     {
         App::set('projectId', $projectId);
 
-        $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
+        $sistemi = App::loadProjectCalculation(
+            'Pures',
+            $projectId,
+            ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'prezracevanje'
+        );
         App::set('sistemi', $sistemi);
         App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
@@ -29,13 +34,18 @@ class TSSController extends Controller
      *
      * @param string $projectId Building name
      * @param string $sistemId Id
+     * @param string|null $ref Referenčna stavba - parameter mora biti 'ref', da se pokažejo podatki referenčne stavbe
      * @return void
      */
-    public function razsvetljava($projectId, $sistemId)
+    public function razsvetljava($projectId, $sistemId, $ref = null)
     {
         App::set('projectId', $projectId);
 
-        $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
+        $sistemi = App::loadProjectCalculation(
+            'Pures',
+            $projectId,
+            ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'razsvetljava'
+        );
         App::set('sistemi', $sistemi);
         App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
@@ -45,15 +55,30 @@ class TSSController extends Controller
      *
      * @param string $projectId Building name
      * @param string $sistemId Id
+     * @param string|null $ref Referenčna stavba - parameter mora biti 'ref', da se pokažejo podatki referenčne stavbe
      * @return void
      */
-    public function oht($projectId, $sistemId)
+    public function oht($projectId, $sistemId, $ref = null)
     {
         App::set('projectId', $projectId);
 
-        $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
+        $jeReferencnaStavba = (!empty($ref) && strtolower($ref) == 'ref');
+
+        $sistemi = App::loadProjectCalculation(
+            'Pures',
+            $projectId,
+            ($jeReferencnaStavba ? 'Ref' . DS : '') . 'TSS' . DS . 'ogrevanje'
+        );
+
+        $sistem = array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId));
+
+        if (!$sistem) {
+            throw new \Exception(sprintf('Sistem z id:"%s" ne obstaja.', $sistemId));
+        }
+
         App::set('sistemi', $sistemi);
-        App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
+        App::set('sistem', $sistem);
+        App::set('jeReferencnaStavba', $jeReferencnaStavba);
     }
 
     /**

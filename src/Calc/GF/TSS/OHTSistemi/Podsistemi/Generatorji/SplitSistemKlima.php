@@ -59,15 +59,14 @@ class SplitSistemKlima extends Generator
     {
         parent::parseConfig($config);
 
-        if (!isset($config->nazivnaMoc)) {
-            throw new \Exception('Ni vpisane nazivne moči split sistema hlajenja.');
+        if (isset($config->nazivnaMoc)) {
+            $this->nazivnaMoc = $config->nazivnaMoc;
         }
 
         if (!isset($config->EER)) {
             throw new \Exception('Ni vpisanega EER faktorja split sistema hlajenja.');
         }
 
-        $this->nazivnaMoc = $config->nazivnaMoc;
         $this->EER = $config->EER;
 
         $this->vrstaIdx = isset($config->multiSplit) && $config->multiSplit === true ? 1 : 0;
@@ -88,6 +87,12 @@ class SplitSistemKlima extends Generator
      */
     public function toplotneIzgube($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        if (empty($this->nazivnaMoc)) {
+            // todo: tole sem kar povzel po ogrevanju
+            $this->nazivnaMoc = ($cona->specTransmisijskeIzgube + $cona->Hve_hlajenje) *
+                (35 - $cona->notranjaTHlajenje) / 1000;
+        }
+
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $this->vneseneIzgube['hlajenje'][$mesec] = $vneseneIzgube[$mesec];
 
@@ -242,6 +247,7 @@ class SplitSistemKlima extends Generator
         );
 
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'tCgen',
             't<sub>C,gen,op,d</sub>',
             'Število ur delovanja na dan',
             $this->stUrDelovanjaNaDan,
@@ -249,6 +255,7 @@ class SplitSistemKlima extends Generator
         );
 
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'fEER',
             'f<sub>EER,corr</sub>',
             'Korekcijski faktor ERR',
             $this->korekcijskiFaktorEER,

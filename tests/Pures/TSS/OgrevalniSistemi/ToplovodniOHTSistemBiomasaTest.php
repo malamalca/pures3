@@ -82,8 +82,9 @@ final class ToplovodniOHTSistemBiomasaTest extends TestCase
         $data = $sistem->generatorji[0]->export();
 
         // betah
-        $beta_h_gen = $data->porociloNizi['betaH']->vrednosti;
-        $roundedResult = array_map(fn($el) => round($el, 3), $beta_h_gen);
+        //$beta_h_gen = $data->porociloNizi['betaH']->vrednosti;
+        $beta_h_gen = array_first($data->porociloNizi, fn($k) => $k->id == 'betaH');
+        $roundedResult = array_map(fn($el) => round($el, 3), $beta_h_gen->vrednosti);
         $expected = [0.144, 0.101, 0.051, 0.031, 0.035, 0.000, 0.000, 0.000, 0.036, 0.032, 0.096, 0.144];
         $this->assertEquals($expected, $roundedResult);
 

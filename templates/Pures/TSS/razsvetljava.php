@@ -27,7 +27,7 @@
     <tr>
         <td>Specifična električna moč vgrajenih svetilk:</td>
         <td>P'<sub>L</sub></td>
-        <td><?= $this->numFormat($sistem->mocSvetilk, 1) ?></td>
+        <td><?= $this->numFormat($sistem->mocSvetilk ?? 0.0, 1) ?></td>
         <td>W/m²</td>
     </tr>
     <tr>

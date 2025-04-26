@@ -39,6 +39,13 @@ class Ogrevanje extends TSSInterface
         if ($config) {
             $this->parseConfig($config);
         }
+
+        $this->id = $config->id ?? null;
+
+        $this->razvodi = $config->razvodi ?? [];
+        $this->prenosniki = $config->prenosniki ?? [];
+        $this->hranilniki = $config->hranilniki ?? [];
+        $this->generatorji = $config->generatorji ?? [];
     }
 
     /**
@@ -217,6 +224,11 @@ class Ogrevanje extends TSSInterface
     public function export()
     {
         $sistem = parent::export();
+        $sistem->razvodi = $this->razvodi;
+        $sistem->prenosniki = $this->prenosniki;
+        $sistem->hranilniki = $this->hranilniki;
+        $sistem->generatorji = $this->generatorji;
+
         $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
 
         return $sistem;

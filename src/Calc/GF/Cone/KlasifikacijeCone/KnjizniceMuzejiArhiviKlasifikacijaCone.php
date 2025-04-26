@@ -48,6 +48,14 @@ class KnjizniceMuzejiArhiviKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
+    public function letnoSteviloUrDelovanjaRazsvetljave(Cona $cona): array
+    {
+        return ['podnevi' => 1800, 'ponoci' => 200];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function export()
     {
         return $this->code;

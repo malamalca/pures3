@@ -37,6 +37,9 @@ class RazvodSolar extends Razvod
         // OBTOČNA ČRPALKA
         if (!empty($config->crpalka)) {
             $this->crpalka = $config->crpalka;
+        } else {
+            $this->crpalka = new \stdClass();
+            $this->crpalka->moc = 0;
         }
 
         $this->idGeneratorja = $config->idGeneratorja;
@@ -54,6 +57,20 @@ class RazvodSolar extends Razvod
      */
     public function analiza($toplotneIzgube, $sistem, $cona, $okolje, $params = [])
     {
+        if (!isset($this->crpalka->moc)) {
+            $generator = array_first($sistem->generatorji, fn($generatorj) => $generatorj->id == $this->idGeneratorja);
+            if (!$generator) {
+                throw new \Exception('TSS RazvodSolar: Generator ne obstaja.');
+            }
+
+            // EN 15316-4-3:2017
+            // B.2.1.2 Collector pump
+            $c1 = 25; // [W]
+            $c2 = 2; // [W/m2]
+
+            $this->crpalka->moc = $c1 + $c2 * $generator->povrsina;
+        }
+
         $this->toplotneIzgube($toplotneIzgube, $sistem, $cona, $okolje, $params);
         $this->potrebnaElektricnaEnergija($toplotneIzgube, $sistem, $cona, $okolje, $params);
     }
@@ -74,6 +91,15 @@ class RazvodSolar extends Razvod
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $this->potrebnaElektricnaEnergija[$namen][$mesec] = 0;
+
+            // B.2.2.5 Collector loop overall heat loss coefficient
+            // not implemented
+            // If the collector loop characteristics are not known, the heat loss coefficient of the piping in de the
+            // collector loop is calculated by
+            // H_loop;p = c1 + c2 * A_sol [W/K]
+            // c1 = 5.0 W/K
+            // c2 = 0.5 W/K
+
             $this->toplotneIzgube[$namen][$mesec] = 0;
             $this->vracljiveIzgube[$namen][$mesec] = 0;
         }
@@ -101,19 +127,19 @@ class RazvodSolar extends Razvod
         }
         $generator->izracunSoncnegaObsevanja($okolje);
 
-        if (empty($this->crpalka->moc)) {
-            if (empty($this->crpalka)) {
-                $this->crpalka = new \stdClass();
-            }
-            $this->crpalka->moc = 25 + 2 * $generator->povrsina;
-        }
-
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stDniDelovanja = $stDni;
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // obtočna črpalka za vodo, ki kroži v kolektorjih
+            // EN 15316-4-3:2017
+            // heat loss coefficient of the piping in de the collector loop is calculated by
+
+            // Table B.13 — Default values for the collector pump operation time t_aux;an
+            // 2000h for systems designed for the water heating service or for both water and space heating service (SOL_USE = WHS or SOL_USE = COMBI)
+            // 1500h for systems designed for the space heating service only (SOL_USE = SHS)
+
             $this->stUrDelovanjaObtocneCrpalke[$mesec] =
                 2000 * $generator->soncnoObsevanje[$mesec] * $stDniDelovanja / $generator->skupnoSoncnoObsevanje;
 
@@ -161,6 +187,7 @@ class RazvodSolar extends Razvod
     public function export()
     {
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'tp',
             't<sub>p</sub>',
             'ur',
             $this->stUrDelovanjaNaDan,

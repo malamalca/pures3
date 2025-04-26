@@ -16,16 +16,17 @@ class KlasifikacijaConeFactory
     {
         switch ($type) {
             case 'St-1':
-                return new EnostanovanjskaKlasifikacijaCone();
+                return new EnostanovanjskaKlasifikacijaCone($type, $options);
             case 'St-2':
             case 'St-3':
-                return new VecstanovanjskaKlasifikacijaCone();
+                return new VecstanovanjskaKlasifikacijaCone($type, $options);
             case 'Po-1':
-                return new PoslovnaKlasifikacijaCone();
+            case 'Ho-1':
+                return new PoslovnaKlasifikacijaCone($type, $options);
             case 'Kn-1':
-                return new KnjizniceMuzejiArhiviKlasifikacijaCone();
+                return new KnjizniceMuzejiArhiviKlasifikacijaCone($type, $options);
             case 'Go-1':
-                return new GostinskaKlasifikacijaCone();
+                return new GostinskaKlasifikacijaCone($type, $options);
             default:
                 throw new \Exception(sprintf('Vrsta klasifikacije cone "%s" ne obstaja.', $type));
         }

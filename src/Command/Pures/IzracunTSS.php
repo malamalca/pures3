@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command\Pures;
 
+use App\Calc\GF\Cone\Cona;
 use App\Calc\GF\TSS\FotonapetostniSistemi\FotonapetostniSistem;
 use App\Calc\GF\TSS\Razsvetljava\Razsvetljava;
 use App\Calc\GF\TSS\SistemOHTFactory;
@@ -61,16 +62,15 @@ class IzracunTSS extends Command
             // za referenčno stavbo
             if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
                 $TSSReferencniSistemiPrezracevanjaOut = [];
-                foreach ($TSSSistemiPrezracevanja as $sistem) {
-                    $cona = array_first($referencneCone, fn($cona) => $cona->id == $sistem->idCone);
-                    if (!$cona) {
-                        throw new \Exception(
-                            sprintf('TSS Prezračevanje: Referenčna cona "%s" ne obstaja.', $sistem->idCone)
-                        );
+                foreach ($referencneCone as $cona) {
+                    $conaClass = new Cona(null, $cona);
+                    $refSistemi = $conaClass->referencniTSS('prezracevanje');
+                    foreach ($refSistemi as $refSistem) {
+                        $referencniPrezracevalniSistem =
+                            SistemPrezracevanjaFactory::create($refSistem->vrsta, $refSistem, true);
+                        $referencniPrezracevalniSistem->analiza([], $cona, $okolje);
+                        $TSSReferencniSistemiPrezracevanjaOut[] = $referencniPrezracevalniSistem->export();
                     }
-                    $referencniPrezracevalniSistem = SistemPrezracevanjaFactory::create($sistem->vrsta, $sistem, true);
-                    $referencniPrezracevalniSistem->analiza([], $cona, $okolje);
-                    $TSSReferencniSistemiPrezracevanjaOut[] = $referencniPrezracevalniSistem->export();
                 }
                 App::saveProjectCalculation(
                     'Pures',
@@ -90,6 +90,7 @@ class IzracunTSS extends Command
                 if (!$cona) {
                     throw new \Exception('TSS Razsvetljava: Cona ne obstaja.');
                 }
+
                 $razsvetljava = new Razsvetljava($sistem);
                 $razsvetljava->analiza([], $cona, $okolje);
 
@@ -103,14 +104,14 @@ class IzracunTSS extends Command
             // za referenčno stavbo
             if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
                 $TSSReferencniSistemiRazsvetljavaOut = [];
-                foreach ($TSSSistemiRazsvetljava as $sistem) {
-                    $cona = array_first($referencneCone, fn($cona) => $cona->id == $sistem->idCone);
-                    if (!$cona) {
-                        throw new \Exception('TSS Razsvetljava: Referenčna cona ne obstaja.');
+                foreach ($referencneCone as $cona) {
+                    $conaClass = new Cona(null, $cona);
+                    $refSistemi = $conaClass->referencniTSS('razsvetljava');
+                    foreach ($refSistemi as $refSistem) {
+                        $referencnaRazsvetljava = new Razsvetljava($refSistem, true);
+                        $referencnaRazsvetljava->analiza([], $cona, $okolje);
+                        $TSSReferencniSistemiRazsvetljavaOut[] = $referencnaRazsvetljava->export();
                     }
-                    $referencnaRazsvetljava = new Razsvetljava($sistem, true);
-                    $referencnaRazsvetljava->analiza([], $cona, $okolje);
-                    $TSSReferencniSistemiRazsvetljavaOut[] = $referencnaRazsvetljava->export();
                 }
                 App::saveProjectCalculation(
                     'Pures',
@@ -164,25 +165,22 @@ class IzracunTSS extends Command
             // za referenčno stavbo
             if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
                 $TSSReferencniSistemiOHTOut = [];
-                $vracljiveIzgubeVOgrevanje = [];
-                foreach ($TSSSistemiOHT as $sistem) {
-                    $cona = array_first($referencneCone, fn($cona) => $cona->id == $sistem->idCone);
-                    if (!$cona) {
-                        throw new \Exception('TSS OHT: Referenčna cona ne obstaja.');
+                foreach ($referencneCone as $cona) {
+                    $vracljiveIzgubeVOgrevanje = [];
+
+                    $conaClass = new Cona(null, $cona);
+                    $refTSSSistemiOHT = $conaClass->referencniTSS('OHT');
+
+                    foreach ($refTSSSistemiOHT as $refSistemOHT) {
+                        $referencniSistemOHT = SistemOHTFactory::create($refSistemOHT->vrsta, $refSistemOHT, true);
+
+                        $refSistemOHT->vracljiveIzgubeVOgrevanje = $vracljiveIzgubeVOgrevanje;
+                        $referencniSistemOHT->analiza($cona, $okolje);
+                        $vracljiveIzgubeVOgrevanje = $referencniSistemOHT->vracljiveIzgubeVOgrevanje;
+
+                        $TSSReferencniSistemiOHTOut[] = $referencniSistemOHT->export();
                     }
-
-                    $referencniSistemOHT = SistemOHTFactory::create($sistem->vrsta, $sistem, true);
-                    if (!$referencniSistemOHT) {
-                        throw new \Exception(sprintf('TSS OHT: Referenčni sistem "%s" ne obstaja.', $sistem->id));
-                    }
-
-                    $referencniSistemOHT->vracljiveIzgubeVOgrevanje = $vracljiveIzgubeVOgrevanje;
-                    $referencniSistemOHT->analiza($cona, $okolje);
-
-                    $vracljiveIzgubeVOgrevanje = $referencniSistemOHT->vracljiveIzgubeVOgrevanje;
-                    $TSSReferencniSistemiOHTOut[] = $referencniSistemOHT->export();
                 }
-
                 App::saveProjectCalculation(
                     'Pures',
                     $projectId,

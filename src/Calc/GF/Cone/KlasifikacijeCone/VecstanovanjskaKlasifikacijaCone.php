@@ -5,7 +5,7 @@ namespace App\Calc\GF\Cone\KlasifikacijeCone;
 
 use App\Calc\GF\Cone\Cona;
 
-class VecstanovanjskaKlasifikacijaCone extends KlasifikacijaCone
+class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
 {
     public string $code = 'St-2';
 
@@ -52,13 +52,5 @@ class VecstanovanjskaKlasifikacijaCone extends KlasifikacijaCone
             ($cona->vrnjeneIzgubeVTSV[$mesec] ?? 0);
 
         return $energijaTSV;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function export()
-    {
-        return $this->code;
     }
 }

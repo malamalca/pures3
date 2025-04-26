@@ -52,11 +52,13 @@ abstract class Generator extends TSSInterface
      */
     public function analiza($toplotneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $this->toplotneIzgube = [];
-        $this->potrebnaElektricnaEnergija = [];
-        $this->obnovljivaEnergija = [];
-        $this->vracljiveIzgube = [];
-        $this->vracljiveIzgubeAux = [];
+        $namen = $params['namen'] ?? 'ogrevanje';
+
+        $this->toplotneIzgube[$namen] = [];
+        $this->potrebnaElektricnaEnergija[$namen] = [];
+        $this->obnovljivaEnergija[$namen] = [];
+        $this->vracljiveIzgube[$namen] = [];
+        $this->vracljiveIzgubeAux[$namen] = [];
 
         $this->toplotneIzgube($toplotneIzgube, $sistem, $cona, $okolje, $params);
         $this->potrebnaElektricnaEnergija($toplotneIzgube, $sistem, $cona, $okolje, $params);

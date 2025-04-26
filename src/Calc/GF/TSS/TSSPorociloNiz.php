@@ -8,6 +8,7 @@ class TSSPorociloNiz implements \JsonSerializable
     /**
      * Class Constructor
      *
+     * @param string $id ID
      * @param string $naziv Naziv
      * @param string $opis Opis
      * @param array $vrednosti Vrednosti
@@ -16,6 +17,7 @@ class TSSPorociloNiz implements \JsonSerializable
      * @return void
      */
     public function __construct(
+        public string $id,
         public string $naziv,
         public string $opis,
         public $vrednosti,

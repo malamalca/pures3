@@ -211,8 +211,14 @@ class Hlajenje extends TSSInterface
     public function export()
     {
         $sistem = parent::export();
+        $sistem->razvodi = $this->razvodi;
+        $sistem->prenosniki = $this->prenosniki;
+        $sistem->hranilniki = $this->hranilniki;
+        $sistem->generatorji = $this->generatorji;
+
         $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
         $sistem->porociloNizi[] = new TSSPorociloNiz(
+            'QCenv',
             'Q<sub>C,environment,del</sub>; Q<sub>C,an,environment,del</sub>',
             'Obnovljiva energija',
             $this->obnovljivaEnergija,

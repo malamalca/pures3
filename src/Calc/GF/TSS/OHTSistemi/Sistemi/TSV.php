@@ -16,7 +16,7 @@ class TSV extends TSSInterface
     public VrstaRezima $rezim;
 
     /**
-     * @var array $razvodi Seznam razvodov iz OHT, ki sodelujejo pri ogrevanju
+     * @var array $razvodi Seznam razvodov iz OHT, ki sodelujejo pri TSV
      */
     public array $razvodi = [];
     public array $prenosniki = [];
@@ -205,6 +205,11 @@ class TSV extends TSSInterface
     public function export()
     {
         $sistem = parent::export();
+        $sistem->razvodi = $this->razvodi;
+        $sistem->prenosniki = $this->prenosniki;
+        $sistem->hranilniki = $this->hranilniki;
+        $sistem->generatorji = $this->generatorji;
+
         $sistem->energijaPoEnergentih = $this->energijaPoEnergentih;
 
         return $sistem;

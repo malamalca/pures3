@@ -17,7 +17,10 @@ class Kotel extends Generator
     public VrstaRegulacijeKotla $regulacija;
     public bool $znotrajOvoja = true;
 
-    private array $beta_h_g;
+    public float $izkoristekPolneObremenitve;
+    public float $izkoristekVmesneObremenitve;
+
+    private array $beta_h_g = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     private string $tipKotlaClass;
 
     /**
@@ -48,6 +51,30 @@ class Kotel extends Generator
         $this->tip = $tip::from($config->tip);
         $this->regulacija = VrstaRegulacijeKotla::from($config->regulacija);
         $this->lokacija = VrstaLokacijeNamestitve::from($config->lokacija ?? 'ogrevanProstor');
+
+        if (isset($config->izkoristekPolneObremenitve)) {
+            $this->izkoristekPolneObremenitve = $config->izkoristekPolneObremenitve;
+        }
+        if (isset($config->izkoristekVmesneObremenitve)) {
+            $this->izkoristekVmesneObremenitve = $config->izkoristekVmesneObremenitve;
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function analiza($toplotneIzgube, $sistem, $cona, $okolje, $params = [])
+    {
+        if (empty($this->nazivnaMoc)) {
+            $this->nazivnaMoc = $sistem->standardnaMoc($cona, $okolje);
+        }
+
+        $this->izkoristekPolneObremenitve =
+            (float)($this->izkoristekPolneObremenitve ?? $this->tip->izkoristekPolneObremenitve($this->nazivnaMoc));
+        $this->izkoristekVmesneObremenitve =
+            (float)($this->izkoristekVmesneObremenitve ?? $this->tip->izkoristekVmesneObremenitve($this->nazivnaMoc));
+
+        parent::analiza($toplotneIzgube, $sistem, $cona, $okolje, $params);
     }
 
     /**
@@ -86,7 +113,7 @@ class Kotel extends Generator
      */
     private function toplotneIzgubeTSV($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $izk100 = $this->tip->izkoristekPolneObremenitve($this->nazivnaMoc);
+        $izk100 = $this->izkoristekPolneObremenitve;
         $f_kor100 = $this->tip->korekcijskiFaktorIzkoristkaPolneObremenitve();
 
         $temperaturaOkolice =
@@ -164,10 +191,10 @@ class Kotel extends Generator
         $namen = $params['namen'] ?? 'ogrevanje';
         $rezimRazvoda = $sistem->{$namen}->rezim;
 
-        $izk100 = $this->tip->izkoristekPolneObremenitve($this->nazivnaMoc);
+        $izk100 = $this->izkoristekPolneObremenitve;
         $f_kor100 = $this->tip->korekcijskiFaktorIzkoristkaPolneObremenitve();
 
-        $izk30 = $this->tip->izkoristekVmesneObremenitve($this->nazivnaMoc);
+        $izk30 = $this->izkoristekVmesneObremenitve;
         $f_kor30 = $this->tip->korekcijskiFaktorIzkoristkaVmesneObremenitve();
 
         $temperaturaOkolice =
@@ -261,13 +288,6 @@ class Kotel extends Generator
 
             $this->toplotneIzgube['ogrevanje'][$mesec] = $Qh_g_l;
         }
-
-        $this->porociloNizi['betaH'] = new TSSPorociloNiz(
-            '&beta;<sub>H,gen</sub>',
-            'Razmerje toplotne obremenitve posameznega (i-tega) generatorja toplote.',
-            $this->beta_h_g,
-            2
-        );
     }
 
     /**
@@ -429,18 +449,26 @@ class Kotel extends Generator
             new TSSPorociloPodatek(
                 'η<sub>H,gen,Pn</sub>',
                 'Izkoristek polne obremenitve',
-                $this->tip->izkoristekPolneObremenitve($this->nazivnaMoc),
+                $this->izkoristekPolneObremenitve,
                 '-',
                 3
             ),
             new TSSPorociloPodatek(
                 'η<sub>H,gen,Pint</sub>',
                 'Izkoristek vmesne obremenitve',
-                $this->tip->izkoristekVmesneObremenitve($this->nazivnaMoc),
+                $this->izkoristekVmesneObremenitve,
                 '-',
                 3
             ),
         ];
+
+        $this->porociloNizi[] = new TSSPorociloNiz(
+            'betaH',
+            '&beta;<sub>H,gen</sub>',
+            'Razmerje toplotne obremenitve posameznega (i-tega) generatorja toplote.',
+            $this->beta_h_g,
+            2
+        );
 
         $sistem = parent::export();
         $sistem->lokacija = $this->lokacija->value;

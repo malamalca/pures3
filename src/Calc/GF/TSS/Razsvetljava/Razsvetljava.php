@@ -13,6 +13,7 @@ class Razsvetljava extends TSSSistem
     public string $tss = 'razsvetljava';
 
     public float $faktorDnevneSvetlobe;
+    public ?float $faktorOblike = null;
 
     public float $faktorZmanjsanjaSvetlobnegaToka = 0;
     public float $faktorPrisotnosti = 0;
@@ -117,19 +118,24 @@ class Razsvetljava extends TSSSistem
      */
     public function analiza($potrebnaEnergija, $cona, $okolje, $params = [])
     {
-        $faktorOblike = $cona->faktorOblikeCone ?? 1;
-        if (!empty($params['referencnaStavba'])) {
-            $faktorOblike = 1.4;
+        if (is_null($this->faktorOblike)) {
+            $faktorOblike = $cona->faktorOblikeCone ?? 1;
+            if (!empty($params['referencnaStavba'])) {
+                $faktorOblike = 1.4;
+            }
+        } else {
+            $faktorOblike = $this->faktorOblike;
         }
 
         // ker je LAHKO odvisna od $cone oz. faktorjaOblikeCone
-        $mocSvetilk = !is_null($this->mocSvetilk) ? $this->mocSvetilk :
-            1 / $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine * $faktorOblike *
-            $this->faktorZmanjsaneOsvetlitveDelovnePovrsine * $this->faktorVzdrzevanja;
+        if (is_null($this->mocSvetilk)) {
+            $this->mocSvetilk = 1 / $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine *
+                $faktorOblike * $this->faktorZmanjsaneOsvetlitveDelovnePovrsine * $this->faktorVzdrzevanja;
+        }
 
         $letnaDovedenaEnergija = ($this->faktorZmanjsanjaSvetlobnegaToka *
             $this->faktorPrisotnosti *
-            $mocSvetilk / 1000 *
+            $this->mocSvetilk / 1000 *
             (($this->letnoUrPodnevi * $this->faktorNaravneOsvetlitve) +
             $this->letnoUrPonoci) +
             $this->varnostnaRazsvetljavaEnergijaZaPolnjenje +

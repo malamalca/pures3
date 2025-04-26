@@ -86,26 +86,37 @@ class ProjektiController extends Controller
     public function analiza($projectId, $ref = null)
     {
         App::set('projectId', $projectId);
-        App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
+        $splosniPodatki = App::loadProjectData('Pures', $projectId, 'splosniPodatki');
+        App::set('splosniPodatki', $splosniPodatki);
 
-        App::set(
-            'stavba',
-            App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'stavba')
-        );
+        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
+
+        if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
+            App::set('refStavba', App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba'));
+        }
     }
 
     /**
      * Prikaz analize projekta s področja TSS
      *
      * @param string $projectId Building name
+     * @param ?string $ref Referenčna stavba
      * @return void
      */
-    public function snes($projectId)
+    public function snes($projectId, $ref = null)
     {
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
-        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
-        App::set('sistemi', App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje.json'));
+        App::set('stavba', App::loadProjectCalculation(
+            'Pures',
+            $projectId,
+            ($ref == 'ref' ? 'Ref' . DS : '') . 'stavba'
+        ));
+        App::set('sistemi', App::loadProjectCalculation(
+            'Pures',
+            $projectId,
+            ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'ogrevanje.json'
+        ));
     }
 
     /**

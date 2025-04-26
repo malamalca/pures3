@@ -190,8 +190,10 @@ class Cona
                             $vrsteLege = VrstaLegeStavbe::cases();
                             $this->infiltracija->lega = $vrsteLege[$this->infiltracija->lega - 1];
                         } else {
-                            $this->infiltracija->lega =
-                                VrstaLegeStavbe::from($config->infiltracija->lega ?? 'izpostavljena');
+                            $this->infiltracija->lega = gettype($config->infiltracija->lega) == 'object' &&
+                                get_class($config->infiltracija->lega) == VrstaLegeStavbe::class ?
+                                    $config->infiltracija->lega :
+                                    VrstaLegeStavbe::from($config->infiltracija->lega ?? 'izpostavljena');
                         }
 
                         if (isset($this->infiltracija->zavetrovanost) && is_int($this->infiltracija->zavetrovanost)) {
@@ -201,6 +203,9 @@ class Cona
                                 $vrsteZavetrovanosti[$this->infiltracija->zavetrovanost - 1];
                         } else {
                             $this->infiltracija->zavetrovanost =
+                                gettype($config->infiltracija->zavetrovanost) == 'object' &&
+                                get_class($config->infiltracija->zavetrovanost) == VrstaIzpostavljenostiFasad::class ?
+                                $config->infiltracija->zavetrovanost :
                                 VrstaIzpostavljenostiFasad::from(
                                     $config->infiltracija->zavetrovanost ?? 'izpostavljena'
                                 );
@@ -816,5 +821,30 @@ class Cona
         }
 
         return $cona;
+    }
+
+    /**
+     * Vrnje referenčni tss za predmetno cono, glede na vrsto $TSS
+     *
+     * @param string $TSS Za kateri sistem gre ('oht', 'prezracevanje', 'razsvetljava', 'fotovoltaika')
+     * @return array
+     */
+    public function referencniTSS(string $TSS): array
+    {
+        switch ($TSS) {
+            case 'prezracevanje':
+                $ret = $this->klasifikacija->referencniTSSPrezracevanja($this);
+                break;
+            case 'razsvetljava':
+                $ret = $this->klasifikacija->referencniTSSRazsvetljava($this);
+                break;
+            case 'OHT':
+                $ret = $this->klasifikacija->referencniTSSOHT($this);
+                break;
+            default:
+                throw new \Exception(sprintf('Neznan TSS "%s"', $TSS));
+        }
+
+        return $ret;
     }
 }

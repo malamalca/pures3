@@ -78,13 +78,7 @@ class LokalniPrezracevalniSistem extends PrezracevalniSistem
         $ret->energijaPoEnergentih = $this->energijaPoEnergentih;
 
         $ret->porociloPodatki = [
-            new TSSPorociloPodatek(
-                'N',
-                'Število naprav',
-                $this->stevilo,
-                '-',
-                0
-            ),
+            new TSSPorociloPodatek('N', 'Število naprav', $this->stevilo, '-', 0),
         ];
 
         return $ret;

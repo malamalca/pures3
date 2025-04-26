@@ -78,15 +78,9 @@ class ToplotnaCrpalkaVodaVoda extends Generator
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $E_tc[$mesec] = $vneseneIzgube[$mesec] / $COP_t;
 
-            if (empty($namen)) {
-                $this->toplotneIzgube[$mesec] = ($this->toplotneIzgube[$mesec] ?? 0) + 0;
-                $this->E_tc[$mesec] = ($this->E_tc[$mesec] ?? 0) + $E_tc[$mesec];
-                $this->potrebnaElektricnaEnergija[$mesec] = 0;
-            } else {
-                $this->toplotneIzgube[$namen][$mesec] = ($this->toplotneIzgube[$namen][$mesec] ?? 0) + 0;
-                $this->E_tc[$namen][$mesec] = ($this->E_tc[$namen][$mesec] ?? 0) + $E_tc[$mesec];
-                $this->potrebnaElektricnaEnergija[$namen][$mesec] = 0;
-            }
+            $this->toplotneIzgube[$namen][$mesec] = ($this->toplotneIzgube[$namen][$mesec] ?? 0) + 0;
+            $this->E_tc[$namen][$mesec] = ($this->E_tc[$namen][$mesec] ?? 0) + $E_tc[$mesec];
+            $this->potrebnaElektricnaEnergija[$namen][$mesec] = 0;
         }
     }
 
@@ -141,17 +135,10 @@ class ToplotnaCrpalkaVodaVoda extends Generator
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $delovanjeUr = $vneseneIzgube[$mesec] / $Q_tc_dej;
 
-            if (empty($namen)) {
-                $this->potrebnaElektricnaEnergija[$mesec] =
-                    ($this->potrebnaElektricnaEnergija[$mesec] ?? 0) +
-                    ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
-                    $delovanjeUr / 1000;
-            } else {
-                $this->potrebnaElektricnaEnergija[$namen][$mesec] =
-                    ($this->potrebnaElektricnaEnergija[$namen][$mesec] ?? 0) +
-                    ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
-                    $delovanjeUr / 1000;
-            }
+            $this->potrebnaElektricnaEnergija[$namen][$mesec] =
+                ($this->potrebnaElektricnaEnergija[$namen][$mesec] ?? 0) +
+                ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
+                $delovanjeUr / 1000;
         }
     }
 
@@ -178,6 +165,7 @@ class ToplotnaCrpalkaVodaVoda extends Generator
         }
 
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'ETC',
             'E<sub>TČ</sub>',
             'Energija za delovanje TČ',
             $E_tc,

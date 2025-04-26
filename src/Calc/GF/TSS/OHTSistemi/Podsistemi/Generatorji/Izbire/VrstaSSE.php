@@ -30,7 +30,7 @@ enum VrstaSSE: string
     }
 
     /**
-     * a1
+     * a1 - Heat loss coefficient [W/m2K]
      *
      * @return float
      */
@@ -42,7 +42,7 @@ enum VrstaSSE: string
     }
 
     /**
-     * a2
+     * a2 - Temperature dependence of heat loss coefficient [W/m2K2]
      *
      * @return float
      */
@@ -52,7 +52,7 @@ enum VrstaSSE: string
     }
 
     /**
-     * IAM
+     * IAM = po standardu Khem,50° - Incidence angle modifier (50°)
      *
      * @return float
      */
@@ -64,7 +64,7 @@ enum VrstaSSE: string
     }
 
     /**
-     * eta0
+     * eta0 - Peak collector efficiency
      *
      * @return float
      */

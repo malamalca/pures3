@@ -145,7 +145,3 @@ $lookups['crpalke']['regulacija'] = [
     'zRegulacijo' => ['Cp1' => 0.75, 'Cp2' => 0.25],
     'spremenljivPretok' => ['Cp1' => 0.9, 'Cp2' => 0.1],
 ];
-$lookups['faktorjiZaVrstoOgrevala'] = [
-    'n_exp_ogr' => [1 => 1.33, 2 => 1.1, 3 => 1],
-    'dP_FBH' => [1 => 0, 2 => 25, 3 => 0],
-];

@@ -10,7 +10,7 @@
 <?php
     foreach ($sistemi as $s) {
 ?>
-<a class="button<?= $s->id == $sistem->id ? ' active' : '' ?>" href="<?= App::url('/pures/TSS/oht/' . $projectId . '/' . $s->id . (!empty($jeReferencnaStavba) ? '/ref' : '')) ?>"><?= $s->id ?></a>
+<a class="button<?= $s->id == $sistem->id ? ' active' : '' ?>" href="<?= App::url('/pures/TSS/oht/' . $projectId . '/' . $s->id) ?>"><?= $s->id ?></a>
 <?php
     }
 ?>
@@ -37,8 +37,6 @@
 
 
 <?php
-    $podsistemNaziv = ['ogrevanje' => 'Ogrevanje', 'hlajenje' => 'Hlajenje', 'tsv' => 'Topla voda'];
-    $podsistemIx = ['ogrevanje' => 'H', 'hlajenje' => 'C', 'tsv' => 'W'];
     $podsistemi = [];
     if (isset($sistem->ogrevanje)) {
         $podsistemi[] = 'ogrevanje';
@@ -50,21 +48,15 @@
         $podsistemi[] = 'hlajenje';
     }
 
-    foreach ($podsistemi as $podsistem) {
+    foreach ($podsistem as $podsistem)
 ?>
 
-<h1>Podsistem: <?= $podsistemNaziv[$podsistem] ?></h1>
-
 <?php
-    if (!empty($sistem->{$podsistem}->prenosniki)) {
+    if (!empty($sistem->prenosniki)) {
 ?>
 <h2>Analiza končnih prenosnikov</h2>
 <?php
-        foreach ($sistem->{$podsistem}->prenosniki as $prenosnikId) {
-            $prenosnik = array_first($sistem->prenosniki, fn($p) => $p->id == $prenosnikId);
-            if (!$prenosnik) {
-                throw new \Exception(sprintf('Prenosnik id:"%s" ne obstaja.', $prenosnikId));
-            }
+        foreach ($sistem->prenosniki as $prenosnik) {
 ?>
 <table border="1">
     <tr>
@@ -85,6 +77,20 @@
     </tr>
 </table>
 <br />
+<?php
+            $podsistemi = [];
+            if (isset($prenosnik->toplotneIzgube->tsv)) {
+                $podsistemi[] = 'tsv';
+            }
+            if (isset($prenosnik->toplotneIzgube->ogrevanje)) {
+                $podsistemi[] = 'ogrevanje';
+            }
+            if (isset($prenosnik->toplotneIzgube->hlajenje)) {
+                $podsistemi[] = 'hlajenje';
+            }
+
+            foreach ($podsistemi as $podsistem) {
+?>
 <table border="1">
     <thead>
         <tr>
@@ -112,20 +118,17 @@
     </tr>
 </table>
 <?php
+            }
         }
     }
 ?>
 
 <?php
-    if (!empty($sistem->{$podsistem}->razvodi)) {
+    if (!empty($sistem->razvodi)) {
 ?>
 <h2>Analiza razvoda</h2>
 <?php
-        foreach ($sistem->{$podsistem}->razvodi as $razvodId) {
-            $razvod = array_first($sistem->razvodi, fn($p) => $p->id == $razvodId);
-            if (!$razvod) {
-                throw new \Exception(sprintf('Razvod id:"%s" ne obstaja.', $razvodId));
-            }
+        foreach ($sistem->razvodi as $razvod) {
 ?>
     <table border="1">
         <tr>
@@ -160,6 +163,20 @@
         ?>
     </table>
     <br />
+<?php
+            $podsistemi = [];
+            if (isset($razvod->toplotneIzgube->tsv)) {
+                $podsistemi[] = 'tsv';
+            }
+            if (isset($razvod->toplotneIzgube->ogrevanje)) {
+                $podsistemi[] = 'ogrevanje';
+            }
+            if (isset($razvod->toplotneIzgube->hlajenje)) {
+                $podsistemi[] = 'hlajenje';
+            }
+
+            foreach ($podsistemi as $podsistem) {
+?>
     <table border="1">
     <thead>
         <tr>
@@ -193,20 +210,17 @@
 </table>
 <br />
 <?php
+            }
         }
     }
 ?>
 
 <?php
-    if (!empty($sistem->{$podsistem}->hranilniki)) {
+    if (!empty($sistem->hranilniki)) {
 ?>
 <h2>Analiza hranilnikov</h2>
 <?php
-        foreach ($sistem->{$podsistem}->hranilniki as $hranilnikId) {
-            $hranilnik = array_first($sistem->hranilniki, fn($p) => $p->id == $hranilnikId);
-            if (!$hranilnik) {
-                throw new \Exception(sprintf('Hranilnik id:"%s" ne obstaja.', $hranilnikId));
-            }
+        foreach ($sistem->hranilniki as $hranilnik) {
 ?>
 <table border="1">
     <tr>
@@ -221,6 +235,20 @@
     </tr>
 </table>
 <br />
+<?php
+            $podsistemi = [];
+            if (isset($hranilniki->toplotneIzgube->tsv)) {
+                $podsistemi[] = 'tsv';
+            }
+            if (isset($hranilniki->toplotneIzgube->ogrevanje)) {
+                $podsistemi[] = 'ogrevanje';
+            }
+            if (isset($hranilniki->toplotneIzgube->hlajenje)) {
+                $podsistemi[] = 'hlajenje';
+            }
+
+            foreach ($podsistemi as $podsistem) {
+?>
 <table border="1">
     <thead>
         <tr>
@@ -238,38 +266,39 @@
     </tr>
 </table>
 <?php
+            }
         }
     }
 ?>
 
 <?php
-    if (!empty($sistem->{$podsistem}->generatorji)) {
+    if (!empty($sistem->generatorji)) {
 ?>
-<h2>Analiza generatorjev</h2>
+<h2>Analiza generatorja</h2>
 <?php
-        foreach ($sistem->{$podsistem}->generatorji as $generatorId) {
-            $generator = array_first($sistem->generatorji, fn($p) => $p->id == $generatorId);
-            if (!$generator) {
-                throw new \Exception(sprintf('Generator id:"%s" ne obstaja.', $generatorId));
-            }
+    foreach ($sistem->generatorji as $generator) {
+        $podsistemi = [];
+        if (isset($generator->toplotneIzgube->tsv)) {
+            $podsistemi[] = 'tsv';
+        }
+        if (isset($generator->toplotneIzgube->ogrevanje)) {
+            $podsistemi[] = 'ogrevanje';
+        }
+        if (isset($generator->toplotneIzgube->hlajenje)) {
+            $podsistemi[] = 'hlajenje';
+        }
 ?>
 <table border="1">
     <tr>
         <th colspan="2">Generator:</th>
         <th colspan="2"><?= $generator->id ?></th>
     </tr>
-    <?php
-        if (isset($generator->nazivnaMoc)) {
-    ?>
     <tr>
         <td>Nazivna moč:</td>
         <td>P<sub>n,gen</sub></td>
         <td><?= $this->numFormat($generator->nazivnaMoc, 1) ?></td>
         <td>kW</td>
     </tr>
-    <?php
-        }
-    ?>
     <?php
         foreach ($generator->porociloPodatki as $podatek) {
             echo $this->element('elements'. DS . 'porociloPodatek', ['podatek' => $podatek]);
@@ -287,6 +316,9 @@
         </tr>
     </thead>
 
+    <?php
+        foreach ($podsistemi as $podsistem) {
+    ?>
     <tr>
         <td rowspan="<?= 2 + (isset($generator->porociloNizi) ? count($generator->porociloNizi) : 0) ?>"><?= h($generator->id ?? '') ?> <?= $podsistem ?></td>
         <td>Q<sub><?= $podsistemIx[$podsistem] ?>,del,m</sub>; Q<sub><?= $podsistemIx[$podsistem] ?>,del,an</sub></td>
@@ -299,20 +331,21 @@
         <th class="right w-6"><?= $this->numFormat(array_sum($generator->potrebnaElektricnaEnergija->$podsistem), 0) ?></th>
     </tr>
     <?php
+        }
+    ?>
+
+    <?php
         foreach ($generator->porociloNizi as $niz) {
             echo $this->element('elements'. DS . 'porociloNiz', ['niz' => $niz]);
         }
     ?>
 </table>
-<br />
 <?php
         }
     }
-
-} // podsistemi
 ?>
 
-<h1>Analiza sistema</h1>
+<h2>Analiza sistema</h2>
 <table border="1">
     <thead>
         <tr>

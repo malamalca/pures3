@@ -200,11 +200,7 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            if (empty($namen)) {
-                $this->obnovljivaEnergija[$mesec] = $vneseneIzgube[$mesec] - $this->E_tc[$mesec];
-            } else {
-                $this->obnovljivaEnergija[$namen][$mesec] = $vneseneIzgube[$mesec] - $this->E_tc[$namen][$mesec];
-            }
+            $this->obnovljivaEnergija[$namen][$mesec] = $vneseneIzgube[$mesec] - $this->E_tc[$namen][$mesec];
         }
     }
 
@@ -243,17 +239,10 @@ class ToplotnaCrpalkaZrakVoda extends Generator
                 $delovanjeUr += $potrebnaEnergija[$mesec][$rezim] / $dejanskaMoc[$rezim];
             }
 
-            if (empty($namen)) {
-                $this->potrebnaElektricnaEnergija[$mesec] =
-                    ($this->potrebnaElektricnaEnergija[$mesec] ?? 0) +
-                    ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
-                    $delovanjeUr / 1000;
-            } else {
-                $this->potrebnaElektricnaEnergija[$namen][$mesec] =
-                    ($this->potrebnaElektricnaEnergija[$namen][$mesec] ?? 0) +
-                    ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
-                    $delovanjeUr / 1000;
-            }
+            $this->potrebnaElektricnaEnergija[$namen][$mesec] =
+                ($this->potrebnaElektricnaEnergija[$namen][$mesec] ?? 0) +
+                ($this->elektricnaMocNaPrimarnemKrogu + $this->elektricnaMocNaSekundarnemKrogu) *
+                $delovanjeUr / 1000;
         }
     }
 
@@ -280,6 +269,7 @@ class ToplotnaCrpalkaZrakVoda extends Generator
         }
 
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'ETC',
             'E<sub>TČ</sub>',
             'Energija za delovanje TČ',
             $E_tc,

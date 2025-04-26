@@ -265,24 +265,28 @@ class SolarniPaneli extends Generator
     public function export()
     {
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'x',
             'X',
             '-',
             $this->X,
             1
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'y',
             'Y',
             '-',
             $this->Y,
             1
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'fsol',
             'f<sub>sol</sub>',
             'Faktor SSE',
             $this->f_sol,
             2
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
+            'QW',
             'Q<sub>W,sol,del</sub>',
             'Proizvedena energija SSE',
             $this->proizvedenaEnergijaSSE,

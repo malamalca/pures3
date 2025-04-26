@@ -18,7 +18,7 @@ return [
                 'format' => "%message%\n",
             ],
             'file' => 'php://stderr', /*LOGS . 'debug.log',*/
-            'level' => \Monolog\Logger::WARNING,
+            'level' => \Monolog\Logger::NOTICE,
             'cli' => true,
         ],
         'error' => [

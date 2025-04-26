@@ -73,6 +73,8 @@ class NeposrednoOgrevanHranilnik extends Hranilnik
 
         // q w,s,l - dnevne toplotne izgube hranilnika v stanju obratovalne pripravljenosti [kWh]. Podatek
         // proizvajalca ali enačba 123a ali 123b.
+        // EN 15316-4-1:2017
+        // qB,S is the daily stand-by thermal loss, in kWh;
         if ($sistem->energent == TSSVrstaEnergenta::Elektrika) {
             $dnevneIzgube = 0.29 + 0.019 * pow($this->volumen, 0.8);
         } else {
@@ -86,9 +88,9 @@ class NeposrednoOgrevanHranilnik extends Hranilnik
 
             $this->toplotneIzgube[$namen][$mesec] =
                 $dnevneIzgube * (55 - $temperaturaOkolice) / 45 * $stDni * $this->stevilo;
-        }
 
-        $this->vracljiveIzgube = $this->toplotneIzgube;
+            $this->vracljiveIzgube[$namen][$mesec] = $this->znotrajOvoja ? $this->toplotneIzgube[$namen][$mesec] : 0;
+        }
 
         return $this->toplotneIzgube;
     }
