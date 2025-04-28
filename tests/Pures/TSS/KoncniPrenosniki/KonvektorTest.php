@@ -32,8 +32,8 @@ final class KonvektorTest extends TestCase
         }
         EOT;
 
-        $sistem = new \App\Calc\GF\TSS\OHTSistemi\Sistemi\Ogrevanje();
-        $sistem->ogrevanje = new \stdClass();
+        $sistem = new \App\Calc\GF\TSS\OHTSistemi\ToplovodniOHTSistem();
+        $sistem->ogrevanje = new \App\Calc\GF\TSS\OHTSistemi\Sistemi\Ogrevanje();
         $sistem->ogrevanje->rezim = \App\Calc\GF\TSS\OHTSistemi\Izbire\VrstaRezima::Rezim_40_30;
 
         $koncniPrenosnik = new Konvektor(json_decode($config));

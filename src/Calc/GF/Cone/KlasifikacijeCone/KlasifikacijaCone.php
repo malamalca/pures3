@@ -37,13 +37,11 @@ abstract class KlasifikacijaCone
      */
     abstract public function izracunTSVZaMesec(int $mesec, Cona $cona): float;
 
-
     /**
      * Izračun količine oz. izmenjave svežega zraka za prezračevanje
      * Tabela 6.1.4: Spremenljivke, ki se upoštevajo pri določitvi količine svežega zraka za prezračevanje
-     * energetsko manj zahtevnih nestanovanjskih stavb
+     * energetsko manj zahtevnih (nestanovanjskih) stavb
      *
-     * @param int $mesec Številka meseca
      * @param \App\Calc\GF\Cone\Cona $cona Cona
      * @return float
      */
@@ -53,7 +51,6 @@ abstract class KlasifikacijaCone
      * Izračun letnega števila delovanja električne razsvetljave
      * Tabela 8.17: Letno število ur delovanja električne razsvetljave posamezno cono (zn) v
      *
-     * @param int $mesec Številka meseca
      * @param \App\Calc\GF\Cone\Cona $cona Cona
      * @return array<int> [Podnevi, Ponoči]
      */

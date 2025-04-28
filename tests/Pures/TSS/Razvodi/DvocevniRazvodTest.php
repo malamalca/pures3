@@ -59,7 +59,7 @@ final class DvocevniRazvodTest extends TestCase
         }
         EOT;
         $sistem = new ToplovodniOHTSistem($configSistem);
-        $sistem->standardnaMoc = 5.0179966123288615;
+        //$sistem->standardnaMoc = 5.0179966123288615;
 
         $configPrenosnika = <<<EOT
         {
