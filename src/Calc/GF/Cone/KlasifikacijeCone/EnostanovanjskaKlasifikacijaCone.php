@@ -50,6 +50,14 @@ class EnostanovanjskaKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
+    public function kolicinaSvezegaZrakaZaPrezracevanje(Cona $cona): float
+    {
+        return $cona->ogrevanaPovrsina * 0.42 * 3600 / 1000;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function letnoSteviloUrDelovanjaRazsvetljave(Cona $cona): array
     {
         return ['podnevi' => 1820, 'ponoci' => 1680];

@@ -19,7 +19,7 @@ class Cona
     public string $id;
     public string $naziv;
     public KlasifikacijaCone $klasifikacija;
-    protected array $options = [];
+    public array $options = [];
 
     public float $brutoProstornina = 0;
     public float $netoProstornina = 0;

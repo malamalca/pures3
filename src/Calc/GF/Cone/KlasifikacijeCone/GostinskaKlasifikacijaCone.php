@@ -28,7 +28,7 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
                 }
                 break;
             case 'Ho-1':
-                if (!empty($options->petZvezdic)) {
+                if (!empty($cona->options['petZvezdic'])) {
                     if (isset($cona->TSV->steviloOseb)) {
                         $energijaTSV = 7.0 * $cona->TSV->steviloOseb * $stDni;
                     } else {
@@ -43,6 +43,8 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
                     }
                 }
                 break;
+            default:
+                throw new \Exception('Neveljavna koda cone');
         }
 
         return $energijaTSV;
@@ -68,6 +70,8 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
                 $dnevnaUporabaStavbe = 24; // [h]
                 $tedenskaUporabaStavbe = 7; // [dni/teden]
                 break;
+            default:
+                throw new \Exception('Neveljavna koda cone');
         }
 
         $volumenZraka = $kolicinaZrakaNaOsebo * $faktorSocasneUporabe * $stOseb *
@@ -86,6 +90,8 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
                 return ['podnevi' => 1250, 'ponoci' => 1250];
             case 'Ho-1':
                 return ['podnevi' => 3000, 'ponoci' => 2000];
+            default:
+                throw new \Exception('Neveljavna koda cone');
         }
     }
 
@@ -162,6 +168,15 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
         $ret->volumenProjekt = $cona->netoProstornina / 2;
 
         return [$ret];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function referencniTSSOHT(Cona $cona): array
+    {
+        // TODO
+        return [];
     }
 
     /**

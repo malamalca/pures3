@@ -56,6 +56,33 @@ class KnjizniceMuzejiArhiviKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
+    public function referencniTSSRazsvetljava(Cona $cona): array
+    {
+        // TODO
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function referencniTSSPrezracevanja(Cona $cona): array
+    {
+        // TODO
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function referencniTSSOHT(Cona $cona): array
+    {
+        // TODO
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function export()
     {
         return $this->code;

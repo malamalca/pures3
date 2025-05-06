@@ -17,8 +17,8 @@ class Kotel extends Generator
     public VrstaRegulacijeKotla $regulacija;
     public bool $znotrajOvoja = true;
 
-    public float $izkoristekPolneObremenitve;
-    public float $izkoristekVmesneObremenitve;
+    public ?float $izkoristekPolneObremenitve;
+    public ?float $izkoristekVmesneObremenitve;
 
     private array $beta_h_g = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     private string $tipKotlaClass;
