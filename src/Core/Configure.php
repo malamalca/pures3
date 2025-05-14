@@ -89,8 +89,37 @@ class Configure
     }
 
     /**
-     * Empty function
+     * Write configuration option to class.
      *
+     * @param string $key Configure key
+     * @param mixed $value Configuration value
+     * @return void
+     */
+    public static function write($key, $value)
+    {
+        $instance = self::getInstance();
+
+        $levels = (array)explode('.', $key);
+
+        $base = &$instance->config;
+
+        $i = 0;
+
+        while (isset($base[$levels[$i]])) {
+            if (is_array($base[$levels[$i]]) && ($i < count($levels) - 1)) {
+                $base = &$base[$levels[$i]];
+
+                $i++;
+            } else {
+                $base[$levels[$i]] = $value;
+                break;
+            }
+        }
+    }
+
+    /**
+     * Empty function
+     *  
      * @return void
      */
     private function __clone()

@@ -68,6 +68,10 @@ session_start();
 /*
  * Include the CLI bootstrap overrides.
  */
-if (PHP_SAPI === 'cli') {
+if (PHP_SAPI === 'cli' && empty($_ENV['PHPURES_NOCLI'])) {
     require CONFIG . 'bootstrap_cli.php';
+}
+
+if (!empty($_ENV['PHPURES_NOCLI'])) {
+    Configure::write('App.baseUrl', 'about:blank?url=');
 }

@@ -145,6 +145,7 @@ class App
             }
         } else {
             $url_base = (string)Configure::read('App.baseUrl', '/') . '/';
+            //$url_base = 'about:blank?url=/';
         }
 
         return $url_base . substr($params, 1);
@@ -249,7 +250,7 @@ class App
      */
     public static function isLocalProject()
     {
-        return !empty($_ENV['PHPURES_PROJECT']) || !empty($_SERVER['HTTP_PHPURES_PROJECT']);
+        return (!empty($_ENV['PHPURES_PROJECT'])) || (!empty($_SERVER['HTTP_PHPURES_PROJECT']));
     }
 
     /**

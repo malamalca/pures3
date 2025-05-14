@@ -12,8 +12,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute(['GET'], '/', 'Index');
 });
 
-// Fetch method and URI from somewhere
-$httpMethod = $_SERVER['REQUEST_METHOD'];
+// Fetch method and URI from somewhere;
+$httpMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 if (Configure::read('App.baseUrl') == '') {
     $uri = $_SERVER['REQUEST_URI'];
 } else {
