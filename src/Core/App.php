@@ -250,7 +250,7 @@ class App
      */
     public static function isLocalProject()
     {
-        return (!empty($_ENV['PHPURES_PROJECT'])) || (!empty($_SERVER['HTTP_PHPURES_PROJECT']));
+        return !empty($_ENV['PHPURES_PROJECT']) || (!empty($_SERVER['HTTP_PHPURES_PROJECT']));
     }
 
     /**

@@ -119,7 +119,7 @@ class Configure
 
     /**
      * Empty function
-     *  
+     *
      * @return void
      */
     private function __clone()

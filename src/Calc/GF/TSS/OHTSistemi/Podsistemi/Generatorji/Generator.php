@@ -9,6 +9,8 @@ abstract class Generator extends TSSInterface
 {
     public float $nazivnaMoc;
     public array $vneseneIzgube = [];
+
+    public float $delezPokrivanjaEnegije = 1;
     public array $nepokritaEnergija = [];
 
     /**
@@ -38,6 +40,7 @@ abstract class Generator extends TSSInterface
 
         $this->id = $config->id;
         $this->nazivnaMoc = $config->nazivnaMoc ?? 0;
+        $this->delezPokrivanjaEnegije = $config->delezPokrivanjaEnegije ?? 1;
     }
 
     /**
@@ -109,6 +112,9 @@ abstract class Generator extends TSSInterface
     public function export()
     {
         $sistem = parent::export();
+        $sistem->nazivnaMoc = $this->nazivnaMoc;
+        $sistem->delezPokrivanjaEnegije = $this->delezPokrivanjaEnegije;
+
         $sistem->vneseneIzgube = $this->vneseneIzgube;
 
         return $sistem;

@@ -109,7 +109,9 @@ class ToplotnaPodpostaja extends Generator
             $Q_w_DO_l = $H_ds * ($temperaturaMedija - $temperaturaOkolice) * $stDni / 365;
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $this->vneseneIzgube['tsv'][$mesec] = $vneseneIzgube[$mesec];
+            $this->vneseneIzgube['tsv'][$mesec] = $vneseneIzgube[$mesec] ?? '';
+            $this->nepokritaEnergija['tsv'][$mesec] = $vneseneIzgube[$mesec] * $this->delezPokrivanjaEnegije;
+
             $this->toplotneIzgube['tsv'][$mesec] = $Q_w_DO_l;
 
             $this->vracljiveIzgube['tsv'][$mesec] = 0;
@@ -166,7 +168,9 @@ class ToplotnaPodpostaja extends Generator
             $Q_h_DO_l = $H_ds * ($temperaturaMedija - $temperaturaOkolice) * $stUrOgrevanje / 24 / 365;
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $this->vneseneIzgube['ogrevanje'][$mesec] = $vneseneIzgube[$mesec];
+            $this->vneseneIzgube['ogrevanje'][$mesec] = ($vneseneIzgube[$mesec] ?? 0) * $this->delezPokrivanjaEnegije;
+            $this->nepokritaEnergija['ogrevanje'][$mesec] = $vneseneIzgube[$mesec] * $this->delezPokrivanjaEnegije;
+
             $this->toplotneIzgube['ogrevanje'][$mesec] = $Q_h_DO_l;
             $this->vracljiveIzgube['ogrevanje'][$mesec] = $Q_h_DO_l;
         }
@@ -198,7 +202,7 @@ class ToplotnaPodpostaja extends Generator
                             // POLNJENJE POSREDNO OGREVANEGA HRANILNIKA
                             // t - čas delovanja črpalke [h]
                             // enačba 153
-                            $t_p = $vneseneIzgube[$mesec] * 1.1 / $this->nazivnaMoc;
+                            $t_p = ($vneseneIzgube[$mesec] ?? 0) * $this->delezPokrivanjaEnegije * 1.1 / $this->nazivnaMoc;
 
                             // nazivna moč črpalke [W]. Podatek proizvajalca ali prevzeta vrednost
                             // todo: to lahko uporabnik določi kot podatek v $config

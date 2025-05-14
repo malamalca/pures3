@@ -379,6 +379,12 @@ class NetransparentenElementOvoja extends ElementOvoja
         if (in_array($this->konstrukcija->TSG->tip, ['tla-neogrevano'])) {
             // ekvivalentna debelina tal (floor)
             // enačba 12 v standard
+            if (!isset($this->debelinaStene)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane debeline stene.', $this->id));
+            }
+            if (!isset($this->U_tla)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane vrednosti U tal.', $this->id));
+            }
             $d_f = $this->debelinaStene + $this->tla->lambda() * 1 / $this->U_tla;
 
             /** enačba 16 v standardu */

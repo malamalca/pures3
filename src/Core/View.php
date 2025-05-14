@@ -7,6 +7,8 @@ class View
 {
     public string $area = 'Pures';
 
+    public bool $layout;
+
     /**
      * @var array<string, mixed> $_vars
      */

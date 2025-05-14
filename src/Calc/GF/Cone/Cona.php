@@ -315,6 +315,13 @@ class Cona
                         ) {
                             $configValue = (float)$EvalMath->e($configValue);
                         }
+                        if (
+                            $prop->isInitialized($this) &&
+                            gettype($this->{$prop->getName()}) == 'array' &&
+                            gettype($configValue) == 'object'
+                        ) {
+                            $configValue = json_decode(json_encode($configValue), true);
+                        }
                         $this->{$prop->getName()} = $configValue;
                     }
             }

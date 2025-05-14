@@ -40,7 +40,7 @@ class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
         }
 
         if (empty($cona->TSV->dnevnaKolicina)) {
-            $dnevnaKolicina = min(40.71, 3.26 * $cona->ogrevanaPovrsina / $cona->TSV->steviloOseb);
+            $dnevnaKolicina = min(40.71, 3.26 * $cona->ogrevanaPovrsina / $steviloOseb);
         } else {
             $dnevnaKolicina = $cona->TSV->dnevnaKolicina;
         }
