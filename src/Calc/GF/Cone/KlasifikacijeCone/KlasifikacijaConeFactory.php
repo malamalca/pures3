@@ -25,6 +25,8 @@ class KlasifikacijaConeFactory
                 return new PoslovnaKlasifikacijaCone($type, $options);
             case 'Kn-1':
                 return new KnjizniceMuzejiArhiviKlasifikacijaCone($type, $options);
+            case 'In-1':
+                return new IndustrijskaKlasifikacijaCone($type, $options);
             case 'Go-1':
                 return new GostinskaKlasifikacijaCone($type, $options);
             default:
