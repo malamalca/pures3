@@ -202,7 +202,9 @@ class ToplotnaPodpostaja extends Generator
                             // POLNJENJE POSREDNO OGREVANEGA HRANILNIKA
                             // t - čas delovanja črpalke [h]
                             // enačba 153
-                            $t_p = ($vneseneIzgube[$mesec] ?? 0) * $this->delezPokrivanjaEnegije * 1.1 / $this->nazivnaMoc;
+                            $t_p = ($vneseneIzgube[$mesec] ?? 0) *
+                                $this->delezPokrivanjaEnegije * 1.1 /
+                                $this->nazivnaMoc;
 
                             // nazivna moč črpalke [W]. Podatek proizvajalca ali prevzeta vrednost
                             // todo: to lahko uporabnik določi kot podatek v $config

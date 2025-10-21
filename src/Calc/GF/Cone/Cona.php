@@ -320,7 +320,7 @@ class Cona
                             gettype($this->{$prop->getName()}) == 'array' &&
                             gettype($configValue) == 'object'
                         ) {
-                            $configValue = json_decode(json_encode($configValue), true);
+                            $configValue = json_decode((string)json_encode($configValue), true);
                         }
                         $this->{$prop->getName()} = $configValue;
                     }
