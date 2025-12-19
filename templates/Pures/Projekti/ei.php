@@ -13,7 +13,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <reiXmlPrenos>
     <program>drugo</program>
-    <nazivStavbe><?= h($stavba->naziv) ?></nazivStavbe>
+    <nazivStavbe><![CDATA[<?= h($stavba->naziv) ?>]]></nazivStavbe>
     <LokacijaX><?= $stavba->koordinate->X ?></LokacijaX>
     <LokacijaY><?= $stavba->koordinate->Y ?></LokacijaY>
     <VrstaStavbe><?= VrstaZahtevnosti::from($stavba->vrsta)->sifraEI() ?></VrstaStavbe>

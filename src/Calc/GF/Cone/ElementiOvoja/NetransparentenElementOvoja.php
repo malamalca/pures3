@@ -347,7 +347,8 @@ class NetransparentenElementOvoja extends ElementOvoja
 
         if ($this->konstrukcija->TSG->tip == 'stena-teren') {
             // ekvivalentna debelina stene
-            // enačba 15 v standardu; TODO: v standardu je brez debelineStene, XLS pa jo upošteva
+            // enačba 15 v standardu
+            // TODO: v standardu je brez debelineStene, XLS pa jo upošteva
             $d_wb = $this->debelinaStene + $this->tla->lambda() * 1 / $this->konstrukcija->U;
 
             // ekvivalentna debelina tal (floor)

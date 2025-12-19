@@ -30,6 +30,7 @@ class PdfIzvoz extends Command
         $view->set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
         $view->set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
         $view->set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
+        $view->set('maliElementi', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'maliElementi'));
         $view->set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
         $view->set('udarniHrup', App::loadProjectCalculation('Hrup', $projectId, 'udarniHrup'));
         $view->set('zracniHrup', App::loadProjectCalculation('Hrup', $projectId, 'zracniHrup'));

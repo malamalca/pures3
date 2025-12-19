@@ -129,9 +129,9 @@
                         <?= $this->numFormat($konstrukcija->Rw, 0) ?> 
                         (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>)
                     </td>
-                    <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 2) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?> 
+                    <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?></td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 2) ?></td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?></td>
                     <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB
                         <br />
                         <?= sprintf('%.1E', $konstrukcija->povrsina * $konstrukcija->stevilo / $fasada->povrsina * pow(10, -($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C)) / 10) * $konstrukcija->stevilo) ?>
@@ -163,12 +163,52 @@
                         <?= $this->numFormat($konstrukcija->Rw, 0) ?> 
                         (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>)
                     </td>
-                    <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 2) ?> 
-                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?> 
+                    <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?></td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina, 2) ?></td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->povrsina / $fasada->povrsina, 2) ?></td>
                     <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB
                         <br />
                         <?= sprintf('%.1E', $konstrukcija->povrsina * $konstrukcija->stevilo / $fasada->povrsina * pow(10, -($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C)) / 10) * $konstrukcija->stevilo) ?>
+                    </td>
+                </tr>
+            <?php
+                        $k++;
+                    }
+                }
+            ?>
+            <?php
+                if (count($fasada->maliElementi) > 0) {
+                    foreach ($fasada->maliElementi as $konstrukcija) {
+                        $libMaliElement = array_first($maliElementi, fn($k) => $k->id == $konstrukcija->idMaliElement);
+            ?>
+                <tr>
+                    <td class="center"><?= $k  ?>.</td>
+                    <td class="left"><?= h($libMaliElement->id) ?></td>
+                    <td class="left"><?= h($libMaliElement->naziv) ?></td>
+                    <td class="left">&nbsp;</td>
+                    <td class="center">
+                        <span class="nowrap"><?= $this->numFormat($libMaliElement->Rw, 0) ?> 
+                        (<?= $this->numFormat($libMaliElement->C, 0) ?>; <?= $this->numFormat($libMaliElement->Ctr, 0) ?>)</span><br />
+                        <?php
+                            if (isset($konstrukcija->length)) {
+                        ?>
+                        <div class="small">
+                            L =<?= $this->numFormat($konstrukcija->length, 2) ?> m
+                        </div>
+                        <?php
+                            }
+                        ?>
+                    </td>
+                    <td class="center nowrap">
+                        <?= $this->numFormat($konstrukcija->Rw, 0) ?> 
+                        (<?= $this->numFormat($konstrukcija->C, 0) ?>; <?= $this->numFormat($konstrukcija->Ctr, 0) ?>)
+                    </td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->stevilo, 0) ?></td>
+                    <td class="center">&nbsp;</td>
+                    <td class="center">&nbsp;</td>
+                    <td class="center"><?= $this->numFormat($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C), 0) ?> dB
+                        <br />
+                        <?= sprintf('%.1E', 10 * $konstrukcija->stevilo / $fasada->povrsina * pow(10, -($konstrukcija->Rw + ($fasada->vplivPrometa ? $konstrukcija->Ctr : $konstrukcija->C)) / 10) * $konstrukcija->stevilo) ?>
                     </td>
                 </tr>
             <?php

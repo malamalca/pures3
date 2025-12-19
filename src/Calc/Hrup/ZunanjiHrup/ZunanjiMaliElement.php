@@ -9,7 +9,6 @@ use App\Lib\EvalMath;
 class ZunanjiMaliElement
 {
     public string $idMaliElement;
-    public float $povrsina = 0;
     public ?float $dolzina;
     public int $stevilo = 1;
     public array $R = [];

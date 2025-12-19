@@ -27,6 +27,7 @@ class IzracunZunanjegaHrupa extends Command
 
         $konstrukcije = App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije');
         $oknaVrata = App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata');
+        $maliElementi = App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'maliElementi');
 
         /** @var array $prostoriIn */
         $prostoriIn = App::loadProjectData('Hrup', $projectId, 'zunanjiHrup');
@@ -38,6 +39,7 @@ class IzracunZunanjegaHrupa extends Command
             $elementi = new \stdClass();
             $elementi->konstrukcije = $konstrukcije;
             $elementi->oknaVrata = $oknaVrata;
+            $elementi->maliElementi = $maliElementi;
 
             $prostoriOut = [];
             foreach ($prostoriIn as $prostorConfig) {

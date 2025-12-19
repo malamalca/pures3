@@ -138,7 +138,6 @@ class Fasada
                             }
                             $maliElement = new ZunanjiMaliElement(new MaliElement($libMaliElement), $maliElementConfig);
                             $this->maliElementi[] = $maliElement;
-                            $this->povrsina += $maliElement->povrsina * $maliElement->stevilo;
                         }
                     }
                     break;

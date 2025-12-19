@@ -35,6 +35,8 @@ class GeneratorFactory
                 return new Kotel('PlinskiKotel', $options);
             case 'biomasa':
                 return new Kotel('Biomasa', $options);
+            case 'elko':
+                return new Kotel('Elko', $options);
             case 'elektricniGrelnik':
                 return new ElektricniGrelnik($options);
             case 'splitHlajenje':
