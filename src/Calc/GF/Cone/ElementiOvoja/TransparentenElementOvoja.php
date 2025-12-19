@@ -207,11 +207,6 @@ class TransparentenElementOvoja extends ElementOvoja
                 $P2_stena_d = $W ? $L_stena_d / $W : 0;
 
                 // dolžina sence nadstreška
-                // po standardu je malo drugačna enačba:
-                // TODO: preveri razlike
-                // $h_ovh = $H - $H * (($A1 + $B1 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh +
-                //    ($A2 + $B2 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh * $P2_ovh);
-
                 $h_ovh = $H - $H * (1 + (($A1 + $B1 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh +
                     ($A2 + $B2 * ($zemljepisnaSirina - $deklinacija)) * $P1_ovh * $P2_ovh));
 

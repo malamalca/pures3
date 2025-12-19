@@ -25,5 +25,6 @@ class ZunanjiHrupController extends Controller
 
         App::set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
         App::set('oknaVrata', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata'));
+        App::set('maliElementi', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'maliElementi'));
     }
 }

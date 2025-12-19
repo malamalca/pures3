@@ -314,7 +314,7 @@ class App
     {
         $sourceFolder = self::getProjectFolder($area, $projectId, $subfolder);
         if (!is_dir($sourceFolder)) {
-            throw new \Exception(sprintf('Projekt "%s" ne obstaja.', $projectId));
+            throw new \Exception(sprintf('Projekt v mapi "%s" ne obstaja.', $sourceFolder));
         }
 
         if (is_dir($sourceFolder . $projectFile)) {

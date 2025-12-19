@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Command\Hrup;
 
 use App\Calc\Hrup\Elementi\Konstrukcija;
+use App\Calc\Hrup\Elementi\MaliElement;
 use App\Calc\Hrup\Elementi\OknaVrata;
 use App\Core\App;
 use App\Core\Command;
@@ -58,6 +59,23 @@ class IzracunElementov extends Command
             }
 
             App::saveProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'oknaVrata', $oknaVrataOut);
+        }
+
+        $maliElementiIn = App::loadProjectData('Hrup', $projectId, 'elementi' . DS . 'maliElementi');
+        if (!empty($maliElementiIn)) {
+            //if (!$this->validateSchema(json: $maliElementiIn, schema: 'maliElementi', area: 'Hrup')) {
+            //    return;
+            //}
+            $maliElementiOut = [];
+            foreach ($maliElementiIn as $maliElementConfig) {
+                $maliElement = new MaliElement($maliElementConfig);
+                $maliElement->analiza();
+                $maliElementiOut[] = $maliElement->export();
+            }
+            if (count($maliElementiOut) == 0) {
+                throw new \Exception('Mali elementi ne obstajajo.');
+            }
+            App::saveProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'maliElementi', $maliElementiOut);
         }
     }
 }
