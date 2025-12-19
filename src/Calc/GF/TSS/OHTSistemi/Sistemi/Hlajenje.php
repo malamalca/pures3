@@ -129,7 +129,10 @@ class Hlajenje extends TSSInterface
             }
 
             foreach ($this->hranilniki as $hranilnikId) {
-                $hranilnik = array_first_callback($sistem->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
+                $hranilnik = array_first_callback(
+                    $sistem->hranilniki,
+                    fn($hranilnik) => $hranilnik->id == $hranilnikId
+                );
                 if (!$hranilnik) {
                     throw new \Exception(sprintf('Hranilnik hlajenja "%s" ne obstaja', $hranilnikId));
                 }

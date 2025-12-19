@@ -26,7 +26,10 @@ class TSSController extends Controller
             ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'prezracevanje'
         );
         App::set('sistemi', $sistemi);
-        App::set('sistem', array_first_callback($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
+        App::set('sistem', array_first_callback(
+            $sistemi,
+            fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)
+        ));
     }
 
     /**
@@ -47,7 +50,10 @@ class TSSController extends Controller
             ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'razsvetljava'
         );
         App::set('sistemi', $sistemi);
-        App::set('sistem', array_first_callback($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
+        App::set('sistem', array_first_callback(
+            $sistemi,
+            fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)
+        ));
     }
 
     /**
@@ -94,6 +100,9 @@ class TSSController extends Controller
 
         $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
         App::set('sistemi', $sistemi);
-        App::set('sistem', array_first_callback($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
+        App::set('sistem', array_first_callback(
+            $sistemi,
+            fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)
+        ));
     }
 }

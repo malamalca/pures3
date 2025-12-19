@@ -21,7 +21,10 @@ class UdarniHrupController extends Controller
         App::set('splosniPodatki', App::loadProjectData('Hrup', $projectId, 'splosniPodatki'));
 
         $locilneKonstrukcije = App::loadProjectCalculation('Hrup', $projectId, 'udarniHrup');
-        App::set('locilnaKonstrukcija', array_first_callback($locilneKonstrukcije, fn($p) => $konstrukcijaId == $p->id));
+        App::set('locilnaKonstrukcija', array_first_callback(
+            $locilneKonstrukcije,
+            fn($p) => $konstrukcijaId == $p->id
+        ));
 
         App::set('konstrukcije', App::loadProjectCalculation('Hrup', $projectId, 'elementi' . DS . 'konstrukcije'));
     }

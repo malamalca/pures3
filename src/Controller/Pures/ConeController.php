@@ -69,7 +69,10 @@ class ConeController extends Controller
     {
         $cone = App::loadProjectCalculation('Pures', $projectId, 'cone');
         $cona = array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId));
-        $k = array_first_callback($cona->ovoj->transparentneKonstrukcije, fn($kn) => strtolower($kn->id) == strtolower($konsId));
+        $k = array_first_callback(
+            $cona->ovoj->transparentneKonstrukcije,
+            fn($kn) => strtolower($kn->id) == strtolower($konsId)
+        );
 
         App::set('projectId', $projectId);
         App::set('cona', $cona);
