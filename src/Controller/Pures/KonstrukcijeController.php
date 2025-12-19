@@ -37,7 +37,7 @@ class KonstrukcijeController extends Controller
         App::set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
 
         $ntKonsArray = App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'netransparentne');
-        $kons = array_first($ntKonsArray, fn($item) => $item->id == $konsId);
+        $kons = array_first_callback($ntKonsArray, fn($item) => $item->id == $konsId);
 
         if (empty($kons)) {
             throw new \Exception('Konstrukcija ne obstaja');

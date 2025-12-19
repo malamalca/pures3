@@ -71,11 +71,11 @@ function array_subtract_values(&$a, $b) {
  * Return the first element in an array passing a given truth test.
  *
  * @param  iterable  $array
- * @param  callable|null  $callback
+ * @param  callable  $callback
  * @param  mixed  $default
  * @return mixed
  */
-function array_first($haystack, callable $callback = null, $default = null) {
+function array_first_callback($haystack, ?callable $callback, $default = null) {
     if (is_null($callback)) {
         if (empty($haystack)) {
             return $default;

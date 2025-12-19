@@ -8,8 +8,11 @@ use App\Calc\GF\Cone\Cona;
 abstract class KlasifikacijaCone
 {
     public string $code;
+
+    // Tabela 6.1.2:
     public float $notranjaTOgrevanje;
     public float $notranjaTHlajenje;
+
     public int $toplaVodaT = 42;
     public int $hladnaVodaT = 10;
     public ?\stdClass $options;

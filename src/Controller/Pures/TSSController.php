@@ -26,7 +26,7 @@ class TSSController extends Controller
             ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'prezracevanje'
         );
         App::set('sistemi', $sistemi);
-        App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
+        App::set('sistem', array_first_callback($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 
     /**
@@ -47,7 +47,7 @@ class TSSController extends Controller
             ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'razsvetljava'
         );
         App::set('sistemi', $sistemi);
-        App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
+        App::set('sistem', array_first_callback($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 
     /**
@@ -70,7 +70,7 @@ class TSSController extends Controller
             ($jeReferencnaStavba ? 'Ref' . DS : '') . 'TSS' . DS . 'ogrevanje'
         );
 
-        $sistem = array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId));
+        $sistem = array_first_callback($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId));
 
         if (!$sistem) {
             throw new \Exception(sprintf('Sistem z id:"%s" ne obstaja.', $sistemId));
@@ -94,6 +94,6 @@ class TSSController extends Controller
 
         $sistemi = App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');
         App::set('sistemi', $sistemi);
-        App::set('sistem', array_first($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
+        App::set('sistem', array_first_callback($sistemi, fn($sistem) => strtolower($sistem->id) == strtolower($sistemId)));
     }
 }

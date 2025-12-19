@@ -87,7 +87,7 @@ class TSV extends TSSInterface
             $this->vracljiveIzgubeVOgrevanje = [];
 
             foreach ($this->razvodi as $razvodId) {
-                $razvod = array_first($sistem->razvodi, fn($r) => $r->id == $razvodId);
+                $razvod = array_first_callback($sistem->razvodi, fn($r) => $r->id == $razvodId);
                 if (!$razvod) {
                     throw new \Exception(sprintf('Razvod TSV "%s" ne obstaja', $razvodId));
                 }
@@ -110,7 +110,7 @@ class TSV extends TSSInterface
             }
 
             foreach ($this->hranilniki as $hranilnikId) {
-                $hranilnik = array_first($sistem->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
+                $hranilnik = array_first_callback($sistem->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
                 if (!$hranilnik) {
                     throw new \Exception(sprintf('Hranilnik TSV "%s" ne obstaja', $hranilnikId));
                 }
@@ -139,7 +139,7 @@ class TSV extends TSSInterface
             $nepokritaEnergija = $this->potrebnaEnergija;
 
             foreach ($this->generatorji as $generatorId) {
-                $generator = array_first($sistem->generatorji, fn($g) => $g->id == $generatorId);
+                $generator = array_first_callback($sistem->generatorji, fn($g) => $g->id == $generatorId);
                 if (!$generator) {
                     throw new \Exception(sprintf('Generator "%s" ne obstaja', $generatorId));
                 }

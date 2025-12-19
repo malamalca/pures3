@@ -29,6 +29,8 @@ class KlasifikacijaConeFactory
                 return new IndustrijskaKlasifikacijaCone($type, $options);
             case 'Go-1':
                 return new GostinskaKlasifikacijaCone($type, $options);
+            case 'Sd-1':
+                return new SplosniDruzbeniNamenKlasifikacijaCone($type, $options);
             default:
                 throw new \Exception(sprintf('Vrsta klasifikacije cone "%s" ne obstaja.', $type));
         }

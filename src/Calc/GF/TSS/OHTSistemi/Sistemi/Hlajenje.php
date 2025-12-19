@@ -89,7 +89,7 @@ class Hlajenje extends TSSInterface
             $this->obnovljivaEnergija = [];
 
             foreach ($this->prenosniki as $prenosnikId) {
-                $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $prenosnikId);
+                $prenosnik = array_first_callback($sistem->koncniPrenosniki, fn($p) => $p->id == $prenosnikId);
                 if (!$prenosnik) {
                     throw new \Exception(sprintf('Prenosnik hlajenja "%s" ne obstaja', $prenosnikId));
                 }
@@ -109,7 +109,7 @@ class Hlajenje extends TSSInterface
             }
 
             foreach ($this->razvodi as $razvodId) {
-                $razvod = array_first($sistem->razvodi, fn($r) => $r->id == $razvodId);
+                $razvod = array_first_callback($sistem->razvodi, fn($r) => $r->id == $razvodId);
                 if (!$razvod) {
                     throw new \Exception(sprintf('Razvod hlajenja "%s" ne obstaja', $razvodId));
                 }
@@ -129,7 +129,7 @@ class Hlajenje extends TSSInterface
             }
 
             foreach ($this->hranilniki as $hranilnikId) {
-                $hranilnik = array_first($sistem->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
+                $hranilnik = array_first_callback($sistem->hranilniki, fn($hranilnik) => $hranilnik->id == $hranilnikId);
                 if (!$hranilnik) {
                     throw new \Exception(sprintf('Hranilnik hlajenja "%s" ne obstaja', $hranilnikId));
                 }
@@ -148,7 +148,7 @@ class Hlajenje extends TSSInterface
             }
 
             foreach ($this->generatorji as $generatorId) {
-                $generator = array_first($sistem->generatorji, fn($g) => $g->id == $generatorId);
+                $generator = array_first_callback($sistem->generatorji, fn($g) => $g->id == $generatorId);
                 if (!$generator) {
                     throw new \Exception(sprintf('Generator hlajenja "%s" ne obstaja', $generatorId));
                 }

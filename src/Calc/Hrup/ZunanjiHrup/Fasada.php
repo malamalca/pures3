@@ -72,7 +72,7 @@ class Fasada
                 case 'konstrukcije':
                     if (isset($config->konstrukcije)) {
                         foreach ($config->konstrukcije as $konstrukcijaConfig) {
-                            $libKonstrukcija = array_first(
+                            $libKonstrukcija = array_first_callback(
                                 $this->konstrukcijeLib->konstrukcije,
                                 fn($kons) => $konstrukcijaConfig->idKonstrukcije == $kons->id
                             );
@@ -95,7 +95,7 @@ class Fasada
                 case 'oknaVrata':
                     if (isset($config->oknaVrata)) {
                         foreach ($config->oknaVrata as $oknaVrataConfig) {
-                            $libOknaVrata = array_first(
+                            $libOknaVrata = array_first_callback(
                                 $this->konstrukcijeLib->oknaVrata,
                                 fn($ov) => $oknaVrataConfig->idOknaVrata == $ov->id
                             );
@@ -111,7 +111,7 @@ class Fasada
 
                             // določi netransparentni element v katerega je okno/vrata vgrajeno
                             if (isset($oknaVrataConfig->idElementaVgradnje)) {
-                                $konstrukcijaVgradnje = array_first(
+                                $konstrukcijaVgradnje = array_first_callback(
                                     $this->konstrukcije,
                                     fn($k) => $k->id == $oknaVrataConfig->idElementaVgradnje
                                 );
@@ -126,7 +126,7 @@ class Fasada
                 case 'maliElementi':
                     if (isset($config->maliElementi)) {
                         foreach ($config->maliElementi as $maliElementConfig) {
-                            $libMaliElement = array_first(
+                            $libMaliElement = array_first_callback(
                                 $this->konstrukcijeLib->maliElementi,
                                 fn($ml) => $maliElementConfig->idMaliElement == $ml->id
                             );

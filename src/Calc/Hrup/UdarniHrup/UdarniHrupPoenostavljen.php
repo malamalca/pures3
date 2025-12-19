@@ -85,7 +85,7 @@ class UdarniHrupPoenostavljen
         foreach ($props as $prop) {
             switch ($prop->getName()) {
                 case 'konstrukcija':
-                    $this->konstrukcija = array_first(
+                    $this->konstrukcija = array_first_callback(
                         $this->konstrukcijeLib,
                         fn($k) => $k->id == $config->idKonstrukcije
                     );
@@ -124,7 +124,7 @@ class UdarniHrupPoenostavljen
 
         $dodatniSloj = null;
         if (!empty($this->idDodatnegaSloja)) {
-            $dodatniSloj = array_first(
+            $dodatniSloj = array_first_callback(
                 $this->konstrukcija->dodatniSloji,
                 fn($ds) => (!empty($ds->id) && $ds->id == $this->idDodatnegaSloja)
             );

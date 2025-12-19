@@ -85,7 +85,7 @@
                 $k = 1;
                 if (count($fasada->konstrukcije) > 0) {
                     foreach ($fasada->konstrukcije as $konstrukcija) {
-                        $libKons = array_first($konstrukcije, fn($k) => $k->id == $konstrukcija->idKonstrukcije);
+                        $libKons = array_first_callback($konstrukcije, fn($k) => $k->id == $konstrukcija->idKonstrukcije);
             ?>
                 <tr>
                     <td class="center"><?= $k ?>.</td>
@@ -145,7 +145,7 @@
             <?php
                 if (count($fasada->oknaVrata) > 0) {
                     foreach ($fasada->oknaVrata as $konstrukcija) {
-                        $libOknaVrata = array_first($oknaVrata, fn($k) => $k->id == $konstrukcija->idOknaVrata);
+                        $libOknaVrata = array_first_callback($oknaVrata, fn($k) => $k->id == $konstrukcija->idOknaVrata);
             ?>
                 <tr>
                     <td class="center"><?= $k  ?>.</td>

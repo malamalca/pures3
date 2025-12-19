@@ -70,7 +70,7 @@
     </tr>
     <?php
         if (isset($stranskiElement->idDodatnegaSloja)) {
-            $dodatniSloj = array_first($stranskiElement->konstrukcija->dodatniSloji, fn($k) => $k->id == $stranskiElement->idDodatnegaSloja)
+            $dodatniSloj = array_first_callback($stranskiElement->konstrukcija->dodatniSloji, fn($k) => $k->id == $stranskiElement->idDodatnegaSloja)
     ?>
     <tr>
         <td class="w-30">Dodatni sloj :: <?= h($dodatniSloj->naziv) ?></td>

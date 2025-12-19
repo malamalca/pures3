@@ -21,7 +21,7 @@ class ConeController extends Controller
         $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
 
         App::set('projectId', $projectId);
-        App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
+        App::set('cona', array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
     }
 
     /**
@@ -37,7 +37,7 @@ class ConeController extends Controller
         $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
 
         App::set('projectId', $projectId);
-        App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
+        App::set('cona', array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
         App::set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
     }
 
@@ -54,7 +54,7 @@ class ConeController extends Controller
         $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
 
         App::set('projectId', $projectId);
-        App::set('cona', array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
+        App::set('cona', array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
     }
 
     /**
@@ -68,8 +68,8 @@ class ConeController extends Controller
     public function transparentniElement($projectId, $conaId, $konsId)
     {
         $cone = App::loadProjectCalculation('Pures', $projectId, 'cone');
-        $cona = array_first($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId));
-        $k = array_first($cona->ovoj->transparentneKonstrukcije, fn($kn) => strtolower($kn->id) == strtolower($konsId));
+        $cona = array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId));
+        $k = array_first_callback($cona->ovoj->transparentneKonstrukcije, fn($kn) => strtolower($kn->id) == strtolower($konsId));
 
         App::set('projectId', $projectId);
         App::set('cona', $cona);

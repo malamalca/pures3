@@ -7,4 +7,5 @@ use App\Core\CommandRunner;
 
 // Build the runner with an application and root executable name.
 $runner = new CommandRunner();
-exit($runner->run($argv, 'Hrup'));
+$runner->run($argv, 'Hrup');
+exit();

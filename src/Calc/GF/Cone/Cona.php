@@ -225,20 +225,20 @@ class Cona
                     if (!empty($config->ovoj->netransparentneKonstrukcije)) {
                         foreach ($config->ovoj->netransparentneKonstrukcije as $konsConfig) {
                             // poišči konstrukcijo v knjižnici
-                            $kons = array_first(
+                            $kons = array_first_callback(
                                 $this->konstrukcije->netransparentne,
                                 fn($k) => $k->id == $konsConfig->idKonstrukcije
                             );
 
                             $additionalOptions = [];
                             if (isset($konsConfig->idKonstrukcijeTla)) {
-                                $additionalOptions['idKonstrukcijeTla'] = array_first(
+                                $additionalOptions['idKonstrukcijeTla'] = array_first_callback(
                                     $this->konstrukcije->netransparentne,
                                     fn($k) => $k->id == $konsConfig->idKonstrukcijeTla
                                 );
                             }
                             if (isset($konsConfig->idKonstrukcijeStene)) {
-                                $additionalOptions['idKonstrukcijeStene'] = array_first(
+                                $additionalOptions['idKonstrukcijeStene'] = array_first_callback(
                                     $this->konstrukcije->netransparentne,
                                     fn($k) => $k->id == $konsConfig->idKonstrukcijeStene
                                 );
@@ -253,7 +253,7 @@ class Cona
                     }
                     if (!empty($config->ovoj->transparentneKonstrukcije)) {
                         foreach ($config->ovoj->transparentneKonstrukcije as $konsConfig) {
-                            $kons = array_first(
+                            $kons = array_first_callback(
                                 $this->konstrukcije->transparentne,
                                 fn($k) => $k->id == $konsConfig->idKonstrukcije
                             );
@@ -261,7 +261,7 @@ class Cona
                             // določi netransparentni element v katerega je okno/vrata vgrajeno
                             $additionalOptions = [];
                             if (isset($konsConfig->idElementaVgradnje)) {
-                                $elementVgradnje = array_first(
+                                $elementVgradnje = array_first_callback(
                                     $this->ovoj->netransparentneKonstrukcije,
                                     fn($k) => $k->id == $konsConfig->idElementaVgradnje
                                 );

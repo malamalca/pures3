@@ -45,7 +45,7 @@ class IzracunTSS extends Command
         if (count($TSSSistemiPrezracevanja) > 0) {
             $TSSSistemiPrezracevanjaOut = [];
             foreach ($TSSSistemiPrezracevanja as $sistem) {
-                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
+                $cona = array_first_callback($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
                     throw new \Exception(sprintf('TSS Prezračevanje: Cona "%s" ne obstaja.', $sistem->idCone));
                 }
@@ -86,7 +86,7 @@ class IzracunTSS extends Command
         if (count($TSSSistemiRazsvetljava) > 0) {
             $TSSSistemiRazsvetljavaOut = [];
             foreach ($TSSSistemiRazsvetljava as $sistem) {
-                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
+                $cona = array_first_callback($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
                     throw new \Exception('TSS Razsvetljava: Cona ne obstaja.');
                 }
@@ -128,7 +128,7 @@ class IzracunTSS extends Command
             $TSSSistemiOHTOut = [];
             $vracljiveIzgubeVOgrevanje = [];
             foreach ($TSSSistemiOHT as $sistem) {
-                $cona = array_first($cone, fn($cona) => $cona->id == $sistem->idCone);
+                $cona = array_first_callback($cone, fn($cona) => $cona->id == $sistem->idCone);
                 if (!$cona) {
                     throw new \Exception('TSS OHT: Cona ne obstaja.');
                 }

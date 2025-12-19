@@ -92,7 +92,7 @@ abstract class RazvodOgrevanje extends Razvod
         $namen = $params['namen'];
 
         if (!empty($this->idPrenosnika)) {
-            $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
+            $prenosnik = array_first_callback($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
         }
 
         $rezim = $sistem->ogrevanje->rezim;
@@ -159,7 +159,7 @@ abstract class RazvodOgrevanje extends Razvod
 
         if (!empty($this->idPrenosnika)) {
             /** @var \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
-            $prenosnik = array_first($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
+            $prenosnik = array_first_callback($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
         } else {
             $prenosnik = null;
         }

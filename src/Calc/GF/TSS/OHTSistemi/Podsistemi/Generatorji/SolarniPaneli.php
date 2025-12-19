@@ -107,7 +107,7 @@ class SolarniPaneli extends Generator
 
         $U_sc = $this->tip->a1() + $this->tip->a2() * 40 + (5 + 0.5 * $this->povrsina) / $this->povrsina;
 
-        $hranilnik = array_first($sistem->hranilniki);
+        $hranilnik = array_first_callback($sistem->hranilniki);
         $volumenHranilnika = (float)array_reduce(
             $sistem->hranilniki,
             fn($sum, $hranilnik) => $sum += $hranilnik->volumen

@@ -459,6 +459,15 @@
         "difuzijskaUpornost": 40
     },
     {
+        "id": "00.11",
+        "sifra": "parnaOvira",
+        "opis": "Parna ovira",
+        "lambda": 0.22,
+        "gostota": 250,
+        "specificnaToplota": 1700,
+        "difuzijskaUpornost": 4000
+    },
+    {
         "id": "00.2",
         "sifra": "parnaZapora",
         "opis": "Parna zapora",

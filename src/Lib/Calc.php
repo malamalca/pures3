@@ -86,30 +86,28 @@ class Calc
      */
     public static function combineDeltaR($konstrukcija1, $idSloja1, $konstrukcija2, $idSloja2)
     {
-        $sloj1 = array_first(
+        $sloj1 = array_first_callback(
             $konstrukcija1->dodatniSloji,
-            fn($sloj) => isset($sloj->id) ? $sloj->id == $idSloja1 : false
+            fn($sloj) => isset($sloj->id) && $sloj->id == $idSloja1
         );
-        $sloj2 = array_first(
+        $sloj2 = array_first_callback(
             $konstrukcija2->dodatniSloji,
-            fn($sloj) => isset($sloj->id) ? $sloj->id == $idSloja2 : false
+            fn($sloj) => isset($sloj->id) && $sloj->id == $idSloja2
         );
 
+        // Handle cases where layers don't exist or have no dR
         if (empty($sloj1->dR) && empty($sloj2->dR)) {
             return 0;
         }
-        if (empty($sloj1->dR) && !empty($sloj2->dR)) {
+        if (empty($sloj1->dR)) {
             return $sloj2->dR;
         }
-        if (!empty($sloj1->dR) && empty($sloj2->dR)) {
+        if (empty($sloj2->dR)) {
             return $sloj1->dR;
         }
 
-        if ($sloj1->dR > $sloj2->dR) {
-            return $sloj1->dR + $sloj2->dR / 2;
-        } else {
-            return $sloj2->dR + $sloj1->dR / 2;
-        }
+        // Both have dR values - use the weighted combination
+        return max($sloj1->dR, $sloj2->dR) + min($sloj1->dR, $sloj2->dR) / 2;
     }
 
     /**

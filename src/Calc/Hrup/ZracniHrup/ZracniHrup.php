@@ -36,7 +36,7 @@ class ZracniHrup
         $this->konstrukcijeLib = $konstrukcijeLib;
         $this->options = $options;
 
-        $konstrukcijaConfig = array_first(
+        $konstrukcijaConfig = array_first_callback(
             $this->konstrukcijeLib,
             fn($k) => $k->id == $config->locilniElement->idKonstrukcije
         );
@@ -68,7 +68,7 @@ class ZracniHrup
                     break;
                 case 'stranskiElementi':
                     foreach ($config->stranskiElementi as $stranskiElementiConfig) {
-                        $libKonstrukcijaConfig = array_first(
+                        $libKonstrukcijaConfig = array_first_callback(
                             $this->konstrukcijeLib,
                             fn($kons) => $stranskiElementiConfig->idKonstrukcije == $kons->id
                         );

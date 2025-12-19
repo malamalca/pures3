@@ -99,8 +99,6 @@ class Chart
         imagecolordeallocate($this->chart, $this->labelColor);
         imagecolordeallocate($this->chart, $this->gridColor);
         imagecolordeallocate($this->chart, $this->separatorLineColor);
-
-        imagedestroy($this->chart);
     }
 
     /**

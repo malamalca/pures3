@@ -58,7 +58,7 @@ class RazvodSolar extends Razvod
     public function analiza($toplotneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         if (!isset($this->crpalka->moc)) {
-            $generator = array_first($sistem->generatorji, fn($generatorj) => $generatorj->id == $this->idGeneratorja);
+            $generator = array_first_callback($sistem->generatorji, fn($generatorj) => $generatorj->id == $this->idGeneratorja);
             if (!$generator) {
                 throw new \Exception('TSS RazvodSolar: Generator ne obstaja.');
             }
@@ -121,7 +121,7 @@ class RazvodSolar extends Razvod
     {
         $namen = $params['namen'];
 
-        $generator = array_first($sistem->generatorji, fn($generatorj) => $generatorj->id == $this->idGeneratorja);
+        $generator = array_first_callback($sistem->generatorji, fn($generatorj) => $generatorj->id == $this->idGeneratorja);
         if (!$generator) {
             throw new \Exception('TSS RazvodSolar: Generator ne obstaja.');
         }

@@ -24,8 +24,7 @@
         "squizlabs/php_codesniffer": "*",
         "cakephp/cakephp-codesniffer": "^4.5",
         "phpunit/phpunit": "^10.1",
-        "phpstan/phpstan": "^1.10",
-        "vimeo/psalm": "^5.12"
+        "phpstan/phpstan": "^1.10"
     },
     "autoload": {
         "psr-4": {

@@ -61,7 +61,7 @@
 <h2>Analiza končnih prenosnikov</h2>
 <?php
         foreach ($sistem->{$podsistem}->prenosniki as $prenosnikId) {
-            $prenosnik = array_first($sistem->prenosniki, fn($p) => $p->id == $prenosnikId);
+            $prenosnik = array_first_callback($sistem->prenosniki, fn($p) => $p->id == $prenosnikId);
             if (!$prenosnik) {
                 throw new \Exception(sprintf('Prenosnik id:"%s" ne obstaja.', $prenosnikId));
             }
@@ -122,7 +122,7 @@
 <h2>Analiza razvoda</h2>
 <?php
         foreach ($sistem->{$podsistem}->razvodi as $razvodId) {
-            $razvod = array_first($sistem->razvodi, fn($p) => $p->id == $razvodId);
+            $razvod = array_first_callback($sistem->razvodi, fn($p) => $p->id == $razvodId);
             if (!$razvod) {
                 throw new \Exception(sprintf('Razvod id:"%s" ne obstaja.', $razvodId));
             }
@@ -203,7 +203,7 @@
 <h2>Analiza hranilnikov</h2>
 <?php
         foreach ($sistem->{$podsistem}->hranilniki as $hranilnikId) {
-            $hranilnik = array_first($sistem->hranilniki, fn($p) => $p->id == $hranilnikId);
+            $hranilnik = array_first_callback($sistem->hranilniki, fn($p) => $p->id == $hranilnikId);
             if (!$hranilnik) {
                 throw new \Exception(sprintf('Hranilnik id:"%s" ne obstaja.', $hranilnikId));
             }
@@ -248,7 +248,7 @@
 <h2>Analiza generatorjev</h2>
 <?php
         foreach ($sistem->{$podsistem}->generatorji as $generatorId) {
-            $generator = array_first($sistem->generatorji, fn($p) => $p->id == $generatorId);
+            $generator = array_first_callback($sistem->generatorji, fn($p) => $p->id == $generatorId);
             if (!$generator) {
                 throw new \Exception(sprintf('Generator id:"%s" ne obstaja.', $generatorId));
             }
