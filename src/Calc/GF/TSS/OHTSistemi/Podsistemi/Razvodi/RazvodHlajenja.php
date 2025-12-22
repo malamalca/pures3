@@ -84,7 +84,7 @@ class RazvodHlajenja extends Razvod
      */
     public function potrebnaElektricnaEnergija($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
-        $generator = array_first_callback($sistem->generatorji);
+        $generator = array_first_callback($sistem->generatorji, fn($g) => true);
 
         if (!empty($this->crpalka) && !empty($generator->nazivnaMoc)) {
             foreach (array_keys(Calc::MESECI) as $mesec) {
