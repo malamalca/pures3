@@ -279,7 +279,7 @@ class Cona
 
                             // če se okno vgrajuje v NT element, odštejem površino okna
                             if (!empty($elementVgradnje)) {
-                                $elementVgradnje->povrsina -= $tKons->povrsina;
+                                $elementVgradnje->povrsina -= ($tKons->povrsina * $tKons->stevilo);
                             }
                         }
                     }

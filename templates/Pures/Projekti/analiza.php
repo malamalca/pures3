@@ -164,7 +164,7 @@
         <td>kWh/m²an</td>
     </tr>
     <tr class="noprint">
-        <td colspan="<?= ($stavba->vrsta == 'zahtevna') ? 5 : 4 ?>" class="math">`Q'_(H,nd,dov,an)= 25 (kWh)/(m^2an)`</td>
+        <td colspan="<?= ($stavba->vrsta == 'zahtevna') ? 5 : 4 ?>" class="math">`Q'_(H,nd,dov,an)= <?= $this->numFormat($stavba->X_Hnd, 1) ?> × 25 (kWh)/(m^2an) = <?= $this->numFormat($stavba->dovoljenaSpecLetnaToplota, 1) ?> (kWh)/(m^2an)`</td>
     </tr>
     <tr>
         <td class="right">X<sub>H,nd</sub></td>

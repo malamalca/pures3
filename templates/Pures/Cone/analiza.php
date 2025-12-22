@@ -103,6 +103,35 @@
         <td class="center"><?= $this->numFormat($cona->volumenZrakaHlajenje, 1) ?></td>
         <td>m³/h</td>
     </tr>
+<?php
+    if (!empty($cona->TSV)) {
+?>   
+    <tr>
+        <td colspan="4">TSV: </td>
+    </tr>
+<?php
+    if (!empty($cona->TSV->steviloOseb)) {
+?>    
+    <tr>
+        <td>- št. oseb: </td>
+        <td>n<sub>P,eq</sub></td>
+        <td class="center"><?= $this->numFormat($cona->TSV->steviloOseb, 1) ?></td>
+        <td>-</td>
+    </tr>
+<?php
+    }
+    if (!empty($cona->TSV->dnevnaKolicina)) {
+?>    
+    <tr>
+        <td>- dnevna količina: </td>
+        <td>V<sub>W,P,day</sub></td>
+        <td class="center"><?= $this->numFormat($cona->TSV->dnevnaKolicina, 1) ?></td>
+        <td>L</td>
+    </tr>
+<?php
+    }
+    }
+?>
 </table>
 <h1>Analiza cone "<?= h($cona->naziv) ?>"</h1>
 <table border="1">

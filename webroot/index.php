@@ -39,7 +39,6 @@ if (file_exists(WWW_ROOT . $uri) && is_file(WWW_ROOT . $uri)) {
     if ($finfo && $fullPath) {
         $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
         $mime = finfo_file($finfo, $fullPath);
-        finfo_close($finfo);
 
         switch($extension){
             case 'css':

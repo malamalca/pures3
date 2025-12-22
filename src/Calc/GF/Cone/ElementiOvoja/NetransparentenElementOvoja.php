@@ -18,6 +18,7 @@ class NetransparentenElementOvoja extends ElementOvoja
 
     // lahko se overrida določilo iz TSG
     public ?bool $dobitekSS;
+    public ?bool $adiabatno;
 
     // velja za konstrukcije v stiku z zemljino
     public ?float $obseg;
@@ -64,6 +65,10 @@ class NetransparentenElementOvoja extends ElementOvoja
 
         if (isset($config->dobitekSS)) {
             $this->dobitekSS = $config->dobitekSS;
+        }
+
+        if (isset($config->adiabatno)) {
+            $this->adiabatno = $config->adiabatno;
         }
 
         if (isset($config->idKonstrukcije)) {
@@ -195,6 +200,17 @@ class NetransparentenElementOvoja extends ElementOvoja
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             if ($this->konstrukcija->TSG->tip == 'zunanja') {
                 // konstrukcija proti zraku
+                $adiabatno = !empty($this->konstrukcija->TSG->adiabatno);
+                if (isset($this->adiabatno)) {
+                    $adiabatno = $this->adiabatno;
+                }
+                if ($adiabatno) {
+                    $this->transIzgubeOgrevanje[$mesec] = 0;
+                    $this->transIzgubeHlajenje[$mesec] = 0;
+                    $this->solarniDobitkiOgrevanje[$mesec] = 0;
+                    $this->solarniDobitkiHlajenje[$mesec] = 0;
+                    continue;
+                }
                 $this->transIzgubeOgrevanje[$mesec] = $this->H_ogrevanje * 24 / 1000 *
                     $cona->deltaTOgrevanje[$mesec] * $stDni * $this->stevilo;
 

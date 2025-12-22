@@ -27,7 +27,6 @@ class AppController
             $finfo = finfo_open(FILEINFO_MIME_TYPE); // Return MIME type a la the 'mimetype' extension
             if ($finfo && $fullPath) {
                 $mime = finfo_file($finfo, $fullPath);
-                finfo_close($finfo);
 
                 header('Content-Type: ' . $mime);
                 readfile($fullPath);

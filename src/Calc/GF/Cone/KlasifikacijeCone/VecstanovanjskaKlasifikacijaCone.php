@@ -24,23 +24,28 @@ class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
         $hladnaVodaT = $this->TSV->hladnaVodaT ?? $this->hladnaVodaT;
 
         if (empty($cona->TSV->steviloOseb)) {
+            // EN 12831-3:2017 B.3
             if ($cona->ogrevanaPovrsina > 50) {
-                $steviloOseb = 0.035 * $cona->ogrevanaPovrsina;
-                if ($steviloOseb > 1.75) {
-                    $steviloOseb = 1.75 + 0.3 * (0.035 * $cona->ogrevanaPovrsina - 1.75);
-                }
+                $steviloOsebEq = 0.035 * $cona->ogrevanaPovrsina;
+            } elseif ($cona->ogrevanaPovrsina < 10) {
+                $steviloOsebEq = 1.0;
             } else {
-                $steviloOseb = 1.75 - 0.01875 * (50 - $cona->ogrevanaPovrsina);
-                if ($steviloOseb > 1.75) {
-                    $steviloOseb = 1.75 + 0.3 * (0.035 * $cona->ogrevanaPovrsina - 1.75);
-                }
+                $steviloOsebEq = 1.75 - 0.01875 * (50 - $cona->ogrevanaPovrsina);
             }
+            if ($steviloOsebEq > 1.75) {
+                $steviloOseb = 1.75 + 0.3 * ($steviloOsebEq - 1.75);
+            } else {
+                $steviloOseb = $steviloOsebEq;
+            }
+
+            $cona->TSV->steviloOseb = $steviloOseb;
         } else {
             $steviloOseb = $cona->TSV->steviloOseb;
         }
 
         if (empty($cona->TSV->dnevnaKolicina)) {
             $dnevnaKolicina = min(40.71, 3.26 * $cona->ogrevanaPovrsina / $steviloOseb);
+            $cona->TSV->dnevnaKolicina = $dnevnaKolicina;
         } else {
             $dnevnaKolicina = $cona->TSV->dnevnaKolicina;
         }
