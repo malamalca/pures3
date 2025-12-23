@@ -116,8 +116,8 @@ class Fasada
                                     fn($k) => $k->id == $oknaVrataConfig->idElementaVgradnje
                                 );
                                 if ($konstrukcijaVgradnje) {
-                                    $konstrukcijaVgradnje->povrsina -= ($oknaVrata->povrsina * $oknaVrata->stevilo);
-                                    $this->povrsina -= ($oknaVrata->povrsina * $oknaVrata->stevilo);
+                                    $konstrukcijaVgradnje->povrsina -= $oknaVrata->povrsina * $oknaVrata->stevilo;
+                                    $this->povrsina -= $oknaVrata->povrsina * $oknaVrata->stevilo;
                                 }
                             }
                         }
