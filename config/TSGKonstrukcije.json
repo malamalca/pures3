@@ -279,13 +279,49 @@
         "difuzijskaUpornost": 2.1
     },
     {
-        "id": "44",
+        "id": "44.1",
+        "sifra": "beton2500",
+        "opis": "Beton s kamnitimi agregati",
+        "lambda": 2.33,
+        "gostota": 2500,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 90
+    },
+    {
+        "id": "44.2",
         "sifra": "beton",
         "opis": "Beton s kamnitimi agregati",
         "lambda": 2.04,
         "gostota": 2400,
         "specificnaToplota": 960,
         "difuzijskaUpornost": 60
+    },
+    {
+        "id": "44.3",
+        "sifra": "beton2200",
+        "opis": "Beton s kamnitimi agregati",
+        "lambda": 1.51,
+        "gostota": 2200,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 30
+    },
+    {
+        "id": "44.4",
+        "sifra": "beton2000",
+        "opis": "Beton s kamnitimi agregati",
+        "lambda": 1.16,
+        "gostota": 2000,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 22
+    },
+    {
+        "id": "44.5",
+        "sifra": "beton1800",
+        "opis": "Beton s kamnitimi agregati",
+        "lambda": 0.93,
+        "gostota": 1800,
+        "specificnaToplota": 960,
+        "difuzijskaUpornost": 15
     },
     {
         "id": "50.1",
