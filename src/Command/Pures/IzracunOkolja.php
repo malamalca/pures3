@@ -14,9 +14,10 @@ class IzracunOkolja extends Command
      * Command run routine
      *
      * @param string|null $projectId Project id.
+     * @param array|null $args Additional arguments
      * @return void
      */
-    public function run($projectId = null)
+    public function run($projectId = null, ...$args)
     {
         parent::run();
 
@@ -85,17 +86,7 @@ class IzracunOkolja extends Command
         // iz podatkov za temperaturo in letno sevanje na horizontalno površino
         $YXObsevanje = json_decode((string)file_get_contents(CONFIG . 'YXObsevanje.json'));
         $YXObsevanjeNearest = null;
-        //$nearestDistance = null;
         foreach ($YXObsevanje as $lineIndex => $line) {
-            /*$stavbaX = $splosniPodatkiIn->stavba->koordinate->X;
-            $stavbaY = $splosniPodatkiIn->stavba->koordinate->Y;
-            $lineDistance = sqrt(pow($line->GKY - $stavbaY, 2) + pow($line->GKX - $stavbaX, 2));
-
-            if (is_null($nearestDistance) || $lineDistance < $nearestDistance) {
-                $nearestDistance = $lineDistance;
-                $YXObsevanjeNearest = $line;
-                $YXObsevanjeNearest->id = $lineIndex;
-            }*/
             if ($YXTempNearest->sevanje == $line->podatki[0]->leto) {
                 $YXObsevanjeNearest = $line;
                 $YXObsevanjeNearest->id = $lineIndex;

@@ -175,6 +175,10 @@
     </tr>
     <?php
             }
+        } else {
+    ?>
+    <tr><td colspan="7">V objektu ni varovanega prostora, ki bi zahteval izračun zaščite pred zunanjim hrupom</td></tr>
+    <?php
         }
     ?>
     <tr>
@@ -264,15 +268,7 @@
             }
         } else {
     ?>
-    <tr>
-        <td class="w-10">&nbsp;</td>
-        <td class="w-30">&nbsp;</td>
-        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
-        <td class="w-10 center">&nbsp;</td>
-        <td class="w-20 center">&nbsp;</td>
-        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
-        <td class="w-10 center">&nbsp;</td>
-    </tr>
+    <tr><td colspan="7">V objektu ni notranjih pokončnih ločilnih elementov, ki bi zahtevali izračun zvočne izolirnosti</td></tr>
     <?php
         }
     ?>
@@ -296,15 +292,7 @@
             }
         } else {
     ?>
-    <tr>
-        <td class="w-10">&nbsp;</td>
-        <td class="w-30">&nbsp;</td>
-        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
-        <td class="w-10 center">&nbsp;</td>
-        <td class="w-20 center">&nbsp;</td>
-        <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
-        <td class="w-10 center">&nbsp;</td>
-    </tr>
+    <tr><td colspan="7">V objektu ni notranjih vodoravnih ločilnih elementov, ki bi zahtevali izračun zvočne izolirnosti</td></tr>
     <?php
         }
     ?>

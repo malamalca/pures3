@@ -13,9 +13,10 @@ class IzracunStavbe extends Command
      * Command run routine
      *
      * @param string|null $projectId Project id.
+     * @param array|null $args Additional arguments
      * @return void
      */
-    public function run($projectId = null)
+    public function run($projectId = null, ...$args)
     {
         parent::run();
 

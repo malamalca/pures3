@@ -18,13 +18,13 @@ class IzracunProjekta extends Command
     {
         parent::run();
 
-        (new IzracunOkolja())->run($projectId);
-        (new IzracunKonstrukcij())->run($projectId);
-        (new IzracunCone())->run($projectId);
-        (new IzracunTSS())->run($projectId);
-        (new IzracunStavbe())->run($projectId);
+        (new IzracunOkolja())->run($projectId, ...$args);
+        (new IzracunKonstrukcij())->run($projectId, ...$args);
+        (new IzracunCone())->run($projectId, ...$args);
+        (new IzracunTSS())->run($projectId, ...$args);
+        (new IzracunStavbe())->run($projectId, ...$args);
         if (!in_array('--noPdf', $args)) {
-            (new PdfIzvoz())->run($projectId);
+            (new PdfIzvoz())->run($projectId, ...$args);
         }
     }
 }

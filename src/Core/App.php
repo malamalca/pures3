@@ -305,13 +305,17 @@ class App
      * Vrne datoteko z izvodnimi podatki za izračun.
      *
      * @param string $area Področje izračuna
-     * @param string $projectId Id projekta
+     * @param string|null $projectId Id projekta
      * @param string $projectFile Datoteka json
      * @param string $subfolder Podmapa s podaki ali z izračuni
      * @return mixed|null
      */
-    public static function loadProjectData($area, $projectId, $projectFile, $subfolder = 'podatki')
-    {
+    public static function loadProjectData(
+        string $area,
+        ?string $projectId,
+        string $projectFile,
+        string $subfolder = 'podatki'
+    ) {
         $sourceFolder = self::getProjectFolder($area, $projectId, $subfolder);
         if (!is_dir($sourceFolder)) {
             throw new \Exception(sprintf('Projekt v mapi "%s" ne obstaja.', $sourceFolder));
@@ -405,7 +409,7 @@ class App
             return $sistemi;
         }
 
-        return self::loadProjectData($area, $projectId, $projectFile, 'izracuni');
+        return self::loadProjectData($area, $projectId, $projectFile, subfolder: 'izracuni');
     }
 
     /**

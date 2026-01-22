@@ -333,6 +333,15 @@
         "difuzijskaUpornost": 10000
     },
     {
+        "id": "83",
+        "sifra": "parket",
+        "opis": "Parket",
+        "lambda": 0.21,
+        "gostota": 700,
+        "specificnaToplota": 1670,
+        "difuzijskaUpornost": 15
+    },
+    {
         "id": "85",
         "sifra": "PEfolija",
         "opis": "Polietilenske folije",
@@ -394,6 +403,24 @@
         "gostota": 7800,
         "specificnaToplota": 4600,
         "difuzijskaUpornost": 600000
+    },
+    {
+        "id": "105.1",
+        "sifra": "pluta",
+        "opis": "Pluta, ekspandirana, impregnirana",
+        "lambda": 0.044,
+        "gostota": 160,
+        "specificnaToplota": 1670,
+        "difuzijskaUpornost": 22
+    },
+    {
+        "id": "105.2",
+        "sifra": "pluta120",
+        "opis": "Pluta, ekspandirana, impregnirana",
+        "lambda": 0.041,
+        "gostota": 120,
+        "specificnaToplota": 1670,
+        "difuzijskaUpornost": 10
     },
     {
         "id": "113.4",

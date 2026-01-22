@@ -101,6 +101,9 @@ class Configure
 
         $levels = (array)explode('.', $key);
 
+        /**
+         * @psalm-suppress UnsupportedPropertyReferenceUsage
+         */
         $base = &$instance->config;
 
         $i = 0;

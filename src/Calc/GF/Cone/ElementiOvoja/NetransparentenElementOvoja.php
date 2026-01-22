@@ -362,6 +362,18 @@ class NetransparentenElementOvoja extends ElementOvoja
         }
 
         if ($this->konstrukcija->TSG->tip == 'stena-teren') {
+            if (!isset($this->debelinaStene)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane debeline stene.', $this->id));
+            }
+            if (!isset($this->U_tla)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane vrednosti U_tla.', $this->id));
+            }
+            if (!isset($this->globina)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane globine kleti.', $this->id));
+            }
+            if (!isset($this->obseg)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane vrednosti obsega.', $this->id));
+            }
             // ekvivalentna debelina stene
             // enačba 15 v standardu
             // TODO: v standardu je brez debelineStene, XLS pa jo upošteva
@@ -400,7 +412,28 @@ class NetransparentenElementOvoja extends ElementOvoja
                 throw new \Exception(sprintf('Element ovoja "%s" nima podane debeline stene.', $this->id));
             }
             if (!isset($this->U_tla)) {
-                throw new \Exception(sprintf('Element ovoja "%s" nima podane vrednosti U tal.', $this->id));
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane vrednosti U_tla.', $this->id));
+            }
+            if (!isset($this->visinaNadTerenom)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane višine nad terenom.', $this->id));
+            }
+            if (!isset($this->obseg)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podanega obsega.', $this->id));
+            }
+            if (!isset($this->U_zid_nadTerenom)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane vrednosti U_zid_nadTerenom.', $this->id));
+            }
+            if (!isset($this->U_zid)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane vrednosti U_zid (zid kleti).', $this->id));
+            }
+            if (!isset($this->globina)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane globine kleti.', $this->id));
+            }
+            if (!isset($this->prostorninaKleti)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane prostornine kleti.', $this->id));
+            }
+            if (!isset($this->izmenjavaZraka)) {
+                throw new \Exception(sprintf('Element ovoja "%s" nima podane izmenjave zraka.', $this->id));
             }
             $d_f = $this->debelinaStene + $this->tla->lambda() * 1 / $this->U_tla;
 

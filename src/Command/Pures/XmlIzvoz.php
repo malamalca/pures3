@@ -5,6 +5,7 @@ namespace App\Command\Pures;
 
 use App\Core\App;
 use App\Core\Command;
+use App\Core\View;
 use App\Core\Xml;
 
 class XmlIzvoz extends Command
@@ -20,6 +21,46 @@ class XmlIzvoz extends Command
     {
         parent::run();
 
+        $this->export($projectId);
+        $this->ei($projectId);
+    }
+
+    /**
+     * Export PURES EI to XML
+     *
+     * @param string $projectId Project id.
+     * @param array|null $args Additional arguments
+     * @return void
+     */
+    public function ei($projectId, ...$args)
+    {
+        $view = new View();
+        $view->set('projectId', $projectId);
+        $view->set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
+        $view->set('okolje', App::loadProjectCalculation('Pures', $projectId, 'okolje'));
+
+        $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
+        $view->set('stavba', $stavba);
+
+        $contents = $view->render('Projekti', 'ei');
+
+        $xmlFolder = App::getProjectFolder('Pures', $projectId, 'xml');
+        if (!is_dir($xmlFolder)) {
+            mkdir($xmlFolder, 0777, true);
+        }
+
+        $result = file_put_contents($xmlFolder . 'ei.xml', $contents);
+    }
+
+    /**
+     * Export PURES project data to XML
+     *
+     * @param string $projectId Project id.
+     * @param array|null $args Additional arguments
+     * @return void
+     */
+    public function export($projectId, ...$args)
+    {
         $export = [];
         $export['splosniPodatki'] = App::loadProjectData('Pures', $projectId, 'splosniPodatki');
         $export['cone'] = App::loadProjectData('Pures', $projectId, 'cone');
