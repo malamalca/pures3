@@ -15,11 +15,12 @@ class KonstrukcijeController extends Controller
      * Prikaz seznama
      *
      * @param string $projectId Building name
+     * @param string|null $ref Referenčna stavba
      * @return void
      */
-    public function index($projectId)
+    public function index($projectId, $ref = null)
     {
-        $ntKonsArray = App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'netransparentne');
+        $ntKonsArray = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'konstrukcije' . DS . 'netransparentne');
 
         App::set('konstrukcije', $ntKonsArray);
         App::set('projectId', $projectId);
