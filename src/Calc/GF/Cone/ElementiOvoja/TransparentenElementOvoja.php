@@ -41,7 +41,8 @@ class TransparentenElementOvoja extends ElementOvoja
 
         $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
 
-        $numSettings = ['A', 'B', 'sirinaOkvirja', 'sirinaStekla', 'visinaStekla', 'delezOkvirja', 'dolzinaOkvirja'];
+        $numSettings = ['A', 'B', 'sirinaOkvirja', 'sirinaStekla', 'visinaStekla', 'dolzinaOkvirja', 'delezOkvirja'];
+        $EvalMath->setVar('povrsina', $this->povrsina);
         foreach ($numSettings as $setting) {
             if (isset($config->$setting) && gettype($config->$setting) == 'string') {
                 $config->$setting = (float)$EvalMath->e($config->$setting);
@@ -85,7 +86,9 @@ class TransparentenElementOvoja extends ElementOvoja
 
         // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
         $this->g = !empty($this->options['referencnaStavba']) ? 0.5 : ($this->konstrukcija->g ?? 0.5);
-        $this->faktorSencil = !empty($this->options['referencnaStavba']) ? 0.3 : ($config->faktorSencil ?? 1);
+        
+        $this->faktorSencil = !empty($this->options['referencnaStavba']) ? 0.3 :
+            ((!empty($this->konstrukcija->faktorSencil)) ? $this->konstrukcija->faktorSencil : ($config->faktorSencil ?? 1));
 
         $this->g_sh = $this->g * $this->faktorSencil;
 

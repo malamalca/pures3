@@ -82,12 +82,20 @@ class KonstrukcijeController extends Controller
             $okolje = $this->izracunOkolja($GKY, $GKX);
             //$okolje->minfRsi = [1];
 
+            $jsonKonsDecoded = json_decode($jsonKons);
+            if (isset($jsonKonsDecoded->notranjaT)) {
+                $okolje->notranjaT = array_fill(0, 12, $jsonKonsDecoded->notranjaT);
+            }
+            if (isset($jsonKonsDecoded->zunanjaT)) {
+                $okolje->zunanjaT = array_fill(0, 12, $jsonKonsDecoded->zunanjaT);
+            }
+
             $libraryArray = json_decode((string)file_get_contents(CONFIG . 'TSGKonstrukcije.json'));
             foreach ($libraryArray as $item) {
                 CalcKonstrukcije::$library[$item->sifra] = $item;
             }
 
-            $kons = CalcKonstrukcije::konstrukcija(json_decode($jsonKons), $okolje, ['izracunKondenzacije' => true]);
+            $kons = CalcKonstrukcije::konstrukcija($jsonKonsDecoded, $okolje, ['izracunKondenzacije' => true]);
             App::set('kons', json_decode((string)json_encode($kons)));
             App::set('okolje', $okolje);
         }
