@@ -48,7 +48,7 @@ class PoslovnaKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
-    public function letnoSteviloUrDelovanjaRazsvetljave(Cona $cona): array
+    public function letnoSteviloUrDelovanjaRazsvetljave(): array
     {
         return ['podnevi' => 2250, 'ponoci' => 250];
     }

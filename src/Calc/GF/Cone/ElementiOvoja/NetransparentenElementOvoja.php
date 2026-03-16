@@ -380,9 +380,6 @@ class NetransparentenElementOvoja extends ElementOvoja
             // ekvivalentna debelina stene
             // enačba 15 v standardu
             // TODO: v standardu je brez debelineStene, XLS pa jo upošteva
-            if (!isset($this->debelinaStene)) {
-                throw new \Exception(sprintf('Element "%s" nima definirane debeline stene.', $this->id ?? ''));
-            }
             $d_wb = $this->debelinaStene + $this->tla->lambda() * 1 / $this->konstrukcija->U;
 
             // ekvivalentna debelina tal (floor)

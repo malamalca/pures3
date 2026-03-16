@@ -179,7 +179,7 @@
             <?php
                 if (count($fasada->maliElementi) > 0) {
                     foreach ($fasada->maliElementi as $konstrukcija) {
-                        $libMaliElement = array_first($maliElementi, fn($k) => $k->id == $konstrukcija->idMaliElement);
+                        $libMaliElement = array_first_callback($maliElementi, fn($k) => $k->id == $konstrukcija->idMaliElement);
             ?>
                 <tr>
                     <td class="center"><?= $k  ?>.</td>

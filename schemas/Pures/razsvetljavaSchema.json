@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items" : {
+        "type" : "object",
+        "oneOf": [
+            {"required": ["id", "idCone", "faktorDnevneSvetlobe", "mocSvetilk"]},
+            {"required": ["id", "idCone", "faktorDnevneSvetlobe", "ucinkovitostViraSvetlobe", "osvetlitevDelovnePovrsine", "faktorZmanjsaneOsvetlitveDelovnePovrsine", "faktorVzdrzevanja"]}
+        ],
+        "properties": {
+            "id": {"type": "string", "title": "Id sistema razsvetljave"},
+            "idCone": {"type": "string", "title": "Šifra cone"},
+            "faktorDnevneSvetlobe": {
+                "type": "number",
+                "title": "Faktor dnevne svetlobe FDS [%]",
+                "description": "Razmerje med osvetljenostjo točke na dani ravni v stavbi in osvetljenostjo zunanje nesenčene in nezastrte vodoravne ploskve z naravno svetlobo, določeno s standardiziranimi lastnostmi neba in standardizirano metodo izračuna"},
+            "mocSvetilk": {
+                "type": "number",
+                "title": "Specifična moč vgrajenih svetilk P<sub>L,zn</sub> [W/m²]"},
+            "faktorZmanjsanjaSvetlobnegaToka": {
+                "type": "number",
+                "title": "Faktor zmanjšanja svetlobnega toka F<sub>C,zn</sub> [-]",
+                "description": "Faktor, ki upošteva zmanjšanje svetlobnega toka zaradi staranja svetilk in umazanije na svetilkah in površinah za odboj svetlobe. Povzetek iz tabele B.8 v standard SIST EN 15193-1"
+            },
+            "faktorPrisotnosti": {
+                "type": "number",
+                "title": "Faktor prisotnosti F<sub>O,zn</sub> [-]",
+                "description": "Faktor, ki upošteva zmanjšanje porabe električne energije za razsvetljavo zaradi prisotnosti oseb v prostoru. Iz tabele B.7 v standard SIST EN 15193-1."
+            },
+            "ucinkovitostViraSvetlobe": {
+                "type": "number",
+                "title": "Učinkovitost vira svetlobe η<sub>L</sub> [lm/W]",
+                "description": "Razmerje med svetlobnim tokom in porabljeno električno močjo vira svetlobe. Povzetek iz tabele B.6 v standard SIST EN 15193-1. Tipične vrednosti za halogenske žarnice so do 30 lm/W, za kompaktne fluorescenčne sijalke (CFL) do 80 lm/W, za svetilne diode (LED) pa od 100 do 140 lm/W."
+            },
+            "osvetlitevDelovnePovrsine": {
+                "type": "number",
+                "title": "Projektirana osvetlitev delovne površine E<sub>task</sub> [lx]",
+                "description": "Projektirana osvetlitev delovne površine, ki jo določa standard za posamezno vrsto prostora. Priporočene vrednosti so navedene v tabeli B.5 v standardu SIST EN 15193-1. Tipični vrednosti Etask, ki se upoštevata tudi za referenčne stavbe, sta na primer 300 lx za stanovanjske ub 500 lx za poslovne prostore."
+            },
+            "faktorZmanjsaneOsvetlitveDelovnePovrsine": {
+                "type": "number",
+                "title": "Faktor zmanjšane projektirane osvetlitve cone F<sub>CA</sub> [-]",
+                "description": "Faktor, ki upošteva zmanjšanje osvetlitve delovne površine zaradi uporabe sistemov za uravnavanje razsvetljave in/ali naravne svetlobe. Povzetek iz tabele B.9 v standard SIST EN 15193-1."
+            },
+            "faktorVzdrzevanja": {
+                "type": "number",
+                "title": "Faktor vzdrževanja F<sub>MF</sub> [-]",
+                "description": "Faktor, ki upošteva zmanjšanje svetlobnega toka zaradi staranja svetilk in umazanije na svetilkah in površinah za odboj svetlobe. Povzetek iz tabele 8.24 v standard SIST EN 15193-1."
+            },
+            "varnostnaRazsvetljavaEnergijaZaPolnjenje": {
+                "type": "number",
+                "title": "Energija za polnjenje varnostne razsvetljave W<sub>pe,zn,an</sub> [kWh/(m2an)]",
+                "description": "Letna poraba energije za polnjenje varnostne razsvetljave. Priporočene vrednosti so navedene v tabeli B.1 v standardu SIST EN 15193-1."
+            },
+            "varnostnaRazsvetljavaEnergijaZaDelovanje": {
+                "type": "number",
+                "title": "Energija za regulacijo delovanja varnostnih sijalk W<sub>pc,zn,an</sub> [kWh/(m2an)]",
+                "description": "Letna poraba energije za delovanje varnostne razsvetljave. Priporočene vrednosti so navedene v tabeli B.2 v standardu SIST EN 15193-1."
+            },
+
+            "letnoUrPodnevi": {
+                "type": "number",
+                "title": "Letno število ur delovanja razsvetljave podnevi t<sub>D</sub> [h/a]",
+                "description": "Letno število ur delovanja razsvetljave v dnevnem času, ko je na voljo naravna svetloba. Priporočene vrednosti so navedene v tabeli B.6 v standardu SIST EN 15193-1."
+            },
+            "letnoUrPonoci": {
+                "type": "number",
+                "title": "Letno število ur delovanja razsvetljave ponoči t<sub>N</sub> [h/a]",
+                "description": "Letno število ur delovanja razsvetljave v nočnem času, ko ni na voljo naravne svetlobe. Priporočene vrednosti so navedene v tabeli B.6 v standardu SIST EN 15193-1."
+            }
+        }
+    }
+}

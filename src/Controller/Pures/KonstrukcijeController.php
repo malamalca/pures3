@@ -20,7 +20,11 @@ class KonstrukcijeController extends Controller
      */
     public function index($projectId, $ref = null)
     {
-        $ntKonsArray = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'konstrukcije' . DS . 'netransparentne');
+        $ntKonsArray = App::loadProjectCalculation(
+            'Pures',
+            $projectId,
+            ($ref == 'ref' ? 'Ref' . DS : '') . 'konstrukcije' . DS . 'netransparentne',
+        );
 
         App::set('konstrukcije', $ntKonsArray);
         App::set('projectId', $projectId);

@@ -14,17 +14,18 @@ class StavbaFactory
      *
      * @param string $type Tip sistema
      * @param \stdClass|null $options Dodatne nastavitve
+     * @param int $year Leto za izracune
      * @return \App\Calc\GF\Stavbe\Stavba|null
      */
-    public static function create($type, $options)
+    public static function create($type, $options, $year)
     {
         switch ($type) {
             case 'nezahtevna':
-                return new NezahtevnaStavba($options);
+                return new NezahtevnaStavba($options, $year);
             case 'manjzahtevna':
-                return new ManjzahtevnaStavba($options);
+                return new ManjzahtevnaStavba($options, $year);
             case 'zahtevna':
-                return new ZahtevnaStavba($options);
+                return new ZahtevnaStavba($options, $year);
             default:
                 throw new \Exception('Vrsta stavbe ne obstaja.');
         }

@@ -67,6 +67,10 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->dobitekSS = (bool)$config->dobitekSS;
         }
 
+        if (isset($this->konstrukcija->sirinaOkvirja) && !isset($config->sirinaOkvirja)) {
+            $config->sirinaOkvirja = $this->konstrukcija->sirinaOkvirja;
+        }
+
         /** @var \stdClass $config */
         if (!empty($config->A) && !empty($config->B) && !empty($config->sirinaOkvirja)) {
             $config->sirinaStekla = $config->A - $config->sirinaOkvirja * 2;
@@ -86,9 +90,11 @@ class TransparentenElementOvoja extends ElementOvoja
 
         // dvoslojna zasteklitev 0.67; troslojna zasteklitev 0.5
         $this->g = !empty($this->options['referencnaStavba']) ? 0.5 : ($this->konstrukcija->g ?? 0.5);
-        
+
         $this->faktorSencil = !empty($this->options['referencnaStavba']) ? 0.3 :
-            ((!empty($this->konstrukcija->faktorSencil)) ? $this->konstrukcija->faktorSencil : ($config->faktorSencil ?? 1));
+            (!empty($this->konstrukcija->faktorSencil) ?
+                $this->konstrukcija->faktorSencil :
+                ($config->faktorSencil ?? 1));
 
         $this->g_sh = $this->g * $this->faktorSencil;
 

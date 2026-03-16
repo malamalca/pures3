@@ -83,7 +83,7 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
-    public function letnoSteviloUrDelovanjaRazsvetljave(Cona $cona): array
+    public function letnoSteviloUrDelovanjaRazsvetljave(): array
     {
         switch ($this->code) {
             case 'Go-1':

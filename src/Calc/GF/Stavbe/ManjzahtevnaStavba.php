@@ -232,7 +232,8 @@ class ManjzahtevnaStavba extends Stavba
             if (isset($sistem->oddanaEnergijaPoEnergentih)) {
                 foreach ((array)$sistem->oddanaEnergijaPoEnergentih as $energent => $energija) {
                     $this->skupnaPrimarnaEnergija -=
-                        $energija * $this->k_exp('elektrika') * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                        $energija * $this->k_exp('elektrika', $this->year) *
+                        TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
 
                     $this->izpustCO2 -= $energija * TSSVrstaEnergenta::from($energent)->faktorIzpustaCO2();
 
@@ -266,14 +267,14 @@ class ManjzahtevnaStavba extends Stavba
             $this->ROVE = 100;
         }
 
-        $this->minROVE = 50 * $this->X_OVE();
+        $this->minROVE = 50 * $this->X_OVE($this->year);
 
         $this->specificnaPrimarnaEnergija =
             $this->skupnaPrimarnaEnergija / $this->ogrevanaPovrsina;
         $this->korigiranaSpecificnaPrimarnaEnergija =
             $this->specificnaPrimarnaEnergija * $this->Y_Hnd() * $this->Y_ROVE();
         $this->dovoljenaKorigiranaSpecificnaPrimarnaEnergija =
-            75 * $this->X_p() * $this->X_s();
+            75 * $this->X_p($this->year) * $this->X_s();
     }
 
     /**
@@ -297,10 +298,10 @@ class ManjzahtevnaStavba extends Stavba
         $stavba->Y_Hnd = $this->Y_Hnd();
         $stavba->Y_ROVE = $this->Y_ROVE();
 
-        $stavba->X_OVE = $this->X_OVE();
-        $stavba->X_p = $this->X_p();
+        $stavba->X_OVE = $this->X_OVE($this->year);
+        $stavba->X_p = $this->X_p($this->year);
 
-        $stavba->k_exp = $this->k_exp('elektrika');
+        $stavba->k_exp = $this->k_exp('elektrika', $this->year);
 
         return $stavba;
     }
@@ -405,7 +406,6 @@ class ManjzahtevnaStavba extends Stavba
             $ret = 1.2;
         }
         if ($this->ROVE > 50 * $this->X_OVE(2026)) {
-            // TODO: uporablja se do leta 2026
             $ret = 0.8;
         }
 
@@ -420,7 +420,7 @@ class ManjzahtevnaStavba extends Stavba
      * @return float
      */
     // phpcs:ignore
-    public function X_OVE($year = 2023)
+    public function X_OVE($year)
     {
         if ($this->javna) {
             if ($year > 2025) {
@@ -447,7 +447,7 @@ class ManjzahtevnaStavba extends Stavba
      * @return float
      */
     // phpcs:ignore
-    public function X_p($year = 2023)
+    public function X_p($year)
     {
         if ($this->javna) {
             if ($year > 2025) {
@@ -474,7 +474,7 @@ class ManjzahtevnaStavba extends Stavba
      * @return float
      */
     // phpcs:ignore
-    public function k_exp($vrsta, $year = 2023)
+    public function k_exp($vrsta, $year)
     {
         if ($vrsta == 'elektrika') {
             if ($year > 2025) {

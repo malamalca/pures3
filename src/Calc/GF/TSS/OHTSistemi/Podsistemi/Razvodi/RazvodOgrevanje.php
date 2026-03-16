@@ -158,8 +158,14 @@ abstract class RazvodOgrevanje extends Razvod
         $namen = $params['namen'];
 
         if (!empty($this->idPrenosnika)) {
-            /** @var \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik $prenosnik */
+            /** @var \App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\KoncniPrenosnik|null $prenosnik */
             $prenosnik = array_first_callback($sistem->koncniPrenosniki, fn($p) => $p->id == $this->idPrenosnika);
+
+            if (empty($prenosnik)) {
+                throw new \Exception(
+                    'Ni definiran prenosnik za izračun potrebne električne energije. Razvod: ' . $this->id
+                );
+            }
         } else {
             $prenosnik = null;
         }

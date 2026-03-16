@@ -18,7 +18,8 @@ class Cona
 {
     public string $id;
     public string $naziv;
-    public KlasifikacijaCone $klasifikacija;
+    public string $klasifikacija;
+    private KlasifikacijaCone $klasifikacijaCone;
     public array $options = [];
 
     public float $brutoProstornina = 0;
@@ -179,7 +180,8 @@ class Cona
         foreach ($props as $prop) {
             switch ($prop->getName()) {
                 case 'klasifikacija':
-                    $this->klasifikacija = KlasifikacijaConeFactory::create($config->klasifikacija);
+                    $this->klasifikacijaCone = KlasifikacijaConeFactory::create($config->klasifikacija);
+                    $this->klasifikacija = $config->klasifikacija;
                     break;
                 case 'infiltracija':
                     if (isset($config->infiltracija)) {
@@ -461,12 +463,11 @@ class Cona
         $faktorLokacije = $this->infiltracija->lega->koeficientVplivaVetra($this->infiltracija->zavetrovanost);
 
         if (
-            method_exists($this->klasifikacija, 'kolicinaSvezegaZrakaZaPrezracevanje') &&
             !isset($this->prezracevanje->volumenDovedenegaZraka) &&
             !isset($this->prezracevanje->izmenjava)
         ) {
-            $volumenZrakaOgrevanje = $this->klasifikacija->kolicinaSvezegaZrakaZaPrezracevanje($this);
-            $volumenZrakaHlajenje = $this->klasifikacija->kolicinaSvezegaZrakaZaPrezracevanje($this);
+            $volumenZrakaOgrevanje = $this->klasifikacijaCone->kolicinaSvezegaZrakaZaPrezracevanje($this);
+            $volumenZrakaHlajenje = $this->klasifikacijaCone->kolicinaSvezegaZrakaZaPrezracevanje($this);
         } else {
             if (isset($this->prezracevanje->volumenDovedenegaZraka)) {
                 if (is_float($this->prezracevanje->volumenDovedenegaZraka)) {
@@ -476,7 +477,8 @@ class Cona
                     $volumenZrakaOgrevanje = $this->prezracevanje->volumenDovedenegaZraka->ogrevanje;
                     $volumenZrakaHlajenje = $this->prezracevanje->volumenDovedenegaZraka->hlajenje;
                 }
-            } elseif (isset($this->prezracevanje->izmenjava)) {
+            } else {
+                // if (isset($this->prezracevanje->izmenjava))
                 if (is_float($this->prezracevanje->izmenjava)) {
                     $volumenZrakaOgrevanje = $this->netoProstornina * $this->prezracevanje->izmenjava;
                     $volumenZrakaHlajenje = $this->netoProstornina * $this->prezracevanje->izmenjava;
@@ -484,8 +486,6 @@ class Cona
                     $volumenZrakaOgrevanje = $this->netoProstornina * $this->prezracevanje->izmenjava->ogrevanje;
                     $volumenZrakaHlajenje = $this->netoProstornina * $this->prezracevanje->izmenjava->hlajenje;
                 }
-            } else {
-                Log::warn(sprintf('Cona "%s" nima določenega prezračevalnega volumna.', $this->id));
             }
         }
 
@@ -664,7 +664,7 @@ class Cona
         if (!is_null($this->TSV)) {
             $this->skupnaEnergijaTSV = 0;
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $this->energijaTSV[$mesec] = $this->klasifikacija->izracunTSVZaMesec($mesec, $this);
+                $this->energijaTSV[$mesec] = $this->klasifikacijaCone->izracunTSVZaMesec($mesec, $this);
                 $this->skupnaEnergijaTSV += $this->energijaTSV[$mesec];
             }
         } else {
@@ -796,9 +796,7 @@ class Cona
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
-            if ($prop->getName() == 'klasifikacija') {
-                $cona->klasifikacija = $this->klasifikacija->export();
-            } elseif ($prop->getName() == 'ovoj') {
+            if ($prop->getName() == 'ovoj') {
                 $cona->ovoj = new \stdClass();
                 $cona->ovoj->netransparentneKonstrukcije = [];
                 $cona->ovoj->transparentneKonstrukcije = [];
@@ -838,13 +836,13 @@ class Cona
     {
         switch ($TSS) {
             case 'prezracevanje':
-                $ret = $this->klasifikacija->referencniTSSPrezracevanja($this);
+                $ret = $this->klasifikacijaCone->referencniTSSPrezracevanja($this);
                 break;
             case 'razsvetljava':
-                $ret = $this->klasifikacija->referencniTSSRazsvetljava($this);
+                $ret = $this->klasifikacijaCone->referencniTSSRazsvetljava($this);
                 break;
             case 'OHT':
-                $ret = $this->klasifikacija->referencniTSSOHT($this);
+                $ret = $this->klasifikacijaCone->referencniTSSOHT($this);
                 break;
             default:
                 throw new \Exception(sprintf('Neznan TSS "%s"', $TSS));

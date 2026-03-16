@@ -54,10 +54,9 @@ abstract class KlasifikacijaCone
      * Izračun letnega števila delovanja električne razsvetljave
      * Tabela 8.17: Letno število ur delovanja električne razsvetljave posamezno cono (zn) v
      *
-     * @param \App\Calc\GF\Cone\Cona $cona Cona
-     * @return array<int> [Podnevi, Ponoči]
+     * @return array<int> [podnevi, ponoci]
      */
-    abstract public function letnoSteviloUrDelovanjaRazsvetljave(Cona $cona): array;
+    abstract public function letnoSteviloUrDelovanjaRazsvetljave(): array;
 
     /**
      * Vrne lastnosti TSS za razsvetljavo referenčne stavbe

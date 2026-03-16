@@ -19,6 +19,7 @@ abstract class Stavba
     public VrstaGradnje $tip;
     public VrstaZahtevnosti $zahtevnost;
     public bool $javna;
+    public int $year;
 
     public array $cone = [];
     public array $sistemi = [];
@@ -27,10 +28,12 @@ abstract class Stavba
      * Class Constructor
      *
      * @param \stdClass|null $config Configuration
+     * @param int $year Leto, za katerega se izvaja izračun
      * @return void
      */
-    public function __construct(?stdClass $config)
+    public function __construct(?stdClass $config, int $year)
     {
+        $this->year = $year;
         if ($config) {
             $this->parseConfig($config);
         }
