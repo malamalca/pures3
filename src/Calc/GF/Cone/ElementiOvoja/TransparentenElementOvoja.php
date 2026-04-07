@@ -67,7 +67,7 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->dobitekSS = (bool)$config->dobitekSS;
         }
 
-        if (empty($config->sirinaOkvirja) && !empty($this->konstrukcija->sirinaOkvirja)) {
+        if (isset($this->konstrukcija->sirinaOkvirja) && !isset($config->sirinaOkvirja)) {
             $config->sirinaOkvirja = $this->konstrukcija->sirinaOkvirja;
         }
 
@@ -92,7 +92,9 @@ class TransparentenElementOvoja extends ElementOvoja
         $this->g = !empty($this->options['referencnaStavba']) ? 0.5 : ($this->konstrukcija->g ?? 0.5);
 
         $this->faktorSencil = !empty($this->options['referencnaStavba']) ? 0.3 :
-            (!empty($this->konstrukcija->faktorSencil) ? $this->konstrukcija->faktorSencil : ($config->faktorSencil ?? 1));
+            (!empty($this->konstrukcija->faktorSencil) ?
+                $this->konstrukcija->faktorSencil :
+                ($config->faktorSencil ?? 1));
 
         $this->g_sh = $this->g * $this->faktorSencil;
 

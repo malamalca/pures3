@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\Razsvetljava;
 
+use App\Calc\GF\Cone\Cona;
+use App\Calc\GF\Cone\KlasifikacijeCone\KlasifikacijaConeFactory;
 use App\Calc\GF\TSS\TSSSistem;
 use App\Calc\GF\TSS\TSSVrstaEnergenta;
 use App\Lib\Calc;
+use stdClass;
 
 class Razsvetljava extends TSSSistem
 {
@@ -15,20 +18,19 @@ class Razsvetljava extends TSSSistem
     public float $faktorDnevneSvetlobe;
     public ?float $faktorOblike = null;
 
-    public float $faktorZmanjsanjaSvetlobnegaToka = 0;
-    public float $faktorPrisotnosti = 0;
-    public float $ucinkovitostViraSvetlobe = 0;
-    public float $osvetlitevDelovnePovrsine = 0;
-    public float $faktorZmanjsaneOsvetlitveDelovnePovrsine = 0;
-    public float $faktorVzdrzevanja = 0;
-    public float $faktorNaravneOsvetlitve = 0;
-    public float $letnoUrPodnevi = 0;
-    public float $letnoUrPonoci = 0;
-
-    public float $varnostnaRazsvetljavaEnergijaZaPolnjenje = 0;
-    public float $varnostnaRazsvetljavaEnergijaZaDelovanje = 0;
-
     public ?float $mocSvetilk = null;
+
+    public ?float $faktorZmanjsanjaSvetlobnegaToka;
+    public ?float $faktorPrisotnosti;
+    public ?float $ucinkovitostViraSvetlobe;
+    public ?float $osvetlitevDelovnePovrsine;
+    public ?float $faktorZmanjsaneOsvetlitveDelovnePovrsine;
+    public ?float $faktorVzdrzevanja;
+    public ?float $faktorNaravneOsvetlitve;
+    public ?float $letnoUrPodnevi;
+    public ?float $letnoUrPonoci;
+    public ?float $varnostnaRazsvetljavaEnergijaZaPolnjenje;
+    public ?float $varnostnaRazsvetljavaEnergijaZaDelovanje;
 
     public float $skupnaPotrebnaEnergija = 0;
     public array $potrebnaEnergija = [];
@@ -67,44 +69,76 @@ class Razsvetljava extends TSSSistem
 
         $this->faktorDnevneSvetlobe = $config->faktorDnevneSvetlobe;
 
+        $this->mocSvetilk = $config->mocSvetilk ?? null;
+
         // fluo     1-brez zatemnjevanja        0.9-z zatemnjevanjem
         // LED      1-brez zatemnjevanja        0.85-z zatemnjevanjem
-        $this->faktorZmanjsanjaSvetlobnegaToka =
-            $config->faktorZmanjsanjaSvetlobnegaToka ?? 1;
+        $this->faktorZmanjsanjaSvetlobnegaToka = $config->faktorZmanjsanjaSvetlobnegaToka ?? null;
 
         // stanovanjske     0.7-ročni vklop     0.55-avtomatsko zatemnjevanje       0.5-ročni vklop, samodejni izklop
         // pisarne          0.9-ročni vklop     0.85-avtomatsko zatemnjevanje       0.7-ročni vklop, samodejni izklop
         // ostale stavbe    1-za vse načine krmiljenja
-        $this->faktorPrisotnosti = $config->faktorPrisotnosti ?? 0.7;
+        $this->faktorPrisotnosti = $config->faktorPrisotnosti ?? null;
 
                 // halogen      30 lm/W
                 // fluo         80 lm/W
                 // LED          100-140 lm/W
                 // ref.stavba   65 lm/W oz. 95 lm/W po letu 2025
-                $this->ucinkovitostViraSvetlobe = $config->ucinkovitostViraSvetlobe ?? 65;
+                $this->ucinkovitostViraSvetlobe = $config->ucinkovitostViraSvetlobe ?? null;
 
                 // stanovanjske 300 lx
                 // poslovne     500 lx
-                $this->osvetlitevDelovnePovrsine = $config->osvetlitevDelovnePovrsine ?? 300;
+                $this->osvetlitevDelovnePovrsine = $config->osvetlitevDelovnePovrsine ?? null;
 
                 // F_CA = TSG stran 96
                 $this->faktorZmanjsaneOsvetlitveDelovnePovrsine =
-                    $config->faktorZmanjsaneOsvetlitveDelovnePovrsine ?? 1;
+                    $config->faktorZmanjsaneOsvetlitveDelovnePovrsine ?? null;
 
                 // CFL fluo     1.15
                 // T5 fluo      1.1
                 // LED          1
-                $this->faktorVzdrzevanja = $config->faktorVzdrzevanja ?? 1;
+                $this->faktorVzdrzevanja = $config->faktorVzdrzevanja ?? null;
 
-        $this->mocSvetilk = $config->mocSvetilk ?? null;
+        $this->faktorNaravneOsvetlitve = $config->faktorNaravneOsvetlitve ?? null;
 
-        $this->faktorNaravneOsvetlitve = $config->faktorNaravneOsvetlitve ?? 0.6;
+        $this->letnoUrPodnevi = $config->letnoUrPodnevi ?? null;
+        $this->letnoUrPonoci = $config->letnoUrPonoci ?? null;
 
-        $this->letnoUrPodnevi = $config->letnoUrPodnevi ?? 1820;
-        $this->letnoUrPonoci = $config->letnoUrPonoci ?? 1680;
+        $this->varnostnaRazsvetljavaEnergijaZaPolnjenje = $config->varnostna->energijaZaPolnjenje ?? null;
+        $this->varnostnaRazsvetljavaEnergijaZaDelovanje = $config->varnostna->energijaZaDelovanje ?? null;
+    }
 
-        $this->varnostnaRazsvetljavaEnergijaZaPolnjenje = $config->varnostna->energijaZaPolnjenje ?? 0;
-        $this->varnostnaRazsvetljavaEnergijaZaDelovanje = $config->varnostna->energijaZaDelovanje ?? 0;
+    /**
+     * Vrne privzeto vrednost za podano ime parametra
+     *
+     * @param string $name Ime parametra
+     * @param \App\Calc\GF\Cone\Cona|\stdClass $cona Podatki cone
+     * @return float
+     */
+    private function param(string $name, Cona|stdClass $cona): float
+    {
+        switch ($name) {
+            case 'faktorZmanjsanjaSvetlobnegaToka':
+                return $this->faktorZmanjsanjaSvetlobnegaToka ?? 1;
+            case 'faktorPrisotnosti':
+                return $this->faktorPrisotnosti ?? 0.7;
+            case 'ucinkovitostViraSvetlobe':
+                return $this->ucinkovitostViraSvetlobe ?? 95;
+            case 'osvetlitevDelovnePovrsine':
+                return $this->osvetlitevDelovnePovrsine ?? 300;
+            case 'faktorZmanjsaneOsvetlitveDelovnePovrsine':
+                return $this->faktorZmanjsaneOsvetlitveDelovnePovrsine ?? 1;
+            case 'faktorVzdrzevanja':
+                return $this->faktorVzdrzevanja ?? 1;
+            case 'faktorNaravneOsvetlitve':
+                return $this->faktorNaravneOsvetlitve ?? 0.6;
+            case 'letnoUrPodnevi':
+                return $this->letnoUrPodnevi ?? 1820;
+            case 'letnoUrPonoci':
+                return $this->letnoUrPonoci ?? 1680;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -129,17 +163,31 @@ class Razsvetljava extends TSSSistem
 
         // ker je LAHKO odvisna od $cone oz. faktorjaOblikeCone
         if (is_null($this->mocSvetilk)) {
-            $this->mocSvetilk = 1 / $this->ucinkovitostViraSvetlobe * $this->osvetlitevDelovnePovrsine *
-                $faktorOblike * $this->faktorZmanjsaneOsvetlitveDelovnePovrsine * $this->faktorVzdrzevanja;
+            $this->mocSvetilk = 1 / $this->param('ucinkovitostViraSvetlobe', $cona) *
+                $this->param('osvetlitevDelovnePovrsine', $cona) *
+                $faktorOblike *
+                $this->param('faktorZmanjsaneOsvetlitveDelovnePovrsine', $cona) *
+                $this->param('faktorVzdrzevanja', $cona);
         }
 
-        $letnaDovedenaEnergija = ($this->faktorZmanjsanjaSvetlobnegaToka *
-            $this->faktorPrisotnosti *
+        if (is_null($this->letnoUrPodnevi)) {
+            $klasifikacijaCone = KlasifikacijaConeFactory::create($cona->klasifikacija);
+            $stUr = $klasifikacijaCone->letnoSteviloUrDelovanjaRazsvetljave();
+            $this->letnoUrPodnevi = $stUr['podnevi'];
+        }
+        if (is_null($this->letnoUrPonoci)) {
+            $klasifikacijaCone = KlasifikacijaConeFactory::create($cona->klasifikacija);
+            $stUr = $klasifikacijaCone->letnoSteviloUrDelovanjaRazsvetljave();
+            $this->letnoUrPonoci = $stUr['ponoci'];
+        }
+
+        $letnaDovedenaEnergija = ($this->param('faktorZmanjsanjaSvetlobnegaToka', $cona) *
+            $this->param('faktorPrisotnosti', $cona) *
             $this->mocSvetilk / 1000 *
-            (($this->letnoUrPodnevi * $this->faktorNaravneOsvetlitve) +
-            $this->letnoUrPonoci) +
-            $this->varnostnaRazsvetljavaEnergijaZaPolnjenje +
-            $this->varnostnaRazsvetljavaEnergijaZaDelovanje) * $cona->ogrevanaPovrsina;
+            (($this->param('letnoUrPodnevi', $cona) * $this->param('faktorNaravneOsvetlitve', $cona)) +
+            $this->param('letnoUrPonoci', $cona)) +
+            $this->param('varnostnaRazsvetljavaEnergijaZaPolnjenje', $cona) +
+            $this->param('varnostnaRazsvetljavaEnergijaZaDelovanje', $cona)) * $cona->ogrevanaPovrsina;
 
         $mesecniUtezniFaktor = [1.25, 1.1, 0.94, 0.86, 0.83, 0.73, 0.79, 0.87, 0.94, 1.09, 1.21, 1.35];
 
@@ -167,31 +215,14 @@ class Razsvetljava extends TSSSistem
     public function export()
     {
         $ret = new \stdClass();
-        $ret->id = $this->id;
-        $ret->idCone = $this->idCone;
-        $ret->tss = $this->tss;
 
-        $ret->faktorDnevneSvetlobe = $this->faktorDnevneSvetlobe;
-
-        //public float $faktorZmanjsanjaSvetlobnegaToka = 0;
-        //public float $faktorPrisotnosti = 0;
-        //public float $ucinkovitostViraSvetlobe = 0;
-        //public float $osvetlitevDelovnePovrsine = 0;
-        //public float $faktorZmanjsaneOsvetlitveDelovnePovrsine = 0;
-        //public float $faktorVzdrzevanja = 0;
-        //public float $faktorNaravneOsvetlitve = 0;
-        $ret->letnoUrPodnevi = $this->letnoUrPodnevi;
-        $ret->letnoUrPonoci = $this->letnoUrPonoci;
-
-        //public float $varnostnaRazsvetljavaEnergijaZaPolnjenje = 0;
-        //public float $varnostnaRazsvetljavaEnergijaZaDelovanje = 0;
-
-        $ret->mocSvetilk = $this->mocSvetilk;
-
-        $ret->potrebnaEnergija = $this->potrebnaEnergija;
-        $ret->potrebnaElektricnaEnergija = $this->potrebnaElektricnaEnergija;
-        $ret->skupnaPotrebnaEnergija = $this->skupnaPotrebnaEnergija;
-        $ret->energijaPoEnergentih = $this->energijaPoEnergentih;
+        $reflect = new \ReflectionClass(self::class);
+        $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
+        foreach ($props as $prop) {
+            if ($prop->isInitialized($this) && $prop->getValue($this) !== null) {
+                $ret->{$prop->getName()} = $prop->getValue($this);
+            }
+        }
 
         return $ret;
     }

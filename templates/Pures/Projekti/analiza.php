@@ -13,8 +13,12 @@
 <table border="1">
     <tr>
         <td colspan="2"></td>
-        <td class="center"><img src="<?= App::url('/img/manjzahtevnaStavba.png') ?>" /></td>
-        <?php if ($stavba->vrsta == 'zahtevna') { ?><td class="center"><img src="<?= App::url('/img/zahtevnaStavba.png') ?>" /></td><?php } ?>
+        <?php if ($stavba->vrsta == 'zahtevna') { ?>
+            <td class="center"><img src="<?= App::url('/img/zahtevnaStavba.png') ?>" /></td>
+            <td class="center"><img src="<?= App::url('/img/referencnaStavba.png') ?>" /></td>
+        <?php } else { ?>
+            <td class="center"><img src="<?= App::url('/img/manjzahtevnaStavba.png') ?>" /></td>
+        <?php } ?>
         <td>&nbsp;</td>
     </tr>
     <tr>

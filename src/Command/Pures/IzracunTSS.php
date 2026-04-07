@@ -85,6 +85,9 @@ class IzracunTSS extends Command
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $TSSSistemiRazsvetljava = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'razsvetljava') ?? [];
         if (count($TSSSistemiRazsvetljava) > 0) {
+            if (!$this->validateSchema(json: $TSSSistemiRazsvetljava, schema: 'razsvetljava', area: 'Pures')) {
+                throw new \Exception('Napake v opisu TSS Razsvetljava.');
+            }
             $TSSSistemiRazsvetljavaOut = [];
             foreach ($TSSSistemiRazsvetljava as $sistem) {
                 $cona = array_first_callback($cone, fn($cona) => $cona->id == $sistem->idCone);

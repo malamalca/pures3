@@ -26,7 +26,11 @@ class IzracunStavbe extends Command
         /** @var \stdClass $okolje */
         $okolje = App::loadProjectCalculation('Pures', $projectId, 'okolje');
 
-        $stavba = StavbaFactory::create($splosniPodatki->stavba->vrsta, $splosniPodatki->stavba);
+        $stavba = StavbaFactory::create(
+            $splosniPodatki->stavba->vrsta,
+            $splosniPodatki->stavba,
+            (int)substr($splosniPodatki->datum, -4)
+        );
         $stavba->cone = App::loadProjectCalculation('Pures', $projectId, 'cone') ?? [];
         $stavba->analiza($okolje);
 
@@ -37,7 +41,11 @@ class IzracunStavbe extends Command
         App::saveProjectCalculation('Pures', $projectId, 'stavba', $stavbaJson);
 
         if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
-            $stavbaRef = StavbaFactory::create($splosniPodatki->stavba->vrsta, $splosniPodatki->stavba);
+            $stavbaRef = StavbaFactory::create(
+                $splosniPodatki->stavba->vrsta,
+                $splosniPodatki->stavba,
+                (int)substr($splosniPodatki->datum, -4)
+            );
             $stavbaRef->cone = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'cone');
             $stavbaRef->analiza($okolje);
 
