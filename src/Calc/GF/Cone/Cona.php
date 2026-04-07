@@ -326,6 +326,13 @@ class Cona
                     }
             }
         }
+
+        if (!isset($this->notranjaTOgrevanje)) {
+            $this->notranjaTOgrevanje = $this->klasifikacija->notranjaTOgrevanje;
+        }
+        if (!isset($this->notranjaTHlajenje)) {
+            $this->notranjaTHlajenje = $this->klasifikacija->notranjaTHlajenje;
+        }
     }
 
     /**
