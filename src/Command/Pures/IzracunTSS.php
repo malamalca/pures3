@@ -40,6 +40,7 @@ class IzracunTSS extends Command
         }
 
         $elektrikaPoConah = [];
+        $elektrikaPoReferencnihConah = [];
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $TSSSistemiPrezracevanja = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'prezracevanje') ?? [];
@@ -70,6 +71,12 @@ class IzracunTSS extends Command
                         $referencniPrezracevalniSistem =
                             SistemPrezracevanjaFactory::create($refSistem->vrsta, $refSistem, true);
                         $referencniPrezracevalniSistem->analiza([], $cona, $okolje);
+
+                        $elektrikaPoReferencnihConah[$refSistem->idCone] = array_sum_values(
+                            $elektrikaPoReferencnihConah[$refSistem->idCone],
+                            $referencniPrezracevalniSistem->potrebnaEnergija
+                        );
+
                         $TSSReferencniSistemiPrezracevanjaOut[] = $referencniPrezracevalniSistem->export();
                     }
                 }
@@ -114,6 +121,10 @@ class IzracunTSS extends Command
                     foreach ($refSistemi as $refSistem) {
                         $referencnaRazsvetljava = new Razsvetljava($refSistem, true);
                         $referencnaRazsvetljava->analiza([], $cona, $okolje);
+                        $elektrikaPoReferencnihConah[$cona->id] = array_sum_values(
+                            $elektrikaPoReferencnihConah[$cona->id],
+                            $referencnaRazsvetljava->potrebnaEnergija
+                        );
                         $TSSReferencniSistemiRazsvetljavaOut[] = $referencnaRazsvetljava->export();
                     }
                 }
@@ -182,6 +193,19 @@ class IzracunTSS extends Command
                         $referencniSistemOHT->analiza($cona, $okolje);
                         $vracljiveIzgubeVOgrevanje = $referencniSistemOHT->vracljiveIzgubeVOgrevanje;
 
+                        $elektrikaPoReferencnihConah[$refSistemOHT->idCone] = array_sum_values(
+                            $elektrikaPoReferencnihConah[$refSistemOHT->idCone],
+                            $referencniSistemOHT->potrebnaElektricnaEnergija
+                        );
+                        $elektrikaPoReferencnihConah[$refSistemOHT->idCone] =
+                            array_sum_values(
+                                $elektrikaPoReferencnihConah[$refSistemOHT->idCone],
+                                array_subtract_values(
+                                    $referencniSistemOHT->potrebnaEnergija,
+                                    $referencniSistemOHT->obnovljivaEnergija
+                                )
+                            );
+
                         $TSSReferencniSistemiOHTOut[] = $referencniSistemOHT->export();
                     }
                 }
@@ -227,6 +251,49 @@ class IzracunTSS extends Command
                 $TSSFotonapetostniSistemiOut[] = $fotonapetostniSistem;
             }
             App::saveProjectCalculation('Pures', $projectId, 'TSS' . DS . 'fotovoltaika', $TSSFotonapetostniSistemiOut);
+        }
+
+        // za referenčno stavbo
+        if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
+            $TSSReferencniFotonapetostniSistemiOHTOut = [];
+            $celotnaElektrikaVsehReferencnihCon = [];
+            foreach ($elektrikaPoReferencnihConah as $refConaId => $refConaElektrika) {
+                $celotnaElektrikaVsehReferencnihCon = array_sum_values($celotnaElektrikaVsehReferencnihCon, $refConaElektrika);
+            }
+
+            $conaClass = new Cona(null, $referencneCone[0]);
+            $refTSSFotonapetostniSistemi = $conaClass->referencniTSS('fotovoltaika');
+
+            foreach ($refTSSFotonapetostniSistemi as $refSistem) {
+                $refFotonapetostniSistem = new FotonapetostniSistem($refSistem);
+                $refFotonapetostniSistem->analiza($celotnaElektrikaVsehReferencnihCon, $okolje);
+
+                $refSistem->energijaPoEnergentih = $refFotonapetostniSistem->energijaPoEnergentih;
+
+                // odštej v stavbi porabljeno energijo tega fotonapetostnega sistema, da se zmanjša
+                // potrebna električna energija za naslednji fotonapetostni sistem (če jih je več)
+                array_subtract_values(
+                    $celotnaElektrikaVsehReferencnihCon,
+                    $refFotonapetostniSistem->porabljenaEnergija
+                );
+                array_walk(
+                    $celotnaElektrikaVsehReferencnihCon,
+                    function ($potrebnaEnergija, $mesec) use ($celotnaElektrikaVsehReferencnihCon) {
+                        if ($potrebnaEnergija < 0) {
+                            $celotnaElektrikaVsehReferencnihCon[$mesec] = 0;
+                        }
+                    }
+                );
+
+                $TSSReferencniFotonapetostniSistemiOHTOut[] = $refFotonapetostniSistem;
+            }
+
+            App::saveProjectCalculation(
+                'Pures',
+                $projectId,
+                'Ref' . DS . 'TSS' . DS . 'fotovoltaika',
+                $TSSReferencniFotonapetostniSistemiOHTOut
+            );
         }
     }
 }

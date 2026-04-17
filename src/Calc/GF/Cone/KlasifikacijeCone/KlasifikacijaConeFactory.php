@@ -27,6 +27,8 @@ class KlasifikacijaConeFactory
                 return new KnjizniceMuzejiArhiviKlasifikacijaCone($type, $options);
             case 'In-1':
                 return new IndustrijskaKlasifikacijaCone($type, $options);
+            case 'Iz-1':
+                return new IzobrazevalnaKlasifikacijaCone($type, $options);
             case 'Go-1':
                 return new GostinskaKlasifikacijaCone($type, $options);
             case 'Sd-1':

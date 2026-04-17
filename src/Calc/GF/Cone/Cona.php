@@ -157,6 +157,7 @@ class Cona
             $prezracevanje->vrsta = 'rekuperacija';
             $prezracevanje->regulacija = 'brez';
             $prezracevanje->izkoristek = 0.65;
+            $prezracevanje->izmenjava = 0.5;
             $config->prezracevanje = $prezracevanje;
 
             $razsvetljava = $config->razsvetljava ?? new \stdClass();
@@ -843,6 +844,9 @@ class Cona
                 break;
             case 'OHT':
                 $ret = $this->klasifikacijaCone->referencniTSSOHT($this);
+                break;
+            case 'fotovoltaika':
+                $ret = $this->klasifikacijaCone->referencniTSSFotovoltaika($this);
                 break;
             default:
                 throw new \Exception(sprintf('Neznan TSS "%s"', $TSS));

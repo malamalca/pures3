@@ -287,6 +287,14 @@ class EnostanovanjskaKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
+    public function referencniTSSFotovoltaika(Cona $cona): array
+    {
+        return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function export()
     {
         return $this->code;

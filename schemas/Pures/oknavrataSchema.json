@@ -17,6 +17,10 @@
                     "Ug": {"type": "number", "description": "Toplotna prehodnost stekla U<sub>g</sub> [W/m²K]"},
                     "g": {"type": "number", "description": "Faktor prehoda celotnega sončnega sevanja g [-]"},
                     "Psi": {"type": "number", "description": "Linijski toplotni most medstekelnega distančnika ψ [W/mK]"},
+
+                    "sirinaOkvirja": {"type": "number", "description": "Širina okna [m]"},
+                    "faktorSencil": {"type": "number", "description": "Faktor senčil [-]"},
+
                     "stranskoSencenje": {
                         "type": "object",
                         "description": "Senčenje zaradi nadstreškov in stranskih ovir",

@@ -142,14 +142,14 @@ class Konstrukcija
                 $this->R = [500 => $this->Rw];
             }
         }
-        if (empty($this->C)) {
+        if (!isset($this->C)) {
             $this->C = $this->tipKonstrukcije->C($this->povrsinskaMasa, $this->R);
         }
-        if (empty($this->Ctr)) {
+        if (!isset($this->Ctr)) {
             $this->Ctr = $this->tipKonstrukcije->Ctr($this->povrsinskaMasa, $this->R);
         }
 
-        if (empty($this->Lnw)) {
+        if (!isset($this->Lnw)) {
             $this->Lnw = $this->tipKonstrukcije->Lnw($this->povrsinskaMasa, $this->R);
         }
 

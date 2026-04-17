@@ -7,6 +7,7 @@ use App\Lib\Calc;
 
 class ElektricniGrelnik extends Generator
 {
+    public int $stevilo = 1;
     public bool $znotrajOvoja = true;
 
     /**
@@ -29,6 +30,9 @@ class ElektricniGrelnik extends Generator
     public function parseConfig($config)
     {
         parent::parseConfig($config);
+
+        $this->stevilo = $config->stevilo ?? 1;
+        $this->znotrajOvoja = $config->znotrajOvoja ?? true;
     }
 
     /**
@@ -112,7 +116,7 @@ class ElektricniGrelnik extends Generator
         if ($namen == 'tsv') {
             foreach (array_keys(Calc::MESECI) as $mesec) {
                 $this->potrebnaElektricnaEnergija['tsv'][$mesec] =
-                    ($this->potrebnaElektricnaEnergija['tsv'][$mesec] ?? 0) + 0;
+                    ($this->potrebnaElektricnaEnergija['tsv'][$mesec] ?? 0) * $this->stevilo + 0;
 
                 $this->vracljiveIzgubeAux[$mesec] = 0;
             }
@@ -156,6 +160,7 @@ class ElektricniGrelnik extends Generator
         $sistem = parent::export();
         $sistem->znotrajOvoja = $this->znotrajOvoja;
         $sistem->nazivnaMoc = $this->nazivnaMoc;
+        $sistem->stevilo = $this->stevilo;
 
         return $sistem;
     }

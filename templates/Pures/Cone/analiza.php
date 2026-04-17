@@ -69,9 +69,30 @@
         <td class="center"><?= $this->numFormat($cona->steviloEtaz, 1) ?></td>
         <td>-</td>
     </tr>
+    <tr>
+        <td>Spec. toplotna kapaciteta</td>
+        <td>C<sub>spec</sub></td>
+        <td class="center"><?= $this->numFormat($cona->toplotnaKapaciteta, 1) ?></td>
+        <td>J/m²K (na m²a)</td>
+    </tr>
 </table>
 <h1>Drugi podatki cone</h1>
 <table border="1">
+    <tr>
+        <td colspan="4">Operativna temperatura: </td>
+    </tr>
+    <tr>
+        <td>- v času ogrevanja: </td>
+        <td>&#952;<sub>op,h</sub></td>
+        <td class="center"><?= $this->numFormat($cona->notranjaTOgrevanje, 1) ?></td>
+        <td>°C</td>
+    </tr>
+    <tr>
+        <td>- v času hlajenja: </td>
+        <td>&#952;<sub>op,c</sub></td>
+        <td class="center"><?= $this->numFormat($cona->notranjaTHlajenje, 1) ?></td>
+        <td>°C</td>
+    </tr>
     <tr>
         <td colspan="2">Sistem prezračevanja:</td>
         <td class="center"><?= h($cona->prezracevanje->vrsta ?? 'nedefinirano') ?></td>
@@ -132,6 +153,23 @@
     }
     }
 ?>
+
+    <tr>
+        <td colspan="4">Notranji viri: </td>
+    </tr>
+    <tr>
+        <td>- v času ogrevanja: </td>
+        <td>q<sub>s,h</sub></td>
+        <td class="center"><?= $this->numFormat($cona->notranjiViri->ogrevanje, 1) ?></td>
+        <td>W/m²</td>
+    </tr>
+    <tr>
+        <td>- v času hlajenja: </td>
+        <td>q<sub>s,c</sub></td>
+        <td class="center"><?= $this->numFormat($cona->notranjiViri->hlajenje, 1) ?></td>
+        <td>W/m²</td>
+    </tr>
+
 </table>
 <h1>Analiza cone "<?= h($cona->naziv) ?>"</h1>
 <table border="1">

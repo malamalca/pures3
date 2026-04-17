@@ -83,6 +83,14 @@ abstract class KlasifikacijaCone
     abstract public function referencniTSSOHT(Cona $cona): array;
 
     /**
+     * Vrne lastnosti TSS za fotovoltaiko referenčne stavbe
+     *
+     * @param \App\Calc\GF\Cone\Cona $cona Cona
+     * @return array
+     */
+    abstract public function referencniTSSFotovoltaika(Cona $cona): array;
+
+    /**
      * Export za json
      *
      * @return mixed
