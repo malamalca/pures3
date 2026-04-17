@@ -122,12 +122,12 @@ class SolarniPaneli extends Generator
             $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
             $stDniDelovanja = $stDni;
 
-            $this->vneseneIzgube['tsv'][$mesec] = $vneseneIzgube[$mesec];
+            $this->vneseneIzgube['tsv'][$mesec] = $vneseneIzgube[$mesec] ?? 0;
             $this->toplotneIzgube['tsv'][$mesec] = 0;
             $this->vracljiveIzgube['tsv'][$mesec] = 0;
             $this->vracljiveIzgubeTSV['tsv'][$mesec] = 0;
 
-            $potrebnaEnergija = $vneseneIzgube[$mesec] + $this->toplotneIzgube[$namen][$mesec];
+            $potrebnaEnergija = $vneseneIzgube[$mesec] ?? 0 + $this->toplotneIzgube[$namen][$mesec];
 
             // še izračun solarnega dela
             $this->X[$mesec] = 0;
@@ -141,7 +141,7 @@ class SolarniPaneli extends Generator
 
                 // energija ki jo pridelajo paneli
                 // $Q_w_out_sol
-                $this->proizvedenaEnergijaSSE[$mesec] = (1.029 * $this->Y[$mesec] - 0.065 * $this->X[$mesec] -
+                $this->proizvedenaEnergijaSSE['tsv'][$mesec] = (1.029 * $this->Y[$mesec] - 0.065 * $this->X[$mesec] -
                     0.245 * pow($this->Y[$mesec], 2) + 0.0018 * pow($this->X[$mesec], 2) +
                     0.0215 * pow($this->Y[$mesec], 3)) *
                     $potrebnaEnergija * 0.98;
@@ -149,7 +149,7 @@ class SolarniPaneli extends Generator
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 // delež potrebne energije, ki se jo pokriva s SSE
                 $f_sol_nekorig = $stDniDelovanja == 0 ? 0 :
-                    ($this->proizvedenaEnergijaSSE[$mesec] + $sistem->tsv->vracljiveIzgubeVTSV[$mesec]) /
+                    ($this->proizvedenaEnergijaSSE['tsv'][$mesec] + $sistem->tsv->vracljiveIzgubeVTSV[$mesec]) /
                     $potrebnaEnergija;
 
                 $this->f_sol[$mesec] = $f_sol_nekorig < 0 ? 0.0 : ($f_sol_nekorig > 1 ? 1.0 : $f_sol_nekorig);
@@ -158,6 +158,12 @@ class SolarniPaneli extends Generator
                     (1 - $this->f_sol[$mesec]) * 0.2 * $hranilnik->toplotneIzgube[$namen][$mesec];
 
                 $this->nepokritaEnergija[$namen][$mesec] = $Q_w_bu_sol;
+            } else {
+                $this->X[$mesec] = 0;
+                $this->Y[$mesec] = 0;
+                $this->proizvedenaEnergijaSSE['tsv'][$mesec] = 0;
+                $this->f_sol[$mesec] = 0;
+                $this->nepokritaEnergija[$namen][$mesec] = $potrebnaEnergija;
             }
         }
     }
@@ -175,6 +181,8 @@ class SolarniPaneli extends Generator
     private function toplotneIzgubeOgrevanje($vneseneIzgube, $sistem, $cona, $okolje, $params = [])
     {
         foreach (array_keys(Calc::MESECI) as $mesec) {
+            $this->X[$mesec] = 0;
+            $this->Y[$mesec] = 0;
             $this->vneseneIzgube['ogrevanje'][$mesec] = 0;
             $this->toplotneIzgube['ogrevanje'][$mesec] = 0;
             $this->vracljiveIzgube['ogrevanje'][$mesec] = 0;
@@ -228,7 +236,15 @@ class SolarniPaneli extends Generator
         $namen = $params['namen'];
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $this->obnovljivaEnergija[$namen][$mesec] = 0;
+            if (isset($this->proizvedenaEnergijaSSE[$namen][$mesec])) {
+                if ($vneseneIzgube[$mesec] < $this->proizvedenaEnergijaSSE[$namen][$mesec]) {
+                    $this->obnovljivaEnergija[$namen][$mesec] = $vneseneIzgube[$mesec];
+                } else {
+                    $this->obnovljivaEnergija[$namen][$mesec] = $this->proizvedenaEnergijaSSE[$namen][$mesec];
+                }
+            } else {
+                $this->obnovljivaEnergija[$namen][$mesec] = 0;
+            }
         }
     }
 
@@ -268,28 +284,28 @@ class SolarniPaneli extends Generator
             'x',
             'X',
             '-',
-            $this->X,
+            $this->X ?? [],
             1
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
             'y',
             'Y',
             '-',
-            $this->Y,
+            $this->Y ?? [],
             1
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
             'fsol',
             'f<sub>sol</sub>',
             'Faktor SSE',
-            $this->f_sol,
+            $this->f_sol ?? [],
             2
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
             'QW',
             'Q<sub>W,sol,del</sub>',
             'Proizvedena energija SSE',
-            $this->proizvedenaEnergijaSSE,
+            $this->proizvedenaEnergijaSSE['tsv'] ?? [],
             1
         );
 
