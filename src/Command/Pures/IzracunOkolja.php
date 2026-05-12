@@ -46,6 +46,9 @@ class IzracunOkolja extends Command
                 $YXTempNearest = $line;
             }
         }
+        if (is_null($YXTempNearest)) {
+            throw new \Exception('Ni bilo mogoče najti podatkov o temperaturi za koordinate stavbe.');
+        }
         $splosniPodatkiOut->YXTemp = $YXTempNearest;
 
         $YXVlaga = json_decode((string)file_get_contents(CONFIG . 'YXVlaga.json'));

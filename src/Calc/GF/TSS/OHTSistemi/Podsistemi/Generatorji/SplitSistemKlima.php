@@ -111,6 +111,9 @@ class SplitSistemKlima extends Generator
                 $f_Cpl = $potrebnaEnergija / $stUrNaMesec / $this->nazivnaMoc;
 
                 $idx = (int)(($f_Cpl > 1 ? 1 : round($f_Cpl, 1)) * 10 - 1);
+                if ($idx < 0) {
+                    $idx = 0;
+                }
                 $f_C_pl_k = $this->faktorRac[$this->vrstaIdx][$this->vrstaRegulacije][$idx];
 
                 //$a0 = 1;
