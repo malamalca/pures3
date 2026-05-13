@@ -96,9 +96,11 @@ class CalcKonstrukcije
         $kons->Sd = $totalSd;
         $kons->debelina = $debelina;
 
+        self::vplivZemljine($kons);
+
         if (!empty($options['referencnaStavba'])) {
             // todo: takole dele Excel
-            //$kons->U = $kons->TSG->Umax;
+            $kons->U = $kons->TSG->Umax;
         }
 
         foreach (self::$spanIterator as $mesec) {
@@ -514,5 +516,220 @@ class CalcKonstrukcije
         }
 
         return $kons;
+    }
+
+    /**
+     * Izračun vpliva zemljine na konstrukcijo
+     *
+     * @param \stdClass $kons Podatki konstrukcije
+     * @return void
+     */
+    public static function vplivZemljine($kons)
+    {
+        if (!isset($kons->vplivZemljine)) {
+            return;
+        }
+
+        $result = self::izracunajVplivZemljine($kons->TSG->tip ?? '', $kons->U, $kons->vplivZemljine);
+
+        if ($result !== null) {
+            $kons->U_earth = $result->U_earth;
+        }
+    }
+
+    /**
+     * Izračun vpliva zemljine - osrednja logika
+     *
+     * @param string $tip TSG tip ('tla-teren', 'stena-teren', 'tla-neogrevano')
+     * @param float $U_konstrukcije Materialni U konstrukcije
+     * @param \stdClass $params Parametri (tla, povrsina, obseg, debelinaStene, ...)
+     * @return \stdClass|null Rezultat z U_earth, obodniPsi, Lpi, Lpe
+     */
+    public static function izracunajVplivZemljine($tip, $U_konstrukcije, $params)
+    {
+        if (is_string($params->tla ?? null)) {
+            $tlaLambda = ['glina' => 1.5, 'pesek' => 2, 'kamen' => 3.5][$params->tla] ?? 2;
+            $tlaSigma = ['glina' => 2.2, 'pesek' => 3.2, 'kamen' => 4.2][$params->tla] ?? 3.2;
+        } elseif (isset($params->tla)) {
+            $tlaLambda = $params->tla->lambda ?? 2;
+            $tlaSigma = $params->tla->sigma ?? 3.2;
+        } else {
+            $tlaLambda = 2;
+            $tlaSigma = 3.2;
+        }
+
+        $U_earth = null;
+        $obodniPsi = null;
+        $Lpi = 0;
+        $Lpe = 0;
+
+        if ($tip == 'tla-teren') {
+            if (!isset($params->obseg)) {
+                throw new \Exception('Konstrukcija nima definiranega obsega proti zemljini.');
+            }
+
+            $B = $params->povrsina / (0.5 * $params->obseg);
+            $dt = $params->debelinaStene + $tlaLambda * 1 / $U_konstrukcije;
+
+            if ($dt < $B) {
+                $U_earth = 2 * $tlaLambda / (Pi() * $B + $dt + 0.5 * ($params->globina ?? 0)) *
+                    log(Pi() * $B / ($dt + 0.5 * ($params->globina ?? 0)) + 1);
+            } else {
+                $U_earth = $tlaLambda / (0.457 * $B + $dt + 0.5 * ($params->globina ?? 0));
+            }
+
+            $d_ = 0;
+            if (!empty($params->dodatnaIzolacija)) {
+                $Rn = $params->dodatnaIzolacija->debelina / $params->dodatnaIzolacija->lambda;
+                $R_ = $Rn - $params->dodatnaIzolacija->debelina / $tlaLambda;
+                $d_ = $R_ * $tlaLambda;
+
+                if ($params->dodatnaIzolacija->tip == 'horizontalna') {
+                    $horizontalniPsi = -$tlaLambda / Pi() * (
+                        log($params->dodatnaIzolacija->dolzina / $dt + 1) -
+                        log($params->dodatnaIzolacija->dolzina / ($dt + $d_) + 1)
+                    );
+                    $U_earth = $U_earth + 2 * $horizontalniPsi / $B;
+                } elseif ($params->dodatnaIzolacija->tip == 'vertikalna') {
+                    $obodniPsi = -$tlaLambda / Pi() * (
+                        log(2 * $params->dodatnaIzolacija->dolzina / $dt + 1) -
+                        log(2 * $params->dodatnaIzolacija->dolzina / ($dt + $d_) + 1)
+                    );
+                }
+            }
+
+            $Lpi = $params->povrsina * $tlaLambda / $dt *
+                sqrt(2 / (pow(1 + $tlaSigma / $dt, 2) + 1));
+
+            if (!empty($params->dodatnaIzolacija)) {
+                if ($params->dodatnaIzolacija->tip == 'horizontalna') {
+                    $Lpe = 0.37 * $params->obseg * $tlaLambda * (
+                        (1 - exp(-$params->dodatnaIzolacija->dolzina / $tlaSigma)) *
+                        log($tlaSigma / ($dt + $d_) + 1)
+                        +
+                        (exp(-$params->dodatnaIzolacija->dolzina / $tlaSigma) *
+                        log($tlaSigma / $dt + 1))
+                    );
+                } elseif ($params->dodatnaIzolacija->tip == 'vertikalna') {
+                    $Lpe = 0.37 * $params->obseg * $tlaLambda * (
+                        (1 - exp(-2 * $params->dodatnaIzolacija->dolzina / $tlaSigma)) *
+                        log($tlaSigma / ($dt + $d_) + 1) +
+                        (exp(-2 * $params->dodatnaIzolacija->dolzina / $tlaSigma) *
+                        log($tlaSigma / $dt + 1))
+                    );
+                }
+            } else {
+                if (!empty($params->globina)) {
+                    $Lpe = 0.37 * $params->obseg * $tlaLambda *
+                        exp(-$params->globina / $tlaSigma) * log($tlaSigma / $dt + 1);
+                } else {
+                    $Lpe = 0.37 * $params->obseg * $tlaLambda *
+                        ((1 - exp(-0 / $tlaSigma)) *
+                        log($tlaSigma / ($dt + $d_) + 1) +
+                        (exp(-0 / $tlaSigma) *
+                        log($tlaSigma / $dt + 1)));
+                }
+            }
+        } elseif ($tip == 'stena-teren') {
+            if (!isset($params->debelinaStene)) {
+                throw new \Exception('Konstrukcija nima podane debeline stene.');
+            }
+            if (!isset($params->U_tla)) {
+                throw new \Exception('Konstrukcija nima podane vrednosti U_tla.');
+            }
+            if (!isset($params->globina)) {
+                throw new \Exception('Konstrukcija nima podane globine kleti.');
+            }
+            if (!isset($params->obseg)) {
+                throw new \Exception('Konstrukcija nima podane vrednosti obsega.');
+            }
+
+            $d_wb = $params->debelinaStene + $tlaLambda * 1 / $U_konstrukcije;
+            $d_f = $params->debelinaStene + $tlaLambda * 1 / $params->U_tla;
+
+            if ($d_wb < $d_f) {
+                $d_f = $d_wb;
+            }
+
+            $z = $params->globina;
+            $U_earth = 2 * $tlaLambda / (Pi() * $z) *
+                (1 + 0.5 * $d_f / ($d_f + $z)) * log($z / $d_wb + 1);
+
+            $Lpi = $params->obseg * $params->globina *
+                $tlaLambda / $d_wb *
+                sqrt(2 / (pow(1 + $tlaSigma / $d_wb, 2) + 1));
+
+            $Lpe = 0.37 * $params->obseg * $tlaLambda * (
+                2 * (1 - exp(-$params->globina / $tlaSigma)) * log(($tlaSigma / $d_wb) + 1)
+            );
+        } elseif ($tip == 'tla-neogrevano') {
+            if (!isset($params->debelinaStene)) {
+                throw new \Exception('Konstrukcija nima podane debeline stene.');
+            }
+            if (!isset($params->U_tla)) {
+                throw new \Exception('Konstrukcija nima podane vrednosti U_tla.');
+            }
+            if (!isset($params->visinaNadTerenom)) {
+                throw new \Exception('Konstrukcija nima podane višine nad terenom.');
+            }
+            if (!isset($params->obseg)) {
+                throw new \Exception('Konstrukcija nima podanega obsega.');
+            }
+            if (!isset($params->U_zid_nadTerenom)) {
+                throw new \Exception('Konstrukcija nima podane vrednosti U_zid_nadTerenom.');
+            }
+            if (!isset($params->U_zid)) {
+                throw new \Exception('Konstrukcija nima podane vrednosti U_zid (zid kleti).');
+            }
+            if (!isset($params->globina)) {
+                throw new \Exception('Konstrukcija nima podane globine kleti.');
+            }
+            if (!isset($params->prostorninaKleti)) {
+                throw new \Exception('Konstrukcija nima podane prostornine kleti.');
+            }
+            if (!isset($params->izmenjavaZraka)) {
+                throw new \Exception('Konstrukcija nima podane izmenjave zraka.');
+            }
+
+            $U_earth = 1 / (1 / $U_konstrukcije + $params->povrsina / (($params->povrsina * $params->U_tla) +
+                ($params->visinaNadTerenom * $params->obseg * $params->U_zid_nadTerenom) +
+                ($params->globina * $params->obseg * $params->U_zid) +
+                (0.34 * $params->prostorninaKleti * $params->izmenjavaZraka)));
+
+            $d_f = $params->debelinaStene + $tlaLambda * 1 / $params->U_tla;
+
+            $Lpi = pow(
+                1 / ($params->povrsina * $U_konstrukcije) +
+                1 / (
+                    ($params->povrsina + $params->globina * $params->obseg) * $tlaLambda / $tlaSigma +
+                    $params->visinaNadTerenom * $params->obseg * $params->U_zid_nadTerenom +
+                    0.33 * $params->prostorninaKleti * $params->izmenjavaZraka
+                ),
+                -1
+            );
+
+            $Lpe = $params->povrsina * $U_konstrukcije * (
+                    0.37 * $params->obseg * $tlaLambda * (2 - exp(-$params->globina / $tlaSigma)) *
+                    log($tlaSigma / $d_f + 1) +
+                    $params->visinaNadTerenom * $params->obseg * $params->U_zid_nadTerenom +
+                    0.33 * $params->prostorninaKleti * $params->izmenjavaZraka
+                ) / (
+                    ($params->povrsina + $params->globina * $params->obseg) * $tlaLambda / $tlaSigma +
+                    $params->visinaNadTerenom * $params->obseg * $params->U_zid_nadTerenom +
+                    0.33 * $params->prostorninaKleti * $params->izmenjavaZraka +
+                    $params->povrsina * $U_konstrukcije
+                );
+        }
+
+        if ($U_earth !== null) {
+            return (object)[
+                'U_earth' => $U_earth,
+                'obodniPsi' => $obodniPsi,
+                'Lpi' => $Lpi,
+                'Lpe' => $Lpe,
+            ];
+        }
+
+        return null;
     }
 }

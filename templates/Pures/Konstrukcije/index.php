@@ -1,7 +1,7 @@
 <?php
-    use \App\Core\App;
-    use \App\Lib\Calc;
-    use \App\Lib\CalcKonstrukcije;
+    use App\Core\App;
+    use App\Lib\Calc;
+    use App\Lib\CalcKonstrukcije;
 ?>
 <p class="actions">
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
@@ -31,6 +31,6 @@
     </tr>
     <tr>
         <?= implode(PHP_EOL, array_map(fn($kons) =>
-            '<td class="left' . (round($kons->U, 2) <= $kons->TSG->Umax ? '' : ' red') . '">U = ' . $this->numFormat($kons->U, 2) . ' W/m²K</td>', $konstrukcije)) ?>
+            '<td class="left' . (round($kons->U_earth ?? $kons->U, 2) <= $kons->TSG->Umax ? '' : ' red') . '">U = ' . $this->numFormat($kons->U_earth ?? $kons->U, 2) . ' W/m²K</td>', $konstrukcije)) ?>
     </tr>
 </table>
