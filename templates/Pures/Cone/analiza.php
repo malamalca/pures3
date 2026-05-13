@@ -112,6 +112,16 @@
     <tr>
         <td colspan="4">Dotok svežega zraka: </td>
     </tr>
+<?php
+    if (!empty($cona->volumenZrakaPoTsg)) {
+?>
+    <tr>
+        <td>&nbsp;</td>
+        <td colspan="3">Po tabeli 6.1.4 TSG</td>
+    </tr>
+<?php
+    }
+?>
     <tr>
         <td>- v času ogrevanja: </td>
         <td>V<sub>air,h</sub></td>
@@ -140,14 +150,20 @@
         <td>-</td>
     </tr>
 <?php
-    }
-    if (!empty($cona->TSV->dnevnaKolicina)) {
+    } else if (!empty($cona->TSV->dnevnaKolicina)) {
 ?>    
     <tr>
         <td>- dnevna količina: </td>
         <td>V<sub>W,P,day</sub></td>
         <td class="center"><?= $this->numFormat($cona->TSV->dnevnaKolicina, 1) ?></td>
         <td>L</td>
+    </tr>
+<?php
+    } else {
+?>    
+    <tr>
+        <td>&nbsp;</td>
+        <td colspan="3">Po tabeli 8.11.1 TSG</td>
     </tr>
 <?php
     }

@@ -258,7 +258,10 @@ class IzracunTSS extends Command
             $TSSReferencniFotonapetostniSistemiOHTOut = [];
             $celotnaElektrikaVsehReferencnihCon = [];
             foreach ($elektrikaPoReferencnihConah as $refConaId => $refConaElektrika) {
-                $celotnaElektrikaVsehReferencnihCon = array_sum_values($celotnaElektrikaVsehReferencnihCon, $refConaElektrika);
+                $celotnaElektrikaVsehReferencnihCon = array_sum_values(
+                    $celotnaElektrikaVsehReferencnihCon,
+                    $refConaElektrika
+                );
             }
 
             $conaClass = new Cona(null, $referencneCone[0]);

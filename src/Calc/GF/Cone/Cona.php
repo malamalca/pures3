@@ -34,6 +34,7 @@ class Cona
 
     public float $volumenZrakaOgrevanje = 0;
     public float $volumenZrakaHlajenje = 0;
+    public bool $volumenZrakaPoTsg = false;
 
     public float $notranjaTOgrevanje;
     public float $notranjaTHlajenje;
@@ -331,10 +332,10 @@ class Cona
         }
 
         if (!isset($this->notranjaTOgrevanje)) {
-            $this->notranjaTOgrevanje = $this->klasifikacija->notranjaTOgrevanje;
+            $this->notranjaTOgrevanje = $this->klasifikacijaCone->notranjaTOgrevanje;
         }
         if (!isset($this->notranjaTHlajenje)) {
-            $this->notranjaTHlajenje = $this->klasifikacija->notranjaTHlajenje;
+            $this->notranjaTHlajenje = $this->klasifikacijaCone->notranjaTHlajenje;
         }
     }
 
@@ -476,6 +477,7 @@ class Cona
         ) {
             $volumenZrakaOgrevanje = $this->klasifikacijaCone->kolicinaSvezegaZrakaZaPrezracevanje($this);
             $volumenZrakaHlajenje = $this->klasifikacijaCone->kolicinaSvezegaZrakaZaPrezracevanje($this);
+            $this->volumenZrakaPoTsg = true;
         } else {
             if (isset($this->prezracevanje->volumenDovedenegaZraka)) {
                 if (is_float($this->prezracevanje->volumenDovedenegaZraka)) {
@@ -502,28 +504,28 @@ class Cona
 
         switch ($this->prezracevanje->vrsta) {
             case 'naravno':
-                $this->Hve_ogrevanje = 0.33 * $this->volumenZrakaOgrevanje;
-                $this->Hve_hlajenje = 0.33 * $this->volumenZrakaHlajenje;
+                $this->Hve_ogrevanje = 0.33 * $volumenZrakaOgrevanje;
+                $this->Hve_hlajenje = 0.33 * $volumenZrakaHlajenje;
                 break;
             case 'mehansko':
                 $Vinf_ogrevanje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
                     (1 + $this->infiltracija->zavetrovanost->faktorVetra() / $faktorLokacije *
-                    pow($this->volumenZrakaOgrevanje / ($this->netoProstornina * $this->infiltracija->n50), 2));
+                    pow($volumenZrakaOgrevanje / ($this->netoProstornina * $this->infiltracija->n50), 2));
                 $Vinf_hlajenje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije /
                     (1 + $this->infiltracija->zavetrovanost->faktorVetra() / $faktorLokacije *
-                    pow($this->volumenZrakaHlajenje / ($this->netoProstornina * $this->infiltracija->n50), 2));
+                    pow($volumenZrakaHlajenje / ($this->netoProstornina * $this->infiltracija->n50), 2));
 
                 $this->Hve_ogrevanje =
-                    0.33 * ($this->volumenZrakaOgrevanje + $Vinf_ogrevanje);
+                    0.33 * ($volumenZrakaOgrevanje + $Vinf_ogrevanje);
                 $this->Hve_hlajenje =
-                    0.33 * ($this->volumenZrakaHlajenje + $Vinf_hlajenje);
+                    0.33 * ($volumenZrakaHlajenje + $Vinf_hlajenje);
                 break;
             case 'rekuperacija':
                 $Vinf_ogrevanje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije;
                 $Vinf_hlajenje = $this->netoProstornina * $this->infiltracija->n50 * $faktorLokacije;
                 $this->Hve_ogrevanje = 0.33 * ($Vinf_ogrevanje +
-                    (1 - $this->prezracevanje->izkoristek) * $this->volumenZrakaOgrevanje);
-                $this->Hve_hlajenje = 0.33 * ($Vinf_hlajenje + $this->volumenZrakaHlajenje);
+                    (1 - $this->prezracevanje->izkoristek) * $volumenZrakaOgrevanje);
+                $this->Hve_hlajenje = 0.33 * ($Vinf_hlajenje + $volumenZrakaHlajenje);
                 break;
             default:
                 $this->Hve_ogrevanje = 0;

@@ -100,7 +100,7 @@ class CalcKonstrukcije
 
         if (!empty($options['referencnaStavba'])) {
             // todo: takole dele Excel
-            $kons->U = $kons->TSG->Umax;
+            //$kons->U = $kons->TSG->Umax;
         }
 
         foreach (self::$spanIterator as $mesec) {

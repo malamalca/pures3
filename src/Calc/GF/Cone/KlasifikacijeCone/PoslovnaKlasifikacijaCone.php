@@ -34,10 +34,10 @@ class PoslovnaKlasifikacijaCone extends KlasifikacijaCone
     public function kolicinaSvezegaZrakaZaPrezracevanje(Cona $cona): float
     {
         $stOseb = 0.06 * $cona->ogrevanaPovrsina;
-        $kolicinaZrakaNaOsebo = 16; // [m3/h] [7 l/s * 3600s / 1000 l/m3]
+        $kolicinaZrakaNaOsebo = 57.6; // [m3/h] [16 l/s * 3600s / 1000 l/m3]
         $faktorSocasneUporabe = 0.55;
-        $dnevnaUporabaStavbe = 14; // [h]
-        $tedenskaUporabaStavbe = 7; // [dni/teden]
+        $dnevnaUporabaStavbe = 13; // [h]
+        $tedenskaUporabaStavbe = 5; // [dni/teden]
 
         $volumenZraka = $kolicinaZrakaNaOsebo * $faktorSocasneUporabe * $stOseb *
             $dnevnaUporabaStavbe / 24 * $tedenskaUporabaStavbe / 7;
