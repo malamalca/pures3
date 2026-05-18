@@ -149,17 +149,18 @@ class Ogrevanje extends TSSInterface
                     throw new \Exception(sprintf('Hranilnik ogrevanja "%s" ne obstaja', $hranilnikId));
                 }
 
-                $hranilnik->analiza([], $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
+                $hranilnik->analiza($this->potrebnaEnergija, $sistem, $cona, $okolje, ['namen' => 'ogrevanje']);
+
                 $this->potrebnaEnergija =
                     array_sum_values($this->potrebnaEnergija, $hranilnik->toplotneIzgube['ogrevanje']);
                 $this->potrebnaElektricnaEnergija =
                     array_sum_values(
                         $this->potrebnaElektricnaEnergija,
-                        $hranilnik->potrebnaElektricnaEnergija['ogrevanje']
+                        $hranilnik->potrebnaElektricnaEnergija['ogrevanje'] ?? []
                     );
 
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube['ogrevanje']);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux['ogrevanje']);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube['ogrevanje'] ?? []);
+                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux['ogrevanje'] ?? []);
             }
 
             foreach ($this->generatorji as $generatorId) {
