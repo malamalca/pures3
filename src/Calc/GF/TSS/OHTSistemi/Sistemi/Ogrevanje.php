@@ -160,7 +160,10 @@ class Ogrevanje extends TSSInterface
                     );
 
                 $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgube['ogrevanje'] ?? []);
-                $vracljiveIzgube = array_sum_values($vracljiveIzgube, $hranilnik->vracljiveIzgubeAux['ogrevanje'] ?? []);
+                $vracljiveIzgube = array_sum_values(
+                    $vracljiveIzgube,
+                    $hranilnik->vracljiveIzgubeAux['ogrevanje'] ?? []
+                );
             }
 
             foreach ($this->generatorji as $generatorId) {
