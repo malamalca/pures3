@@ -565,7 +565,9 @@ class CalcKonstrukcije
 
         if ($tip == 'tla-teren') {
             if (!isset($params->obseg)) {
-                throw new \Exception('Konstrukcija nima definiranega obsega proti zemljini.');
+                throw new \Exception(
+                    sprintf('Konstrukcija %s nima definiranega obsega proti zemljini.', $params->id ?? '')
+                );
             }
 
             $B = $params->povrsina / (0.5 * $params->obseg);

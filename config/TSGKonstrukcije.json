@@ -388,12 +388,21 @@
     },
     {
         "id": "87.2",
-        "sifra": "hidroizolacijaAl",
+        "sifra": "hidroizolacijaAl2",
         "opis": "Bitumenski trak z vložkom Al folije debeline 0.2 mm",
         "lambda": 0.19,
         "gostota": 900,
         "specificnaToplota": 1460,
         "difuzijskaUpornost": 150000
+    },
+    {
+        "id": "88",
+        "sifra": "hidroizolacijaAl",
+        "opis": "Bitumenski trakovi, zvarjeni, debeline 5 mm, Al folijo 0,2 mm",
+        "lambda": 0.19,
+        "gostota": 1000,
+        "specificnaToplota": 1460,
+        "difuzijskaUpornost": 140000
     },
     {
         "id": "91.2",
@@ -406,17 +415,17 @@
     },
     {
         "id": "91.3",
-        "sifra": "hidroizolacija2",
+        "sifra": "hidroizolacijaIzotekt",
         "opis": "Večplastna bitumenska hidroizolacija",
-        "lambda": 0.19,
+        "lambda": 0.17,
         "gostota": 1100,
-        "specificnaToplota": 1460,
-        "difuzijskaUpornost": 2000
+        "specificnaToplota": 950,
+        "difuzijskaUpornost": 20000
     },
     {
         "id": "91.4",
         "sifra": "cementnaHidroizolacija",
-        "opis": "Večplastna bitumenska hidroizolacija",
+        "opis": "Cementna hidroizolacija, debeline 5 mm",
         "lambda": 1.7,
         "gostota": 1700,
         "specificnaToplota": 1500,

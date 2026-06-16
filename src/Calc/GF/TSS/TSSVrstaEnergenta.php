@@ -15,6 +15,7 @@ enum TSSVrstaEnergenta: string
     case Daljinsko = 'daljinsko';
     case UNP = 'UNP';
     case Sonce = 'sonce';
+    case DaljinskoUcinkovito = 'daljinskoSDOLjubljana';
 
     /**
      * Vrne utezni faktor za vrsto energenta
@@ -24,10 +25,10 @@ enum TSSVrstaEnergenta: string
      */
     public function utezniFaktor($faktor)
     {
-        $utezniFaktorjiF_Pnren = [0, 1.5, 0.2, 1.1, 1.1, 1.12, 1.1, 0];
-        $utezniFaktorjiF_Pren = [1, 1, 1, 0, 0, 0.06, 0, 1];
-        $utezniFaktorjiF_Ptot = [1, 2.5, 1.2, 1.1, 1.1, 1.18, 1.1, 1];
-        $utezniFaktorjiF_TSG = [1, 2.5, 1, 1, 1, 1, 1, 1];
+        $utezniFaktorjiF_Pnren = [0, 1.5, 0.2, 1.1, 1.1, 1.12, 1.1, 0, 0.973];
+        $utezniFaktorjiF_Pren = [1, 1, 1, 0, 0, 0.06, 0, 1, 0.146];
+        $utezniFaktorjiF_Ptot = [1, 2.5, 1.2, 1.1, 1.1, 1.18, 1.1, 1, 1.119];
+        $utezniFaktorjiF_TSG = [1, 2.5, 1, 1, 1, 1, 1, 1, 1];
 
         switch ($faktor) {
             case 'tot':
@@ -52,7 +53,7 @@ enum TSSVrstaEnergenta: string
      */
     public function maksimalniIzkoristek()
     {
-        $faktorjiIzkoristka = [0, 1, 1.08, 1.06, 1.11, 1, 1.09, 0];
+        $faktorjiIzkoristka = [0, 1, 1.08, 1.06, 1.11, 1, 1.09, 0, 1];
 
         return $faktorjiIzkoristka[$this->getOrdinal()];
     }
@@ -64,7 +65,7 @@ enum TSSVrstaEnergenta: string
      */
     public function faktorIzpustaCO2()
     {
-        $faktorjiIzpusta = [0, 0.42, 0.04, 0.29, 0.22, 0.396, 0.22, 0];
+        $faktorjiIzpusta = [0, 0.42, 0.04, 0.29, 0.22, 0.396, 0.22, 0, 0.343];
 
         return $faktorjiIzpusta[$this->getOrdinal()];
     }
@@ -86,6 +87,7 @@ enum TSSVrstaEnergenta: string
             TSSVrstaEnergenta::ZP,
             TSSVrstaEnergenta::Daljinsko,
             TSSVrstaEnergenta::ELKO => 0.7,
+            TSSVrstaEnergenta::DaljinskoUcinkovito => 0.7,
         };
     }
 
@@ -105,6 +107,7 @@ enum TSSVrstaEnergenta: string
             'Daljinsko ogrevanje',
             'UNP',
             'Sončna energija',
+            'Daljinsko ogrevanje s SDOL Ljubljana',
         ];
 
         return $naziviEnergentov[$this->getOrdinal()];
@@ -126,6 +129,7 @@ enum TSSVrstaEnergenta: string
             'energy_dt',
             'energy_unp',
             'energy_sol',
+            'energy_dt',
         ];
 
         return $sifre[$this->getOrdinal()];
