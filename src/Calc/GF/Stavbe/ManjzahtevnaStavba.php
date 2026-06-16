@@ -268,6 +268,9 @@ class ManjzahtevnaStavba extends Stavba
         }
 
         $this->minROVE = 50 * $this->X_OVE($this->year);
+        if ($this->ROVE < $this->minROVE) {
+            //$this->minROVE = $this->minROVE / 2;
+        }
 
         $this->specificnaPrimarnaEnergija =
             $this->skupnaPrimarnaEnergija / $this->ogrevanaPovrsina;

@@ -169,23 +169,30 @@ class NetransparentenElementOvoja extends ElementOvoja
                 ($cona->notranjaTOgrevanje - $okolje->projektnaZunanjaT);
         }
 
+        $dobitekSS = !empty($this->konstrukcija->TSG->dobitekSS);
+        if (isset($this->dobitekSS)) {
+            $dobitekSS = $this->dobitekSS;
+        }
+
         // napolni podatke o vplivu zemljine
         if ($this->konstrukcija->TSG->tip != 'zunanja') {
             $this->vplivZemljine();
         } else {
             // faktor sončnega sevanja
-            foreach ($okolje->obsevanje as $line) {
-                if ($line->orientacija == $this->orientacija && $line->naklon == $this->naklon) {
-                    $this->soncnoObsevanje = $line->obsevanje;
-                    break;
+            if ($dobitekSS) {
+                foreach ($okolje->obsevanje as $line) {
+                    if ($line->orientacija == $this->orientacija && $line->naklon == $this->naklon) {
+                        $this->soncnoObsevanje = $line->obsevanje;
+                        break;
+                    }
                 }
-            }
-            if (empty($this->soncnoObsevanje)) {
-                throw new \Exception(sprintf(
-                    'Sončno obsevanje %1$s za element "%2$s" ne obstaja',
-                    $this->id ?? '',
-                    $this->orientacija . ':' . $this->naklon
-                ));
+                if (empty($this->soncnoObsevanje)) {
+                    throw new \Exception(sprintf(
+                        'Sončno obsevanje za element %1$s z orientacijo "%2$s" ne obstaja',
+                        $this->id ?? '',
+                        $this->orientacija . ':' . $this->naklon
+                    ));
+                }
             }
 
             $this->H_ogrevanje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
@@ -217,10 +224,6 @@ class NetransparentenElementOvoja extends ElementOvoja
                 $this->transIzgubeHlajenje[$mesec] = $this->H_hlajenje * 24 / 1000 *
                     $cona->deltaTHlajenje[$mesec] * $stDni * $this->stevilo;
 
-                $dobitekSS = !empty($this->konstrukcija->TSG->dobitekSS);
-                if (isset($this->dobitekSS)) {
-                    $dobitekSS = $this->dobitekSS;
-                }
                 if ($dobitekSS) {
                     // svetla barva 0.3, srednja barva 0.6, temna barva 0.9
                     $alphaSr = !empty($this->options['referencnaStavba']) ? 0.5 : $this->barva->koeficientAlphaSr();
@@ -273,6 +276,7 @@ class NetransparentenElementOvoja extends ElementOvoja
     private function vplivZemljine()
     {
         $params = (object)[
+            'id' => $this->id,
             'tla' => $this->tla->value,
             'povrsina' => $this->povrsina,
             'obseg' => $this->obseg ?? null,

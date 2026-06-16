@@ -74,7 +74,7 @@ class FotonapetostniSistem
         $this->kontrolniFaktor = (float)($config->kontrolniFaktor ?? 1);
 
         $this->vrsta = VrstaSoncnihCelic::from($config->vrsta ?? 'monokristalne');
-        $this->koeficientMoci = $this->vrsta->koeficientMoci();
+        $this->koeficientMoci = $config->koeficientMoci ?? $this->vrsta->koeficientMoci();
 
         $this->vgradnja = VrstaVgradnje::from($config->vgradnja ?? 'neprezracavani');
         $this->koeficientVgradnje = $this->vgradnja->koeficientVgradnje();
