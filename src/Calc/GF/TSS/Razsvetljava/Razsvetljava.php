@@ -153,10 +153,9 @@ class Razsvetljava extends TSSSistem
     public function analiza($potrebnaEnergija, $cona, $okolje, $params = [])
     {
         if (is_null($this->faktorOblike)) {
+            // TSG (tabele 11.1-11.10): faktor oblike prostora k = 1 za referenčno stavbo; privzeto tudi za
+            // obravnavano stavbo, če faktorOblikeCone ni podan.
             $faktorOblike = $cona->faktorOblikeCone ?? 1;
-            if (!empty($params['referencnaStavba'])) {
-                $faktorOblike = 1.4;
-            }
         } else {
             $faktorOblike = $this->faktorOblike;
         }

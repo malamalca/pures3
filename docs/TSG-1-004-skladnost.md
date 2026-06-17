@@ -19,6 +19,8 @@ Legenda: ✅ odpravljeno · 🟡 odprto · 🔵 potrjeno skladno
 | 5 | Iz-1 fotonapetostne celice `monokristalne` → `polikristalne` | `IzobrazevalnaKlasifikacijaCone::referencniTSSFotovoltaika` | tab. 11.4 / 11.8 |
 | 6 | Privzeta temperatura TSV usklajena s TSG: 45 °C (St-1) / 55 °C (St-2/St-3); cona lahko prepiše prek `TSV->toplaVodaT`; popravljeno tudi branje (prej se je bralo z `$this->TSV`, kar ni bilo nikoli nastavljeno) | `Enostanovanjska/Vecstanovanjska KlasifikacijaCone` | tab. 11.1 |
 | 8 | Implementirane referenčne klasifikacije Tr-1, Bo-1, Sp-1, Ra-1 | `KlasifikacijaConeFactory` + nove klase | tab. 11.5, 11.9, 11.10, 11.8 |
+| A | Referenčna fotovoltaika ima faktor ujemanja `fmatch = 1` (dodan zastavica `referencnaStavba`, ki izklopi izračun samooskrbnega ujemanja) | `FotonapetostniSistem`, `IzracunTSS` | tab. 11.4, t. 9 |
+| B | Faktor oblike referenčne razsvetljave popravljen z `1,4` na `k = 1` (odstranjena posebna veja za referenčno stavbo; uporabi se privzeti `faktorOblikeCone ?? 1`) | `Razsvetljava::analiza` | tab. 11.1–11.10 |
 | – | Popravljen obstoječi hrošč: neinicializirana lastnost `ElementOvoja::$id` pri konstrukcijah proti zemljini | `ElementOvoja::$id` | – |
 
 ---
@@ -30,25 +32,6 @@ Legenda: ✅ odpravljeno · 🟡 odprto · 🔵 potrjeno skladno
 - `Cona` nima dostopa do vrste gradnje (`Stavba::$tip` je na nivoju stavbe) — ni enostavnega popravka.
 - Dodatno: TSG je notranje neskladen — tabela 8.10.3 navaja `n50 = 2,0`, poglavje 11 pa `1,5`.
   Koda sledi poglavju 11 (1,5).
-
-### 🟡 A — Referenčna fotovoltaika ne vsiljuje `fmatch = 1`
-Referenčni PV (`refFotovoltaika`) ima `oddajaVOmrezje = false` brez hranilnika/TSV,
-zato je `vplivUjemanja = true` in se izračuna faktor ujemanja `< 1`.
-TSG zahteva za **referenčno stavbo** `fmatch,t = 1` ne glede na metodo modeliranja
-(TSG t. 9, opombe; tab. 11.4).
-
-- **Lokacija:** `FotonapetostniSistem::parseConfig:94`, `::analiza:132`.
-- **Posledica:** referenčna stavba lastno porabi manj PV, kot predpisuje smernica.
-
-### 🟡 B — Faktor oblike referenčne razsvetljave `1,4` namesto `k = 1`
-`Razsvetljava::analiza` uporabi `faktorOblike = 1.4`, kadar je `faktorOblike` nenastavljen
-in gre za referenčno stavbo (pot `Cona::izracunRazsvetljave`). TSG tab. 11.1–11.10 zahtevajo
-`k = 1` (in `refRazsvetljava` pravilno uporablja 1).
-
-- **Lokacija:** `Razsvetljava::analiza:157-158`.
-- **Opomba:** vpliv odvisen od tega, ali se `Cona->energijaRazsvetljava` referenčne cone
-  dejansko upošteva v končnem EPtot (merodajna EP-pot uporablja `referencniTSS('razsvetljava')`
-  s `k = 1`). Pred posegom preveriti porabo te vrednosti.
 
 ### 🟡 C — Stanovanjsko prezračevanje brez spodnje meje 7 l/s na osebo
 `EnostanovanjskaKlasifikacijaCone::kolicinaSvezegaZrakaZaPrezracevanje` uporablja

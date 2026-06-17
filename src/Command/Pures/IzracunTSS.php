@@ -278,7 +278,7 @@ class IzracunTSS extends Command
             $refTSSFotonapetostniSistemi = $conaClass->referencniTSS('fotovoltaika');
 
             foreach ($refTSSFotonapetostniSistemi as $refSistem) {
-                $refFotonapetostniSistem = new FotonapetostniSistem($refSistem);
+                $refFotonapetostniSistem = new FotonapetostniSistem($refSistem, true);
                 $refFotonapetostniSistem->analiza($celotnaElektrikaVsehReferencnihCon, $okolje);
 
                 $refSistem->energijaPoEnergentih = $refFotonapetostniSistem->energijaPoEnergentih;

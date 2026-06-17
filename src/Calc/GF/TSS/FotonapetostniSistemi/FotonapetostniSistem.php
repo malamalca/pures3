@@ -28,6 +28,7 @@ class FotonapetostniSistem
     public bool $vgrajenHranilnik;
     public bool $ogrevanjeTSV;
     public bool $vplivUjemanja;
+    public bool $referencnaStavba = false;
 
     public float $nazivnaMoc;
 
@@ -45,10 +46,13 @@ class FotonapetostniSistem
      * Class Constructor
      *
      * @param string|\stdClass $config Configuration
+     * @param bool $referencnaStavba Določa ali gre za referenčno stavbo ali ne
      * @return void
      */
-    public function __construct($config = null)
+    public function __construct($config = null, bool $referencnaStavba = false)
     {
+        $this->referencnaStavba = $referencnaStavba;
+
         if ($config) {
             $this->parseConfig($config);
         }
@@ -91,10 +95,13 @@ class FotonapetostniSistem
         $this->vgrajenHranilnik = (bool)($config->vgrajenHranilnik ?? false);
         $this->ogrevanjeTSV = (bool)($config->ogrevanjeTSV ?? false);
 
+        // Za referenčno stavbo je faktor ujemanja fmatch vedno 1 (TSG, tab. 11.4 in t. 9), zato se
+        // samooskrbni faktor ujemanja ne računa.
         $this->vplivUjemanja =
             $this->oddajaVOmrezje == false &&
             $this->vgrajenHranilnik == false &&
-            $this->ogrevanjeTSV == false;
+            $this->ogrevanjeTSV == false &&
+            $this->referencnaStavba == false;
     }
 
     /**
