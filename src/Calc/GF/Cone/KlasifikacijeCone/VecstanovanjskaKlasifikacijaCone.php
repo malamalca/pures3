@@ -12,10 +12,9 @@ class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
     public float $notranjaTOgrevanje = 20;
     public float $notranjaTHlajenje = 26;
 
-    // OPOMBA: TSG tabela 11.1 navaja referenčno temperaturo TSV v večstanovanjskih stavbah 55 °C/10 °C,
-    // tu pa je (kot pri St-1) uporabljena 42 °C zaradi skladnosti z obstoječim validacijskim Excelom.
-    // Za uskladitev s TSG nastavi toplaVodaT = 55 in posodobi pričakovane vrednosti TSV v testih.
-    public int $toplaVodaT = 42;
+    // TSG tabela 11.1: referenčna temperatura TSV v večstanovanjskih stavbah 55 °C/10 °C.
+    // Posamezna cona lahko privzeto vrednost prepiše prek TSV->toplaVodaT / TSV->hladnaVodaT v vhodnih podatkih.
+    public int $toplaVodaT = 55;
     public int $hladnaVodaT = 10;
 
     /**
@@ -32,8 +31,8 @@ class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
      */
     public function izracunTSVZaMesec(int $mesec, Cona $cona): float
     {
-        $toplaVodaT = $this->TSV->toplaVodaT ?? $this->toplaVodaT;
-        $hladnaVodaT = $this->TSV->hladnaVodaT ?? $this->hladnaVodaT;
+        $toplaVodaT = $cona->TSV->toplaVodaT ?? $this->toplaVodaT;
+        $hladnaVodaT = $cona->TSV->hladnaVodaT ?? $this->hladnaVodaT;
 
         if (empty($cona->TSV->steviloOseb)) {
             // EN 12831-3:2017 B.3

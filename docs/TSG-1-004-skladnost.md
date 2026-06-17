@@ -17,23 +17,13 @@ Legenda: ✅ odpravljeno · 🟡 odprto · 🔵 potrjeno skladno
 | 3 | Svetlobni izkoristek (hL) in osvetljenost referenčne stavbe poenotena med potjo QH/QC in EP; hL določen glede na leto projekta (80 do 2025, 95 po 2025), osvetljenost po klasifikaciji (300/500 lx) | `KlasifikacijaCone::ucinkovitostViraSvetlobeZaLeto`, `::referencnaOsvetlitevDelovnePovrsine`, `Cona::parseConfig`, `IzracunCone`/`IzracunTSS` | tab. 11.1–11.10 |
 | 4 | Prostornina solarnega hranilnika TSV `0,8/0,6·Ause` → `50·ASSE` | `KlasifikacijaCone::dodajSolarniTSV` | tab. 11.1, vrstica OVE |
 | 5 | Iz-1 fotonapetostne celice `monokristalne` → `polikristalne` | `IzobrazevalnaKlasifikacijaCone::referencniTSSFotovoltaika` | tab. 11.4 / 11.8 |
+| 6 | Privzeta temperatura TSV usklajena s TSG: 45 °C (St-1) / 55 °C (St-2/St-3); cona lahko prepiše prek `TSV->toplaVodaT`; popravljeno tudi branje (prej se je bralo z `$this->TSV`, kar ni bilo nikoli nastavljeno) | `Enostanovanjska/Vecstanovanjska KlasifikacijaCone` | tab. 11.1 |
 | 8 | Implementirane referenčne klasifikacije Tr-1, Bo-1, Sp-1, Ra-1 | `KlasifikacijaConeFactory` + nove klase | tab. 11.5, 11.9, 11.10, 11.8 |
 | – | Popravljen obstoječi hrošč: neinicializirana lastnost `ElementOvoja::$id` pri konstrukcijah proti zemljini | `ElementOvoja::$id` | – |
 
 ---
 
 ## Odprte neskladnosti
-
-### 🟡 #6 — Referenčna temperatura TSV pri stanovanjskih stavbah
-TSG tabela 11.1 navaja temperaturo TSV **45 °C** (enostanovanjske) oz. **55 °C**
-(večstanovanjske); koda uporablja **42 °C**.
-
-- **Stanje:** v kodi je dodan le komentar (`Enostanovanjska/Vecstanovanjska KlasifikacijaCone`).
-- **Razlog za odlog:** sprememba ruši validacijski test `IzracunConeTest`, ki preverja
-  cono St-1 proti referenčnemu Excelu, izračunanemu pri 42 °C. Konflikt med besedilom
-  TSG (45/55 °C) in obstoječim validacijskim virom (42 °C) zahteva odločitev naročnika.
-- **Potreben poseg ob potrditvi:** `toplaVodaT = 45` (St-1) / `55` (St-2/St-3) + uskladitev
-  pričakovanih vrednosti TSV v testu (faktor 35/32 oz. 45/32).
 
 ### 🟡 #7 — Tesnost referenčne stavbe pri rekonstrukcijah (`n50 = 2,0`)
 - `Cona::parseConfig` nastavi `n50 = 1.5` (`// todo: za rekonstrukcije n50=2`).

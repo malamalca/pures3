@@ -28,6 +28,8 @@
         "toplotnaKapaciteta": 165000,
 
         "TSV": {
+            "toplaVodaT": 42,
+            "hladnaVodaT": 10
         },
 
         "razsvetljava": {
