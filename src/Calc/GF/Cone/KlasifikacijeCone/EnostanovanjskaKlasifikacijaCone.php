@@ -73,7 +73,7 @@ class EnostanovanjskaKlasifikacijaCone extends KlasifikacijaCone
     {
         // TSG tabela 11.1: projektirana osvetljenost delovne površine 300 lx, FDS = 0,0 %.
         // Število ur (tD = 1820, tN = 1680) se prevzame iz letnoSteviloUrDelovanjaRazsvetljave() (tabela 8.17).
-        return $this->refRazsvetljava($cona, 300);
+        return $this->refRazsvetljava($cona, $this->referencnaOsvetlitevDelovnePovrsine());
     }
 
     /**

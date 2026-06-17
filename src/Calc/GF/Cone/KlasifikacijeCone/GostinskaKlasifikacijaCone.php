@@ -98,10 +98,19 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
+    public function referencnaOsvetlitevDelovnePovrsine(): int
+    {
+        // TSG tabeli 11.2 in 11.3: projektirana osvetljenost delovne površine 500 lx.
+        return 500;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function referencniTSSRazsvetljava(Cona $cona): array
     {
         // TSG tabeli 11.2 in 11.3: projektirana osvetljenost delovne površine 500 lx, FDS = 0,0 %.
-        return $this->refRazsvetljava($cona, 500);
+        return $this->refRazsvetljava($cona, $this->referencnaOsvetlitevDelovnePovrsine());
     }
 
     /**

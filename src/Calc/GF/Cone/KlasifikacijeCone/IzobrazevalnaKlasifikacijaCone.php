@@ -66,10 +66,19 @@ class IzobrazevalnaKlasifikacijaCone extends KlasifikacijaCone
     /**
      * @inheritDoc
      */
+    public function referencnaOsvetlitevDelovnePovrsine(): int
+    {
+        // TSG tabela 11.8: projektirana osvetljenost delovne površine 500 lx.
+        return 500;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function referencniTSSRazsvetljava(Cona $cona): array
     {
         // TSG tabela 11.8: projektirana osvetljenost delovne površine 500 lx, FDS = 0,0 %.
-        return $this->refRazsvetljava($cona, 500);
+        return $this->refRazsvetljava($cona, $this->referencnaOsvetlitevDelovnePovrsine());
     }
 
     /**

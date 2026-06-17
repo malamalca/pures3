@@ -61,7 +61,7 @@ class IndustrijskaKlasifikacijaCone extends KlasifikacijaCone
     {
         // TSG tabela 11.6: število ur in osvetljenost delovne površine skladno s projektno dokumentacijo;
         // privzame se 300 lx, FDS = 0,0 %.
-        return $this->refRazsvetljava($cona, 300);
+        return $this->refRazsvetljava($cona, $this->referencnaOsvetlitevDelovnePovrsine());
     }
 
     /**

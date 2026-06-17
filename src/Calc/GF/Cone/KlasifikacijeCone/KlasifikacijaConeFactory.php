@@ -33,6 +33,14 @@ class KlasifikacijaConeFactory
                 return new GostinskaKlasifikacijaCone($type, $options);
             case 'Sd-1':
                 return new SplosniDruzbeniNamenKlasifikacijaCone($type, $options);
+            case 'Tr-1':
+                return new TrgovskaKlasifikacijaCone($type, $options);
+            case 'Bo-1':
+                return new ZdravstvenaKlasifikacijaCone($type, $options);
+            case 'Sp-1':
+                return new SportnaKlasifikacijaCone($type, $options);
+            case 'Ra-1':
+                return new KulturaRazvedriloKlasifikacijaCone($type, $options);
             default:
                 throw new \Exception(sprintf('Vrsta klasifikacije cone "%s" ne obstaja.', $type));
         }

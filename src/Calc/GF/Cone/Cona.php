@@ -167,7 +167,9 @@ class Cona
             $razsvetljava->faktorZmanjsanjaSvetlobnegaToka = 1;
             $razsvetljava->faktorPrisotnosti = 1;
             $razsvetljava->faktorDnevneSvetlobe = 0;
-            $razsvetljava->osvetlitevDelovnePovrsine = 300;
+            // projektirana osvetljenost delovne površine je odvisna od klasifikacije cone (TSG tabele 11.x)
+            $razsvetljava->osvetlitevDelovnePovrsine =
+                KlasifikacijaConeFactory::create($config->klasifikacija)->referencnaOsvetlitevDelovnePovrsine();
             // velja za LED; hL = 80 lm/W, po letu 2025 pa 95 lm/W (TSG), glede na leto projekta
             $razsvetljava->ucinkovitostViraSvetlobe =
                 KlasifikacijaCone::ucinkovitostViraSvetlobeZaLeto($this->options['leto'] ?? null);

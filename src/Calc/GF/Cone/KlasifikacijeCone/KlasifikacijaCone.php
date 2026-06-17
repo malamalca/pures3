@@ -115,6 +115,18 @@ abstract class KlasifikacijaCone
     abstract public function export();
 
     /**
+     * Projektirana osvetljenost delovne površine referenčne stavbe (lx) za to klasifikacijo cone.
+     * Privzeto 300 lx (TSG tabele 11.1-11.10); podrazredi z drugačno zahtevo vrednost prepišejo.
+     * Uporablja se enotno v izračunu QH,nd/QC,nd (notranja bremena) in EP (referenčni TSS razsvetljave).
+     *
+     * @return int
+     */
+    public function referencnaOsvetlitevDelovnePovrsine(): int
+    {
+        return 300;
+    }
+
+    /**
      * Faktor površine sprejemnikov sončne energije (SSE) glede na uporabno površino cone.
      * Privzeto 0,04 x Ause (TSG tabela 11.1, vrstica OVE). Podrazredi lahko vrednost prepišejo.
      *
@@ -133,13 +145,15 @@ abstract class KlasifikacijaCone
      * @param string $emitter Vrsta končnega prenosnika ('radiatorji' za ploščata ogrevala ali 'konvektorji')
      * @param string $tsvNacin Način priprave TSV ('elektricni' za lokalne grelnike ali 'solarni')
      * @param float|null $sseFaktor Faktor površine SSE (le pri solarni TSV); privzeto solarniFaktorSSE()
+     * @param string $rezim Temperaturni režim razvoda ogrevanja (privzeto '55/45'; npr. '35/30' za šport)
      * @return \stdClass
      */
     protected function refToplovodniSistem(
         Cona $cona,
         string $emitter,
         string $tsvNacin,
-        ?float $sseFaktor = null
+        ?float $sseFaktor = null,
+        string $rezim = '55/45'
     ): \stdClass {
         $sistem = new \stdClass();
         $sistem->id = $cona->id;
@@ -152,7 +166,7 @@ abstract class KlasifikacijaCone
         $sistem->prenosniki = [];
 
         $sistem->ogrevanje = new \stdClass();
-        $sistem->ogrevanje->rezim = '55/45';
+        $sistem->ogrevanje->rezim = $rezim;
         $sistem->ogrevanje->generatorji = ['KOTEL'];
         $sistem->ogrevanje->razvodi = ['OGREVANJE'];
         $sistem->ogrevanje->prenosniki = ['OGREVALA'];

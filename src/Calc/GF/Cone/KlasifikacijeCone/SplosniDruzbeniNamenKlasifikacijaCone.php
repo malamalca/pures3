@@ -59,7 +59,7 @@ class SplosniDruzbeniNamenKlasifikacijaCone extends KlasifikacijaCone
     public function referencniTSSRazsvetljava(Cona $cona): array
     {
         // TSG tabela 11.4 (Po-1 in Sd-1): projektirana osvetljenost delovne površine 300 lx, FDS = 0,0 %.
-        return $this->refRazsvetljava($cona, 300);
+        return $this->refRazsvetljava($cona, $this->referencnaOsvetlitevDelovnePovrsine());
     }
 
     /**
