@@ -96,6 +96,9 @@ class CalcKonstrukcije
         $kons->Sd = $totalSd;
         $kons->debelina = $debelina;
 
+        // faktor toplotne stabilnosti f (dušilni/dekrementni faktor, SIST EN ISO 13786; TSG t. 8.1.5)
+        $kons->f = self::faktorToplotneStabilnosti($kons);
+
         self::vplivZemljine($kons);
 
         if (!empty($options['referencnaStavba'])) {
@@ -158,6 +161,8 @@ class CalcKonstrukcije
         $izracunKondenzacije = !isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false;
         $izracunKondenzacije = !isset($options['referencnaStavba']) || !$options['referencnaStavba'];
         $izracunKondenzacije = $izracunKondenzacije || !empty($options['izracunKondenzacije']);
+        // brez difuzijskih podatkov (Sd = 0) prehoda vodne pare ni mogoče izračunati
+        $izracunKondenzacije = $izracunKondenzacije && $kons->Sd > 0;
 
         if ($izracunKondenzacije) {
             $Sdt = 0;
@@ -208,6 +213,120 @@ class CalcKonstrukcije
         }
 
         return $kons;
+    }
+
+    /**
+     * Faktor toplotne stabilnosti f (dušilni/dekrementni faktor) gradnika po SIST EN ISO 13786,
+     * skladno s točko 8.1.5 smernice TSG-1-004. Določen je kot razmerje med periodično toplotno
+     * prehodnostjo |Yie| (perioda 24 h) in stacionarno toplotno prehodnostjo U: f = |Yie| / U.
+     * Vrne null, kadar dinamičnih lastnosti slojev ni mogoče določiti (manjka gostota/specifična toplota).
+     *
+     * @param \stdClass $kons Podatki konstrukcije (z izračunanim U, Rsi, Rse in materiali)
+     * @return float|null
+     */
+    public static function faktorToplotneStabilnosti($kons): ?float
+    {
+        foreach ($kons->materiali as $material) {
+            if (
+                empty($material->debelina) || empty($material->lambda) ||
+                empty($material->gostota) || empty($material->specificnaToplota)
+            ) {
+                return null;
+            }
+        }
+
+        $perioda = 86400.0; // 24 h v sekundah
+
+        // toplotna matrika gradnika (kompleksna 2x2), od notranje proti zunanji strani
+        $Z = self::kompleksniProdukt(self::kompleksnaMatrikaUpora($kons->Rsi), self::kompleksnaEnotskaMatrika());
+        foreach ($kons->materiali as $material) {
+            $Z = self::kompleksniProdukt($Z, self::kompleksnaMatrikaSloja(
+                (float)$material->debelina,
+                (float)$material->lambda,
+                (float)$material->gostota,
+                (float)$material->specificnaToplota,
+                $perioda
+            ));
+        }
+        $Z = self::kompleksniProdukt($Z, self::kompleksnaMatrikaUpora($kons->Rse));
+
+        $absZ12 = sqrt($Z['12'][0] ** 2 + $Z['12'][1] ** 2);
+        if ($absZ12 == 0.0) {
+            return null;
+        }
+
+        // periodična toplotna prehodnost Yie = -1/Z12; |Yie| = 1/|Z12|
+        return 1 / $absZ12 / $kons->U;
+    }
+
+    /**
+     * Enotska kompleksna 2x2 matrika.
+     *
+     * @return array
+     */
+    private static function kompleksnaEnotskaMatrika(): array
+    {
+        return ['11' => [1.0, 0.0], '12' => [0.0, 0.0], '21' => [0.0, 0.0], '22' => [1.0, 0.0]];
+    }
+
+    /**
+     * Toplotna matrika mejnega (zračnega) sloja z uporom R.
+     *
+     * @param float $R Toplotni upor (m2K/W)
+     * @return array
+     */
+    private static function kompleksnaMatrikaUpora(float $R): array
+    {
+        return ['11' => [1.0, 0.0], '12' => [-$R, 0.0], '21' => [0.0, 0.0], '22' => [1.0, 0.0]];
+    }
+
+    /**
+     * Toplotna matrika homogenega sloja po SIST EN ISO 13786.
+     *
+     * @param float $d Debelina sloja (m)
+     * @param float $lambda Toplotna prevodnost (W/(mK))
+     * @param float $ro Gostota (kg/m3)
+     * @param float $c Specifična toplota (J/(kgK))
+     * @param float $perioda Perioda nihanja (s)
+     * @return array
+     */
+    private static function kompleksnaMatrikaSloja(float $d, float $lambda, float $ro, float $c, float $perioda): array
+    {
+        $delta = sqrt($lambda * $perioda / (M_PI * $ro * $c)); // globina prodiranja
+        $xi = $d / $delta;
+
+        $sh = sinh($xi);
+        $ch = cosh($xi);
+        $sn = sin($xi);
+        $cs = cos($xi);
+
+        $z11 = [$ch * $cs, $sh * $sn];
+        $f12 = $delta / (2 * $lambda);
+        $z12 = [-$f12 * ($sh * $cs + $ch * $sn), -$f12 * ($ch * $sn - $sh * $cs)];
+        $f21 = $lambda / $delta;
+        $z21 = [-$f21 * ($sh * $cs - $ch * $sn), -$f21 * ($sh * $cs + $ch * $sn)];
+
+        return ['11' => $z11, '12' => $z12, '21' => $z21, '22' => $z11];
+    }
+
+    /**
+     * Produkt dveh kompleksnih 2x2 matrik.
+     *
+     * @param array $A Matrika A
+     * @param array $B Matrika B
+     * @return array
+     */
+    private static function kompleksniProdukt(array $A, array $B): array
+    {
+        $mul = fn(array $x, array $y): array => [$x[0] * $y[0] - $x[1] * $y[1], $x[0] * $y[1] + $x[1] * $y[0]];
+        $add = fn(array $x, array $y): array => [$x[0] + $y[0], $x[1] + $y[1]];
+
+        return [
+            '11' => $add($mul($A['11'], $B['11']), $mul($A['12'], $B['21'])),
+            '12' => $add($mul($A['11'], $B['12']), $mul($A['12'], $B['22'])),
+            '21' => $add($mul($A['21'], $B['11']), $mul($A['22'], $B['21'])),
+            '22' => $add($mul($A['21'], $B['12']), $mul($A['22'], $B['22'])),
+        ];
     }
 
     /**

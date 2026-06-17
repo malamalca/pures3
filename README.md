@@ -37,3 +37,7 @@ Po preračunu se izkaz gradbene fizike shrani v podmapo /projects/TestniProjekt/
 ## Skladnost s TSG 004
 
 Skladnos s TSG je opisana v [ločeni datoteki](docs/TSG-1-004-skladnost.md).
+
+## Skladnost z validacijskimi testi iz TSG
+
+Skladnost z validacijskimi testi je opisana v [ločeni datoteki](docs/TSG-1-004-validacijski-testi.md)

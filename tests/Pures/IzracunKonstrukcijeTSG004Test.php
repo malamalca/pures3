@@ -35,21 +35,21 @@ final class IzracunKonstrukcijeTSG004Test extends TestCase
                     "debelina": 0.15,
                     "lambda": 2.04,
                     "gostota": 2400,
-                    "difuzijskaUpornost": 9
+                    "difuzijskaUpornost": 60
                 },
                 {
                     "opis": "b",
                     "debelina": 0.15,
                     "lambda": 0.041,
                     "gostota": 20,
-                    "difuzijskaUpornost": 5.25
+                    "difuzijskaUpornost": 35
                 },
                 {
                     "opis": "c",
                     "debelina": 0.15,
                     "lambda": 2.04,
                     "gostota": 2400,
-                    "difuzijskaUpornost": 9
+                    "difuzijskaUpornost": 60
                 }
             ]
         }
@@ -65,9 +65,49 @@ final class IzracunKonstrukcijeTSG004Test extends TestCase
         $expected_fRsi = [0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939, 0.939];
         $this->assertEquals($expected_fRsi, $roundedResult);
 
-        $roundedResult = array_map(fn($el) => round($el, 1), $result->gc);
-        $expectedGs = [9, 4, -8, -21, 0, 0, 0, 0, 0, 0, 2, 7];
-        //$this->assertEquals($expectedGs, $roundedResult);
+        // TSG tabela 8.3: mesečna količina nastalega/izsušenega kondenzata gc (g/(m2 m)).
+        // Vhodna difuzijska upornost je μ = sd / d (TSG navaja sd = 9/5,25/9 m, debeline 0,15 m -> μ = 60/35/60).
+        // gc se izračuna le za mesece s kondenzacijo/izsuševanjem; ostale mesece (poletje) izenačimo z 0.
+        $gc = [];
+        foreach (range(0, 11) as $mesec) {
+            $gc[$mesec] = (int)round($result->gc[$mesec] ?? 0, 0);
+        }
+        $expectedGc = [9, 4, -8, -21, 0, 0, 0, 0, 0, 0, 2, 7];
+        $this->assertEquals($expectedGc, $gc);
+    }
+
+    /**
+     * TSG-1-004:2022, tabela 8.4 - kontrolni primer: U = 0,130 W/(m2K), faktor toplotne stabilnosti f = 0,449
+     * (dušilni/dekrementni faktor po SIST EN ISO 13786, točka 8.1.5).
+     */
+    public function testValidacijaTSG84(): void
+    {
+        $inputZunanjaT = [-1, 1, 6, 10, 15, 18, 20, 19, 15, 10, 4, 1];
+        $inputZunanjaVlaga = [82, 77, 72, 71, 73, 72, 75, 76, 80, 82, 84, 85];
+        $okolje = \App\Lib\CalcOkolje::notranjeOkolje(['zunanjaT' => $inputZunanjaT, 'zunanjaVlaga' => $inputZunanjaVlaga]);
+
+        $konstrukcijaJson = <<<EOT
+        {
+            "id": "S1",
+            "naziv": "Streha",
+            "vrsta": 1,
+            "Rsi": 0.13,
+            "Rse": 0.04,
+            "materiali": [
+                {"opis": "a", "debelina": 0.03, "lambda": 0.13, "gostota": 700, "specificnaToplota": 2100},
+                {"opis": "b", "debelina": 0.25, "lambda": 0.035, "gostota": 100, "specificnaToplota": 840},
+                {"opis": "c", "debelina": 0.04, "lambda": 0.21, "gostota": 900, "specificnaToplota": 840}
+            ]
+        }
+        EOT;
+        $konstrukcija = json_decode($konstrukcijaJson);
+        $result = \App\Lib\CalcKonstrukcije::konstrukcija($konstrukcija, $okolje);
+
+        // U = 0,130 W/(m2K) (TSG tabela 8.4)
+        $this->assertEqualsWithDelta(0.130, $result->U, 0.001);
+
+        // faktor toplotne stabilnosti f = 0,449 (TSG tabela 8.4, SIST EN ISO 13786)
+        $this->assertEqualsWithDelta(0.449, $result->f, 0.005);
     }
 
     public function testValidacijaTSGProtiZemlji(): void

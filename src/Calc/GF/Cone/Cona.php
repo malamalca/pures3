@@ -776,11 +776,14 @@ class Cona
                 $mesecnaKolicinaVodnePare = $this->uravnavanjeVlage->faktorUporabe *
                     $this->uravnavanjeVlage->viriVodnePare * $this->ogrevanaPovrsina * 24 * $stDni / 1000;
 
-                $this->energijaNavlazevanje[$mesec] =
-                    ($potrebnaMesecnaKolicinaVodeOgrevanje - $mesecnaKolicinaVodnePare) *
-                    (1 - $this->uravnavanjeVlage->ucinkovitostPrenosnika) * $uparjalnaToplota / 3600;
-                $this->energijaRazvlazevanje[$mesec] =
-                    ($potrebnaMesecnaKolicinaVodeHlajenje + $mesecnaKolicinaVodnePare) * $uparjalnaToplota / 3600;
+                // TSG (tabeli 8.12.1 in 8.12.2): mesečna potrebna toplota za navlaževanje oz. razvlaževanje
+                // je nič, kadar je potrebna količina vode (mH2O,m) manjša od 0.
+                $this->energijaNavlazevanje[$mesec] = max(0, (
+                    $potrebnaMesecnaKolicinaVodeOgrevanje - $mesecnaKolicinaVodnePare
+                ) * (1 - $this->uravnavanjeVlage->ucinkovitostPrenosnika) * $uparjalnaToplota / 3600);
+                $this->energijaRazvlazevanje[$mesec] = max(0, (
+                    $potrebnaMesecnaKolicinaVodeHlajenje + $mesecnaKolicinaVodnePare
+                ) * $uparjalnaToplota / 3600);
 
                 if (!empty($options['details'])) {
                     // za validacijo

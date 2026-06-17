@@ -21,6 +21,9 @@ Legenda: ✅ odpravljeno · 🟡 odprto · 🔵 potrjeno skladno
 | 8 | Implementirane referenčne klasifikacije Tr-1, Bo-1, Sp-1, Ra-1 | `KlasifikacijaConeFactory` + nove klase | tab. 11.5, 11.9, 11.10, 11.8 |
 | A | Referenčna fotovoltaika ima faktor ujemanja `fmatch = 1` (dodan zastavica `referencnaStavba`, ki izklopi izračun samooskrbnega ujemanja) | `FotonapetostniSistem`, `IzracunTSS` | tab. 11.4, t. 9 |
 | B | Faktor oblike referenčne razsvetljave popravljen z `1,4` na `k = 1` (odstranjena posebna veja za referenčno stavbo; uporabi se privzeti `faktorOblikeCone ?? 1`) | `Razsvetljava::analiza` | tab. 11.1–11.10 |
+| E | Mesečna energija za navlaževanje/razvlaževanje omejena na ≥ 0 (`max(0, …)`) | `Cona::izracunNavlazevanje` | tab. 8.12.1, 8.12.2 |
+| F | Implementiran faktor toplotne stabilnosti `f` (dušilni/dekrementni faktor, kompleksna toplotna matrika) | `CalcKonstrukcije::faktorToplotneStabilnosti` | t. 8.1.5, tab. 8.4 (SIST EN ISO 13786) |
+| G | Dodan varovalni pogoj `Sd > 0` pred izračunom prehoda vodne pare (prepreči `DivisionByZeroError`) | `CalcKonstrukcije::konstrukcija` | t. 8.1.3 |
 | – | Popravljen obstoječi hrošč: neinicializirana lastnost `ElementOvoja::$id` pri konstrukcijah proti zemljini | `ElementOvoja::$id` | – |
 
 ---
@@ -32,6 +35,9 @@ Legenda: ✅ odpravljeno · 🟡 odprto · 🔵 potrjeno skladno
 - `Cona` nima dostopa do vrste gradnje (`Stavba::$tip` je na nivoju stavbe) — ni enostavnega popravka.
 - Dodatno: TSG je notranje neskladen — tabela 8.10.3 navaja `n50 = 2,0`, poglavje 11 pa `1,5`.
   Koda sledi poglavju 11 (1,5).
+
+> Pokritost validacijskih primerov TSG s testi je popisana v ločenem dokumentu:
+> [TSG-1-004-validacijski-testi.md](TSG-1-004-validacijski-testi.md).
 
 ### 🟡 C — Stanovanjsko prezračevanje brez spodnje meje 7 l/s na osebo
 `EnostanovanjskaKlasifikacijaCone::kolicinaSvezegaZrakaZaPrezracevanje` uporablja
