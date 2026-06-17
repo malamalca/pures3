@@ -314,6 +314,26 @@
     <tr class="noprint">
         <td colspan="4" class="math">`E'_(P_("tot,kor,an"))=Y_(H,nd) * Y_(ROVE) * E'_(P_(t ot,an))=<?= $this->numFormat($stavba->Y_Hnd, 1, '.') ?>*<?= $this->numFormat($stavba->Y_ROVE, 1, '.') ?>*<?= $this->numFormat($stavba->specificnaPrimarnaEnergija, 3, '.') ?>=<?= $this->numFormat($stavba->korigiranaSpecificnaPrimarnaEnergija, 3, '.') ?>`</td>
     </tr>
+<?php
+    if ($stavba->vrsta == 'zahtevna') {
+?>
+    <tr>
+        <td>Specifična potrebna skupna primarna energija referenčne stavbe</td>
+        <td>E'<sub>Ptot,ref,an</sub></td>
+        <td class="center"><?= $this->numFormat($refStavba->specificnaPrimarnaEnergija, 1) ?></td>
+    </tr>
+    <tr>
+        <td>Ustreza (DA/NE) </td>
+        <td></td>
+        <td class="center">
+            <b class="<?= $refStavba->specificnaPrimarnaEnergija > $stavba->korigiranaSpecificnaPrimarnaEnergija ? 'green' : 'red' ?>">
+            <?= $refStavba->specificnaPrimarnaEnergija > $stavba->korigiranaSpecificnaPrimarnaEnergija ? 'DA' : 'NE' ?>
+            </b>
+        </td>
+    </tr>
+<?php
+    } else {
+?>
     <tr>
         <td>Dovoljena specifična potrebna skupna primarna energija</td>
         <td>E'<sub>Ptot,dov,an</sub></td>
@@ -336,7 +356,9 @@
             </b>
         </td>
     </tr>
-
+<?php
+    }
+?>
 
     <tr><td colspan="3"></td></tr>
 

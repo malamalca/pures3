@@ -27,6 +27,16 @@ class IzracunTSS extends Command
         /** @var \stdClass $splosniPodatki */
         $splosniPodatki = App::loadProjectData('Pures', $projectId, 'splosniPodatki');
 
+        // leto projekta (zadnje 4 številke datuma), uporabljeno za referenčni svetlobni izkoristek (hL)
+        $letoNiz = substr(trim((string)($splosniPodatki->datum ?? '')), -4);
+        $letoProjekta = (int)$letoNiz;
+        if (!ctype_digit($letoNiz) || $letoProjekta < 2000 || $letoProjekta > 2100) {
+            throw new \Exception(sprintf(
+                'Iz datuma projekta "%s" ni mogoče določiti veljavnega leta (zadnje 4 številke).',
+                $splosniPodatki->datum ?? ''
+            ));
+        }
+
         /** @var \stdClass $okolje */
         $okolje = App::loadProjectCalculation('Pures', $projectId, 'okolje');
 
@@ -65,7 +75,7 @@ class IzracunTSS extends Command
             if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
                 $TSSReferencniSistemiPrezracevanjaOut = [];
                 foreach ($referencneCone as $cona) {
-                    $conaClass = new Cona(null, $cona);
+                    $conaClass = new Cona(null, $cona, ['leto' => $letoProjekta]);
                     $refSistemi = $conaClass->referencniTSS('prezracevanje');
                     foreach ($refSistemi as $refSistem) {
                         $referencniPrezracevalniSistem =
@@ -116,7 +126,7 @@ class IzracunTSS extends Command
             if ($splosniPodatki->stavba->vrsta == 'zahtevna') {
                 $TSSReferencniSistemiRazsvetljavaOut = [];
                 foreach ($referencneCone as $cona) {
-                    $conaClass = new Cona(null, $cona);
+                    $conaClass = new Cona(null, $cona, ['leto' => $letoProjekta]);
                     $refSistemi = $conaClass->referencniTSS('razsvetljava');
                     foreach ($refSistemi as $refSistem) {
                         $referencnaRazsvetljava = new Razsvetljava($refSistem, true);
@@ -183,7 +193,7 @@ class IzracunTSS extends Command
                 foreach ($referencneCone as $cona) {
                     $vracljiveIzgubeVOgrevanje = [];
 
-                    $conaClass = new Cona(null, $cona);
+                    $conaClass = new Cona(null, $cona, ['leto' => $letoProjekta]);
                     $refTSSSistemiOHT = $conaClass->referencniTSS('OHT');
 
                     foreach ($refTSSSistemiOHT as $refSistemOHT) {
@@ -264,7 +274,7 @@ class IzracunTSS extends Command
                 );
             }
 
-            $conaClass = new Cona(null, $referencneCone[0]);
+            $conaClass = new Cona(null, $referencneCone[0], ['leto' => $letoProjekta]);
             $refTSSFotonapetostniSistemi = $conaClass->referencniTSS('fotovoltaika');
 
             foreach ($refTSSFotonapetostniSistemi as $refSistem) {

@@ -24,6 +24,16 @@ class IzracunCone extends Command
         /** @var \stdClass $splosniPodatki */
         $splosniPodatki = App::loadProjectData('Pures', $projectId, 'splosniPodatki');
 
+        // leto projekta (zadnje 4 številke datuma), uporabljeno za referenčni svetlobni izkoristek (hL)
+        $letoNiz = substr(trim((string)($splosniPodatki->datum ?? '')), -4);
+        $letoProjekta = (int)$letoNiz;
+        if (!ctype_digit($letoNiz) || $letoProjekta < 2000 || $letoProjekta > 2100) {
+            throw new \Exception(sprintf(
+                'Iz datuma projekta "%s" ni mogoče določiti veljavnega leta (zadnje 4 številke).',
+                $splosniPodatki->datum ?? ''
+            ));
+        }
+
         /** @var \stdClass $okolje */
         $okolje = App::loadProjectCalculation('Pures', $projectId, 'okolje');
 
@@ -42,7 +52,7 @@ class IzracunCone extends Command
 
             $coneOut = [];
             foreach ($coneIn as $conaConfig) {
-                $cona = new Cona($konstrukcije, $conaConfig);
+                $cona = new Cona($konstrukcije, $conaConfig, ['leto' => $letoProjekta]);
                 $cona->analiza($okolje);
                 $coneOut[] = $cona->export();
             }
@@ -61,7 +71,11 @@ class IzracunCone extends Command
 
             $coneOut = [];
             foreach ($coneIn as $conaConfig) {
-                $cona = new Cona($referencneKonstrukcije, $conaConfig, ['referencnaStavba' => true]);
+                $cona = new Cona(
+                    $referencneKonstrukcije,
+                    $conaConfig,
+                    ['referencnaStavba' => true, 'leto' => $letoProjekta]
+                );
                 $cona->analiza($okolje);
                 $coneOut[] = $cona->export();
             }

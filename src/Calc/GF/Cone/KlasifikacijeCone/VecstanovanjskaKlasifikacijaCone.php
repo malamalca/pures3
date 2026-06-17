@@ -12,8 +12,20 @@ class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
     public float $notranjaTOgrevanje = 20;
     public float $notranjaTHlajenje = 26;
 
+    // OPOMBA: TSG tabela 11.1 navaja referenčno temperaturo TSV v večstanovanjskih stavbah 55 °C/10 °C,
+    // tu pa je (kot pri St-1) uporabljena 42 °C zaradi skladnosti z obstoječim validacijskim Excelom.
+    // Za uskladitev s TSG nastavi toplaVodaT = 55 in posodobi pričakovane vrednosti TSV v testih.
     public int $toplaVodaT = 42;
     public int $hladnaVodaT = 10;
+
+    /**
+     * @inheritDoc
+     */
+    protected function solarniFaktorSSE(): float
+    {
+        // TSG tabela 11.1, vrstica OVE: površina SSE je 0,03 x Ause (St-2) oziroma 0,05 x Ause (St-3).
+        return $this->code === 'St-3' ? 0.05 : 0.03;
+    }
 
     /**
      * @inheritDoc

@@ -152,7 +152,8 @@ class IzkaziController extends Controller
     {
         App::set('projectId', $projectId);
 
-        App::set('stavba', App::loadProjectCalculation('Pures', $projectId, 'stavba'));
+        $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
+        App::set('stavba', $stavba);
         App::set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
         App::set('sistemiOHT', App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'ogrevanje'));
         App::set('sistemiRazsvetljave', App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'razsvetljava'));
@@ -160,5 +161,10 @@ class IzkaziController extends Controller
             'sistemiPrezracevanja',
             App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS . 'prezracevanje')
         );
+
+        if ($stavba->vrsta == 'zahtevna') {
+            $refStavba = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba');
+            App::set('refStavba', $refStavba);
+        }
     }
 }

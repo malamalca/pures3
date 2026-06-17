@@ -577,11 +577,28 @@
         <td class="w-20 center"><?= $this->numFormat($stavba->X_s, 1) ?></td>
     </tr>
 
+<?php
+    if ($stavba->vrsta == 'zahtevna') {
+?>
+    <tr>
+        <td colspan="3">specifična potrebna skupna primarna energija za delovanje referenčne stavbe E'<sub>Ptot,ref,an</sub> (kWh/m² an)</td>
+        <td class="w-20 center"><?= $this->numFormat($refStavba->specificnaPrimarnaEnergija, 1) ?></td>
+    </tr>
+    <tr>
+        <td colspan="3">ustreza (DA/NE)</td>
+        <td class="w-20 center">
+            <b class="<?= $refStavba->specificnaPrimarnaEnergija > $stavba->korigiranaSpecificnaPrimarnaEnergija ? 'green' : 'red' ?>">
+            <?= $refStavba->specificnaPrimarnaEnergija > $stavba->korigiranaSpecificnaPrimarnaEnergija ? 'DA' : 'NE' ?>
+            </b>
+        </td>
+    </tr>
+<?php
+    } else {
+?>
     <tr>
         <td colspan="3">dovoljena korigirana specifična potrebna skupna primarna energija za delovanje stavbe E'<sub>Ptot,kor,dov,an</sub> (kWh/m² an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->dovoljenaKorigiranaSpecificnaPrimarnaEnergija, 1) ?></td>
     </tr>
-
     <tr>
         <td colspan="3">ustreza (DA/NE)</td>
         <td class="w-20 center">
@@ -590,7 +607,9 @@
             </b>
         </td>
     </tr>
-
+<?php
+    }
+?>
 
     <tr>
         <td colspan="3">ROVE v primarni energiji, potrebni za delovanje stavbe (%)</td>
@@ -613,5 +632,14 @@
         <td colspan="3">izpusti CO<sub>2</sub> pri delovanju M<sub>CO2</sub> (kg/an)</td>
         <td class="w-20 center"><?= $this->numFormat($stavba->izpustCO2, 0) ?></td>
     </tr>
-
+<?php
+    if ($stavba->vrsta == 'zahtevna') {
+?>
+    <tr>
+        <td colspan="3">izpusti CO<sub>2</sub> pri delovanju za referenčno stavbo M<sub>CO2</sub> (kg/an)</td>
+        <td class="w-20 center"><?= $this->numFormat($refStavba->izpustCO2, 0) ?></td>
+    </tr>
+<?php
+    }
+?>
 </table>

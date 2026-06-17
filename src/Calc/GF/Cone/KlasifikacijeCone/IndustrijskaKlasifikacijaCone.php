@@ -50,7 +50,8 @@ class IndustrijskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function letnoSteviloUrDelovanjaRazsvetljave(): array
     {
-        return ['podnevi' => 1800, 'ponoci' => 200];
+        // TSG tabela 8.17: industrijske stavbe tD = 2500, tN = 1500.
+        return ['podnevi' => 2500, 'ponoci' => 1500];
     }
 
     /**
@@ -58,8 +59,9 @@ class IndustrijskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSRazsvetljava(Cona $cona): array
     {
-        // TODO
-        return [];
+        // TSG tabela 11.6: število ur in osvetljenost delovne površine skladno s projektno dokumentacijo;
+        // privzame se 300 lx, FDS = 0,0 %.
+        return $this->refRazsvetljava($cona, 300);
     }
 
     /**
@@ -67,8 +69,9 @@ class IndustrijskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSPrezracevanja(Cona $cona): array
     {
-        // TODO
-        return [];
+        // TSG tabela 11.6: mehansko prezračevanje z vračanjem toplote (65 %), konstanten pretok;
+        // količine zraka se prevzamejo iz projektne dokumentacije obravnavane stavbe.
+        return $this->refPrezracevanjeCentralno($cona);
     }
 
     /**
@@ -76,8 +79,16 @@ class IndustrijskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSOHT(Cona $cona): array
     {
-        // TODO
-        return [];
+        // TSG tabela 11.6 - Referenčni TSS v industrijskih stavbah (In-1):
+        // - ogrevanje: toplovodno ogrevanje, plinski kondenzacijski kotel (105 %); drugi elementi podsistemov
+        //   po projektni dokumentaciji obravnavane stavbe (privzamejo se ploščata ogrevala);
+        // - TSV: kot v projektu obravnavane stavbe (privzamejo se lokalni električni grelniki);
+        // - hlajenje (kadar je predvideno): kompresorsko hlajenje z ohlajeno vodo 8/14 °C, COPref = 3,5,
+        //   zunanji suh prenosnik toplote.
+        return [
+            $this->refToplovodniSistem($cona, 'radiatorji', 'elektricni'),
+            $this->refHlajenjeHladnaVoda($cona),
+        ];
     }
 
     /**
@@ -85,7 +96,8 @@ class IndustrijskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSFotovoltaika(Cona $cona): array
     {
-        return [];
+        // TSG tabela 11.6, vrstica OVE: površina fotonapetostnih modulov 0,04 x Ause.
+        return $this->refFotovoltaika($cona, 0.04);
     }
 
     /**

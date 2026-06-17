@@ -58,8 +58,9 @@ class KnjizniceMuzejiArhiviKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSRazsvetljava(Cona $cona): array
     {
-        // TODO
-        return [];
+        // TSG tabela 11.7: projektirana osvetljenost delovne površine skladno s projektno dokumentacijo;
+        // privzame se 300 lx, FDS = 0,0 %.
+        return $this->refRazsvetljava($cona, 300);
     }
 
     /**
@@ -67,8 +68,8 @@ class KnjizniceMuzejiArhiviKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSPrezracevanja(Cona $cona): array
     {
-        // TODO
-        return [];
+        // TSG tabela 11.7: mehansko prezračevanje z vračanjem toplote (65 %), konstanten pretok, razred AB 3.
+        return $this->refPrezracevanjeCentralno($cona);
     }
 
     /**
@@ -76,8 +77,15 @@ class KnjizniceMuzejiArhiviKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSOHT(Cona $cona): array
     {
-        // TODO
-        return [];
+        // TSG tabela 11.7 - Referenčni TSS v muzejih, arhivih in knjižnicah (Kn-1):
+        // - ogrevanje: centralni toplovodni sistem, plinski kondenzacijski kotel (105 %), dvocevni razvod 55/45 °C,
+        //   ploščata ogrevala s termostatskimi ventili in PI-regulacijo;
+        // - TSV: lokalni električni grelniki (10 l, 1 grelnik na 100 m2 Ause, 45/10 °C, ON/OFF);
+        // - hlajenje: multisplit z direktnim uparjanjem, COPref = 3,0.
+        return [
+            $this->refToplovodniSistem($cona, 'radiatorji', 'elektricni'),
+            $this->refHlajenjeMultiSplit($cona),
+        ];
     }
 
     /**
@@ -85,7 +93,8 @@ class KnjizniceMuzejiArhiviKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSFotovoltaika(Cona $cona): array
     {
-        return [];
+        // TSG tabela 11.7, vrstica OVE: površina fotonapetostnih modulov 0,04 x Ause.
+        return $this->refFotovoltaika($cona, 0.04);
     }
 
     /**

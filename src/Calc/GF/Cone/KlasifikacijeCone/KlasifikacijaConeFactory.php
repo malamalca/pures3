@@ -21,7 +21,6 @@ class KlasifikacijaConeFactory
             case 'St-3':
                 return new VecstanovanjskaKlasifikacijaCone($type, $options);
             case 'Po-1':
-            case 'Ho-1':
                 return new PoslovnaKlasifikacijaCone($type, $options);
             case 'Kn-1':
                 return new KnjizniceMuzejiArhiviKlasifikacijaCone($type, $options);
@@ -30,6 +29,7 @@ class KlasifikacijaConeFactory
             case 'Iz-1':
                 return new IzobrazevalnaKlasifikacijaCone($type, $options);
             case 'Go-1':
+            case 'Ho-1':
                 return new GostinskaKlasifikacijaCone($type, $options);
             case 'Sd-1':
                 return new SplosniDruzbeniNamenKlasifikacijaCone($type, $options);

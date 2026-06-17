@@ -100,38 +100,8 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSRazsvetljava(Cona $cona): array
     {
-        /*
-            - upoštevase število ur uporabe električne razsvetljave skladno s tabelo 8.17;
-            - projektirana osvetljenost delovne površine 500 lx;
-            - vgrajene so LEDsijalke s svetlobnim učinkom hL = 80 lm/W, po letu 2025 pa 95 lm/W;
-            - faktor uporabe razsvetljave Fo = 1 (occupancy dependency factor);
-            - faktor trajnosti svetilnosti svetilke Fc = 1 (constant illuminance dependency factor);
-            - faktor vzdrževanja svetilk FMF = 1;
-            - faktor oblike prostora k = 1;
-            - faktor dnevne svetlobe FDS = 0,0 %;
-            - faktor zmanjšanja projektne osvetlitve FCA kot pri obravnavani stavbi, upoštevajo se vrednosti iz tabele 8.23;
-            - varnostne svetilke se ne upoštevajo v izračunu rabe energije za delovanje sistema razsvetljave.
-        */
-
-        $ret = new \stdClass();
-        $ret->id = $cona->id;
-        $ret->idCone = $cona->id;
-        $ret->faktorOblike = 1;
-        $ret->faktorDnevneSvetlobe = 0.0;
-
-        $ret->letnoUrPodnevi = 1820;
-        $ret->letnoUrPonoci = 1820;
-
-        $ret->osvetlitevDelovnePovrsine = 500;
-        $ret->ucinkovitostViraSvetlobe = 95;
-        $ret->faktorPrisotnosti = 1;
-        $ret->faktorVzdrzevanja = 1;
-        $ret->faktorZmanjsanjaSvetlobnegaToka = 1; // temu v tabeli TSG rečejo tudi faktor trajnosti Fc
-        $ret->faktorDnevneSvetlobe = 0.05;
-        $ret->faktorZmanjsaneOsvetlitveDelovnePovrsine =
-            $cona->razsvetljava->faktorZmanjsaneOsvetlitveDelovnePovrsine ?? 1;
-
-        return [$ret];
+        // TSG tabeli 11.2 in 11.3: projektirana osvetljenost delovne površine 500 lx, FDS = 0,0 %.
+        return $this->refRazsvetljava($cona, 500);
     }
 
     /**
@@ -139,35 +109,8 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSPrezracevanja(Cona $cona): array
     {
-        /*
-            - mehansko prezračevanje z dovodom in odvodom zraka in vračanjem toplote, konstanten pretok zraka,
-            - tesnost stavbe n50 = 1,5 h1; za rekonstruirane stavbe 2,0 h1,
-            - temperaturni izkoristek prenosnika za vračanje senzibilne toplote je 65 %
-            - tesno razvodno omrežje,
-            - tesno ohišje AHU,
-            - ne upošteva se segrevanje zraka v ventilatorjih;
-            - prezračevanje je uravnoteženo, skladno z razredom AB 3, tabela 13 v standardu SIST EN 167983,
-            - pogoni SFP 3 dovod (0,211 W/(m3/h)), SFP 2 dovod (0,142 W/(m3/s)), (tabela 14 v standardu SIST EN 167983,
-            - z upoštevanjem sestavnih komponent, ki so navedene v tabeli 15 v standardu SIST EN 167983),
-            - hibridno prezračevanje se ne upošteva,
-            - brez predogrevanja in predhlajenja zraka za prezračevanje.
-        */
-        $ret = new \stdClass();
-        $ret->id = $cona->id;
-        $ret->idCone = $cona->id;
-        $ret->vrsta = 'centralni';
-        $ret->razredH1H2 = true;
-        $ret->mocSenzorjev = 0;
-        $ret->razredH1H2 = true;
-
-        $ret->odvod = new \stdClass();
-        $ret->odvod->filter = 'hepa';
-        $ret->dovod = new \stdClass();
-        $ret->dovod->filter = 'hepa';
-
-        $ret->volumenProjekt = $cona->netoProstornina / 2;
-
-        return [$ret];
+        // TSG tabeli 11.2 in 11.3: mehansko prezračevanje z vračanjem toplote (65 %), konstanten pretok, razred AB 3.
+        return $this->refPrezracevanjeCentralno($cona);
     }
 
     /**
@@ -175,8 +118,26 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSOHT(Cona $cona): array
     {
-        // TODO
-        return [];
+        // TSG tabela 11.2 (gostinske stavbe - restavracije, Go-1) in tabela 11.3 (hoteli, Ho-1):
+        // - ogrevanje: centralni toplovodni sistem, plinski kondenzacijski kotel (105 %), dvocevni razvod 55/45 °C;
+        //   Go-1: ploščata ogrevala s PI 1 K termostatskimi ventili; Ho-1: 4-cevni ventilatorski konvektorji;
+        // - TSV: centralni sistem, kombinacija generatorja ogrevanja in solarnega toplotnega sistema;
+        //   površina SSE 0,04 x Ause (Go-1) oziroma 0,08 x Ause (Ho-1);
+        // - hlajenje: Go-1 multisplit COPref = 3,0; Ho-1 kompresorsko hlajenje z ohlajeno vodo 8/14 °C, COPref = 3,5.
+        switch ($this->code) {
+            case 'Go-1':
+                return [
+                    $this->refToplovodniSistem($cona, 'radiatorji', 'solarni', 0.04),
+                    $this->refHlajenjeMultiSplit($cona),
+                ];
+            case 'Ho-1':
+                return [
+                    $this->refToplovodniSistem($cona, 'konvektorji', 'solarni', 0.08),
+                    $this->refHlajenjeHladnaVoda($cona),
+                ];
+            default:
+                throw new \Exception('Neveljavna koda cone');
+        }
     }
 
     /**
@@ -184,6 +145,8 @@ class GostinskaKlasifikacijaCone extends KlasifikacijaCone
      */
     public function referencniTSSFotovoltaika(Cona $cona): array
     {
+        // TSG tabeli 11.2 in 11.3: obnovljivi vir je solarni toplotni sistem za TSV (vključen v sistem OHT),
+        // fotonapetostni sistem ni predviden.
         return [];
     }
 

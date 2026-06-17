@@ -634,16 +634,16 @@ class CalcKonstrukcije
             }
         } elseif ($tip == 'stena-teren') {
             if (!isset($params->debelinaStene)) {
-                throw new \Exception('Konstrukcija nima podane debeline stene.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane debeline stene.', $params->id));
             }
             if (!isset($params->U_tla)) {
-                throw new \Exception('Konstrukcija nima podane vrednosti U_tla.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane vrednosti U_tla.', $params->id));
             }
             if (!isset($params->globina)) {
-                throw new \Exception('Konstrukcija nima podane globine kleti.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane globine kleti.', $params->id));
             }
             if (!isset($params->obseg)) {
-                throw new \Exception('Konstrukcija nima podane vrednosti obsega.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane vrednosti obsega.', $params->id));
             }
 
             $d_wb = $params->debelinaStene + $tlaLambda * 1 / $U_konstrukcije;
@@ -666,31 +666,31 @@ class CalcKonstrukcije
             );
         } elseif ($tip == 'tla-neogrevano') {
             if (!isset($params->debelinaStene)) {
-                throw new \Exception('Konstrukcija nima podane debeline stene.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane debeline stene.', $params->id));
             }
             if (!isset($params->U_tla)) {
-                throw new \Exception('Konstrukcija nima podane vrednosti U_tla.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane vrednosti U_tla.', $params->id));
             }
             if (!isset($params->visinaNadTerenom)) {
-                throw new \Exception('Konstrukcija nima podane višine nad terenom.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane višine nad terenom.', $params->id));
             }
             if (!isset($params->obseg)) {
-                throw new \Exception('Konstrukcija nima podanega obsega.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podanega obsega.', $params->id));
             }
             if (!isset($params->U_zid_nadTerenom)) {
-                throw new \Exception('Konstrukcija nima podane vrednosti U_zid_nadTerenom.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane vrednosti U_zid_nadTerenom.', $params->id));
             }
             if (!isset($params->U_zid)) {
-                throw new \Exception('Konstrukcija nima podane vrednosti U_zid (zid kleti).');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane vrednosti U_zid (zid kleti).', $params->id));
             }
             if (!isset($params->globina)) {
-                throw new \Exception('Konstrukcija nima podane globine kleti.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane globine kleti.', $params->id));
             }
             if (!isset($params->prostorninaKleti)) {
-                throw new \Exception('Konstrukcija nima podane prostornine kleti.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane prostornine kleti.', $params->id));
             }
             if (!isset($params->izmenjavaZraka)) {
-                throw new \Exception('Konstrukcija nima podane izmenjave zraka.');
+                throw new \Exception(sprintf('Konstrukcija %s nima podane izmenjave zraka.', $params->id));
             }
 
             $U_earth = 1 / (1 / $U_konstrukcije + $params->povrsina / (($params->povrsina * $params->U_tla) +

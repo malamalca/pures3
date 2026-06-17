@@ -87,6 +87,13 @@ class RazvodHlajenja extends Razvod
         $generator = array_first_callback($sistem->generatorji, fn($g) => true);
 
         if (!empty($this->crpalka) && !empty($generator->nazivnaMoc)) {
+            // če električna moč obtočne črpalke ni podana, jo določimo iz hidravlične moči
+            if (empty($this->crpalka->moc)) {
+                $hidravlicnaMoc = $this->izracunHidravlicneMoci($sistem, $cona, $okolje);
+                $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc);
+                $this->crpalka->moc = $hidravlicnaMoc * $fe_crpalke;
+            }
+
             foreach (array_keys(Calc::MESECI) as $mesec) {
                 $steviloUr = $sistem->steviloUrDelovanja($mesec, $cona, $okolje);
 
@@ -106,6 +113,55 @@ class RazvodHlajenja extends Razvod
         }
 
         return $this->potrebnaElektricnaEnergija;
+    }
+
+    /**
+     * Izračun hidravlične moči obtočne črpalke hladilnega razvoda [W].
+     * Analogno izračunu pri ogrevanju (SIST EN 15316-3, enačbe 66 in 67), prilagojeno hladilnemu mediju
+     * (ohlajena voda 8/14 °C).
+     *
+     * @param \App\Calc\GF\TSS\OHTSistemi\OHTSistem $sistem Podatki sistema
+     * @param \stdClass $cona Podatki cone
+     * @param \stdClass $okolje Podatki okolja
+     * @return float
+     */
+    public function izracunHidravlicneMoci($sistem, $cona, $okolje)
+    {
+        $Lmax = $this->getProperty(RazvodAbstractProperties::Lmax, ['cona' => $cona]);
+
+        // ΔθC – temperaturna razlika hladilnega medija (ohlajena voda 8/14 °C) [°C]
+        $deltaT = 6;
+
+        // V – volumski pretok hladilnega medija [m³/h] (analogno enačbi 66)
+        $volumskiPretok = $sistem->standardnaMoc($cona, $okolje) / (1.15 * $deltaT);
+
+        // ΔpWE – tlačni padec generatorja hladu (uparjalnik) [kPa]
+        $deltaP_WE = 20;
+
+        // tlačni padec hladilnega razvoda [kPa] (analogno enačbi 67, brez dodatka za ploskovno ogrevanje)
+        $deltaP = 0.13 * $Lmax + 2 + $deltaP_WE;
+
+        // hidravlična moč črpalke v načrtovani obratovalni točki [W]
+        $mocCrpalke = 0.2778 * $deltaP * $volumskiPretok;
+
+        return $mocCrpalke;
+    }
+
+    /**
+     * Izračun faktorja rabe energije obtočne črpalke (analogno enačbi 68, spodnji del).
+     *
+     * @param float $hidravlicnaMoc Hidravlična moč [W]
+     * @return float
+     */
+    public function izracunFaktorjaRabeEnergijeCrpalke($hidravlicnaMoc)
+    {
+        $faktorCrpalkaPoProjektu = 1;
+
+        $fe_crpalke = $hidravlicnaMoc > 0 ?
+            1.25 + pow(200 / $hidravlicnaMoc, 0.5) * $faktorCrpalkaPoProjektu :
+            0;
+
+        return $fe_crpalke;
     }
 
     /**

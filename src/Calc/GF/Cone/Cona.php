@@ -168,8 +168,9 @@ class Cona
             $razsvetljava->faktorPrisotnosti = 1;
             $razsvetljava->faktorDnevneSvetlobe = 0;
             $razsvetljava->osvetlitevDelovnePovrsine = 300;
-            // velja za LED
-            $razsvetljava->ucinkovitostViraSvetlobe = 80;
+            // velja za LED; hL = 80 lm/W, po letu 2025 pa 95 lm/W (TSG), glede na leto projekta
+            $razsvetljava->ucinkovitostViraSvetlobe =
+                KlasifikacijaCone::ucinkovitostViraSvetlobeZaLeto($this->options['leto'] ?? null);
             $razsvetljava->faktorVzdrzevanja = 1;
 
             $config->razsvetljava = $razsvetljava;
@@ -264,6 +265,7 @@ class Cona
 
                             // določi netransparentni element v katerega je okno/vrata vgrajeno
                             $additionalOptions = [];
+                            $elementVgradnje = null;
                             if (isset($konsConfig->idElementaVgradnje)) {
                                 $elementVgradnje = array_first_callback(
                                     $this->ovoj->netransparentneKonstrukcije,

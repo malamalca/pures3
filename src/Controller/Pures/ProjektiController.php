@@ -107,16 +107,21 @@ class ProjektiController extends Controller
     {
         App::set('projectId', $projectId);
         App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
-        App::set('stavba', App::loadProjectCalculation(
+        $stavba = App::loadProjectCalculation(
             'Pures',
             $projectId,
             ($ref == 'ref' ? 'Ref' . DS : '') . 'stavba'
-        ));
+        );
+        App::set('stavba', $stavba);
         App::set('sistemi', App::loadProjectCalculation(
             'Pures',
             $projectId,
             ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'ogrevanje.json'
         ));
+        if ($stavba->vrsta == 'zahtevna') {
+            $refStavba = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba');
+            App::set('refStavba', $refStavba);
+        }
     }
 
     /**
