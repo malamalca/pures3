@@ -32,3 +32,8 @@ bin/pures IzracunProjekta TestniProjekt
 ```
 
 Po preračunu se izkaz gradbene fizike shrani v podmapo /projects/TestniProjekt/pdf/izkaz.pdf
+
+
+## Skladnost s TSG 004
+
+Skladnos s TSG je opisana v [ločeni datoteki](docs/TSG-1-004-skladnost.md).
