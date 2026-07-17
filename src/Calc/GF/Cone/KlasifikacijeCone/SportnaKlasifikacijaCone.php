@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF\Cone\KlasifikacijeCone;
 
 use App\Calc\GF\Cone\Cona;
+use App\Lib\Calc;
 
 class SportnaKlasifikacijaCone extends KlasifikacijaCone
 {
@@ -32,7 +33,7 @@ class SportnaKlasifikacijaCone extends KlasifikacijaCone
             throw new \Exception('Za izračun TSV športne cone (Sp-1) je potrebno število oseb.');
         }
 
-        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+        $stDni = Calc::steviloDni($mesec);
 
         return 1.5 * $cona->TSV->steviloOseb * $stDni;
     }

@@ -107,7 +107,7 @@ class HladilniKompresor extends Generator
         foreach (array_keys(Calc::MESECI) as $mesec) {
             $this->vneseneIzgube['hlajenje'][$mesec] = $vneseneIzgube[$mesec];
 
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = 24 * $stDni;
 
             $potrebnaEnergija = $cona->energijaHlajenje[$mesec] + $cona->energijaRazvlazevanje[$mesec];
@@ -201,7 +201,7 @@ class HladilniKompresor extends Generator
     {
         if (!empty($this->mocRegulatorja)) {
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
                 $stUr = 24 * $stDni;
                 $potrebnaEnergija = $cona->energijaHlajenje[$mesec] + $cona->energijaRazvlazevanje[$mesec];
                 $this->stUrDelovanjaNaDan[$mesec] = ceil($potrebnaEnergija / $stDni / $this->nazivnaMoc);

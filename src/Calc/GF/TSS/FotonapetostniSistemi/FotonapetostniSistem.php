@@ -118,7 +118,7 @@ class FotonapetostniSistem
 
         $proizvedenaElektricnaEnergija = [];
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
 
             // faktor sončnega sevanja
             $solarnoObsevanje = null;

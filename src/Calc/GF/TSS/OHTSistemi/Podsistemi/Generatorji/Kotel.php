@@ -133,7 +133,7 @@ class Kotel extends Generator
         $q_w_g_T = $q_w_g_70 * ($temperaturaVode - $temperaturaOkolice) / (70 - 20);
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = $stDni * 24;
             $stDniTSV = $stDni;
             $stUrNaDanTSV = 24;
@@ -201,7 +201,7 @@ class Kotel extends Generator
             $this->lokacija == VrstaLokacijeNamestitve::OgrevanProstor ? $cona->notranjaTOgrevanje : 13;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = $stDni * 24;
             $stUrNaDanTSV = 24;
 
@@ -310,7 +310,7 @@ class Kotel extends Generator
             $mocPomoznih100 = $this->tip->mocPomoznihElektricnihNaprav($this->nazivnaMoc, 'polna');
             $mocPomoznih0 = $this->tip->mocPomoznihElektricnihNaprav($this->nazivnaMoc, 'min');
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
                 $stUr = $stDni * 24;
                 $stDniTSV = $stDni;
 
@@ -381,7 +381,7 @@ class Kotel extends Generator
             $Paux_g_P0 = $this->tip->mocPomoznihElektricnihNaprav($this->nazivnaMoc, 'min');
 
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
                 $stUr = $stDni * 24;
 
                 // th – mesečne obratovalne ure – čas [h/M] (enačba 43)

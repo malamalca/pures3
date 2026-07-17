@@ -88,7 +88,7 @@ class StranskiElementPoenostavljen
             $config = json_decode($config);
         }
 
-        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+        $EvalMath = new EvalMath();
 
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);

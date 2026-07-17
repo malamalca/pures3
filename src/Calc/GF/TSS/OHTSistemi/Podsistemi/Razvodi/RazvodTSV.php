@@ -109,7 +109,7 @@ class RazvodTSV extends Razvod
         $padecTemperatureVCirkulaciji = 5;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = 24 * $stDni;
 
             // Q_w,d,l, col – toplotne izgube skupnega dela razdelilnega omrežja [kWh]
@@ -175,7 +175,7 @@ class RazvodTSV extends Razvod
             $steviloUrCrpalke = $this->izracunCasaDelovanjaCrpalke($cona);
 
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
                 $stUr = $stDni * 24;
 
                 // ew,d,aux - faktor rabe električne energije črpalke

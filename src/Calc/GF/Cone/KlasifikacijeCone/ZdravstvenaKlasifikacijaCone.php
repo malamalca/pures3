@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF\Cone\KlasifikacijeCone;
 
 use App\Calc\GF\Cone\Cona;
+use App\Lib\Calc;
 
 class ZdravstvenaKlasifikacijaCone extends KlasifikacijaCone
 {
@@ -18,7 +19,7 @@ class ZdravstvenaKlasifikacijaCone extends KlasifikacijaCone
     public function izracunTSVZaMesec(int $mesec, Cona $cona): float
     {
         // TSG tabela 8.11.1: stavbe za zdravstveno oskrbo - 530 Wh/(m2 d) oz. 8 kWh na bolniško posteljo.
-        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+        $stDni = Calc::steviloDni($mesec);
 
         if (isset($cona->TSV->steviloOseb)) {
             $energijaTSV = 8.0 * $cona->TSV->steviloOseb * $stDni;

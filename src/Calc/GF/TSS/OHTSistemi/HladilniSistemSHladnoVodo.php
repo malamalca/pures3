@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Calc\GF\TSS\OHTSistemi;
 
+use App\Lib\Calc;
+
 class HladilniSistemSHladnoVodo extends OHTSistem
 {
     /**
@@ -18,7 +20,7 @@ class HladilniSistemSHladnoVodo extends OHTSistem
      */
     public function steviloUrDelovanja($mesec, $cona, $okolje): float
     {
-        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+        $stDni = Calc::steviloDni($mesec);
         $stUr = 24 * $stDni;
 
         $potrebnaEnergija = $cona->energijaHlajenje[$mesec] + $cona->energijaRazvlazevanje[$mesec];

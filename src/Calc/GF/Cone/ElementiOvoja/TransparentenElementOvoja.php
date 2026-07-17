@@ -39,7 +39,7 @@ class TransparentenElementOvoja extends ElementOvoja
             $config = json_decode($config);
         }
 
-        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+        $EvalMath = new EvalMath();
 
         $numSettings = ['A', 'B', 'sirinaOkvirja', 'sirinaStekla', 'visinaStekla', 'dolzinaOkvirja', 'delezOkvirja'];
         $EvalMath->setVar('povrsina', $this->povrsina);
@@ -183,7 +183,7 @@ class TransparentenElementOvoja extends ElementOvoja
         $this->H_hlajenje = ($this->U + $cona->deltaPsi) * $this->povrsina * $this->b * $this->stevilo;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
 
             if ($this->dobitekSS) {
                 /** ============================================================================================= */

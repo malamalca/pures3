@@ -36,8 +36,8 @@ class Cona
     public float $volumenZrakaHlajenje = 0;
     public bool $volumenZrakaPoTsg = false;
 
-    public float $notranjaTOgrevanje;
-    public float $notranjaTHlajenje;
+    public float $notranjaTOgrevanje = 0.0;
+    public float $notranjaTHlajenje = 0.0;
 
     public float $toplotnaKapaciteta = 0;
 
@@ -178,7 +178,7 @@ class Cona
             $config->razsvetljava = $razsvetljava;
         }
 
-        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+        $EvalMath = new EvalMath();
 
         $reflect = new \ReflectionClass(Cona::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
@@ -187,6 +187,8 @@ class Cona
                 case 'klasifikacija':
                     $this->klasifikacijaCone = KlasifikacijaConeFactory::create($config->klasifikacija);
                     $this->klasifikacija = $config->klasifikacija;
+                    $this->notranjaTOgrevanje = $this->klasifikacijaCone->notranjaTOgrevanje;
+                    $this->notranjaTHlajenje = $this->klasifikacijaCone->notranjaTHlajenje;
                     break;
                 case 'infiltracija':
                     if (isset($config->infiltracija)) {
@@ -335,12 +337,6 @@ class Cona
             }
         }
 
-        if (!isset($this->notranjaTOgrevanje)) {
-            $this->notranjaTOgrevanje = $this->klasifikacijaCone->notranjaTOgrevanje;
-        }
-        if (!isset($this->notranjaTHlajenje)) {
-            $this->notranjaTHlajenje = $this->klasifikacijaCone->notranjaTHlajenje;
-        }
     }
 
     /**
@@ -358,7 +354,7 @@ class Cona
 
         // izračunaj delto temperature med notranjostjo in zuanjim zrakom
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
 
             $this->deltaTOgrevanje[$mesec] = $this->notranjaTOgrevanje - $okolje->zunanjaT[$mesec];
             $this->deltaTHlajenje[$mesec] = $this->notranjaTHlajenje - $okolje->zunanjaT[$mesec];
@@ -537,7 +533,7 @@ class Cona
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $this->prezracevalneIzgubeOgrevanje[$mesec] = $this->Hve_ogrevanje *
                 $this->deltaTOgrevanje[$mesec] * $stDni * 24 / 1000;
             $this->prezracevalneIzgubeHlajenje[$mesec] = $this->Hve_hlajenje *
@@ -575,7 +571,7 @@ class Cona
         $A_hlajenje = 1 + $tau_hlajenje / 15;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
 
             $vsotaVirov_ogrevanje =
                 $this->notranjiViriOgrevanje[$mesec] +
@@ -619,16 +615,14 @@ class Cona
             }
 
             $this->ucinekPonorov[$mesec] = null;
-            if (1 / $gama_hlajenje <= 2) {
-                if ($gama_hlajenje <= 0) {
-                    $this->ucinekPonorov[$mesec] = 1;
+            if ($gama_hlajenje <= 0) {
+                $this->ucinekPonorov[$mesec] = 1;
+            } elseif (1 / $gama_hlajenje <= 2) {
+                if ($gama_hlajenje == 1) {
+                    $this->ucinekPonorov[$mesec] = $A_hlajenje / ($A_hlajenje + 1);
                 } else {
-                    if ($gama_hlajenje == 1) {
-                        $this->ucinekPonorov[$mesec] = $A_hlajenje / ($A_hlajenje + 1);
-                    } else {
-                        $this->ucinekPonorov[$mesec] =
-                            (1 - pow($gama_hlajenje, -$A_hlajenje)) / (1 - pow($gama_hlajenje, -$A_hlajenje - 1));
-                    }
+                    $this->ucinekPonorov[$mesec] =
+                        (1 - pow($gama_hlajenje, -$A_hlajenje)) / (1 - pow($gama_hlajenje, -$A_hlajenje - 1));
                 }
             }
         }
@@ -753,7 +747,7 @@ class Cona
             $this->skupnaEnergijaNavlazevanje = 0;
             $this->skupnaEnergijaRazvlazevanje = 0;
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
 
                 $nasicenZunanjiTlak =
                     611.2 * exp(17.62 * $okolje->zunanjaT[$mesec] / (243.12 + $okolje->zunanjaT[$mesec]));

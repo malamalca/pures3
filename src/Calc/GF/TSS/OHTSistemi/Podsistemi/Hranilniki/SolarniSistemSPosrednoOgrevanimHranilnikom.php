@@ -32,7 +32,7 @@ class SolarniSistemSPosrednoOgrevanimHranilnikom extends PosrednoOgrevanHranilni
         //var_dump($H_sto_ls);
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stDniDelovanja = $stDni;
 
             $this->toplotneIzgube[$namen][$mesec] =

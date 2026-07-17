@@ -79,7 +79,7 @@ abstract class ElementOvoja
             $config = json_decode($config);
         }
 
-        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+        $EvalMath = new EvalMath();
 
         if (isset($config->id)) {
             $this->id = $config->id;

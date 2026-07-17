@@ -90,11 +90,6 @@ LICENSE
 class EvalMath
 {
     /**
-     * @var \App\Lib\EvalMath|null $instance
-     */
-    protected static $instance = null;
-
-    /**
      * @var bool $suppress_errors
      * */
     private $suppress_errors = true;
@@ -144,47 +139,15 @@ class EvalMath
     ];
 
     /**
-     * Returns object instance
-     *
-     * @param array $options Options
-     * @return \App\Lib\EvalMath
-     */
-    public static function getInstance($options = [])
-    {
-        if (static::$instance === null) {
-            static::$instance = new EvalMath($options);
-        }
-
-        return static::$instance;
-    }
-
-    /**
      * Constructor
      *
-     * @param array $options Options
      * @return void
      */
-    protected function __construct($options = [])
+    public function __construct()
     {
         // make the variables a little more accurate
         $this->v['pi'] = pi();
         $this->v['e'] = exp(1);
-
-        $locale_info = localeconv();
-        $this->options['decimalSeparator'] = $locale_info['decimal_point'];
-        $this->options['thousandsSeparator'] = $locale_info['thousands_sep'];
-
-        $this->options = array_replace_recursive($this->options, (array)$options);
-    }
-
-    /**
-     * Destory singleton instance
-     *
-     * @return void
-     */
-    public function destroy()
-    {
-        static::$instance = null;
     }
 
     /**
@@ -204,19 +167,6 @@ class EvalMath
     }
 
     /**
-     * Set options
-     *
-     * @param array $options Options
-     * @return \App\Lib\EvalMath|null
-     */
-    public function setOptions($options)
-    {
-        $this->options = array_merge($this->options, (array)$options);
-
-        return static::$instance;
-    }
-
-    /**
      * Get error
      *
      * @return mixed
@@ -224,16 +174,6 @@ class EvalMath
     public function getError()
     {
         return $this->last_error;
-    }
-
-    /**
-     * Private clone method to prevent cloning of the instance of the
-     * *Singleton* instance.
-     *
-     * @return void
-     */
-    private function __clone()
-    {
     }
 
     /**
@@ -903,8 +843,7 @@ class EvalMath
             // if the token is a number or variable, push it on the stack
             } else {
                 if (is_numeric($token)) {
-                    $l = localeconv();
-                    $token = strtr((string)$token, [$l['decimal_point'] => $options['decimalSeparator']]);
+                    $token = strtr((string)$token, ['.' => $options['decimalSeparator']]);
                     $stack->push($token);
                 } elseif ($this->isValidFloat($token, $options)) {
                     $stack->push($this->delocalize($token, $options));

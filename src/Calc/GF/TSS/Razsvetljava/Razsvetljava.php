@@ -192,7 +192,7 @@ class Razsvetljava extends TSSSistem
 
         $this->skupnaPotrebnaEnergija = 0;
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = $stDni * 24;
 
             $this->potrebnaElektricnaEnergija[$mesec] = 0;

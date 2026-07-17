@@ -91,7 +91,7 @@ class ToplotnaPodpostaja extends Generator
         $T_h_g = 45;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = $stDni * 24;
 
             // faktor [-]
@@ -140,7 +140,7 @@ class ToplotnaPodpostaja extends Generator
         $T_h_g = 45;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = $stDni * 24;
 
             // th – mesečne obratovalne ure – čas [h/M]
@@ -192,7 +192,7 @@ class ToplotnaPodpostaja extends Generator
 
         if ($namen == 'tsv') {
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
                 $stUr = $stDni * 24;
                 $stDniTSV = $stDni;
 
@@ -245,7 +245,7 @@ class ToplotnaPodpostaja extends Generator
             }
         } else {
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
                 $stUr = $stDni * 24;
 
                 // th – mesečne obratovalne ure – čas [h/M]

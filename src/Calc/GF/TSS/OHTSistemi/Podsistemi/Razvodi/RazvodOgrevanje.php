@@ -98,7 +98,7 @@ abstract class RazvodOgrevanje extends Razvod
         $rezim = $sistem->ogrevanje->rezim;
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUr = 24 * $stDni;
 
             // th – mesečne obratovalne ure – čas [h/M] (enačba 43)
@@ -193,7 +193,7 @@ abstract class RazvodOgrevanje extends Razvod
             $f_abgl = 1;
 
             foreach (array_keys(Calc::MESECI) as $mesec) {
-                $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+                $stDni = Calc::steviloDni($mesec);
                 $stUr = 24 * $stDni;
 
                 // th – mesečne obratovalne ure – čas [h/M] (enačba 43)

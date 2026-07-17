@@ -16,9 +16,9 @@ class SolarniPaneli extends Generator
     public string $orientacija;
     public int $naklon;
 
-    public array $X;
-    public array $Y;
-    public array $f_sol;
+    public array $X = [];
+    public array $Y = [];
+    public array $f_sol = [];
     public array $proizvedenaEnergijaSSE;
 
     public ?array $soncnoObsevanje;
@@ -119,7 +119,7 @@ class SolarniPaneli extends Generator
         $f_sto = pow(75 / ($volumenHranilnika * (1 - 0.5) / $this->povrsina), 0.25);
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stDniDelovanja = $stDni;
 
             $this->vneseneIzgube['tsv'][$mesec] = $vneseneIzgube[$mesec] ?? 0;
@@ -269,7 +269,7 @@ class SolarniPaneli extends Generator
 
         $this->skupnoSoncnoObsevanje = 0;
         foreach ($this->soncnoObsevanje as $mesec => $obsevanje) {
-            $this->skupnoSoncnoObsevanje += $obsevanje * cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $this->skupnoSoncnoObsevanje += $obsevanje * Calc::steviloDni($mesec);
         }
     }
 
@@ -284,21 +284,21 @@ class SolarniPaneli extends Generator
             'x',
             'X',
             '-',
-            $this->X ?? [],
+            $this->X,
             1
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
             'y',
             'Y',
             '-',
-            $this->Y ?? [],
+            $this->Y,
             1
         );
         $this->porociloNizi[] = new TSSPorociloNiz(
             'fsol',
             'f<sub>sol</sub>',
             'Faktor SSE',
-            $this->f_sol ?? [],
+            $this->f_sol,
             2
         );
         $this->porociloNizi[] = new TSSPorociloNiz(

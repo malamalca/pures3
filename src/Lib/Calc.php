@@ -6,6 +6,8 @@ namespace App\Lib;
 class Calc
 {
     public const MESECI = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'avg', 'sep', 'okt', 'nov', 'dec'];
+    /** Število dni v mesecu (referenčno leto brez prestopa; indeks 0=jan..11=dec) */
+    public const DNI_V_MESECU = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     public const NIX = 0.000001;
     public const HITROST_ZVOKA = 343;
     public const GOSTOTA_ZRAKA = 1.18;
@@ -73,6 +75,17 @@ class Calc
     public static function jeMesecBrezOgrevanja($mesec)
     {
         return $mesec > 2 && $mesec < 9;
+    }
+
+    /**
+     * Vrne število dni v podanem mesecu (referenčno leto brez prestopa)
+     *
+     * @param int $mesec Številka meseca 0..11
+     * @return int
+     */
+    public static function steviloDni(int $mesec): int
+    {
+        return self::DNI_V_MESECU[$mesec];
     }
 
     /**

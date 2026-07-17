@@ -67,7 +67,7 @@ class Konstrukcija
             $config = json_decode($config);
         }
 
-        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+        $EvalMath = new EvalMath();
 
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
@@ -142,14 +142,14 @@ class Konstrukcija
                 $this->R = [500 => $this->Rw];
             }
         }
-        if (!isset($this->C)) {
+        if (empty($this->C)) {
             $this->C = $this->tipKonstrukcije->C($this->povrsinskaMasa, $this->R);
         }
-        if (!isset($this->Ctr)) {
+        if (empty($this->Ctr)) {
             $this->Ctr = $this->tipKonstrukcije->Ctr($this->povrsinskaMasa, $this->R);
         }
 
-        if (!isset($this->Lnw)) {
+        if (empty($this->Lnw)) {
             $this->Lnw = $this->tipKonstrukcije->Lnw($this->povrsinskaMasa, $this->R);
         }
 

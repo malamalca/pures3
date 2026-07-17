@@ -52,7 +52,7 @@ class NetransparentenElementOvoja extends ElementOvoja
             $config = json_decode($config);
         }
 
-        $EvalMath = EvalMath::getInstance(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+        $EvalMath = new EvalMath();
 
         if (isset($config->protiZraku)) {
             $this->protiZraku = (bool)$config->protiZraku;
@@ -204,7 +204,7 @@ class NetransparentenElementOvoja extends ElementOvoja
 
         // transmisijske toplotne izgube za ogrevanje in hlajenje Qtr,m (kWh/m)
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             if ($this->konstrukcija->TSG->tip == 'zunanja') {
                 // konstrukcija proti zraku
                 $adiabatno = !empty($this->konstrukcija->TSG->adiabatno);
@@ -363,7 +363,7 @@ class NetransparentenElementOvoja extends ElementOvoja
         $povprecnaNotranjaT = $povprecnaNotranjaT ?? 20;
         $notranjaT = $notranjaT ?? 20;
 
-        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+        $stDni = Calc::steviloDni($mesec);
 
         $urniToplotniTok = $this->U *
             $this->povrsina * ($povprecnaNotranjaT - $okolje->povprecnaLetnaTemp) +

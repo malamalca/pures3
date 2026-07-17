@@ -189,7 +189,7 @@ abstract class KoncniPrenosnik extends TSSInterface
         $namen = $params['namen'];
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
             $stUrNaMesec = $stDni * 24;
 
             $this->potrebnaElektricnaEnergija[$namen][$mesec] =

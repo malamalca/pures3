@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Calc\GF\Cone\KlasifikacijeCone;
 
 use App\Calc\GF\Cone\Cona;
+use App\Lib\Calc;
 
 class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
 {
@@ -61,7 +62,7 @@ class VecstanovanjskaKlasifikacijaCone extends EnostanovanjskaKlasifikacijaCone
             $dnevnaKolicina = $cona->TSV->dnevnaKolicina;
         }
 
-        $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+        $stDni = Calc::steviloDni($mesec);
 
         $energijaTSV = 0.001 * $dnevnaKolicina * $steviloOseb * 4.2 / 3.6 *
             ($toplaVodaT - $hladnaVodaT) * $stDni -

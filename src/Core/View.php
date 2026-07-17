@@ -64,6 +64,7 @@ class View
         $contents = ob_get_contents();
         ob_end_clean();
 
+        /** @psalm-suppress TypeDoesNotContainType */
         if (!isset($this->layout) || $this->layout !== false) {
             // extract vars that might be set in template
             extract($this->_vars);

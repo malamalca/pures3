@@ -451,7 +451,7 @@ class CalcKonstrukcije
                         $SdDesno = $kons->Sd;
                     }
 
-                    $gc = 2 * pow(10, -10) * cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023) * 24 * 60 * 60 * 1000 *
+                    $gc = 2 * pow(10, -10) * Calc::steviloDni($mesec) * 24 * 60 * 60 * 1000 *
                     (
                         (($tlakLevo - $sloj->nasicenTlak[$mesec]) / ($sloj->Sdn - $SdLevo))
                         -
@@ -557,7 +557,7 @@ class CalcKonstrukcije
 
                                 // izhlapevanje
                                 /** @var \stdClass $sloj */
-                                $gc = 2 * pow(10, -10) * cal_days_in_month(CAL_GREGORIAN, $i % 12 + 1, 2023)
+                                $gc = 2 * pow(10, -10) * Calc::steviloDni($i % 12)
                                     * 24 * 3600 * 1000 *
                                     (
                                         (($tlakLevo - $sloj->nasicenTlak[$mesec]) / ($sloj->Sdn - $SdLevo))

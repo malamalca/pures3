@@ -87,7 +87,7 @@ class PosrednoOgrevanHranilnik extends Hranilnik
         }
 
         foreach (array_keys(Calc::MESECI) as $mesec) {
-            $stDni = cal_days_in_month(CAL_GREGORIAN, $mesec + 1, 2023);
+            $stDni = Calc::steviloDni($mesec);
 
             $this->toplotneIzgube[$namen][$mesec] =
                 $f_povezava * $dnevneIzgube * (50 - $temperaturaOkolice) / 45 * $stDni * $this->stevilo;

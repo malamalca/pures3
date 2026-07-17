@@ -18,23 +18,9 @@ class EvalMathTest extends TestCase
      */
     public function testSimpleMath()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.', 'thousandsSeparator' => '']);
+        $EvalMath = new EvalMath();
         $this->assertEquals(12, $EvalMath->e('3*4'));
         $this->assertEquals(14, $EvalMath->e('3.5*4'));
-    }
-
-    /**
-     * testLocalized method
-     *
-     * @return void
-     */
-    public function testLocalized()
-    {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => ',']);
-        $this->assertEquals(12, $EvalMath->e('3*4'));
-        $this->assertEquals(14, $EvalMath->e('3,5*4'));
-
-        $this->assertEquals(38.4, $EvalMath->e('5*4,2+3*5,8'));
     }
 
     /**
@@ -44,21 +30,9 @@ class EvalMathTest extends TestCase
      */
     public function testThousands()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.', 'thousandsSeparator' => ',']);
+        $EvalMath = new EvalMath();
         $this->assertEquals(1000, $EvalMath->e('1000'));
         $this->assertEquals(1000.23, $EvalMath->e('1000.23'));
-        $this->assertEquals(1000.23, $EvalMath->e('1,000.23'));
-        $this->assertEquals(1000000.23, $EvalMath->e('1,000,000.23'));
-        $this->assertEquals(2000.46, $EvalMath->e('1000.23*2'));
-        $this->assertEquals(2000.46, $EvalMath->e('1,000.23*2'));
-
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => ',', 'thousandsSeparator' => '.']);
-        $this->assertEquals(1000, $EvalMath->e('1000'));
-        $this->assertEquals(1000.23, $EvalMath->e('1000,23'));
-        $this->assertEquals(1000.23, $EvalMath->e('1.000,23'));
-        $this->assertEquals(1000000.23, $EvalMath->e('1.000.000,23'));
-        $this->assertEquals(2000.46, $EvalMath->e('1000,23*2'));
-        $this->assertEquals(2000.46, $EvalMath->e('1.000,23*2'));
     }
 
     /**
@@ -68,7 +42,7 @@ class EvalMathTest extends TestCase
      */
     public function testParanthesis()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.']);
+        $EvalMath = new EvalMath();
         $this->assertEquals(14, $EvalMath->e('2+3*4'));
         $this->assertEquals(20, $EvalMath->e('(2+3)*4'));
         $this->assertEquals(42, $EvalMath->e('-8(5/2)^2*(1-sqrt(4))-8'));
@@ -82,7 +56,7 @@ class EvalMathTest extends TestCase
      */
     public function testExpressions()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.']);
+        $EvalMath = new EvalMath();
 
         $this->assertEquals(round($EvalMath->e('sin(degtorad(30))'), 1), 0.5);
 
@@ -97,7 +71,7 @@ class EvalMathTest extends TestCase
      */
     public function testGfxSimple()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.']);
+        $EvalMath = new EvalMath();
 
         $tokens = $EvalMath->nfx('(2+3 )* 4');
         $result = $EvalMath->gfx($tokens);
@@ -126,7 +100,7 @@ class EvalMathTest extends TestCase
      */
     public function testGfx2()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.']);
+        $EvalMath = new EvalMath();
         $EvalMath->evaluate('Aux=12');
         $EvalMath->evaluate('OtherVariable=4.5');
 
@@ -144,7 +118,7 @@ class EvalMathTest extends TestCase
      */
     public function testUsedVars()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.']);
+        $EvalMath = new EvalMath();
         $EvalMath->evaluate('Aux=12');
         $EvalMath->evaluate('OtherVariable=4.5');
         $EvalMath->evaluate('Third=9');
@@ -164,20 +138,28 @@ class EvalMathTest extends TestCase
      */
     public function testLocalize()
     {
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => ',']);
+        $EvalMath = new EvalMath();
         $result = $EvalMath->localize(12.5);
-        $this->assertEquals('12,5', $result);
-
-        $this->assertEquals('=3,5*4,5', $EvalMath->localize('=3.5*4.5'));
-        $this->assertEquals('=3,5*4000,5', $EvalMath->localize('=3.5*4000.5'));
-        $this->assertEquals('=3,5*4000,5', $EvalMath->localize('=3.5*4,000.5'));
-
-        $EvalMath = EvalMath::getInstance()->setOptions(['decimalSeparator' => '.']);
-        $result = $EvalMath->localize(2.5 * 3);
-        $this->assertEquals('7.5', $result);
+        $this->assertEquals('12.5', $result);
 
         $this->assertEquals('=3.5*4.5', $EvalMath->localize('=3.5*4.5'));
         $this->assertEquals('=3.5*4000.5', $EvalMath->localize('=3.5*4000.5'));
-        $this->assertEquals('=3.5*4000.5', $EvalMath->localize('=3.5*4,000.5'));
+    }
+
+    /**
+     * testIsolation — each instance is independent
+     *
+     * @return void
+     */
+    public function testIsolation()
+    {
+        $a = new EvalMath();
+        $b = new EvalMath();
+
+        $a->evaluate('x = 42');
+        $this->assertEquals(42, $a->e('x'));
+
+        // $b must not see $a's variables
+        $this->assertFalse($b->e('x'));
     }
 }
