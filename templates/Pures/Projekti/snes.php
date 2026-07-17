@@ -29,7 +29,7 @@
             <span class="math">`E_(d el,an)=sum_(i=1)^n E_(de l,an,i)=`</span>
             <?php
             $cards = [];
-            foreach($stavba->sistemi as $i => $sistem) {
+            foreach($sistemi as $i => $sistem) {
                 $cardContents = '';
                 foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                     if ($energija > 0) {
@@ -64,7 +64,7 @@
             <span class="math">`E_(w,d el,an)=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`</span>
             <?php
             $cards = [];
-            foreach($stavba->sistemi as $i => $sistem) {
+            foreach($sistemi as $i => $sistem) {
                 $cardContents = '';
                 foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                     if ($energija > 0) {
@@ -99,7 +99,7 @@
             <span class="math">`E_(P_(ren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"ren")=`</span>
             <?php
             $cards = [];
-            foreach($stavba->sistemi as $i => $sistem) {
+            foreach($sistemi as $i => $sistem) {
                 $cardContents = '';
                 foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                     if ($cardContents != '') {
@@ -143,7 +143,7 @@
             <span class="math">`E_(P_(nren,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"nren")=`</span>
             <?php
             $cards = [];
-            foreach($stavba->sistemi as $i => $sistem) {
+            foreach($sistemi as $i => $sistem) {
                 $cardContents = '';
                 foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                     if ($cardContents != '') {
@@ -187,7 +187,7 @@
             <span class="math">`E_(P_(t ot,an))=sum_(i=1)^n E_(de l,an,i) * f_(P_"tot")=`</span>
             <?php
             $cards = [];
-            foreach($stavba->sistemi as $i => $sistem) {
+            foreach($sistemi as $i => $sistem) {
                 $cardContents = '';
                 foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                     if ($cardContents != '') {
@@ -377,7 +377,7 @@
             <br />
             <?php
             $cards = [];
-            foreach($stavba->sistemi as $i => $sistem) {
+            foreach($sistemi as $i => $sistem) {
                 $cardContents = '';
                 foreach ($sistem->energijaPoEnergentih as $energent => $energija) {
                     if ($cardContents != '') {

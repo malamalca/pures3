@@ -135,10 +135,10 @@
     <Xhnd><?= $this->numFormat($stavba->X_Hnd, 1, '.') ?></Xhnd>
     <VrstaModeliranja>1</VrstaModeliranja>
     <rei>
-        <cone_num><?= $this->numFormat(count($stavba->cone), 0) ?></cone_num>
-        <gradnja><?= $stavba->cone[0]->toplotnaKapaciteta <= 110000 ? 1 : 2 ?></gradnja>
-        <lega_stavbe><?= VrstaLegeStavbe::from($stavba->cone[0]->infiltracija->lega)->sifraEI() ?></lega_stavbe>
-        <zavetrovanost><?= VrstaIzpostavljenostiFasad::from($stavba->cone[0]->infiltracija->zavetrovanost)->sifraEI() ?></zavetrovanost>
+        <cone_num><?= $this->numFormat(count($cone), 0) ?></cone_num>
+        <gradnja><?= $cone[0]->toplotnaKapaciteta <= 110000 ? 1 : 2 ?></gradnja>
+        <lega_stavbe><?= VrstaLegeStavbe::from($cone[0]->infiltracija->lega)->sifraEI() ?></lega_stavbe>
+        <zavetrovanost><?= VrstaIzpostavljenostiFasad::from($cone[0]->infiltracija->zavetrovanost)->sifraEI() ?></zavetrovanost>
         <cone/>
         <ogrevalni_sistemi/>
         <os_razvodi_ogr_stavbe/>

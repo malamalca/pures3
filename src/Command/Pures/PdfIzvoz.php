@@ -38,6 +38,7 @@ class PdfIzvoz extends Command
         }
 
         $view->set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
+        $view->set('sistemi', App::loadProjectCalculation('Pures', $projectId, 'TSS' . DS));
         $view->set(
             'tKons',
             App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'transparentne') ?? []

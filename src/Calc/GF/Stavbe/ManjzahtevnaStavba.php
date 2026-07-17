@@ -292,6 +292,10 @@ class ManjzahtevnaStavba extends Stavba
         $reflect = new \ReflectionClass(ManjzahtevnaStavba::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
+            // cone in sistemi se že hranijo v cone.json oz. TSS/*.json, zato jih tu ne podvajamo
+            if (in_array($prop->getName(), ['cone', 'sistemi'], true)) {
+                continue;
+            }
             $stavba->{$prop->getName()} = $prop->getValue($this);
         }
 

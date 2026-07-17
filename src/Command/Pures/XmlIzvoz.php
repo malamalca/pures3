@@ -41,6 +41,7 @@ class XmlIzvoz extends Command
 
         $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
         $view->set('stavba', $stavba);
+        $view->set('cone', App::loadProjectCalculation('Pures', $projectId, 'cone'));
 
         $contents = $view->render('Projekti', 'ei');
 

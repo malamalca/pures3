@@ -116,7 +116,7 @@ class ProjektiController extends Controller
         App::set('sistemi', App::loadProjectCalculation(
             'Pures',
             $projectId,
-            ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS . 'ogrevanje.json'
+            ($ref == 'ref' ? 'Ref' . DS : '') . 'TSS' . DS
         ));
         if ($stavba->vrsta == 'zahtevna') {
             $refStavba = App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba');

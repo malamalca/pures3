@@ -83,9 +83,9 @@ abstract class Stavba
         $stavba = new \stdClass();
         $stavba->naziv = $this->naziv;
         $stavba->lokacija = $this->lokacija;
-        $stavba->KO = $this->lokacija;
-        $stavba->parcele = $this->lokacija;
-        $stavba->koordinate = $this->lokacija;
+        $stavba->KO = $this->KO;
+        $stavba->parcele = $this->parcele;
+        $stavba->koordinate = $this->koordinate;
         $stavba->klasifikacija = $this->klasifikacija;
         $stavba->tip = $this->tip->value;
         $stavba->vrsta = $this->zahtevnost->value;
