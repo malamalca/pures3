@@ -3,6 +3,8 @@
         "id": "Prezracevanje",
         "idCone": "Cona1",
         "tss": "prezracevanje",
+        "porociloPodatki": [],
+        "porociloNizi": [],
         "razredH1H2": true,
         "vrsta": "centralni",
         "faktorKrmiljenja": 1,

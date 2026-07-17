@@ -1,12 +1,12 @@
 [
     {
-        "id": "Razsvetljava",
         "idCone": "Cona1",
         "tss": "razsvetljava",
         "faktorDnevneSvetlobe": 0.05,
+        "mocSvetilk": 4,
         "letnoUrPodnevi": 1820,
         "letnoUrPonoci": 1680,
-        "mocSvetilk": 4,
+        "skupnaPotrebnaEnergija": 1237.5009981369863,
         "potrebnaEnergija": [
             131.84087671232876,
             104.79223232876713,
@@ -35,9 +35,12 @@
             0,
             0
         ],
-        "skupnaPotrebnaEnergija": 1237.5009981369863,
         "energijaPoEnergentih": {
             "elektrika": 1237.5009981369863
-        }
+        },
+        "id": "Razsvetljava",
+        "referencnaStavba": false,
+        "porociloNizi": [],
+        "porociloPodatki": []
     }
 ]

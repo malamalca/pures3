@@ -59,6 +59,7 @@
         "porociloPodatki": [],
         "porociloNizi": [
             {
+                "id": "QCenv",
                 "naziv": "Q<sub>C,environment,del<\/sub>; Q<sub>C,an,environment,del<\/sub>",
                 "opis": "Obnovljiva energija",
                 "vrednosti": [
@@ -115,6 +116,7 @@
             "vracljiveIzgubeAux": [],
             "porociloNizi": [
                 {
+                    "id": "QCenv",
                     "naziv": "Q<sub>C,environment,del<\/sub>; Q<sub>C,an,environment,del<\/sub>",
                     "opis": "Obnovljiva energija",
                     "vrednosti": [
@@ -136,6 +138,16 @@
                 }
             ],
             "porociloPodatki": [],
+            "razvodi": [
+                "RAZVODHLAJENJA"
+            ],
+            "prenosniki": [
+                "STENSKIKONVEKTORJI"
+            ],
+            "hranilniki": [],
+            "generatorji": [
+                "KOMPRESOR"
+            ],
             "energijaPoEnergentih": {
                 "elektrika": 7.7428109316308165,
                 "okolje": 112.039474656062
@@ -328,11 +340,16 @@
                         0
                     ]
                 },
-                "vracljiveIzgube": [],
+                "vracljiveIzgube": {
+                    "hlajenje": []
+                },
                 "vracljiveIzgubeTSV": [],
-                "vracljiveIzgubeAux": [],
+                "vracljiveIzgubeAux": {
+                    "hlajenje": []
+                },
                 "porociloNizi": [
                     {
+                        "id": "tCgen",
                         "naziv": "t<sub>C,gen,op,d<\/sub>",
                         "opis": "Število ur delovanja na dan",
                         "vrednosti": [
@@ -353,6 +370,7 @@
                         "vsota": true
                     },
                     {
+                        "id": "fEER",
                         "naziv": "f<sub>EER,corr<\/sub>",
                         "opis": "Korekcijski faktor ERR",
                         "vrednosti": [
@@ -373,6 +391,7 @@
                         "vsota": false
                     },
                     {
+                        "id": "Ec",
                         "naziv": "E<sub>C,del,m<\/sub>; E<sub>C,del,an<\/sub>",
                         "opis": "Energija za delovanje",
                         "vrednosti": [
@@ -416,6 +435,8 @@
                         "decimalke": 1
                     }
                 ],
+                "nazivnaMoc": 6,
+                "delezPokrivanjaEnegije": 1,
                 "vneseneIzgube": {
                     "hlajenje": [
                         0,
@@ -431,8 +452,7 @@
                         0,
                         0
                     ]
-                },
-                "nazivnaMoc": 6
+                }
             }
         ]
     },
@@ -531,6 +551,16 @@
             "vracljiveIzgubeAux": [],
             "porociloNizi": [],
             "porociloPodatki": [],
+            "razvodi": [
+                "ogrevanje"
+            ],
+            "prenosniki": [
+                "TALNO"
+            ],
+            "hranilniki": [],
+            "generatorji": [
+                "TC"
+            ],
             "energijaPoEnergentih": {
                 "elektrika": 2159.6434354516405,
                 "okolje": 3662.515176362106
@@ -749,11 +779,16 @@
                         893.0925476502772
                     ]
                 },
-                "vracljiveIzgube": [],
+                "vracljiveIzgube": {
+                    "ogrevanje": []
+                },
                 "vracljiveIzgubeTSV": [],
-                "vracljiveIzgubeAux": [],
+                "vracljiveIzgubeAux": {
+                    "ogrevanje": []
+                },
                 "porociloNizi": [
                     {
+                        "id": "ETC",
                         "naziv": "E<sub>TČ<\/sub>",
                         "opis": "Energija za delovanje TČ",
                         "vrednosti": [
@@ -797,6 +832,8 @@
                         "decimalke": 1
                     }
                 ],
+                "nazivnaMoc": 6,
+                "delezPokrivanjaEnegije": 1,
                 "vneseneIzgube": {
                     "ogrevanje": [
                         1379.147306513585,
@@ -814,7 +851,6 @@
                     ]
                 },
                 "podnebje": "celinsko",
-                "nazivnaMoc": 6,
                 "elektricnaMocNaPrimarnemKrogu": 6,
                 "elektricnaMocNaSekundarnemKrogu": 3
             }
