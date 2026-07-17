@@ -219,10 +219,10 @@ class NetransparentenElementOvoja extends ElementOvoja
                     continue;
                 }
                 $this->transIzgubeOgrevanje[$mesec] = $this->H_ogrevanje * 24 / 1000 *
-                    $cona->deltaTOgrevanje[$mesec] * $stDni * $this->stevilo;
+                    $cona->deltaTOgrevanje[$mesec] * $stDni;
 
                 $this->transIzgubeHlajenje[$mesec] = $this->H_hlajenje * 24 / 1000 *
-                    $cona->deltaTHlajenje[$mesec] * $stDni * $this->stevilo;
+                    $cona->deltaTHlajenje[$mesec] * $stDni;
 
                 if ($dobitekSS) {
                     // svetla barva 0.3, srednja barva 0.6, temna barva 0.9

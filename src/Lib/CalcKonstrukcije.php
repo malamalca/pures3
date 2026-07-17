@@ -158,8 +158,9 @@ class CalcKonstrukcije
             }
         }
 
-        $izracunKondenzacije = !isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false;
-        $izracunKondenzacije = !isset($options['referencnaStavba']) || !$options['referencnaStavba'];
+        $izracunKondenzacije =
+            (!isset($kons->TSG->kontrolaKond) || $kons->TSG->kontrolaKond !== false) &&
+            (empty($options['referencnaStavba']));
         $izracunKondenzacije = $izracunKondenzacije || !empty($options['izracunKondenzacije']);
         // brez difuzijskih podatkov (Sd = 0) prehoda vodne pare ni mogoče izračunati
         $izracunKondenzacije = $izracunKondenzacije && $kons->Sd > 0;

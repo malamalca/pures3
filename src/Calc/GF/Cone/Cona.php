@@ -746,9 +746,9 @@ class Cona
                 $nasicenNotranjiTlakOgrevanje /
                 (101325 - $this->uravnavanjeVlage->vlaznostZrakaNavlazevanje / 100 * $nasicenNotranjiTlakOgrevanje);
             $minNotranjaVlaznostHlajenje = $this->uravnavanjeVlage->minNotranjaVlaznostHlajenje ??
-                0.622 * 1000 * $this->uravnavanjeVlage->vlaznostZrakaNavlazevanje / 100 *
+                0.622 * 1000 * $this->uravnavanjeVlage->vlaznostZrakaRazvlazevanje / 100 *
                 $nasicenNotranjiTlakHlajenje /
-                (101325 - $this->uravnavanjeVlage->vlaznostZrakaNavlazevanje / 100 * $nasicenNotranjiTlakHlajenje);
+                (101325 - $this->uravnavanjeVlage->vlaznostZrakaRazvlazevanje / 100 * $nasicenNotranjiTlakHlajenje);
 
             $this->skupnaEnergijaNavlazevanje = 0;
             $this->skupnaEnergijaRazvlazevanje = 0;

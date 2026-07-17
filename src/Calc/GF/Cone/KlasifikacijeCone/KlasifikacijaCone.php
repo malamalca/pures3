@@ -265,7 +265,7 @@ abstract class KlasifikacijaCone
         $sistem->tsv = new \stdClass();
         $sistem->tsv->rezim = '40/30';
         $sistem->tsv->generatorji = ['SSE', 'KOTEL'];
-        $sistem->tsv->razvodi = ['TSV'];
+        $sistem->tsv->razvodi = ['TSV', 'SOLAR'];
         $sistem->tsv->hranilniki = ['TSVH'];
 
         $razvodTSV = new \stdClass();
@@ -277,9 +277,11 @@ abstract class KlasifikacijaCone
         $sistem->razvodi[] = $razvodTSV;
 
         $razvodSolar = new \stdClass();
-        $razvodSolar->id = 'TSV';
+        $razvodSolar->id = 'SOLAR';
         $razvodSolar->vrsta = 'solar';
         $razvodSolar->idGeneratorja = 'SSE';
+        $razvodSolar->crpalka = new \stdClass();
+        $razvodSolar->crpalka->moc = 25 + 2 * $sseFaktor * $cona->ogrevanaPovrsina;
         $sistem->razvodi[] = $razvodSolar;
 
         $hranilnik = new \stdClass();
@@ -298,8 +300,8 @@ abstract class KlasifikacijaCone
         $generatorSSE->povrsina = $sseFaktor * $cona->ogrevanaPovrsina;
         $generatorSSE->orientacija = 'J';
         $generatorSSE->naklon = 30;
-        $generatorSSE->crpaka = new \stdClass();
-        $generatorSSE->crpaka->moc = 25 + 2 * $sseFaktor * $cona->ogrevanaPovrsina;
+        $generatorSSE->crpalka = new \stdClass();
+        $generatorSSE->crpalka->moc = 25 + 2 * $sseFaktor * $cona->ogrevanaPovrsina;
         $sistem->generatorji[] = $generatorSSE;
     }
 

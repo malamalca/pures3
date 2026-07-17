@@ -67,7 +67,7 @@ class Calc
     /**
      * Določi, če je podani mesec ogrevan ali ne
      *
-     * @param int $mesec Številka meseca 0..122
+     * @param int $mesec Številka meseca 0..11
      * @return bool
      */
     public static function jeMesecBrezOgrevanja($mesec)

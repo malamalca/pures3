@@ -120,7 +120,7 @@ class TransparentenElementOvoja extends ElementOvoja
                 // 0 - okna
                 // 1 - strešna okna
                 if (!empty($this->konstrukcija->Uw)) {
-                    $this->U = $this->povrsina * $this->konstrukcija->Uw / $this->povrsina;
+                    $this->U = $this->konstrukcija->Uw;
                 } else {
                     $this->U = (
                         $this->povrsina * $this->konstrukcija->Ug * (1 - $this->delezOkvirja) +
