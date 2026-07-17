@@ -126,8 +126,9 @@ abstract class ElementOvoja
         if (isset($this->id)) {
             $elementOvoja->id = $this->id;
         }
+        // celotne konstrukcije (materiali ipd.) ne shranjujemo — hranijo se v konstrukcije/*.json.
+        // ob prikazu/rekonstrukciji se konstrukcija poišče po idKonstrukcije (glej Cona::hydrateKonstrukcije()).
         $elementOvoja->idKonstrukcije = $this->idKonstrukcije;
-        $elementOvoja->konstrukcija = $this->konstrukcija;
         $elementOvoja->opis = $this->opis;
 
         $elementOvoja->stevilo = $this->stevilo;

@@ -393,6 +393,10 @@ class NetransparentenElementOvoja extends ElementOvoja
         $reflect = new \ReflectionClass(self::class);
         $props = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($props as $prop) {
+            // celotne konstrukcije ne shranjujemo (glej ElementOvoja::export() in Cona::hydrateKonstrukcije())
+            if ($prop->getName() == 'konstrukcija') {
+                continue;
+            }
             if ($prop->isInitialized($this)) {
                 $elementOvoja->{$prop->getName()} = $prop->getValue($this);
 

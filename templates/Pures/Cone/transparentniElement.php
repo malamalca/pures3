@@ -59,7 +59,7 @@
     <tr>
         <td>Linearna topl. prehodnost distančnika</td>
         <td>&psi;<sub>d</sub></td>
-        <td class="center"><?= $this->numFormat($kons->konstrukcija->Psi, 2) ?></td>
+        <td class="center"><?= $this->numFormat($kons->konstrukcija->Psi ?? 0, 2) ?></td>
         <td>W/mK</td>
     </tr>
 

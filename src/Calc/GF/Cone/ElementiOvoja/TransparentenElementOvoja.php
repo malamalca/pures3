@@ -114,7 +114,7 @@ class TransparentenElementOvoja extends ElementOvoja
             $this->stranskoSencenje->merge($config->stranskoSencenje);
         }
 
-        switch ($this->konstrukcija->vrsta) {
+        switch ($this->konstrukcija->vrsta ?? null) {
             case '0':
             case '1':
                 // 0 - okna

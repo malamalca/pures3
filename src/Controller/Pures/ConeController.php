@@ -3,11 +3,34 @@ declare(strict_types=1);
 
 namespace App\Controller\Pures;
 
+use App\Calc\GF\Cone\Cona;
 use App\Core\App;
 use App\Core\Controller;
 
 class ConeController extends Controller
 {
+    /**
+     * Naloži cone in vanje vstavi konstrukcije (iz konstrukcije/*.json), poiskane po idKonstrukcije.
+     * cone.json ne shranjuje več celotne konstrukcije, zato jo je za prikaz treba ponovno vstaviti.
+     *
+     * @param string $projectId Building name
+     * @param string|null $ref Referenčna stavba ('ref')
+     * @return array
+     */
+    private function naloziCone($projectId, $ref = null): array
+    {
+        $prefix = ($ref == 'ref' ? 'Ref' . DS : '');
+        $cone = App::loadProjectCalculation('Pures', $projectId, $prefix . 'cone') ?? [];
+
+        $konstrukcije = new \stdClass();
+        $konstrukcije->netransparentne =
+            App::loadProjectCalculation('Pures', $projectId, $prefix . 'konstrukcije' . DS . 'netransparentne') ?? [];
+        $konstrukcije->transparentne =
+            App::loadProjectCalculation('Pures', $projectId, $prefix . 'konstrukcije' . DS . 'transparentne') ?? [];
+
+        return Cona::hydrateKonstrukcije($cone, $konstrukcije);
+    }
+
     /**
      * Prikaz podatkov o ovoju cone
      *
@@ -18,7 +41,7 @@ class ConeController extends Controller
      */
     public function ovoj($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
+        $cone = $this->naloziCone($projectId, $ref);
 
         App::set('projectId', $projectId);
         App::set('cona', array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
@@ -34,7 +57,7 @@ class ConeController extends Controller
      */
     public function transmisija($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
+        $cone = $this->naloziCone($projectId, $ref);
 
         App::set('projectId', $projectId);
         App::set('cona', array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
@@ -51,7 +74,7 @@ class ConeController extends Controller
      */
     public function analiza($projectId, $conaId, $ref = null)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, ($ref == 'ref' ? 'Ref' . DS : '') . 'cone');
+        $cone = $this->naloziCone($projectId, $ref);
 
         App::set('projectId', $projectId);
         App::set('cona', array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId)));
@@ -67,7 +90,7 @@ class ConeController extends Controller
      */
     public function transparentniElement($projectId, $conaId, $konsId)
     {
-        $cone = App::loadProjectCalculation('Pures', $projectId, 'cone');
+        $cone = $this->naloziCone($projectId);
         $cona = array_first_callback($cone, fn($cona) => strtolower($cona->id) == strtolower($conaId));
         $k = array_first_callback(
             $cona->ovoj->transparentneKonstrukcije,
