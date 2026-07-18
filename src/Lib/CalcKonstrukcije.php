@@ -693,7 +693,9 @@ class CalcKonstrukcije
             $B = $params->povrsina / (0.5 * $params->obseg);
             $dt = $params->debelinaStene + $tlaLambda * 1 / $U_konstrukcije;
 
-            if ($dt < $B) {
+            // ISO 13370 §7.3.2: izbira formule (13)/(14) temelji na (d_f + 0,5·z), ne le na d_f.
+            // Pri z = 0 se pogoj zvede na slab-on-ground (§7.1, formuli (4)/(5)).
+            if (($dt + 0.5 * ($params->globina ?? 0)) < $B) {
                 $U_earth = 2 * $tlaLambda / (Pi() * $B + $dt + 0.5 * ($params->globina ?? 0)) *
                     log(Pi() * $B / ($dt + 0.5 * ($params->globina ?? 0)) + 1);
             } else {

@@ -48,7 +48,10 @@
 
         $Povoj = 0;
         foreach ($elementiOvoja as $elementOvoja) {
-            if (isset($elementOvoja->konstrukcija->TSG->tip) && $elementOvoja->konstrukcija->TSG->tip != 'zunanja') {
+            // konstrukcija ni več shranjena v cone.json — poišči jo v ustrezni mapi po idKonstrukcije
+            $mapaKonstrukcij = empty($elementOvoja->povezavaIzpis) ? $ntKonsMap : $tKonsMap;
+            $konstrukcija = najdiKonstrukcijo($mapaKonstrukcij, $elementOvoja->idKonstrukcije);
+            if (isset($konstrukcija->TSG->tip) && $konstrukcija->TSG->tip != 'zunanja') {
                 $Tzun = 0;
             } else {
                 $Tzun = $okolje->projektnaZunanjaT;

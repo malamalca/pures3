@@ -336,7 +336,6 @@ class Cona
                     }
             }
         }
-
     }
 
     /**
@@ -835,41 +834,6 @@ class Cona
         }
 
         return $cona;
-    }
-
-    /**
-     * V naložene cone (iz cone.json) ponovno vstavi celotno konstrukcijo v vsak element ovoja,
-     * poiskano po idKonstrukcije v podani knjižnici konstrukcij. Uporablja se pri prikazu, saj
-     * cone.json ne shranjuje več celotne konstrukcije (materiali ipd.), ampak le idKonstrukcije.
-     *
-     * @param array $cone Naložene cone
-     * @param \stdClass $konstrukcije Knjižnica konstrukcij z lastnostma ->netransparentne in ->transparentne
-     * @return array Cone z vstavljeno konstrukcijo v elementih ovoja
-     */
-    public static function hydrateKonstrukcije(array $cone, \stdClass $konstrukcije): array
-    {
-        $netransparentne = $konstrukcije->netransparentne ?? [];
-        $transparentne = $konstrukcije->transparentne ?? [];
-
-        foreach ($cone as $cona) {
-            if (!isset($cona->ovoj)) {
-                continue;
-            }
-            foreach ($cona->ovoj->netransparentneKonstrukcije ?? [] as $element) {
-                $element->konstrukcija = array_first_callback(
-                    $netransparentne,
-                    fn($k) => $k->id == $element->idKonstrukcije
-                ) ?? new \stdClass();
-            }
-            foreach ($cona->ovoj->transparentneKonstrukcije ?? [] as $element) {
-                $element->konstrukcija = array_first_callback(
-                    $transparentne,
-                    fn($k) => $k->id == $element->idKonstrukcije
-                ) ?? new \stdClass();
-            }
-        }
-
-        return $cone;
     }
 
     /**

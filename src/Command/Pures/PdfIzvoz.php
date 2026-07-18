@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Command\Pures;
 
-use App\Calc\GF\Cone\Cona;
 use App\Core\App;
 use App\Core\Command;
 use App\Core\Configure;
@@ -45,14 +44,19 @@ class PdfIzvoz extends Command
         $view->set('tKons', $tKons);
         $view->set('ntKons', $ntKons);
 
-        // cone.json ne vsebuje celotnih konstrukcij — vstavi jih nazaj po idKonstrukcije za prikaz
-        $konstrukcije = new \stdClass();
-        $konstrukcije->netransparentne = $ntKons;
-        $konstrukcije->transparentne = $tKons;
-        $view->set('cone', Cona::hydrateKonstrukcije(
-            (array)(App::loadProjectCalculation('Pures', $projectId, 'cone') ?? []),
-            $konstrukcije
-        ));
+        // cone.json ne vsebuje celotnih konstrukcij — predloge jih poiščejo v mapah po idKonstrukcije
+        $ntKonsMap = [];
+        foreach ($ntKons as $kons) {
+            $ntKonsMap[$kons->id] = $kons;
+        }
+        $tKonsMap = [];
+        foreach ($tKons as $kons) {
+            $tKonsMap[$kons->id] = $kons;
+        }
+        $view->set('ntKonsMap', $ntKonsMap);
+        $view->set('tKonsMap', $tKonsMap);
+
+        $view->set('cone', (array)(App::loadProjectCalculation('Pures', $projectId, 'cone') ?? []));
 
         if ($stavba->vrsta == 'nezahtevna') {
             $energentiSistema = json_decode((string)json_encode($stavba->vgrajeniSistemi), true);

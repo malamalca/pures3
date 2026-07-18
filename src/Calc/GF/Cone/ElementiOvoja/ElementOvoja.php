@@ -127,7 +127,7 @@ abstract class ElementOvoja
             $elementOvoja->id = $this->id;
         }
         // celotne konstrukcije (materiali ipd.) ne shranjujemo — hranijo se v konstrukcije/*.json.
-        // ob prikazu/rekonstrukciji se konstrukcija poišče po idKonstrukcije (glej Cona::hydrateKonstrukcije()).
+        // ob prikazu se konstrukcija poišče po idKonstrukcije v mapah ($ntKonsMap, $tKonsMap).
         $elementOvoja->idKonstrukcije = $this->idKonstrukcije;
         $elementOvoja->opis = $this->opis;
 

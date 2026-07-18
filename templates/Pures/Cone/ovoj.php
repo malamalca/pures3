@@ -34,16 +34,21 @@
 <table border="1">
     <tr>
         <th colspan="4">Zaporedna št. konstrukcije</th>
-        <?= implode(PHP_EOL, array_map(fn($elementOvoja) =>
-            '<th class="center">' . 
+        <?= implode(PHP_EOL, array_map(function ($elementOvoja) use ($projectId, $cona, $ntKonsMap, $tKonsMap) {
+            // konstrukcija ni več shranjena v cone.json — poišči jo v ustrezni mapi po idKonstrukcije
+            $mapaKonstrukcij = empty($elementOvoja->povezavaIzpis) ? $ntKonsMap : $tKonsMap;
+            $konstrukcija = najdiKonstrukcijo($mapaKonstrukcij, $elementOvoja->idKonstrukcije);
+
+            return '<th class="center">' .
             sprintf('<a class="button" href="%2$s" title="%3$s">%1$s</a>',
-                ($elementOvoja->id ?? $elementOvoja->konstrukcija->id),
+                ($elementOvoja->id ?? $elementOvoja->idKonstrukcije),
                 (empty($elementOvoja->povezavaIzpis) ?
-                    App::url('/pures/konstrukcije/view/' . $projectId . '/' . $elementOvoja->konstrukcija->id) :
+                    App::url('/pures/konstrukcije/view/' . $projectId . '/' . $elementOvoja->idKonstrukcije) :
                     App::url('/pures/cone/transparentniElement/' . $projectId . '/' . $cona->id . '/' . $elementOvoja->id)),
-                $elementOvoja->konstrukcija->naziv ?? ''
+                $konstrukcija->naziv ?? ''
             ) .
-            '</th>', $elementiOvoja)) ?>
+            '</th>';
+        }, $elementiOvoja)) ?>
     </tr>
     <tr>
         <td colspan="4">Št. enakih</td>

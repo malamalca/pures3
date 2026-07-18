@@ -3,15 +3,15 @@ declare(strict_types=1);
 
 namespace App\Controller\Pures;
 
-use App\Calc\GF\Cone\Cona;
 use App\Core\App;
 use App\Core\Controller;
 
 class ConeController extends Controller
 {
     /**
-     * Naloži cone in vanje vstavi konstrukcije (iz konstrukcije/*.json), poiskane po idKonstrukcije.
-     * cone.json ne shranjuje več celotne konstrukcije, zato jo je za prikaz treba ponovno vstaviti.
+     * Naloži cone ter pripravi asociativni mapi konstrukcij (id => konstrukcija).
+     * cone.json ne shranjuje več celotne konstrukcije (materiali, TSG ...), ampak le idKonstrukcije,
+     * zato predloge konstrukcijo poiščejo v mapah ($ntKonsMap, $tKonsMap) po idKonstrukcije.
      *
      * @param string $projectId Building name
      * @param string|null $ref Referenčna stavba ('ref')
@@ -22,13 +22,24 @@ class ConeController extends Controller
         $prefix = ($ref == 'ref' ? 'Ref' . DS : '');
         $cone = App::loadProjectCalculation('Pures', $projectId, $prefix . 'cone') ?? [];
 
-        $konstrukcije = new \stdClass();
-        $konstrukcije->netransparentne =
+        $ntKons =
             App::loadProjectCalculation('Pures', $projectId, $prefix . 'konstrukcije' . DS . 'netransparentne') ?? [];
-        $konstrukcije->transparentne =
+        $tKons =
             App::loadProjectCalculation('Pures', $projectId, $prefix . 'konstrukcije' . DS . 'transparentne') ?? [];
 
-        return Cona::hydrateKonstrukcije($cone, $konstrukcije);
+        $ntKonsMap = [];
+        foreach ($ntKons as $kons) {
+            $ntKonsMap[$kons->id] = $kons;
+        }
+        $tKonsMap = [];
+        foreach ($tKons as $kons) {
+            $tKonsMap[$kons->id] = $kons;
+        }
+
+        App::set('ntKonsMap', $ntKonsMap);
+        App::set('tKonsMap', $tKonsMap);
+
+        return $cone;
     }
 
     /**

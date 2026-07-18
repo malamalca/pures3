@@ -1,6 +1,9 @@
 <?php
     use App\Core\App;
     use App\Lib\Calc;
+
+    // konstrukcija ni več shranjena v cone.json — poišči jo v transparentni mapi po idKonstrukcije
+    $konstrukcija = najdiKonstrukcijo($tKonsMap, $kons->idKonstrukcije);
 ?>
 <p class="actions">
 <a class="button active" href="<?= App::url('/pures/cone/ovoj/' . $projectId . '/' . $cona->id) ?>">&larr;  Nazaj</a>
@@ -59,7 +62,7 @@
     <tr>
         <td>Linearna topl. prehodnost distančnika</td>
         <td>&psi;<sub>d</sub></td>
-        <td class="center"><?= $this->numFormat($kons->konstrukcija->Psi ?? 0, 2) ?></td>
+        <td class="center"><?= $this->numFormat($konstrukcija->Psi ?? 0, 2) ?></td>
         <td>W/mK</td>
     </tr>
 

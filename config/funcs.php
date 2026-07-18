@@ -96,6 +96,25 @@ function array_first_callback($haystack, ?callable $callback, $default = null) {
 }
 
 /**
+ * Poišče konstrukcijo v mapi (id => konstrukcija) po idKonstrukcije.
+ * Če konstrukcija z danim id ne obstaja, vrže izjemo (podatki so nekonsistentni),
+ * namesto da bi napako tiho pogoltnili.
+ *
+ * @param array $konstrukcije Mapa konstrukcij (id => konstrukcija)
+ * @param string $idKonstrukcije Iskani id konstrukcije
+ * @return \stdClass
+ * @throws \Exception Če konstrukcija z danim id ne obstaja
+ */
+function najdiKonstrukcijo(array $konstrukcije, string $idKonstrukcije): \stdClass
+{
+    if (!isset($konstrukcije[$idKonstrukcije])) {
+        throw new \Exception(sprintf('Konstrukcija z id="%s" ne obstaja.', $idKonstrukcije));
+    }
+
+    return $konstrukcije[$idKonstrukcije];
+}
+
+/**
  * Določi najbližjo vrednost
  *
  * @param array $haystack Zaloga vrednosti
