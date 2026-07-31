@@ -16,6 +16,8 @@ class LocilniElement
     public float $povrsinskaMasa = 0;
     public float $Rw = 0;
 
+    public array $pomozniElementi = [];
+
     private array $options = [];
 
     /**
@@ -64,6 +66,18 @@ class LocilniElement
             switch ($prop->getName()) {
                 case 'konstrukcija':
                     break;
+                case 'pomozniElementi':
+                    if (isset($config->pomozniElementi)) {
+                        foreach ((array)$config->pomozniElementi as $pomozniElement) {
+                            $elObj = new \stdClass();
+                            $elObj->naziv = $pomozniElement->naziv;
+                            $elObj->Rw = (float)$pomozniElement->Rw;
+                            $elObj->povrsina = (float)$pomozniElement->povrsina;
+                            $elObj->stevilo = (int)$pomozniElement->stevilo;
+
+                            $this->pomozniElementi[] = $elObj;
+                        }
+                    }
                 default:
                     if (isset($config->{$prop->getName()})) {
                         $configValue = $config->{$prop->getName()};
@@ -93,6 +107,20 @@ class LocilniElement
             $this->konstrukcija,
             $this->idDodatnegaSloja2
         );
+
+        if (count($this->pomozniElementi) > 0) {
+            $tau = 0;
+            $povrsinaPomoznih = 0;
+            foreach ($this->pomozniElementi as $pomozniElement) {
+                $tau += $pomozniElement->povrsina / $this->povrsina * pow(10, -$pomozniElement->Rw / 10) * $pomozniElement->stevilo;
+                $povrsinaPomoznih += $pomozniElement->povrsina * $pomozniElement->stevilo;
+            }
+
+            $tau += ($this->povrsina - $povrsinaPomoznih) / $this->povrsina * pow(10, -$this->Rw / 10);
+
+
+            $this->Rw = -10 * log10($tau);
+        }
     }
 
     /**

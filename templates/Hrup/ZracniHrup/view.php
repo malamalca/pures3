@@ -29,18 +29,50 @@
     <tr>
         <td class="w-30">Površina:</td>
         <td class="w-15 right">S<sub>s</sub>=</td>
-        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->povrsina, 1) ?> m²</td>
+        <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->povrsina, 1) ?> </td>
     </tr>
     <tr>
         <td class="w-30">Površinska masa:</td>
         <td class="w-15 right">m'=</td>
         <td class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->povrsinskaMasa, 1) ?> kg/m²</td>
     </tr>
+<?php
+    if (isset($locilnaKonstrukcija->locilniElement->pomozniElementi)) {
+        foreach ($locilnaKonstrukcija->locilniElement->pomozniElementi as $i => $pomozniElement) {
+?>
     <tr>
-        <td class="w-30">Izolativnost:</td>
-        <td class="w-15 right">R'<sub>w</sub>=</td>
+        <td class="w-30" colspan="4">Pomožni element #<?= $i+1 ?>:</td>
+    </tr>
+    <tr>
+        <td class="w-30 right">Naziv:</td>
+        <td class="w-15"><?= h($pomozniElement->naziv) ?></td>
+        <td colspan="2" class="left strong"></td>
+    </tr>
+    <tr>
+        <td class="w-30 right">R<sub>w</sub>=</td>
+        <td class="w-15"><?= $this->numFormat($pomozniElement->Rw, 0) ?> dB</td>
+        <td colspan="2" class="left strong"></td>
+    </tr>
+    <tr>
+        <td class="w-30 right">A=</td>
+        <td class="w-15"><?= $this->numFormat($pomozniElement->povrsina, 1) ?> m²</td>
+        <td colspan="2" class="left strong"></td>
+    </tr>
+        <tr>
+        <td class="w-30 right">N=</td>
+        <td class="w-15"><?= $this->numFormat($pomozniElement->stevilo, 0) ?></td>
+        <td colspan="2" class="left strong"></td>
+    </tr>
+<?php
+        }
+    }
+?>
+    <tr>
+        <td class="w-30 strong">Izolativnost celote:</td>
+        <td class="w-15 right">R<sub>w</sub>=</td>
         <td colspan="2" class="left strong"><?= $this->numFormat($locilnaKonstrukcija->locilniElement->Rw, 0) ?> dB</td>
     </tr>
+
 </table>
 
     <?php
@@ -92,6 +124,7 @@
             $Rw = round($stranskiElement->konstrukcija->Rw, 0);
             if (!empty($dodatniSloj)) {
                 $Rw += $dodatniSloj->dR;
+                unset($dodatniSloj);
             }
         ?>
         <td class="w-30">Izolativnost:</td>
