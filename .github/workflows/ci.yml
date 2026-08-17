@@ -8,6 +8,11 @@ on:
     branches:
       - '*'
 
+env:
+  # Authenticate Composer's GitHub downloads, otherwise codeload.github.com
+  # throttles the shared runner IPs with HTTP 429.
+  COMPOSER_AUTH: '{"github-oauth":{"github.com":"${{ secrets.GITHUB_TOKEN }}"}}'
+
 jobs:
   testsuite:
     runs-on: ubuntu-latest
@@ -44,15 +49,17 @@ jobs:
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-
+          ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-
+          ${{ runner.os }}-composer-
 
     - name: Composer Install
       run: |
-        if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then
-          composer update --prefer-lowest --prefer-stable
-        elif ${{ matrix.php-version == '8.1' }}; then
-          composer update --ignore-platform-reqs
+        if [[ '${{ matrix.prefer-lowest }}' == 'prefer-lowest' ]]; then
+          composer update --prefer-lowest --prefer-stable --prefer-dist --no-progress --no-interaction
         else
-          composer update
+          composer update --ignore-platform-reqs --prefer-dist --no-progress --no-interaction
         fi
 
     - name: Setup problem matchers for PHPUnit
@@ -99,17 +106,13 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
+        key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-
+          ${{ runner.os }}-composer-
 
     - name: Composer Install
-      run: |
-        if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then
-          composer update --prefer-lowest --prefer-stable
-        elif ${{ matrix.php-version == '8.1' }}; then
-          composer update --ignore-platform-reqs
-        else
-          composer update
-        fi
+      run: composer install --prefer-dist --no-progress --no-interaction
 
     - name: Run PHP CodeSniffer
       run: vendor/bin/phpcs --report=checkstyle | cs2pr
