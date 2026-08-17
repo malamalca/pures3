@@ -26,7 +26,7 @@ jobs:
             prefer-lowest: 'prefer-lowest'
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -45,7 +45,7 @@ jobs:
       run: echo "date=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
 
     - name: Cache composer dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
@@ -75,7 +75,7 @@ jobs:
         fi
     - name: Submit code coverage
       if: matrix.php-version == '8.1'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v7
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -84,7 +84,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -103,7 +103,7 @@ jobs:
       run: echo "date=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
 
     - name: Cache composer dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
         key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.lock') }}
