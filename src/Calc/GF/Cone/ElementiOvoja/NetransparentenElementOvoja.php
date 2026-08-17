@@ -180,8 +180,12 @@ class NetransparentenElementOvoja extends ElementOvoja
         } else {
             // faktor sončnega sevanja
             if ($dobitekSS) {
+                // pri vodoravnem elementu (naklon 0) orientacija ni pomembna
                 foreach ($okolje->obsevanje as $line) {
-                    if ($line->orientacija == $this->orientacija && $line->naklon == $this->naklon) {
+                    if (
+                        $line->naklon == $this->naklon &&
+                        ($this->naklon == 0 || $line->orientacija == $this->orientacija)
+                    ) {
                         $this->soncnoObsevanje = $line->obsevanje;
                         break;
                     }

@@ -51,12 +51,15 @@ class TransparentenElementOvoja extends ElementOvoja
         }
 
         /** Povzemi lastnosti zidu, v katerega je okno vgrajeno */
+        $naklonDolocen = isset($config->naklon);
         if (isset($this->options['elementVgradnje'])) {
             /** @var \App\Calc\GF\Cone\ElementiOvoja\NetransparentenElementOvoja $ntElement */
             $ntElement = $this->options['elementVgradnje'];
 
-            if (empty($config->naklon)) {
+            // naklon 0 (vodoraven element) je veljavna vrednost, zato isset in ne empty
+            if (!isset($config->naklon)) {
                 $this->naklon = $ntElement->naklon;
+                $naklonDolocen = true;
             }
             if (empty($config->orientacija)) {
                 $this->orientacija = $ntElement->orientacija;
@@ -137,8 +140,13 @@ class TransparentenElementOvoja extends ElementOvoja
                 break;
         }
 
-        if (empty($this->orientacija) || empty($this->naklon)) {
-            throw new \Exception(sprintf('Transparentni element %s nima določene orientacije ali naklona', $this->id));
+        if (!$naklonDolocen) {
+            throw new \Exception(sprintf('Transparentni element %s nima določenega naklona', $this->id));
+        }
+
+        // pri vodoravnem elementu (naklon 0) orientacija ni določljiva in tudi ni potrebna
+        if ($this->naklon != 0 && empty($this->orientacija)) {
+            throw new \Exception(sprintf('Transparentni element %s nima določene orientacije', $this->id));
         }
     }
 
@@ -151,9 +159,16 @@ class TransparentenElementOvoja extends ElementOvoja
      */
     public function analiza($cona, $okolje)
     {
+        // vodoraven element (naklon 0) - orientacija ni pomembna, sončno obsevanje
+        // in senčenje sta vezana zgolj na vodoravno ploskev
+        $vodoraven = $this->naklon == 0;
+
         // faktor sončnega sevanja
         foreach ($okolje->obsevanje as $line) {
-            if ($line->orientacija == $this->orientacija && $line->naklon == $this->naklon) {
+            if (
+                $line->naklon == $this->naklon &&
+                ($vodoraven || $line->orientacija == $this->orientacija)
+            ) {
                 $this->soncnoObsevanje = $line->obsevanje;
                 break;
             }
@@ -163,18 +178,18 @@ class TransparentenElementOvoja extends ElementOvoja
         }
 
         $pomozniFaktorji = Configure::read('lookups.transparentne.pomozniFaktorji');
-        $A1 = $pomozniFaktorji['nadstresek']['A1'][$this->orientacija];
-        $A2 = $pomozniFaktorji['nadstresek']['A2'][$this->orientacija];
-        $B1 = $pomozniFaktorji['nadstresek']['B1'][$this->orientacija];
-        $B2 = $pomozniFaktorji['nadstresek']['B2'][$this->orientacija];
+        $A1 = $pomozniFaktorji['nadstresek']['A1'][$this->orientacija] ?? 0;
+        $A2 = $pomozniFaktorji['nadstresek']['A2'][$this->orientacija] ?? 0;
+        $B1 = $pomozniFaktorji['nadstresek']['B1'][$this->orientacija] ?? 0;
+        $B2 = $pomozniFaktorji['nadstresek']['B2'][$this->orientacija] ?? 0;
 
-        $A1_stena = $pomozniFaktorji['stena']['A1'][$this->orientacija];
-        $A2_stena = $pomozniFaktorji['stena']['A2'][$this->orientacija];
-        $B1_stena = $pomozniFaktorji['stena']['B1'][$this->orientacija];
-        $B2_stena = $pomozniFaktorji['stena']['B2'][$this->orientacija];
+        $A1_stena = $pomozniFaktorji['stena']['A1'][$this->orientacija] ?? 0;
+        $A2_stena = $pomozniFaktorji['stena']['A2'][$this->orientacija] ?? 0;
+        $B1_stena = $pomozniFaktorji['stena']['B1'][$this->orientacija] ?? 0;
+        $B2_stena = $pomozniFaktorji['stena']['B2'][$this->orientacija] ?? 0;
 
         $faktorOrientacije = Configure::read('lookups.transparentne.faktorOrientacije.' .
-            $this->orientacija);
+            $this->orientacija) ?? ['l' => 0, 'd' => 0];
 
         $visineSonca = Configure::read('lookups.transparentne.visinaSonca');
         $faktorjiSencenjaOvir = Configure::read('lookups.transparentne.faktorjiSencenja');
@@ -203,7 +218,10 @@ class TransparentenElementOvoja extends ElementOvoja
                 $zemljepisnaSirina = 40;
                 $deklinacija = Configure::read('lookups.transparentne.mesecnaDeklinacija.' . $mesec);
 
-                $delezObsevanja = Configure::read('lookups.transparentne.delezObsevanja.' .
+                // TSG podaja delež obsevanja le po orientacijah, torej za navpične oz. nagnjene
+                // elemente. Pri vodoravnem elementu senčenje nadstreška in stranskih ovir
+                // ni definirano, zato je delež obsevanja 0 (faktor senčenja ostane 1).
+                $delezObsevanja = $vodoraven ? 0 : Configure::read('lookups.transparentne.delezObsevanja.' .
                     $this->orientacija . '.' . $mesec) / 100;
 
                 $P1_ovh = $H ? $D_ovh / $H : 0;
@@ -239,8 +257,10 @@ class TransparentenElementOvoja extends ElementOvoja
 
                 /** ============================================================================================= */
                 /** 2. Senčenje drugih objektov */
+                // senčenje ovir je vezano na kvadrante glede na orientacijo elementa,
+                // zato ga pri vodoravnem elementu ni mogoče upoštevati
                 $h_k_skupaj = 0;
-                if (!empty($this->sencenjeOvir)) {
+                if (!$vodoraven && !empty($this->sencenjeOvir)) {
                     $h_k_skupaj = 0;
                     foreach ($this->sencenjeOvir as $ovira) {
                         $visinskiKot =
