@@ -78,6 +78,7 @@ class LocilniElement
                             $this->pomozniElementi[] = $elObj;
                         }
                     }
+                    break;
                 default:
                     if (isset($config->{$prop->getName()})) {
                         $configValue = $config->{$prop->getName()};
@@ -112,12 +113,12 @@ class LocilniElement
             $tau = 0;
             $povrsinaPomoznih = 0;
             foreach ($this->pomozniElementi as $pomozniElement) {
-                $tau += $pomozniElement->povrsina / $this->povrsina * pow(10, -$pomozniElement->Rw / 10) * $pomozniElement->stevilo;
+                $tau += $pomozniElement->povrsina / $this->povrsina *
+                    pow(10, -$pomozniElement->Rw / 10) * $pomozniElement->stevilo;
                 $povrsinaPomoznih += $pomozniElement->povrsina * $pomozniElement->stevilo;
             }
 
             $tau += ($this->povrsina - $povrsinaPomoznih) / $this->povrsina * pow(10, -$this->Rw / 10);
-
 
             $this->Rw = -10 * log10($tau);
         }

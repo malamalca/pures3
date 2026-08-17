@@ -140,14 +140,14 @@ class HladilniKompresor extends Generator
 
                 $PLV = $f_C_pl_k * $f_hr_pl * 1 * 1;
 
-                if ((
+                if (
                     (
                         273.15 +
                         $temperaturaOkoljaKondenzatorja +
                         $this->vrstaHlajenja->deltaTnaKondenzatorju($this->kondenzatorVKanalu)
                     ) -
-                    (273.15 + $this->TizhodnegaZraka - $this->vrstaHlajenja->deltaTnaUparjalniku())
-                ) == 0) {
+                    (273.15 + $this->TizhodnegaZraka - $this->vrstaHlajenja->deltaTnaUparjalniku()) == 0
+                ) {
                     $temperaturaOkoljaKondenzatorja++;
                 }
                 // f_EER_corr
