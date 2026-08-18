@@ -23,7 +23,7 @@ class IzracunProjekta extends Command
         (new IzracunCone())->run($projectId, ...$args);
         (new IzracunTSS())->run($projectId, ...$args);
         (new IzracunStavbe())->run($projectId, ...$args);
-        if (!in_array('--noPdf', $args)) {
+        if (!$this->hasSwitch($args, 'noPdf')) {
             (new PdfIzvoz())->run($projectId, ...$args);
         }
     }

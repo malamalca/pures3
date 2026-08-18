@@ -16,7 +16,6 @@ class FotonapetostniSistem
     public float $povrsina;
     public string $orientacija;
     public int $naklon;
-    public bool $sencenje;
     public VrstaSoncnihCelic $vrsta;
     public VrstaVgradnje $vgradnja;
 
@@ -74,7 +73,6 @@ class FotonapetostniSistem
         $this->orientacija = $config->orientacija;
         $this->naklon = $config->naklon;
 
-        $this->sencenje = (bool)($config->sencenje ?? false);
         $this->kontrolniFaktor = (float)($config->kontrolniFaktor ?? 1);
 
         $this->vrsta = VrstaSoncnihCelic::from($config->vrsta ?? 'monokristalne');
@@ -134,7 +132,7 @@ class FotonapetostniSistem
             $solarnoObsevanje = $stDni * $solarnoObsevanje[$mesec] / 1000;
 
             $this->proizvedenaElektricnaEnergija[$mesec] = $this->povrsina * $solarnoObsevanje *
-                $this->vrsta->koeficientMoci() * $this->vgradnja->koeficientVgradnje();
+                $this->koeficientMoci * $this->vgradnja->koeficientVgradnje();
 
             if ($this->vplivUjemanja) {
                 $this->faktorUjemanja[$mesec] = (

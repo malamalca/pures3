@@ -1,0 +1,520 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": ["idCone", "vrsta"],
+        "oneOf": [
+            {
+                "properties": {"vrsta": {"enum": ["toplovodni", "toplozracni", "sevalni"]}},
+                "required": ["vrsta", "generatorji"]
+            },
+            {
+                "properties": {"vrsta": {"enum": ["hladilni"]}},
+                "required": ["vrsta", "generatorji", "hlajenje"]
+            },
+            {
+                "properties": {"vrsta": {"enum": ["neposrednoElektricni", "lokalniBiomasa"]}},
+                "required": ["vrsta", "nazivnaMoc", "prenosniki"]
+            },
+            {
+                "properties": {"vrsta": {"enum": ["splitHlajenje"]}},
+                "required": ["vrsta", "EER"]
+            }
+        ],
+        "properties": {
+            "id": {"type": "string", "title": "Id sistema"},
+            "idCone": {"type": "string", "title": "Šifra cone"},
+            "vrsta": {
+                "enum": ["toplovodni", "toplozracni", "sevalni", "lokalniBiomasa", "neposrednoElektricni", "splitHlajenje", "hladilni"],
+                "title": "Vrsta sistema za ogrevanje, hlajenje in TSV"
+            },
+            "energent": {
+                "enum": ["okolje", "elektrika", "biomasa", "ELKO", "zemeljskiPlin", "daljinsko", "UNP", "sonce", "daljinskoSDOLjubljana"],
+                "title": "Energent sistema",
+                "description": "Privzeta vrednost je elektrika. Pri sistemu \"lokalniBiomasa\" se energent vedno nastavi na biomaso."
+            },
+            "izkoristek": {
+                "type": "number",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "title": "Izkoristek sistema η [-]",
+                "description": "Upošteva se samo pri sistemih \"neposrednoElektricni\" in \"lokalniBiomasa\". Privzeta vrednost je 1."
+            },
+            "nazivnaMoc": {
+                "type": "number",
+                "minimum": 0,
+                "title": "Nazivna moč sistema P<sub>n</sub> [kW]",
+                "description": "Obvezen podatek sistemov \"neposrednoElektricni\" in \"lokalniBiomasa\". Pri sistemu \"splitHlajenje\" opisuje nazivno hladilno moč."
+            },
+
+            "ogrevanje": {
+                "allOf": [{"$ref": "#/definitions/namen"}],
+                "title": "Namen: ogrevanje",
+                "description": "Sklop poveže podsisteme sistema z ogrevanjem. Pri sistemih \"neposrednoElektricni\" in \"lokalniBiomasa\" se sklop sestavi samodejno iz seznama prenosnikov in se ga ne podaja."
+            },
+            "tsv": {
+                "allOf": [{"$ref": "#/definitions/namen"}],
+                "required": ["rezim"],
+                "title": "Namen: topla sanitarna voda",
+                "description": "Sklop poveže podsisteme sistema s pripravo tople sanitarne vode."
+            },
+            "hlajenje": {
+                "allOf": [{"$ref": "#/definitions/namen"}],
+                "title": "Namen: hlajenje",
+                "description": "Sklop poveže podsisteme sistema s hlajenjem. Režim se pri hlajenju ne podaja."
+            },
+
+            "generatorji": {"type": "array", "minItems": 1, "title": "Generatorji sistema", "items": {"$ref": "#/definitions/generator"}},
+            "razvodi": {"type": "array", "title": "Razvodi sistema", "items": {"$ref": "#/definitions/razvod"}},
+            "prenosniki": {"type": "array", "title": "Končni prenosniki sistema", "items": {"$ref": "#/definitions/prenosnik"}},
+            "hranilniki": {"type": "array", "title": "Hranilniki sistema", "items": {"$ref": "#/definitions/hranilnik"}},
+
+            "EER": {
+                "type": "number",
+                "minimum": 0,
+                "exclusiveMinimum": true,
+                "title": "Razmerje hladilne učinkovitosti EER [-]",
+                "description": "Obvezen podatek sistema \"splitHlajenje\", ki se v celoti opiše kot en sam generator na nivoju sistema."
+            },
+            "multiSplit": {
+                "type": "boolean",
+                "title": "Multi-split sistem (true/false)",
+                "description": "Podatek sistema \"splitHlajenje\". Privzeta vrednost je false."
+            },
+            "regulacija": {
+                "type": "string",
+                "title": "Regulacija split sistema",
+                "description": "Podatek sistema \"splitHlajenje\". Vrednost \"onOff\" pomeni stopenjsko regulacijo, vsaka druga vrednost zvezno."
+            },
+            "TizhodnegaZraka": {
+                "type": "number",
+                "title": "Temperatura izhodnega zraka θ<sub>out</sub> [°C]",
+                "description": "Podatek sistema \"splitHlajenje\". Privzeta vrednost je 20 °C."
+            }
+        }
+    },
+
+    "definitions": {
+        "seznamId": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Seznam šifer podsistemov, ki so opisani na nivoju sistema."
+        },
+
+        "namen": {
+            "type": "object",
+            "properties": {
+                "id": {"type": "string", "title": "Id sklopa"},
+                "rezim": {
+                    "enum": ["35/30", "40/30", "55/45"],
+                    "title": "Temperaturni režim [°C]",
+                    "description": "Obvezen podatek sklopa \"tsv\". Pri sklopu \"ogrevanje\" je neobvezen, pri sklopu \"hlajenje\" se ne upošteva."
+                },
+                "generatorji": {"allOf": [{"$ref": "#/definitions/seznamId"}], "title": "Šifre generatorjev"},
+                "razvodi": {"allOf": [{"$ref": "#/definitions/seznamId"}], "title": "Šifre razvodov"},
+                "prenosniki": {"allOf": [{"$ref": "#/definitions/seznamId"}], "title": "Šifre končnih prenosnikov"},
+                "hranilniki": {"allOf": [{"$ref": "#/definitions/seznamId"}], "title": "Šifre hranilnikov"},
+                "steviloIteracij": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "title": "Število iteracij izračuna vračljivih izgub [-]",
+                    "description": "Upošteva se samo pri sklopu \"tsv\". Privzeta vrednost je 2."
+                }
+            }
+        },
+
+        "generator": {
+            "type": "object",
+            "required": ["id", "vrsta"],
+            "oneOf": [
+                {
+                    "properties": {"vrsta": {"enum": ["TC_zrakvoda", "TC_zrakvodaTSV", "TC_vodavoda", "elektricniGrelnik"]}},
+                    "required": ["vrsta"]
+                },
+                {
+                    "properties": {
+                        "vrsta": {"enum": ["plinskiKotel"]},
+                        "tip": {"enum": ["standardniVentilatorski", "standardniAtmosferski", "standardniAtmosferskiNad250kW", "nizkotemperaturniSpecialniAtmosferski", "nizkotemperaturniVentilatorski", "kondenzacijski"]},
+                        "regulacija": {"enum": ["konstantnaTemperatura", "spremenljivaTemperatura"]}
+                    },
+                    "required": ["vrsta", "tip", "regulacija"]
+                },
+                {
+                    "properties": {
+                        "vrsta": {"enum": ["biomasa", "elko"]},
+                        "tip": {"enum": ["standardniZAvtomatskimDodajanjemGoriva"]},
+                        "regulacija": {"enum": ["konstantnaTemperatura", "spremenljivaTemperatura"]}
+                    },
+                    "required": ["vrsta", "tip", "regulacija"]
+                },
+                {
+                    "properties": {
+                        "vrsta": {"enum": ["toplotnaPodpostaja"]},
+                        "tip": {"enum": ["toplovod", "vrocevod", "nizkotlacniParovod", "visokotlacniParovod"]},
+                        "regulacija": {"enum": ["konstantnaTemperatura", "spremenljivaTemperatura"]}
+                    },
+                    "required": ["vrsta", "tip", "razredIzolacije", "regulacija"]
+                },
+                {
+                    "properties": {"vrsta": {"enum": ["splitHlajenje"]}},
+                    "required": ["vrsta", "EER"]
+                },
+                {
+                    "properties": {"vrsta": {"enum": ["hladilniKompresor"]}},
+                    "required": ["vrsta", "nazivnaMoc", "EER"]
+                },
+                {
+                    "properties": {
+                        "vrsta": {"enum": ["solarniPaneli"]},
+                        "tip": {"enum": ["nezastekljen", "zastekljen", "vakuumskiPloscatiAbsorber", "vakuumskiCevniAbsorber"]}
+                    },
+                    "required": ["vrsta", "tip"]
+                }
+            ],
+            "properties": {
+                "id": {"type": "string", "title": "Id generatorja"},
+                "vrsta": {
+                    "enum": ["TC_zrakvoda", "TC_zrakvodaTSV", "TC_vodavoda", "toplotnaPodpostaja", "plinskiKotel", "biomasa", "elko", "elektricniGrelnik", "splitHlajenje", "hladilniKompresor", "solarniPaneli"],
+                    "title": "Vrsta generatorja"
+                },
+                "nazivnaMoc": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Nazivna moč generatorja P<sub>n</sub> [kW]",
+                    "description": "Privzeta vrednost je 0. Obvezen podatek generatorja \"hladilniKompresor\"."
+                },
+                "delezPokrivanjaEnegije": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "title": "Delež pokrivanja potrebne energije [-]",
+                    "description": "Delež energije namena, ki ga pokriva ta generator. Privzeta vrednost je 1."
+                },
+
+                "tip": {
+                    "type": "string",
+                    "title": "Tip generatorja",
+                    "description": "Dovoljene vrednosti so odvisne od vrste generatorja. Plinski kotel: standardniVentilatorski, standardniAtmosferski, standardniAtmosferskiNad250kW, nizkotemperaturniSpecialniAtmosferski, nizkotemperaturniVentilatorski, kondenzacijski. Kotel na biomaso in ELKO: standardniZAvtomatskimDodajanjemGoriva. Toplotna podpostaja: toplovod, vrocevod, nizkotlacniParovod, visokotlacniParovod. Sončni sprejemniki energije: nezastekljen, zastekljen, vakuumskiPloscatiAbsorber, vakuumskiCevniAbsorber."
+                },
+                "regulacija": {
+                    "type": "string",
+                    "title": "Vrsta regulacije",
+                    "description": "Pri kotlih in toplotni podpostaji sta dovoljeni vrednosti konstantnaTemperatura in spremenljivaTemperatura. Pri generatorju \"splitHlajenje\" vrednost \"onOff\" pomeni stopenjsko regulacijo, vsaka druga vrednost zvezno."
+                },
+                "lokacija": {
+                    "enum": ["ogrevanProstor", "kotlovnica", "neogrevanProstor"],
+                    "title": "Lokacija namestitve generatorja",
+                    "description": "Vpliva na delež vrnjenih toplotnih izgub skozi ovoj generatorja. Privzeta vrednost je ogrevan prostor."
+                },
+                "razredIzolacije": {
+                    "enum": ["primarna4sekundarna5", "primarna3sekundarna4", "primarna2sekundarna3", "primarna1sekundarna2"],
+                    "title": "Razred izolacije toplotne podpostaje",
+                    "description": "Obvezen podatek toplotne podpostaje."
+                },
+                "izkoristekPolneObremenitve": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "title": "Izkoristek pri polni obremenitvi η<sub>Pn</sub> [-]",
+                    "description": "Podatek kotla. Kadar ni podan, se izračuna iz tipa in nazivne moči kotla."
+                },
+                "izkoristekVmesneObremenitve": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "title": "Izkoristek pri vmesni (30 %) obremenitvi η<sub>Pint</sub> [-]",
+                    "description": "Podatek kotla. Kadar ni podan, se izračuna iz tipa in nazivne moči kotla."
+                },
+
+                "nazivniCOP": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "title": "Nazivno grelno število COP [-]",
+                    "description": "Podatek toplotne črpalke."
+                },
+                "podnebje": {
+                    "enum": ["celinsko", "alpsko", "primorsko"],
+                    "title": "Podnebna cona lokacije",
+                    "description": "Podatek toplotne črpalke zrak/voda, ki določa trajanje obratovanja po temperaturnih razredih. Privzeta vrednost je alpsko."
+                },
+                "temperaturaVira": {
+                    "enum": [10, 15],
+                    "title": "Temperatura vira θ<sub>src</sub> [°C]",
+                    "description": "Podatek toplotne črpalke voda/voda. Dovoljeni sta samo vrednosti 10 in 15 °C. Privzeta vrednost je 10 °C."
+                },
+                "elektricnaMocNaPrimarnemKrogu": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Električna moč črpalke na primarnem krogu P<sub>aux,prim</sub> [kW]",
+                    "description": "Podatek toplotne črpalke. Privzeta vrednost je 0."
+                },
+                "elektricnaMocNaSekundarnemKrogu": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Električna moč črpalke na sekundarnem krogu P<sub>aux,sec</sub> [kW]",
+                    "description": "Podatek toplotne črpalke. Privzeta vrednost je 0."
+                },
+
+                "stevilo": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "title": "Število naprav N [-]",
+                    "description": "Podatek električnega grelnika. Privzeta vrednost je 1."
+                },
+                "znotrajOvoja": {
+                    "type": "boolean",
+                    "title": "Naprava je znotraj ovoja stavbe (true/false)",
+                    "description": "Podatek električnega grelnika. Privzeta vrednost je true."
+                },
+
+                "EER": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "title": "Razmerje hladilne učinkovitosti EER [-]",
+                    "description": "Obvezen podatek generatorjev \"hladilniKompresor\" in \"splitHlajenje\"."
+                },
+                "vrstaHlajenja": {
+                    "enum": ["zracno", "vodno"],
+                    "title": "Vrsta hlajenja kondenzatorja",
+                    "description": "Podatek hladilnega kompresorja. Privzeta vrednost je zračno."
+                },
+                "vrstaKompresorja": {
+                    "enum": ["batni", "spiralni", "vijacni", "turbinski"],
+                    "title": "Vrsta hladilnega kompresorja",
+                    "description": "Podatek hladilnega kompresorja. Privzeta vrednost je batni."
+                },
+                "vrstaRegulacije": {
+                    "enum": ["onOff", "prilagodljivo", "vecstopenjsko"],
+                    "title": "Vrsta regulacije hladilnega kompresorja",
+                    "description": "Podatek hladilnega kompresorja. Privzeta vrednost je onOff."
+                },
+                "kondenzatorVKanalu": {
+                    "type": "boolean",
+                    "title": "Kondenzator je vgrajen v kanal (true/false)",
+                    "description": "Podatek hladilnega kompresorja. Privzeta vrednost je false."
+                },
+                "multiSplit": {
+                    "type": "boolean",
+                    "title": "Multi-split sistem (true/false)",
+                    "description": "Podatek generatorja \"splitHlajenje\". Privzeta vrednost je false."
+                },
+                "TizhodnegaZraka": {
+                    "type": "number",
+                    "title": "Temperatura izhodnega zraka θ<sub>out</sub> [°C]",
+                    "description": "Podatek hladilnega kompresorja in split sistema. Privzeta vrednost je 20 °C."
+                },
+                "mocRegulatorja": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Moč regulatorja P<sub>aux,ctr</sub> [W]",
+                    "description": "Podatek hladilnega kompresorja. Privzeta vrednost je 0."
+                },
+                "steviloRegulatorjev": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Število regulatorjev [-]",
+                    "description": "Podatek hladilnega kompresorja. Privzeta vrednost je 1."
+                },
+
+                "povrsina": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Površina sončnih sprejemnikov A<sub>sol</sub> [m²]",
+                    "description": "Podatek sončnih sprejemnikov energije. Privzeta vrednost je 0."
+                },
+                "naklon": {
+                    "enum": [0, 15, 30, 45, 60, 75, 90],
+                    "title": "Naklon sončnih sprejemnikov [°]",
+                    "description": "Podatek sončnih sprejemnikov energije. Privzeta vrednost je 45°."
+                },
+                "orientacija": {
+                    "enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ", ""],
+                    "title": "Orientacija sončnih sprejemnikov",
+                    "description": "Podatek sončnih sprejemnikov energije. Privzeta vrednost je J. Pri naklonu 0° je v podatkih o obsevanju na voljo samo prazna orientacija."
+                }
+            }
+        },
+
+        "cevi": {
+            "type": "object",
+            "properties": {
+                "izolacija": {
+                    "enum": ["izolirane", "neizoliraneZunaj", "neizoliraneZnotraj", "neizoliraneVZraku", "neizoliraneVNotranjiSteni"],
+                    "title": "Vrsta izolacije cevi",
+                    "description": "Privzeta vrednost so izolirane cevi."
+                },
+                "dolzina": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Dolžina cevi L [m]",
+                    "description": "Kadar ni podana, se izračuna iz geometrije cone."
+                },
+                "Ucevi": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Toplotna prehodnost cevi U [W/(mK)]",
+                    "description": "Kadar ni podana, se izračuna iz vrste izolacije in namena cevi."
+                },
+                "delezVOgrevaniConi": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "title": "Delež cevi v ogrevani coni [-]",
+                    "description": "Kadar ni podan, se uporabi privzeta vrednost glede na vrsto voda."
+                }
+            }
+        },
+
+        "crpalka": {
+            "type": "object",
+            "properties": {
+                "moc": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Moč obtočne črpalke P<sub>aux,pmp</sub> [W]",
+                    "description": "Kadar ni podana, se izračuna iz hidravlične moči razvoda."
+                },
+                "regulacija": {
+                    "enum": ["brezRegulacije", "zRegulacijo", "spremenljivPretok"],
+                    "title": "Regulacija obtočne črpalke",
+                    "description": "Upošteva se pri razvodih ogrevanja. Privzeta vrednost je brez regulacije."
+                }
+            }
+        },
+
+        "razvod": {
+            "type": "object",
+            "required": ["id", "vrsta"],
+            "oneOf": [
+                {
+                    "properties": {"vrsta": {"enum": ["dvocevni", "enocevni", "toplavoda"]}},
+                    "required": ["vrsta", "ceviHorizontaliVodi", "ceviDvizniVodi", "ceviPrikljucniVodi"]
+                },
+                {"properties": {"vrsta": {"enum": ["hlajenje"]}}, "required": ["vrsta"]},
+                {"properties": {"vrsta": {"enum": ["solar"]}}, "required": ["vrsta", "idGeneratorja"]}
+            ],
+            "properties": {
+                "id": {"type": "string", "title": "Id razvoda"},
+                "vrsta": {
+                    "enum": ["dvocevni", "enocevni", "toplavoda", "hlajenje", "solar"],
+                    "title": "Vrsta razvoda",
+                    "description": "Razvoda \"dvocevni\" in \"enocevni\" sta namenjena ogrevanju, \"toplavoda\" pripravi TSV, \"hlajenje\" hlajenju in \"solar\" solarnemu krogu."
+                },
+                "idPrenosnika": {
+                    "type": "string",
+                    "title": "Šifra končnega prenosnika",
+                    "description": "Prenosnik, ki ga napaja razvod. Pri razvodih ogrevanja se uporabi za izračun hidravlične moči črpalke."
+                },
+                "idGeneratorja": {
+                    "type": "string",
+                    "title": "Šifra generatorja",
+                    "description": "Obvezen podatek razvoda \"solar\"."
+                },
+                "ceviHorizontaliVodi": {"allOf": [{"$ref": "#/definitions/cevi"}], "title": "Horizontalni razvod"},
+                "ceviDvizniVodi": {"allOf": [{"$ref": "#/definitions/cevi"}], "title": "Dvižni vodi"},
+                "ceviPrikljucniVodi": {"allOf": [{"$ref": "#/definitions/cevi"}], "title": "Priključni vodi"},
+                "crpalka": {"allOf": [{"$ref": "#/definitions/crpalka"}], "title": "Obtočna črpalka razvoda"}
+            }
+        },
+
+        "prenosnik": {
+            "type": "object",
+            "required": ["id", "vrsta"],
+            "oneOf": [
+                {"properties": {"vrsta": {"enum": ["radiatorji"]}}, "required": ["vrsta", "namestitev"]},
+                {"properties": {"vrsta": {"enum": ["ploskovnaOgrevala"]}}, "required": ["vrsta", "sistem", "izolacija"]},
+                {
+                    "properties": {"vrsta": {"enum": ["konvektorji", "elektricnoOgrevalo", "pecNaDrva", "hladilniStenskiKonvektor", "hladilniStropniKonvektor"]}},
+                    "required": ["vrsta"]
+                }
+            ],
+            "properties": {
+                "id": {"type": "string", "title": "Id končnega prenosnika"},
+                "vrsta": {
+                    "enum": ["radiatorji", "konvektorji", "ploskovnaOgrevala", "elektricnoOgrevalo", "pecNaDrva", "hladilniStenskiKonvektor", "hladilniStropniKonvektor"],
+                    "title": "Vrsta končnega prenosnika"
+                },
+                "stevilo": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "title": "Število prenosnikov N [-]",
+                    "description": "Vpliva na izbiro Δθ hidravličnega uravnoteženja. Privzeta vrednost je 1."
+                },
+                "regulacijaTemperature": {
+                    "enum": ["centralna", "referencniProstor", "P-krmilnik", "PI-krmilnik", "PI-krmilnikZOptimizacijo", "termostatNaPeci", "sobniTermostat"],
+                    "title": "Vrsta regulacije temperature",
+                    "description": "Privzeta vrednost je centralna regulacija."
+                },
+                "hidravlicnoUravnotezenje": {
+                    "enum": ["neuravnotezeno", "staticnoKoncnihPrenosnikov", "staticnoDviznihVodov", "dinamicnoPolnaObremenitev", "dinamicnoDelnaObremenitev"],
+                    "title": "Vrsta hidravličnega uravnoteženja",
+                    "description": "Ne upošteva se pri električnem ogrevalu in peči na drva. Privzeta vrednost je neuravnoteženo."
+                },
+                "namestitev": {
+                    "enum": ["notranjeStene", "zunanjeStene", "zasteklitevBrezZascite", "zasteklitevZZascito"],
+                    "title": "Namestitev radiatorjev",
+                    "description": "Obvezen podatek radiatorjev."
+                },
+                "sistem": {
+                    "enum": ["talno_mokri", "talno_suhi", "talno_suhiTankaObloga", "stensko", "stopno"],
+                    "title": "Sistem ploskovnih ogreval",
+                    "description": "Obvezen podatek ploskovnih ogreval."
+                },
+                "izolacija": {
+                    "enum": ["brez", "min", "100%"],
+                    "title": "Izolacija ploskovnih ogreval",
+                    "description": "Obvezen podatek ploskovnih ogreval."
+                },
+                "mocRegulatorja": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Moč regulatorja P<sub>aux,ctr</sub> [W]",
+                    "description": "Privzeta vrednost je 0."
+                },
+                "steviloRegulatorjev": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "title": "Število regulatorjev [-]",
+                    "description": "Privzeta vrednost je 0."
+                },
+                "mocAux": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Moč pomožnih naprav P<sub>aux</sub> [W]",
+                    "description": "Moč ventilatorjev, črpalk in podobnih naprav končnega prenosnika."
+                }
+            }
+        },
+
+        "hranilnik": {
+            "type": "object",
+            "required": ["id", "vrsta", "volumen"],
+            "properties": {
+                "id": {"type": "string", "title": "Id hranilnika"},
+                "vrsta": {
+                    "enum": ["posrednoOgrevan", "neposrednoOgrevan", "solarniPosrednoOgrevan"],
+                    "title": "Vrsta hranilnika"
+                },
+                "volumen": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Volumen hranilnika V [l]",
+                    "description": "Privzeta vrednost je 0."
+                },
+                "znotrajOvoja": {
+                    "type": "boolean",
+                    "title": "Hranilnik je znotraj ovoja stavbe (true/false)",
+                    "description": "Privzeta vrednost je false."
+                },
+                "istiProstorKotGrelnik": {
+                    "type": "boolean",
+                    "title": "Hranilnik je v istem prostoru kot generator (true/false)",
+                    "description": "Ne upošteva se pri neposredno ogrevanem hranilniku. Privzeta vrednost je false."
+                }
+            }
+        }
+    }
+}

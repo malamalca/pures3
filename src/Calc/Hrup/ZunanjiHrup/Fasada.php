@@ -152,7 +152,7 @@ class Fasada
                     $this->visinaLinijePogleda =
                         empty($config->visinaLinijePogleda) ?
                             null :
-                            VisinaLinijePogleda::from($config->visinaLinijePogleda ?? null);
+                            VisinaLinijePogleda::from($config->visinaLinijePogleda);
                     break;
                 default:
                     if (isset($config->{$prop->getName()})) {

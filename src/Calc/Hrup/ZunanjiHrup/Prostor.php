@@ -115,9 +115,13 @@ class Prostor
         $this->Af = 0.163 * $this->prostornina / $this->odmevniCas;
 
         $this->Sf = 0;
-        $sumTau = 0;
         foreach ($this->fasade as $fasada) {
             $this->Sf += $fasada->povrsina;
+        }
+
+        // utež posamezne fasade je Si/Sf, zato mora biti Sf sešteta pred zanko
+        $sumTau = 0;
+        foreach ($this->fasade as $fasada) {
             $sumTau += $fasada->povrsina / $this->Sf * pow(10, -$fasada->Rw / 10);
         }
 

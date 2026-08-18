@@ -55,6 +55,9 @@ class IzracunTSS extends Command
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $TSSSistemiPrezracevanja = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'prezracevanje') ?? [];
         if (count($TSSSistemiPrezracevanja) > 0) {
+            if (!$this->validateSchema(json: $TSSSistemiPrezracevanja, schema: 'prezracevanje', area: 'Pures')) {
+                throw new \Exception('Napake v opisu TSS Prezračevanje.');
+            }
             $TSSSistemiPrezracevanjaOut = [];
             foreach ($TSSSistemiPrezracevanja as $sistem) {
                 $cona = array_first_callback($cone, fn($cona) => $cona->id == $sistem->idCone);
@@ -150,6 +153,9 @@ class IzracunTSS extends Command
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         $TSSSistemiOHT = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'ogrevanje') ?? [];
         if (count($TSSSistemiOHT) > 0) {
+            if (!$this->validateSchema(json: $TSSSistemiOHT, schema: 'ogrevanje', area: 'Pures')) {
+                throw new \Exception('Napake v opisu TSS Ogrevanje, hlajenje in TSV.');
+            }
             $TSSSistemiOHTOut = [];
             $vracljiveIzgubeVOgrevanje = [];
             foreach ($TSSSistemiOHT as $sistem) {

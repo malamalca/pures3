@@ -47,6 +47,30 @@ class Command
     }
 
     /**
+     * Preveri ali je stikalo podano med argumenti ukaza
+     *
+     * Stikalo je lahko podano v camelCase ali kebab-case obliki (--noPdf ali --no-pdf),
+     * velikost črk ni pomembna.
+     *
+     * @param array $args Argumenti ukaza
+     * @param string $switch Ime stikala brez vodilnih pomišljajev
+     * @return bool
+     */
+    public function hasSwitch(array $args, string $switch)
+    {
+        $normalize = fn(string $name) => strtolower(str_replace('-', '', ltrim($name, '-')));
+        $switch = $normalize($switch);
+
+        foreach ($args as $arg) {
+            if (is_string($arg) && substr($arg, 0, 1) == '-' && $normalize($arg) == $switch) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Validate json object to schema
      *
      * @param \stdClass|array $json Json object

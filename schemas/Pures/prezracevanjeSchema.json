@@ -1,0 +1,97 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "required": ["id", "idCone", "vrsta"],
+        "oneOf": [
+            {
+                "properties": {"vrsta": {"enum": ["centralni"]}},
+                "required": ["vrsta", "volumenProjekt"]
+            },
+            {
+                "properties": {"vrsta": {"enum": ["lokalni"]}},
+                "required": ["vrsta", "mocVentilatorja"]
+            }
+        ],
+        "properties": {
+            "id": {"type": "string", "title": "Id prezračevalnega sistema"},
+            "idCone": {"type": "string", "title": "Šifra cone"},
+            "vrsta": {
+                "enum": ["centralni", "lokalni"],
+                "title": "Vrsta prezračevalnega sistema",
+                "description": "Centralni sistem ima ločen dovod in odvod zraka, lokalni sistem pa se opiše samo z močjo ventilatorja."
+            },
+            "stevilo": {
+                "type": "integer",
+                "minimum": 1,
+                "title": "Število naprav N [-]",
+                "description": "Število enakih naprav v coni. Privzeta vrednost je 1."
+            },
+            "krmiljenje": {
+                "enum": ["rocniVklop", "casovnik", "centralnaRegulacija", "lokalnaRegulacija"],
+                "title": "Vrsta krmiljenja sistema",
+                "description": "Faktor sistema krmiljenja F<sub>c</sub>: ročni vklop 1,0; časovnik 0,95; centralna regulacija 0,85; lokalna regulacija 0,65. Privzeta vrednost je ročni vklop."
+            },
+            "mocSenzorjev": {
+                "type": "number",
+                "minimum": 0,
+                "title": "Moč senzorjev P<sub>sen</sub> [W]",
+                "description": "Skupna moč senzorjev centralnega prezračevalnega sistema. Privzeta vrednost je 0. Ne velja za lokalni sistem."
+            },
+            "razredH1H2": {
+                "type": "boolean",
+                "title": "Sistem razreda H1 ali H2 (true/false)",
+                "description": "Sistem z visokim izkoristkom vračanja toplote odpadnega zraka. Kadar je true, se moči ventilatorjev poveča za dodatek 300 Ws/m³. Privzeta vrednost je true. Ne velja za lokalni sistem."
+            },
+            "volumenProjekt": {
+                "type": "number",
+                "minimum": 0,
+                "title": "Projektni volumski pretok zraka V<sub>f</sub> [m³/h]",
+                "description": "Obvezen podatek centralnega sistema. Uporabi se za dovod in odvod, kadar moč ventilatorja ni podana neposredno."
+            },
+            "mocVentilatorja": {
+                "type": "number",
+                "minimum": 0,
+                "title": "Moč ventilatorja P<sub>fan</sub> [kW]",
+                "description": "Obvezen podatek lokalnega sistema. Za centralni sistem se moč ventilatorja podaja ločeno v sklopih \"dovod\" in \"odvod\"."
+            },
+            "dovod": {
+                "type": "object",
+                "title": "Dovod zraka",
+                "description": "Sklop centralnega sistema. Kadar sklop ni podan, se moč ventilatorja izračuna iz projektnega pretoka brez filtra.",
+                "properties": {
+                    "filter": {
+                        "enum": ["brez", "hepa", "f"],
+                        "title": "Vrsta filtra zraka",
+                        "description": "Dodatek k specifični moči ventilatorja: brez filtra 0 Ws/m³, HEPA filter 1000 Ws/m³, F filter 300 Ws/m³. Privzeta vrednost je brez filtra."
+                    },
+                    "mocVentilatorja": {
+                        "type": "number",
+                        "minimum": 0,
+                        "title": "Moč ventilatorja dovoda P<sub>fan,sup</sub> [kW]",
+                        "description": "Kadar je podana, se uporabi neposredno, sicer se izračuna iz projektnega pretoka, vrste filtra in razreda H1/H2."
+                    }
+                }
+            },
+            "odvod": {
+                "type": "object",
+                "title": "Odvod zraka",
+                "description": "Sklop centralnega sistema. Kadar sklop ni podan, se moč ventilatorja izračuna iz projektnega pretoka brez filtra.",
+                "properties": {
+                    "filter": {
+                        "enum": ["brez", "hepa", "f"],
+                        "title": "Vrsta filtra zraka",
+                        "description": "Dodatek k specifični moči ventilatorja: brez filtra 0 Ws/m³, HEPA filter 1000 Ws/m³, F filter 300 Ws/m³. Privzeta vrednost je brez filtra."
+                    },
+                    "mocVentilatorja": {
+                        "type": "number",
+                        "minimum": 0,
+                        "title": "Moč ventilatorja odvoda P<sub>fan,eta</sub> [kW]",
+                        "description": "Kadar je podana, se uporabi neposredno, sicer se izračuna iz projektnega pretoka, vrste filtra in razreda H1/H2."
+                    }
+                }
+            }
+        }
+    }
+}

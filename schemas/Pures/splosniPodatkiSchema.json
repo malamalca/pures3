@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
-    "required": ["stavba"],
+    "required": ["stavba", "datum"],
     "properties": {
         "stavba": {
             "type": "object",
@@ -37,6 +37,10 @@
         "vodjaProjektiranja": {"type": "string"},
         "izdelovalec": {"type": "string"},
         "stevilkaElaborata": {"type": "string"},
-        "datum": {"type": "string"}
+        "datum": {
+            "type": "string",
+            "pattern": "(20[0-9]{2}|2100)$",
+            "description": "Datum elaborata. Zadnje 4 številke določajo leto projekta, ki mora biti med 2000 in 2100."
+        }
     }
 }

@@ -280,22 +280,22 @@
     <tr>
         <td class="right strong" colspan="2">Skupaj:</td>
         <td class="right strong">R'<sub>s,w</sub> = </td>
-        <td class="center strong"><?= $this->numFormat($prostor->Rw, 0) ?> dB</td>
+        <td class="center strong"><?= $this->numFormat($prostor->Rw, 1) ?> dB</td>
     </tr>
     <tr>
         <td class="right strong" colspan="2">Min. zahteva:</td>
         <td class="right strong">R'<sub>min,w</sub> = </td>
-        <td class="center strong"><?= $this->numFormat($prostor->minRw, 0) ?> dB</td>
+        <td class="center strong"><?= $this->numFormat($prostor->minRw, 1) ?> dB</td>
     </tr>
     <tr>
         <td class="right strong" colspan="3">USTREZNOST:</td>
-        <td class="center strong <?= round($prostor->Rw, 0) >= round($prostor->minRw, 0) ? 'green' : 'red' ?>">
-            <?= round($prostor->Rw, 0) >= round($prostor->minRw, 0) ? 'DA' : 'NE' ?>
+        <td class="center strong <?= $prostor->Rw >= $prostor->minRw ? 'green' : 'red' ?>">
+            <?= $prostor->Rw >= $prostor->minRw ? 'DA' : 'NE' ?>
         </td>
     </tr>
     <tr>
         <td class="right strong" colspan="2">Nivo hrupa v prostoru:</td>
         <td class="right strong">L<sub>notri</sub> = </td>
-        <td class="center strong"><?= $this->numFormat($prostor->Lzunaj - $prostor->Rw, 0) ?> dBA</td>
+        <td class="center strong"><?= $this->numFormat($prostor->Lzunaj - $prostor->Rw, 1) ?> dBA</td>
     </tr>
 </table>

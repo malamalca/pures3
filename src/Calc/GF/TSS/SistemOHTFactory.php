@@ -6,10 +6,10 @@ namespace App\Calc\GF\TSS;
 use App\Calc\GF\TSS\OHTSistemi\HladilniSistemSHladnoVodo;
 use App\Calc\GF\TSS\OHTSistemi\LokalniOHTSistemNaBiomaso;
 use App\Calc\GF\TSS\OHTSistemi\NeposredniElektricniOHTSistem;
+use App\Calc\GF\TSS\OHTSistemi\SevalniOHTSistem;
 use App\Calc\GF\TSS\OHTSistemi\SplitHladilniOHTSistem;
-//use App\Calc\GF\TSS\OHTSistemi\SevalniOHTSistem;
 use App\Calc\GF\TSS\OHTSistemi\ToplovodniOHTSistem;
-//use App\Calc\GF\TSS\OHTSistemi\ToplovodniOHTSistem;
+use App\Calc\GF\TSS\OHTSistemi\ToplozracniOHTSistem;
 
 class SistemOHTFactory
 {
@@ -25,6 +25,12 @@ class SistemOHTFactory
     {
         if ($type == 'toplovodni') {
             return new ToplovodniOHTSistem($options, $referencnaStavba);
+        }
+        if ($type == 'toplozracni') {
+            return new ToplozracniOHTSistem($options, $referencnaStavba);
+        }
+        if ($type == 'sevalni') {
+            return new SevalniOHTSistem($options, $referencnaStavba);
         }
         if ($type == 'lokalniBiomasa') {
             return new LokalniOHTSistemNaBiomaso($options, $referencnaStavba);

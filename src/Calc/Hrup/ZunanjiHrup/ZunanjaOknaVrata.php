@@ -36,8 +36,17 @@ class ZunanjaOknaVrata
         $this->options = $options;
         $this->oknaVrata = $oknaVrata;
 
+        $dR = $this->oknaVrata->dR ?? 0;
+
         $this->R = $this->oknaVrata->R;
-        $this->Rw = $this->oknaVrata->Rw + $this->oknaVrata->dR;
+
+        // korekcija zaradi vgradnje (TSG) mora veljati tudi za spekter,
+        // sicer je Fasada::analiza() ne upošteva pri seštevku tau
+        array_walk($this->R, function ($value, $key) use ($dR) {
+            $this->R[$key] = $value + $dR;
+        });
+
+        $this->Rw = $this->oknaVrata->Rw + $dR;
         $this->C = $this->oknaVrata->C;
         $this->Ctr = $this->oknaVrata->Ctr;
 

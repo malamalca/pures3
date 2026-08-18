@@ -41,17 +41,17 @@
                     "n50": {"type": "number", "description": "Stopnja tesnosti stavbe n<sub>50</sub> [h<sup>-1</sup>]"},
                     "lega": {
                         "oneOf": [
-                            {"type": "integer"},
-                            {"enum": ["naPodezelju", "visokaStavbaVMestu", "naPodezeljuMedDrevesi", "obkrozenaStavbaVMestu", "stavbaVPredmestju", "povprecnaStavbaVMestu", "stavbaVGozdu"]}
+                            {"type": "integer", "minimum": 1, "maximum": 6},
+                            {"enum": ["naPodezelju", "visokaStavbaVMestu", "naPodezeljuMedDrevesi", "obkrozenaStavbaVMestu", "stavbaVPredmestju", "povprecnaStavbaVMestu"]}
                         ],
-                        "description": "Lega stavbe za izračun vpliva vetra"
+                        "description": "Lega stavbe za izračun vpliva vetra. Celoštevilčna oblika je zaradi združljivosti za nazaj zaporedna številka vrste lege (1-6)."
                     },
                     "zavetrovanost": {
                         "oneOf": [
-                            {"type": "integer"},
+                            {"type": "integer", "minimum": 1, "maximum": 2},
                             {"enum": ["izpostavljenaEnaFasada", "izpostavljenihVecFasad"]}
                         ],
-                        "description": "Število izpostavljenih površin/fasad"
+                        "description": "Število izpostavljenih površin/fasad. Celoštevilčna oblika je zaradi združljivosti za nazaj zaporedna številka (1-2)."
                     }
                 }
             },
@@ -203,7 +203,7 @@
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "required": ["id", "idKonstrukcije", "povrsina"],
+                            "required": ["povrsina"],
                             "properties": {
                                 "idKonstrukcije": {"type": "string"},
                                 "opis": {"type": "string"},
@@ -234,7 +234,7 @@
                         "type": "array",
                         "items": {
                             "type": "object",
-                            "required": ["id", "idKonstrukcije"],
+                            "required": [],
                             "properties": {
                                 "idKonstrukcije": {"type": "string"},
                                 "opis": {"type": "string"},

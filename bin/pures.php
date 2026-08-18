@@ -8,4 +8,4 @@ use App\Core\CommandRunner;
 // Build the runner with an application and root executable name.
 $runner = new CommandRunner();
 $status = $runner->run($argv);
-
+exit;

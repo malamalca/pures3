@@ -55,7 +55,11 @@ class TSV extends TSSInterface
         }
 
         $this->id = $config->id ?? null;
-        $this->rezim = VrstaRezima::from($config->rezim ?? null);
+
+        if (empty($config->rezim)) {
+            throw new \Exception('Ni vpisanega temperaturnega režima sistema TSV.');
+        }
+        $this->rezim = VrstaRezima::from($config->rezim);
 
         $this->stevilo_iteracij = $config->steviloIteracij ?? 2;
 
