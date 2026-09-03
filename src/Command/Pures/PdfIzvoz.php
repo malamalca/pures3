@@ -249,6 +249,8 @@ class PdfIzvoz extends Command
             mkdir($pdfFolder, 0777, true);
         }
 
+        $pdf->newPage((string)$view->render('Projekti', 'kazalniki'));
+
         $view->set('sistemi', $vsiSistemi);
         $pdf->newPage((string)$view->render('Projekti', 'snes'));
 
