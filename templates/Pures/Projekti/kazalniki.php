@@ -43,6 +43,8 @@
     <?= $this->element('elements' . DS . 'kazalnikSNES', ['kazalnik' => $kazalnik]) ?>
 </div>
 
+<?= $this->element('elements' . DS . 'opozoriloROVE') ?>
+
 <table border="1">
     <tr>
         <td colspan="3"><h2>Vrednosti na grafičnem prikazu</h2></td>

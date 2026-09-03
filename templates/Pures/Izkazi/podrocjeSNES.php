@@ -627,6 +627,16 @@
             </b>
         </td>
     </tr>
+<?php
+    $opozorilo = (string)$this->element('elements' . DS . 'opozoriloROVE');
+    if (trim($opozorilo) != '') {
+?>
+    <tr>
+        <td colspan="4"><?= $opozorilo ?></td>
+    </tr>
+<?php
+    }
+?>
 
     <tr>
         <td colspan="3">izpusti CO<sub>2</sub> pri delovanju M<sub>CO2</sub> (kg/an)</td>

@@ -23,7 +23,8 @@
                 "klasifikacija": {"type": "string"},
                 "vrsta": {"enum": ["nezahtevna", "manjzahtevna", "zahtevna"]},
                 "tip": {"enum": ["nova", "rekonstrukcija", "celovitaObnova"]},
-                "javna": {"type": "boolean"}
+                "javna": {"type": "boolean"},
+                "roveNiMogoceZagotoviti": {"type": "boolean"}
             }
         },
         "investitorji": {

@@ -304,6 +304,7 @@ class ManjzahtevnaStavba extends Stavba
         $stavba->X_s = $this->X_s();
         $stavba->Y_Hnd = $this->Y_Hnd();
         $stavba->Y_ROVE = $this->Y_ROVE();
+        $stavba->roveKompenzacijaDopustna = $this->roveKompenzacijaDopustna();
 
         $stavba->X_OVE = $this->X_OVE($this->year);
         $stavba->X_p = $this->X_p($this->year);
@@ -409,7 +410,9 @@ class ManjzahtevnaStavba extends Stavba
     public function Y_ROVE()
     {
         $ret = 1;
-        if ($this->ROVE < $this->minROVE) {
+        // Kompenzacija je po četrtem odstavku 14. člena pravilnika dopustna šele,
+        // ko ROVE ni mogoče zagotoviti po drugem in tretjem odstavku istega člena.
+        if ($this->ROVE < $this->minROVE && $this->roveNiMogoceZagotoviti) {
             $ret = 1.2;
         }
         if ($this->ROVE > 50 * $this->X_OVE(2026)) {
@@ -417,6 +420,17 @@ class ManjzahtevnaStavba extends Stavba
         }
 
         return $ret;
+    }
+
+    /**
+     * Četrti odstavek 14. člena pravilnika: pri uporabi kompenzacijskega faktorja
+     * YROVE mora biti dosežen vsaj polovični zahtevani delež ROVEmin.
+     *
+     * @return bool
+     */
+    public function roveKompenzacijaDopustna()
+    {
+        return $this->ROVE >= $this->minROVE / 2;
     }
 
     /**

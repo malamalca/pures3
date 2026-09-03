@@ -21,6 +21,17 @@ abstract class Stavba
     public bool $javna;
     public int $year;
 
+    /**
+     * Predpisanega ROVE ni mogoče zagotoviti niti s tehnologijami OVE v bližini stavbe
+     * niti z deležem oddaljenih sistemov (drugi in tretji odstavek 14. člena pravilnika).
+     * Šele takrat je dopustna uporaba kompenzacijskega faktorja YROVE (četrti odstavek).
+     * Privzeto drži - predpostavi se, da stavba nima oddaljenih sistemov oziroma
+     * solastniških deležev, s katerimi bi ROVE lahko dokazala.
+     *
+     * @var bool $roveNiMogoceZagotoviti
+     */
+    public bool $roveNiMogoceZagotoviti = true;
+
     public array $cone = [];
     public array $sistemi = [];
 
@@ -56,6 +67,7 @@ abstract class Stavba
         $this->tip = VrstaGradnje::from($config->tip);
         $this->zahtevnost = VrstaZahtevnosti::from($config->vrsta);
         $this->javna = $config->javna;
+        $this->roveNiMogoceZagotoviti = $config->roveNiMogoceZagotoviti ?? true;
     }
 
     /**
@@ -90,6 +102,7 @@ abstract class Stavba
         $stavba->tip = $this->tip->value;
         $stavba->vrsta = $this->zahtevnost->value;
         $stavba->javna = $this->javna;
+        $stavba->roveNiMogoceZagotoviti = $this->roveNiMogoceZagotoviti;
 
         return $stavba;
     }
