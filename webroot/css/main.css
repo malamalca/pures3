@@ -751,4 +751,20 @@ div.porocilo table th, div.porocilo table td {
   border: solid 1px #404040;
 }
 
+.kazalnikSNESOvoj {
+  margin: 10px 0 24px 0;
+}
+.kazalnikSNESOvoj .kazalnikSNES {
+  font-family: "Open Sans Light", Tahoma, Geneva, Verdana, sans-serif;
+  color: #232022;
+}
+
+p.opozorilo {
+  margin: 8px 0;
+  padding: 6px 10px;
+  border-left: solid 4px #FFCB03;
+  background-color: #FFF8E0;
+  font-size: 13px;
+}
+
 /*# sourceMappingURL=main.css.map */

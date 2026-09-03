@@ -125,6 +125,25 @@ class ProjektiController extends Controller
     }
 
     /**
+     * Prikaz grafičnih kazalnikov energijske učinkovitosti sNES
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
+    public function kazalniki($projectId)
+    {
+        App::set('projectId', $projectId);
+        App::set('splosniPodatki', App::loadProjectData('Pures', $projectId, 'splosniPodatki'));
+
+        $stavba = App::loadProjectCalculation('Pures', $projectId, 'stavba');
+        App::set('stavba', $stavba);
+
+        if ($stavba->vrsta == 'zahtevna') {
+            App::set('refStavba', App::loadProjectCalculation('Pures', $projectId, 'Ref' . DS . 'stavba'));
+        }
+    }
+
+    /**
      * Prikaz naslovnice
      *
      * @param string $projectId Building name

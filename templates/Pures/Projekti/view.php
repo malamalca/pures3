@@ -20,6 +20,7 @@
     <a class="button" href="<?= App::url('/pures/konstrukcije/index/' . $projectId) ?>">Konstrukcije</a>
     <a class="button" href="<?= App::url('/pures/projekti/analiza/' . $projectId) ?>">Analiza GF</a>
     <a class="button" href="<?= App::url('/pures/projekti/snes/' . $projectId) ?>">Analiza SNES</a>
+    <a class="button" href="<?= App::url('/pures/projekti/kazalniki/' . $projectId) ?>">Kazalniki sNES</a>
     <a class="button" href="<?= App::url('/pures/izkazi/splosniPodatki/' . $projectId) ?>">Izkaz</a>
     </p>
 <p class="actions">

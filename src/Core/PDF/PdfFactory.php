@@ -10,7 +10,7 @@ class PdfFactory
      *
      * @param string $engine PDF Engine
      * @param array $enigneOptions Engine options
-     * @return \App\Core\PDF\TCPDFEngine|\App\Core\PDF\WKHTML2PDFEngine
+     * @return \App\Core\PDF\TCPDFEngine|\App\Core\PDF\WKHTML2PDFEngine|\App\Core\PDF\ChromeEngine
      */
     public static function create($engine, $enigneOptions)
     {
@@ -19,6 +19,8 @@ class PdfFactory
                 return new TCPDFEngine($enigneOptions);
             case 'WKHTML2PDF':
                 return new WKHTML2PDFEngine($enigneOptions);
+            case 'CHROME':
+                return new ChromeEngine($enigneOptions);
             default:
                 throw new \Exception('Invalid Engine');
         }
