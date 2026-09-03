@@ -183,6 +183,9 @@ class PdfIzvoz extends Command
         $pdfEngine = Configure::read('PDF.engine');
         $pdf = PdfFactory::create($pdfEngine, Configure::read('PDF.' . $pdfEngine, []));
 
+        // Predloge posameznih TSS prepišejo "sistemi" s svojo skupino sistemov
+        $vsiSistemi = $view->get('sistemi');
+
         $pdf->newPage((string)$view->render('Projekti', 'naslovnica'));
 
         $sourceFilename = App::getProjectFolder('Pures', $projectId, 'podatki') . 'tehnicnoPorocilo.md';
@@ -246,6 +249,7 @@ class PdfIzvoz extends Command
             mkdir($pdfFolder, 0777, true);
         }
 
+        $view->set('sistemi', $vsiSistemi);
         $pdf->newPage((string)$view->render('Projekti', 'snes'));
 
         $pdf->saveAs($pdfFolder . 'PuresElaborat.pdf');

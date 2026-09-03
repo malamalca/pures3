@@ -40,5 +40,8 @@ return [
         'WKHTML2PDF' => [
             'layout' => 'wkhtml2pdf',
         ],
+        'CHROME' => [
+            'layout' => 'chrome',
+        ],
     ],
 ];
