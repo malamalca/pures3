@@ -1,9 +1,11 @@
 [
     {
-        "id": 0, "naziv": "Okna, vgrajena v zunanji zid", "Umax": 1, "idReferencneKonstrukcije": 6
+        "id": 0, "naziv": "Okna, vgrajena v zunanji zid", "Umax": 1, "idReferencneKonstrukcije": 6,
+        "tipskoOkno": {"sirina": 1.23, "visina": 1.48}
     },
     {
-        "id": 1, "naziv": "Streša okna, svetlobne kupule in steklene strehe", "Umax": 1.4, "idReferencneKonstrukcije": 6
+        "id": 1, "naziv": "Streša okna, svetlobne kupule in steklene strehe", "Umax": 1.4, "idReferencneKonstrukcije": 6,
+        "tipskoOkno": {"sirina": 1.23, "visina": 1.48}
     },
     {
         "id": 2, "naziv": "Vhodna vrata v ogrevane prostore, vetrolovi", "Umax": 1.6, "idReferencneKonstrukcije": 7

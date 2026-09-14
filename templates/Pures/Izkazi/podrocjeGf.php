@@ -48,7 +48,7 @@
             foreach ($tKons as $kons) {
                 $elementOvoja = new \stdClass();
                 $elementOvoja->idKonstrukcije = $kons->id;
-                $elementOvoja->U = $kons->Ud ?? $kons->Ug;
+                $elementOvoja->U = $kons->Uw ?? $kons->Uw_tip ?? $kons->Ud ?? $kons->Ug;
                 $cona->ovoj->transparentneKonstrukcije[] = $elementOvoja;
             }
 

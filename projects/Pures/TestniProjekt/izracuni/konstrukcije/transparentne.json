@@ -23,7 +23,11 @@
             "id": 1,
             "naziv": "Streša okna, svetlobne kupule in steklene strehe",
             "Umax": 1.4,
-            "idReferencneKonstrukcije": 6
+            "idReferencneKonstrukcije": 6,
+            "tipskoOkno": {
+                "sirina": 1.23,
+                "visina": 1.48
+            }
         }
     }
 ]

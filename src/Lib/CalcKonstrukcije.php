@@ -634,7 +634,68 @@ class CalcKonstrukcije
             }
         }
 
+        self::tipskoOkno($kons);
+
         return $kons;
+    }
+
+    /**
+     * Izračun toplotne prehodnosti okna U_w za tipsko (referenčno) velikost okna
+     * po SIST EN ISO 10077-1, en. (1): U_w = (A_g*U_g + A_f*U_f + l_g*psi_g) / (A_g + A_f)
+     *
+     * @param \stdClass $kons Podatki konstrukcije
+     * @return void
+     */
+    public static function tipskoOkno($kons)
+    {
+        // pri podanem U_w oz. pri vratih izračun tipskega okna ni potreben
+        if (isset($kons->Uw) || empty($kons->TSG->tipskoOkno)) {
+            return;
+        }
+
+        if (!isset($kons->Ug) || !isset($kons->Uf)) {
+            return;
+        }
+
+        if (empty($kons->sirinaOkvirja)) {
+            Log::warn(sprintf(
+                'Transparentna konstrukcija "%s" nima podane širine okvirja, U_w za tipsko okno ni izračunan.',
+                $kons->id ?? ''
+            ));
+
+            return;
+        }
+
+        $sirina = $kons->TSG->tipskoOkno->sirina;
+        $visina = $kons->TSG->tipskoOkno->visina;
+
+        $sirinaStekla = $sirina - 2 * $kons->sirinaOkvirja;
+        $visinaStekla = $visina - 2 * $kons->sirinaOkvirja;
+
+        if ($sirinaStekla <= 0 || $visinaStekla <= 0) {
+            Log::warn(sprintf(
+                'Transparentna konstrukcija "%s" ima preveliko širino okvirja za tipsko okno.',
+                $kons->id ?? ''
+            ));
+
+            return;
+        }
+
+        // A_g - površina zasteklitve, A_f - površina okvirja, l_g - vidni obod zasteklitve
+        $Ag = $sirinaStekla * $visinaStekla;
+        $Af = $sirina * $visina - $Ag;
+        $lg = 2 * ($sirinaStekla + $visinaStekla);
+
+        $kons->tipskoOkno = (object)[
+            'sirina' => $sirina,
+            'visina' => $visina,
+            'Ag' => $Ag,
+            'Af' => $Af,
+            'lg' => $lg,
+            'delezOkvirja' => $Af / ($Ag + $Af),
+        ];
+
+        $kons->Uw_tip = ($Ag * $kons->Ug + $Af * $kons->Uf + $lg * ($kons->Psi ?? 0)) / ($Ag + $Af);
     }
 
     /**

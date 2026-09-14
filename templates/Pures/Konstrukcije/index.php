@@ -5,6 +5,7 @@
 ?>
 <p class="actions">
 <a class="button" href="<?= App::url('/pures/projekti/view/' . $projectId) ?>">&larr; Nazaj</a>
+<a class="button" href="<?= App::url('/pures/konstrukcije/transparentne/' . $projectId) ?>">Transparentne konstrukcije</a>
 </p>
 
 <h1>Seznam konstrukcij projekta</h1>

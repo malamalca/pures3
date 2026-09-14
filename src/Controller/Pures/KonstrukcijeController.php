@@ -52,6 +52,28 @@ class KonstrukcijeController extends Controller
     }
 
     /**
+     * Prikaz transparentnih konstrukcij projekta
+     *
+     * @param string $projectId Building name
+     * @return void
+     */
+    public function transparentne($projectId)
+    {
+        $tKons = App::loadProjectCalculation('Pures', $projectId, 'konstrukcije' . DS . 'transparentne') ?? [];
+
+        // cone.json ne vsebuje celotnih konstrukcij - predloga jih poišče v mapi po idKonstrukcije
+        $tKonsMap = [];
+        foreach ($tKons as $kons) {
+            $tKonsMap[$kons->id] = $kons;
+        }
+
+        App::set('tKons', $tKons);
+        App::set('tKonsMap', $tKonsMap);
+        App::set('cone', (array)(App::loadProjectCalculation('Pures', $projectId, 'cone') ?? []));
+        App::set('projectId', $projectId);
+    }
+
+    /**
      * Prikaz izračun U vrednosti
      *
      * @param string|null $konsId Konstruction id

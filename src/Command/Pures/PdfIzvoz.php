@@ -214,6 +214,10 @@ class PdfIzvoz extends Command
             $pdf->newPage((string)$view->render('Konstrukcije', 'view'));
         }
 
+        if (!empty($view->get('tKons'))) {
+            $pdf->newPage((string)$view->render('Konstrukcije', 'transparentne'));
+        }
+
         foreach ((array)$view->get('cone') as $cona) {
             $view->set('cona', $cona);
             $pdf->newPage((string)$view->render('Cone', 'ovoj'));
