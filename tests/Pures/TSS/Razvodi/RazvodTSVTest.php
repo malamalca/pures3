@@ -208,4 +208,113 @@ final class RazvodTSVTest extends TestCase
 
         $this->assertEquals($expected, $roundedResult);
     }
+
+    public function testToplotneIzgubeZVnesenimCasomDelovanja(): void
+    {
+        $cona = new \stdClass();
+        $cona->dolzina = 10;
+        $cona->sirina = 8;
+        $cona->steviloEtaz = 3;
+        $cona->etaznaVisina = 3;
+        $cona->notranjaTOgrevanje = 20;
+
+        $config = <<<EOT
+        {
+            "vrsta": "toplavoda",
+            "crpalka": {
+                "casDelovanja": 6
+            },
+            "ceviHorizontaliVodi": {
+            },
+            "ceviDvizniVodi": {
+            },
+            "ceviPrikljucniVodi": {
+            }
+        }
+        EOT;
+
+        $razvodTSV = new RazvodTSV($config);
+
+        $izgube = $razvodTSV->toplotneIzgube(null, null, $cona, null, ['namen' => 'tsv']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $izgube['tsv']);
+
+        $expected = [339.49, 306.63, 339.49, 328.54, 339.49, 328.54, 339.49, 339.49, 328.54, 339.49, 328.54, 339.49];
+
+        $this->assertEquals($expected, $roundedResult);
+
+        // vnesena vrednost se ne sme prepisati z izračunom po enačbi (142)
+        $this->assertEquals(6, $razvodTSV->crpalka->casDelovanja);
+    }
+
+    public function testPotrebnaElektricnaEnergijaZVnesenimCasomDelovanja(): void
+    {
+        $cona = new \stdClass();
+        $cona->dolzina = 10;
+        $cona->sirina = 8;
+        $cona->steviloEtaz = 3;
+        $cona->etaznaVisina = 3;
+        $cona->notranjaTOgrevanje = 20;
+
+        $config = <<<EOT
+        {
+            "vrsta": "toplavoda",
+            "crpalka": {
+                "casDelovanja": 6
+            },
+            "ceviHorizontaliVodi": {
+            },
+            "ceviDvizniVodi": {
+            },
+            "ceviPrikljucniVodi": {
+            }
+        }
+        EOT;
+
+        $razvodTSV = new RazvodTSV($config);
+
+        $elektrika = $razvodTSV->potrebnaElektricnaEnergija(null, null, $cona, null, ['namen' => 'tsv']);
+        $roundedResult = array_map(fn($el) => round($el, 2), $elektrika['tsv']);
+
+        $expected = [3.11, 2.81, 3.11, 3.01, 3.11, 3.01, 3.11, 3.11, 3.01, 3.11, 3.01, 3.11];
+
+        $this->assertEquals($expected, $roundedResult);
+    }
+
+    public function testToplotneIzgubePonovniKlicVrneEnakRezultat(): void
+    {
+        $cona = new \stdClass();
+        $cona->dolzina = 10;
+        $cona->sirina = 8;
+        $cona->steviloEtaz = 3;
+        $cona->etaznaVisina = 3;
+        $cona->notranjaTOgrevanje = 20;
+
+        $config = <<<EOT
+        {
+            "vrsta": "toplavoda",
+            "crpalka": {},
+            "ceviHorizontaliVodi": {
+            },
+            "ceviDvizniVodi": {
+            },
+            "ceviPrikljucniVodi": {
+            }
+        }
+        EOT;
+
+        $razvodTSV = new RazvodTSV($config);
+
+        $prvi = $razvodTSV->toplotneIzgube(null, null, $cona, null, ['namen' => 'tsv']);
+        $prviRounded = array_map(fn($el) => round($el, 2), $prvi['tsv']);
+
+        // izračunan čas delovanja se shrani v črpalko; ponoven klic ga mora uporabiti,
+        // ne pa pasti na privzetih 2 h kroženja vode
+        $drugi = $razvodTSV->toplotneIzgube(null, null, $cona, null, ['namen' => 'tsv']);
+        $drugiRounded = array_map(fn($el) => round($el, 2), $drugi['tsv']);
+
+        $expected = [457.26, 413.00, 457.26, 442.51, 457.26, 442.51, 457.26, 457.26, 442.51, 457.26, 442.51, 457.26];
+
+        $this->assertEquals($expected, $prviRounded);
+        $this->assertEquals($expected, $drugiRounded);
+    }
 }

@@ -82,10 +82,10 @@ class RazvodTSV extends Razvod
     {
         $namen = $params['namen'];
 
-        if (isset($this->crpalka) && empty($this->crpalka->casDelovanja)) {
+        if (isset($this->crpalka)) {
             // z – čas delovanja cirkulacijske črpalke (v urah na dan) [h]
             // enačba (142)
-            $this->crpalka->casDelovanja = $this->izracunCasaDelovanjaCrpalke($cona);
+            $this->crpalka->casDelovanja ??= $this->izracunCasaDelovanjaCrpalke($cona);
             $steviloUrCrpalke = $this->crpalka->casDelovanja;
         } else {
             // todo: število ur kroženja vode glede na vrsto cone
@@ -172,7 +172,8 @@ class RazvodTSV extends Razvod
 
             // z – čas delovanja črpalke (v urah na dan) [h]
             // enačba (142)
-            $steviloUrCrpalke = $this->izracunCasaDelovanjaCrpalke($cona);
+            $this->crpalka->casDelovanja ??= $this->izracunCasaDelovanjaCrpalke($cona);
+            $steviloUrCrpalke = $this->crpalka->casDelovanja;
 
             foreach (array_keys(Calc::MESECI) as $mesec) {
                 $stDni = Calc::steviloDni($mesec);

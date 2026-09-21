@@ -340,10 +340,10 @@
         <td class="w-60" colspan="2"><?= h($sistem->id) ?></td>
         <td class="w-20 center"><?= $this->numFormat($sistem->letnaUcinkovitostOgrHlaTsv * 100, 1) ?> %</td>
         <td class="w-20 center">
-            <span title="&#951; > <?= $this->numFormat($sistem->minLetnaUcinkovitostOgrHlaTsv, 1) ?>">
-            <!--<b class="<?= $sistem->letnaUcinkovitostOgrHlaTsv > $sistem->minLetnaUcinkovitostOgrHlaTsv ? 'green' : 'red' ?>">
-            <?= $sistem->letnaUcinkovitostOgrHlaTsv > $sistem->minLetnaUcinkovitostOgrHlaTsv ? '&#10003;' : '&#10006;' ?>
-            </b>--></span>
+            <span title="&#951; &ge; <?= $this->numFormat($sistem->minLetnaUcinkovitostOgrHlaTsv * 100, 1) ?> %">
+            <b class="<?= $sistem->letnaUcinkovitostOgrHlaTsv >= $sistem->minLetnaUcinkovitostOgrHlaTsv ? 'green' : 'red' ?>">
+            <?= $sistem->letnaUcinkovitostOgrHlaTsv >= $sistem->minLetnaUcinkovitostOgrHlaTsv ? '&#10003;' : '&#10006;' ?>
+            </b></span>
         </td>
     </tr>
     <?php

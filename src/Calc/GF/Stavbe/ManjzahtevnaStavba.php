@@ -195,7 +195,7 @@ class ManjzahtevnaStavba extends Stavba
 
                 if (!empty($sistem->jeOgrevalniSistem)) {
                     $utezenaDovedenaEnergijaOgrHlaTsv +=
-                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tot');
+                        $energija * TSSVrstaEnergenta::from($energent)->utezniFaktor('tsg');
                 }
 
                 $this->neobnovljivaPrimarnaEnergija +=
@@ -252,7 +252,7 @@ class ManjzahtevnaStavba extends Stavba
             $this->faktorUjemanja = array_sum($faktorjiUjemanja) / count($faktorjiUjemanja);
         }
 
-        if ($utezenaDovedenaEnergijaOgrHlaTsv == 0.0 || $this->skupnaPrimarnaEnergija == 0.0) {
+        if ($this->skupnaPrimarnaEnergija == 0.0) {
             return;
         }
 

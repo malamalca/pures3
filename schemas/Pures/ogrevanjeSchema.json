@@ -381,6 +381,13 @@
                     "enum": ["brezRegulacije", "zRegulacijo", "spremenljivPretok"],
                     "title": "Regulacija obtočne črpalke",
                     "description": "Upošteva se pri razvodih ogrevanja. Privzeta vrednost je brez regulacije."
+                },
+                "casDelovanja": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 24,
+                    "title": "Čas delovanja cirkulacijske črpalke z [h/dan]",
+                    "description": "Upošteva se pri razvodu TSV \"toplavoda\". Kadar ni podan, se izračuna po enačbi (142)."
                 }
             }
         },

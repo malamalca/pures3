@@ -41,10 +41,10 @@
                     "n50": {"type": "number", "description": "Stopnja tesnosti stavbe n<sub>50</sub> [h<sup>-1</sup>]"},
                     "lega": {
                         "oneOf": [
-                            {"type": "integer", "minimum": 1, "maximum": 6},
-                            {"enum": ["naPodezelju", "visokaStavbaVMestu", "naPodezeljuMedDrevesi", "obkrozenaStavbaVMestu", "stavbaVPredmestju", "povprecnaStavbaVMestu"]}
+                            {"type": "integer", "minimum": 1, "maximum": 7},
+                            {"enum": ["naPodezelju", "visokaStavbaVMestu", "naPodezeljuMedDrevesi", "obkrozenaStavbaVMestu", "stavbaVPredmestju", "povprecnaStavbaVMestu", "stavbaVGozdu"]}
                         ],
-                        "description": "Lega stavbe za izračun vpliva vetra. Celoštevilčna oblika je zaradi združljivosti za nazaj zaporedna številka vrste lege (1-6)."
+                        "description": "Lega stavbe za izračun vpliva vetra (tabela 8.8). Celoštevilčna oblika je zaradi združljivosti za nazaj zaporedna številka vrste lege (1-7)."
                     },
                     "zavetrovanost": {
                         "oneOf": [

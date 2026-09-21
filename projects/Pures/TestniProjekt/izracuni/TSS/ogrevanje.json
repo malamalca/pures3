@@ -5,7 +5,7 @@
         "tss": "oht",
         "vrsta": "hladilni",
         "energent": "elektrika",
-        "jeOgrevalniSistem": true,
+        "jeOgrevalniSistem": false,
         "potrebnaEnergija": [
             0,
             0,
@@ -54,7 +54,7 @@
             "elektrika": 7.7428109316308165,
             "okolje": 112.039474656062
         },
-        "letnaUcinkovitostOgrHlaTsv": 0.5573460732510566,
+        "letnaUcinkovitostOgrHlaTsv": 0,
         "minLetnaUcinkovitostOgrHlaTsv": 0.5,
         "porociloPodatki": [],
         "porociloNizi": [
