@@ -25,6 +25,7 @@ Legenda: ✅ odpravljeno · 🟡 odprto · 🔵 potrjeno skladno
 | F | Implementiran faktor toplotne stabilnosti `f` (dušilni/dekrementni faktor, kompleksna toplotna matrika) | `CalcKonstrukcije::faktorToplotneStabilnosti` | t. 8.1.5, tab. 8.4 (SIST EN ISO 13786) |
 | G | Dodan varovalni pogoj `Sd > 0` pred izračunom prehoda vodne pare (prepreči `DivisionByZeroError`) | `CalcKonstrukcije::konstrukcija` | t. 8.1.3 |
 | – | Popravljen obstoječi hrošč: neinicializirana lastnost `ElementOvoja::$id` pri konstrukcijah proti zemljini | `ElementOvoja::$id` | – |
+| H | `fRsi`/kondenzacija pri gradnikih proti zemljini (`tla-teren`, `stena-teren`) je namesto zunanjega zraka uporabljala robni pogoj zunanjega zraka; popravljeno na povprečno letno temperaturo zemljine in 100 % relativno vlažnost | `CalcKonstrukcije::konstrukcija` | t. 8.1.3(4) |
 
 ---
 

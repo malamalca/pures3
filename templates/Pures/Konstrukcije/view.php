@@ -22,12 +22,13 @@
         <td class="<?= $kons->TSG->Umax >= round($kons->U_earth ?? $kons->U, 2) ? 'green' : 'red' ?>"><?= $kons->TSG->Umax >= round($kons->U_earth ?? $kons->U, 2) ? 'Ustreza' : 'Ne ustreza' ?></td>
     </tr>
     
+    <?php $limitfRsi = $kons->limitfRsi ?? max($okolje->minfRsi); ?>
     <tr>
         <td>f<sub>Rsi</sub>=</td>
         <td><?= number_format($kons->fRsi[0], 3) ?></td>
         <td>f<sub>Rsi,min</sub>=</td>
-        <td><?= number_format(max($okolje->minfRsi), 3) ?></td>
-        <td><?= max($okolje->minfRsi) < $kons->fRsi[0] ? 'Ustreza' : 'Ne ustreza' ?></td>
+        <td><?= number_format($limitfRsi, 3) ?></td>
+        <td><?= $limitfRsi < $kons->fRsi[0] ? 'Ustreza' : 'Ne ustreza' ?></td>
     </tr>
 </table>
 <br /><br />
@@ -88,7 +89,7 @@
     }
 
     $categories[] = $kons->debelina + $kons->debelina * 0.02;
-    $temperatures[] = $okolje->zunanjaT[$mesec];
+    $temperatures[] = $kons->zunanjaT[$mesec] ?? $okolje->zunanjaT[$mesec];
 
     $png = (new PuresChart(['series' => [$temperatures], 'category' => $categories], [
         'layers' => $layers,
@@ -134,7 +135,7 @@
         $layers[] = ['thickness' => $material->Sd, 'title' => $material->opis, 'color' => $color];
     }
 
-    $nasicenTlak[] = Calc::nasicenTlak($okolje->zunanjaT[$mesec]);
+    $nasicenTlak[] = Calc::nasicenTlak($kons->zunanjaT[$mesec] ?? $okolje->zunanjaT[$mesec]);
     $dejanskiTlak[] = $kons->dejanskiTlakSe[$mesec];
     $categories[] = $kons->Sd + $kons->Sd * 0.02;
 
@@ -219,15 +220,19 @@
             <td class="right"><?= round($kons->dejanskiTlakSe[$mesec], 2) ?></td>
             <td class="right"><?= round($kons->nasicenTlakSe[$mesec], 2) ?></td>
         </tr>
+        <?php
+            $okolicaT = $kons->zunanjaT[$mesec] ?? $okolje->zunanjaT[$mesec];
+            $okolicaVlaga = $kons->zunanjaVlaga[$mesec] ?? $okolje->zunanjaVlaga[$mesec];
+        ?>
         <tr>
             <td>Okolica</td>
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"></td>
             <td class="right"></td>
-            <td class="right"><?= $okolje->zunanjaT[$mesec] ?></td>
-            <td class="right"><?= round(Calc::nasicenTlak($okolje->zunanjaT[$mesec]) * $okolje->zunanjaVlaga[$mesec] / 100, 2) ?></td>
-            <td class="right"><?= round(Calc::nasicenTlak($okolje->zunanjaT[$mesec]), 0) ?></td>
+            <td class="right"><?= $okolicaT ?></td>
+            <td class="right"><?= round(Calc::nasicenTlak($okolicaT) * $okolicaVlaga / 100, 2) ?></td>
+            <td class="right"><?= round(Calc::nasicenTlak($okolicaT), 0) ?></td>
         </tr>
     </table>
 </div>

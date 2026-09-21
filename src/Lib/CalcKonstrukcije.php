@@ -106,18 +106,42 @@ class CalcKonstrukcije
             //$kons->U = $kons->TSG->Umax;
         }
 
+        // TSG-1-004, t. 8.1.3(4): pri prehodu vodne pare v gradnikih proti zemljini se namesto
+        // zunanjega zraka upošteva povprečna letna temperatura zemljine (SIST EN ISO 13788, t. 4.2.3(b))
+        // in relativna vlažnost zemljine 100 % za vse mesece.
+        $protiZemljini = in_array($kons->TSG->tip ?? null, ['tla-teren', 'stena-teren'], true);
+        if ($protiZemljini) {
+            $temperaturaZemljine = $okolje->povprecnaLetnaTemp ??
+                (array_sum($okolje->zunanjaT) / count($okolje->zunanjaT));
+            $zunanjaT = array_fill(0, 12, $temperaturaZemljine);
+            $zunanjaVlaga = array_fill(0, 12, 100);
+        } else {
+            $zunanjaT = $okolje->zunanjaT;
+            $zunanjaVlaga = $okolje->zunanjaVlaga;
+        }
+
+        // efektivni robni pogoj (zunanji zrak ali zemljina), da ga lahko uporabijo tudi predloge poročil
+        // namesto surovega $okolje->zunanjaT/zunanjaVlaga
+        $kons->zunanjaT = $zunanjaT;
+        $kons->zunanjaVlaga = $zunanjaVlaga;
+
+        if (isset($okolje->minTSi)) {
+            $kons->minfRsi = CalcOkolje::mesecniMinFRSi($zunanjaT, $okolje->notranjaT, $okolje->minTSi);
+            $kons->limitfRsi = max($kons->minfRsi);
+        }
+
         foreach (self::$spanIterator as $mesec) {
-            $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
+            $toplotniTok = ($okolje->notranjaT[$mesec] - $zunanjaT[$mesec]) * $kons->U;
             $kons->Tsi[$mesec] = $okolje->notranjaT[$mesec] - $kons->Rsi * $toplotniTok;
-            $kons->Tse[$mesec] = $okolje->zunanjaT[$mesec] + $kons->Rse * $toplotniTok;
-            $kons->fRsi[$mesec] = ($kons->Tsi[$mesec] - $okolje->zunanjaT[$mesec]) / ($okolje->notranjaT[$mesec] -
-                $okolje->zunanjaT[$mesec]);
+            $kons->Tse[$mesec] = $zunanjaT[$mesec] + $kons->Rse * $toplotniTok;
+            $kons->fRsi[$mesec] = ($kons->Tsi[$mesec] - $zunanjaT[$mesec]) / ($okolje->notranjaT[$mesec] -
+                $zunanjaT[$mesec]);
             $kons->nasicenTlakSi[$mesec] = Calc::nasicenTlak($kons->Tsi[$mesec]);
             $kons->nasicenTlakSe[$mesec] = Calc::nasicenTlak($kons->Tse[$mesec]);
             $kons->dejanskiTlakSi[$mesec] = Calc::nasicenTlak($okolje->notranjaT[$mesec]) *
                 $okolje->notranjaVlaga[$mesec] / 100;
-            $kons->dejanskiTlakSe[$mesec] = Calc::nasicenTlak($okolje->zunanjaT[$mesec]) *
-                $okolje->zunanjaVlaga[$mesec] / 100;
+            $kons->dejanskiTlakSe[$mesec] = Calc::nasicenTlak($zunanjaT[$mesec]) *
+                $zunanjaVlaga[$mesec] / 100;
         }
 
         $Rt = $kons->Rsi;
@@ -147,13 +171,13 @@ class CalcKonstrukcije
 
             foreach ($material->racunskiSloji as $sloj) {
                 foreach (self::$spanIterator as $mesec) {
-                    $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
+                    $toplotniTok = ($okolje->notranjaT[$mesec] - $zunanjaT[$mesec]) * $kons->U;
                     $sloj->T[$mesec] = $okolje->notranjaT[$mesec] - $sloj->Rn * $toplotniTok;
                 }
             }
 
             foreach (self::$spanIterator as $mesec) {
-                $toplotniTok = ($okolje->notranjaT[$mesec] - $okolje->zunanjaT[$mesec]) * $kons->U;
+                $toplotniTok = ($okolje->notranjaT[$mesec] - $zunanjaT[$mesec]) * $kons->U;
                 $material->T[$mesec] = $okolje->notranjaT[$mesec] - $Rt * $toplotniTok;
             }
         }

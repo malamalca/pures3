@@ -149,4 +149,52 @@ final class IzracunKonstrukcijeTSG004Test extends TestCase
 
         //var_dump($element->transIzgubeOgrevanje);
     }
+
+    /**
+     * TSG-1-004:2022, t. 8.1.3(4): pri gradnikih proti zemljini (tla-teren, stena-teren) se pri
+     * preverjanju prehoda vodne pare namesto zunanjega zraka upošteva povprečna letna temperatura
+     * zemljine (SIST EN ISO 13788, t. 4.2.3(b)) in relativna vlažnost zemljine 100 % za vse mesece.
+     */
+    public function testFRsiProtiZemljiniUporabiTemperaturoZemljine(): void
+    {
+        $inputZunanjaT = [-1, 1, 6, 10, 15, 18, 20, 19, 15, 10, 4, 1];
+        $inputZunanjaVlaga = [82, 77, 72, 71, 73, 72, 75, 76, 80, 82, 84, 85];
+        $okolje = \App\Lib\CalcOkolje::notranjeOkolje(['zunanjaT' => $inputZunanjaT, 'zunanjaVlaga' => $inputZunanjaVlaga]);
+        $okolje->povprecnaLetnaTemp = 9.9;
+
+        $konstrukcijaJson = <<<EOT
+        {
+            "id": "Tp1",
+            "TSG": {"tip": "tla-teren"},
+            "Rsi": 0.17,
+            "Rse": 0,
+            "materiali": [
+                {"opis": "beton", "debelina": 0.2, "lambda": 1.5, "difuzijskaUpornost": 130}
+            ]
+        }
+        EOT;
+        $kons = json_decode($konstrukcijaJson);
+        $result = \App\Lib\CalcKonstrukcije::konstrukcija($kons, $okolje, ['izracunKondenzacije' => true]);
+
+        // Rse = 0 => Tse mora biti enak robnemu pogoju (temperatura zemljine), konstanten čez vse mesece.
+        foreach ($result->Tse as $Tse) {
+            $this->assertEqualsWithDelta(9.9, $Tse, 0.01);
+        }
+
+        // dejanski tlak na zunanji strani mora ustrezati nasičenemu tlaku pri temperaturi zemljine
+        // (100 % relativna vlažnost zemljine).
+        foreach (array_keys($result->dejanskiTlakSe) as $mesec) {
+            $this->assertEqualsWithDelta(
+                $result->nasicenTlakSe[$mesec],
+                $result->dejanskiTlakSe[$mesec],
+                0.01
+            );
+        }
+
+        // za primerjavo: enaka konstrukcija proti zunanjemu zraku mora januarja (indeks 0) uporabiti
+        // dejansko zunanjo temperaturo zraka (-1 °C), ne temperature zemljine.
+        $konsZunanja = json_decode(str_replace('tla-teren', 'zunanja', $konstrukcijaJson));
+        $resultZunanja = \App\Lib\CalcKonstrukcije::konstrukcija($konsZunanja, $okolje, ['izracunKondenzacije' => true]);
+        $this->assertEqualsWithDelta(-1, $resultZunanja->Tse[0], 0.01);
+    }
 }

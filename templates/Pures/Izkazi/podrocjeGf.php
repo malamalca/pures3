@@ -163,11 +163,12 @@
             </i>
         </td>
         <td class="w-10 center"><?= $this->numFormat($konstrukcija->maxGm ?? 0, 1) ?></td>
+        <?php $limitfRsi = $konstrukcija->limitfRsi ?? $okolje->limitfRsi; ?>
         <td class="w-10 center"><?= $this->numFormat($konstrukcija->fRsi[0], 3) ?></td>
         <td class="w-10 center">
-            <span title="fRsi > <?= $this->numFormat($okolje->limitfRsi, 3) ?>">
-            <b class="<?= $konstrukcija->fRsi[0] < $okolje->limitfRsi ? 'red' : 'green' ?>">
-                <?= $konstrukcija->fRsi[0] > $okolje->limitfRsi ? '&#10003;' : '&#10006;' ?>
+            <span title="fRsi > <?= $this->numFormat($limitfRsi, 3) ?>">
+            <b class="<?= $konstrukcija->fRsi[0] < $limitfRsi ? 'red' : 'green' ?>">
+                <?= $konstrukcija->fRsi[0] > $limitfRsi ? '&#10003;' : '&#10006;' ?>
                 </b></span>
         </td>
     </tr>
