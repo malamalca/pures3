@@ -45,7 +45,7 @@ class SolarniPaneli extends Generator
     {
         parent::parseConfig($config);
 
-        $this->tip = VrstaSSE::from($config->tip ?? 'ploscati');
+        $this->tip = VrstaSSE::from($config->tip ?? VrstaSSE::Zastekljen->value);
         $this->povrsina = (float)($config->povrsina ?? 0.0);
         $this->naklon = $config->naklon ?? 45;
         $this->orientacija = $config->orientacija ?? 'J';

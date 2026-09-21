@@ -8,18 +8,30 @@
             {"required": ["povrsina"]},
             {"required": ["nazivnaMoc"]}
         ],
+        "allOf": [
+            {
+                "oneOf": [
+                    {"properties": {"naklon": {"enum": [0]}, "orientacija": {"enum": [""]}}},
+                    {
+                        "properties": {
+                            "naklon": {"enum": [15, 30, 45, 60, 75, 90]},
+                            "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"]}
+                        }
+                    }
+                ]
+            }
+        ],
         "properties": {
             "id": {"type": "string", "description": "Id fotonapetostnega sistema"},
             "idCone": {"type": "string", "description": "Šifra cone"},
             "vrsta": {"enum": ["monokristalne", "polikristalne", "amorfne", "CuInGaSe", "CdTe", "ostale"], "description": "Vrsta sončnih celic"},
-            "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ"], "description": "Orientacija PV modulov"},
-            "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90], "description": "Naklon PV modulov [°]"},
+            "orientacija": {"enum": ["S", "SV", "V", "JV", "J", "JZ", "Z", "SZ", ""], "description": "Orientacija PV modulov. Pri naklonu 0° mora biti prazna, ker podatki o obsevanju za vodoravno ploskev niso orientirani."},
+            "naklon": {"enum": [0, 15, 30, 45, 60, 75, 90], "description": "Naklon PV modulov [°]. Naklon 0° je dovoljen samo skupaj s prazno orientacijo."},
             "povrsina": {"type": "number", "description": "Površina PV modulov A<sub>PV</sub> [m²]"},
             "nazivnaMoc": {"type": "number", "description": "Nazivna moč fotonapetostnega sistema P<sub>pk</sub> [kW]"},
-            "sencenje": {"type": "boolean", "description": "Senčenje PV modulov (true/false)"},
-            "sencenjeFaktorji": {"type": "array", "items": {"type": "number"}, "minItems": 12, "maxItems": 12, "description": "Faktorji senčenja sistema F<sub>sh,op</sub> [-]"},
             "vgradnja": {"enum": ["neprezracavani", "zmernoPrezracevani", "dobroPrezracevani"], "description": "Način vgradnje PV modulov (neprezracevani/zmernoPrezracevani/dobroPrezracevani)"},
             "kontrolniFaktor": {"type": "number", "description": "Kontrolni faktor k<sub>exp</sub> [-]"},
+            "koeficientMoci": {"type": "number", "description": "Vršna moč PV modulov na enoto površine K<sub>pk</sub> [kW/m²]. Kadar ni podan, se uporabi privzeta vrednost glede na vrsto sončnih celic."},
 
             "oddajaVOmrezje": {"type": "boolean", "description": "PV sistem je povezan z omrežjem (true/false)"},
             "vgrajenHranilnik": {"type": "boolean", "description": "Baterija je vgrajena in je kapacitete > 0,1 kWh/m² Ause (true/false)"},

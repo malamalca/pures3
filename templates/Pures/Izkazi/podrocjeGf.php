@@ -347,7 +347,22 @@
 
 <!-- ---------------------------------------------------------------------------- -->
 <?php
-    // TODO: Izpis n50 po conah
+    // Načrtovana tesnost ovoja se povzame iz podatkov con (infiltracija->n50).
+    // Če se vrednosti po conah razlikujejo, se izpiše razpon.
+    $n50Cone = [];
+    foreach ($cone as $cona) {
+        if (isset($cona->infiltracija->n50)) {
+            $n50Cone[] = (float)$cona->infiltracija->n50;
+        }
+    }
+    $n50Cone = array_unique($n50Cone);
+
+    $n50Nacrtovano = '';
+    if (count($n50Cone) == 1) {
+        $n50Nacrtovano = $this->numFormat(reset($n50Cone), 1);
+    } elseif (count($n50Cone) > 1) {
+        $n50Nacrtovano = $this->numFormat(min($n50Cone), 1) . ' - ' . $this->numFormat(max($n50Cone), 1);
+    }
 ?>
 <table border="1" cellpadding="3" width="100%">
     <thead>
@@ -359,7 +374,7 @@
         <td class="w-5 center"><span style="border: solid 1px black; display: inline-block; width: 18px;">&#10003;</span></td>
         <td class="w-55" colspan="3">načrtovano</td>
         <td class="w-10 right">n<sub>50</sub> (h<sup>-1</sup>)</td>
-        <td class="w-10 center">0.5</td>
+        <td class="w-10 center"><?= $n50Nacrtovano ?></td>
     </tr>
     <tr>
         <td class="w-5 center"><span style="border: solid 1px black; display: inline-block; width: 18px;">&nbsp;</span></td>

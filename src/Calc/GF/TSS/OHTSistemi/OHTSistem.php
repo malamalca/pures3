@@ -190,9 +190,9 @@ abstract class OHTSistem extends TSSSistem
             }
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=
-                array_sum($dejanskaEnergija) * $this->energent->utezniFaktor('tot') +
-                array_sum($this->tsv->potrebnaElektricnaEnergija) * TSSVrstaEnergenta::Elektrika->utezniFaktor('tot') +
-                array_sum($this->tsv->obnovljivaEnergija) * TSSVrstaEnergenta::Okolje->utezniFaktor('tot');
+                array_sum($dejanskaEnergija) * $this->energent->utezniFaktor('tsg') +
+                array_sum($this->tsv->potrebnaElektricnaEnergija) * TSSVrstaEnergenta::Elektrika->utezniFaktor('tsg') +
+                array_sum($this->tsv->obnovljivaEnergija) * TSSVrstaEnergenta::Okolje->utezniFaktor('tsg');
         }
 
         // potem ogrevanje
@@ -222,15 +222,18 @@ abstract class OHTSistem extends TSSSistem
             }
 
             $utezenaDovedenaEnergijaOgrHlaTsv +=
-                array_sum($dejanskaEnergija) * $this->energent->utezniFaktor('tot') +
+                array_sum($dejanskaEnergija) * $this->energent->utezniFaktor('tsg') +
                 array_sum($this->ogrevanje->potrebnaElektricnaEnergija) *
-                TSSVrstaEnergenta::Elektrika->utezniFaktor('tot') +
-                array_sum($this->ogrevanje->obnovljivaEnergija) * TSSVrstaEnergenta::Okolje->utezniFaktor('tot');
+                TSSVrstaEnergenta::Elektrika->utezniFaktor('tsg') +
+                array_sum($this->ogrevanje->obnovljivaEnergija) * TSSVrstaEnergenta::Okolje->utezniFaktor('tsg');
         }
 
         // potem hlajenje
         if (!empty($this->hlajenje)) {
-            $skupnaDovedenaEnergijaOgrHlaTsv += $cona->skupnaEnergijaHlajenje;
+            // hlajenje se v kazalnik ηH/W/C,an ne šteje: po slovarju TSG (pojem 46) kazalnik
+            // zajema oskrbo s toploto za ogrevanje, pripravo TSV in toplotno gnan hladilni
+            // agregat, tabela 12 priloge 1 pravilnika pa določa meje po vrsti generatorja
+            // toplote. Kompresorsko hlajenje sem ne sodi.
 
             //$this->hlajenje->vrnjeneIzgubeVOgrevanje = $this->vracljiveIzgubeVOgrevanje;
             $this->hlajenje->analiza([], $this, $cona, $okolje);
@@ -244,21 +247,12 @@ abstract class OHTSistem extends TSSSistem
             $this->obnovljivaEnergija =
                 array_sum_values($this->obnovljivaEnergija, $this->hlajenje->obnovljivaEnergija);
 
-            $dejanskaEnergija =
-                array_subtract_values($this->hlajenje->potrebnaEnergija, $this->hlajenje->obnovljivaEnergija);
-
             foreach ($this->hlajenje->energijaPoEnergentih as $energentId => $energija) {
                 if ($energija != 0) {
                     $this->energijaPoEnergentih[$energentId] =
                         ($this->energijaPoEnergentih[$energentId] ?? 0) + $energija;
                 }
             }
-
-            $utezenaDovedenaEnergijaOgrHlaTsv +=
-                array_sum($dejanskaEnergija) * $this->energent->utezniFaktor('tot') +
-                array_sum($this->hlajenje->potrebnaElektricnaEnergija) *
-                TSSVrstaEnergenta::Elektrika->utezniFaktor('tot') +
-                array_sum($this->hlajenje->obnovljivaEnergija) * TSSVrstaEnergenta::Okolje->utezniFaktor('tot');
         }
 
         if ($utezenaDovedenaEnergijaOgrHlaTsv > 0) {

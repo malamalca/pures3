@@ -78,7 +78,6 @@ class XmlIzvoz extends Command
         }
 
         $export['tss']['ogrevanje'] = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'ogrevanje');
-        $export['tss']['hlajenje'] = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'hlajenje');
         $export['tss']['razsvetljava'] = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'razsvetljava');
         $export['tss']['prezracevanje'] = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'prezracevanje');
         $export['tss']['fotovoltaika'] = App::loadProjectData('Pures', $projectId, 'TSS' . DS . 'fotovoltaika');

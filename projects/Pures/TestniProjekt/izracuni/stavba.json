@@ -13,6 +13,7 @@
     "tip": "nova",
     "vrsta": "manjzahtevna",
     "javna": false,
+    "roveNiMogoceZagotoviti": true,
     "brutoProstornina": 672,
     "netoProstornina": 400,
     "povrsinaOvoja": 680,
@@ -77,6 +78,7 @@
     "X_s": 1,
     "Y_Hnd": 1.2,
     "Y_ROVE": 1,
+    "roveKompenzacijaDopustna": true,
     "X_OVE": 1,
     "X_p": 1,
     "k_exp": 1

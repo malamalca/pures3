@@ -136,6 +136,10 @@ class Razsvetljava extends TSSSistem
                 return $this->letnoUrPodnevi ?? 1820;
             case 'letnoUrPonoci':
                 return $this->letnoUrPonoci ?? 1680;
+            case 'varnostnaRazsvetljavaEnergijaZaPolnjenje':
+                return $this->varnostnaRazsvetljavaEnergijaZaPolnjenje ?? 0;
+            case 'varnostnaRazsvetljavaEnergijaZaDelovanje':
+                return $this->varnostnaRazsvetljavaEnergijaZaDelovanje ?? 0;
             default:
                 return 0;
         }

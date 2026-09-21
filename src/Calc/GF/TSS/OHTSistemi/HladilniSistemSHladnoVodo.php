@@ -7,6 +7,8 @@ use App\Lib\Calc;
 
 class HladilniSistemSHladnoVodo extends OHTSistem
 {
+    public bool $jeOgrevalniSistem = false;
+
     /**
      * @inheritDoc
      */

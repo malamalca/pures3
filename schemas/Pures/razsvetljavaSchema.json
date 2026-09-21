@@ -47,15 +47,21 @@
                 "title": "Faktor vzdrževanja F<sub>MF</sub> [-]",
                 "description": "Faktor, ki upošteva zmanjšanje svetlobnega toka zaradi staranja svetilk in umazanije na svetilkah in površinah za odboj svetlobe. Povzetek iz tabele 8.24 v standard SIST EN 15193-1."
             },
-            "varnostnaRazsvetljavaEnergijaZaPolnjenje": {
-                "type": "number",
-                "title": "Energija za polnjenje varnostne razsvetljave W<sub>pe,zn,an</sub> [kWh/(m2an)]",
-                "description": "Letna poraba energije za polnjenje varnostne razsvetljave. Priporočene vrednosti so navedene v tabeli B.1 v standardu SIST EN 15193-1."
-            },
-            "varnostnaRazsvetljavaEnergijaZaDelovanje": {
-                "type": "number",
-                "title": "Energija za regulacijo delovanja varnostnih sijalk W<sub>pc,zn,an</sub> [kWh/(m2an)]",
-                "description": "Letna poraba energije za delovanje varnostne razsvetljave. Priporočene vrednosti so navedene v tabeli B.2 v standardu SIST EN 15193-1."
+            "varnostna": {
+                "type": "object",
+                "title": "Varnostna razsvetljava",
+                "properties": {
+                    "energijaZaPolnjenje": {
+                        "type": "number",
+                        "title": "Energija za polnjenje varnostne razsvetljave W<sub>pe,zn,an</sub> [kWh/(m2an)]",
+                        "description": "Letna poraba energije za polnjenje baterij varnostnih sijalk na enoto uporabne površine. Priporočene vrednosti so navedene v tabeli B.1 v standardu SIST EN 15193-1."
+                    },
+                    "energijaZaDelovanje": {
+                        "type": "number",
+                        "title": "Energija za regulacijo delovanja varnostnih sijalk W<sub>pc,zn,an</sub> [kWh/(m2an)]",
+                        "description": "Letna poraba energije za delovanje varnostne razsvetljave na enoto uporabne površine. Priporočene vrednosti so navedene v tabeli B.2 v standardu SIST EN 15193-1."
+                    }
+                }
             },
 
             "letnoUrPodnevi": {

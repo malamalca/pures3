@@ -8,17 +8,6 @@ use App\Lib\Calc;
 class ToplozracniOHTSistem extends OHTSistem
 {
     /**
-     * Analiza ogrevalnega sistem
-     *
-     * @param \stdClass $cona Podatki cone
-     * @param \stdClass $okolje Podatki okolja
-     * @return void
-     */
-    public function analiza($cona, $okolje)
-    {
-    }
-
-    /**
      * @inheritDoc
      */
     public function standardnaMoc($cona, $okolje): float

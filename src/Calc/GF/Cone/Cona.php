@@ -197,27 +197,41 @@ class Cona
                         if (isset($this->infiltracija->lega) && is_int($this->infiltracija->lega)) {
                             // združljivosti za nazaj
                             $vrsteLege = VrstaLegeStavbe::cases();
+                            if (!isset($vrsteLege[$this->infiltracija->lega - 1])) {
+                                throw new \Exception(
+                                    sprintf('Lega stavbe "%s" ne obstaja.', $this->infiltracija->lega)
+                                );
+                            }
                             $this->infiltracija->lega = $vrsteLege[$this->infiltracija->lega - 1];
                         } else {
+                            if (empty($config->infiltracija->lega)) {
+                                throw new \Exception('Ni vpisane lege stavbe za izračun vpliva vetra.');
+                            }
                             $this->infiltracija->lega = gettype($config->infiltracija->lega) == 'object' &&
                                 get_class($config->infiltracija->lega) == VrstaLegeStavbe::class ?
                                     $config->infiltracija->lega :
-                                    VrstaLegeStavbe::from($config->infiltracija->lega ?? 'izpostavljena');
+                                    VrstaLegeStavbe::from($config->infiltracija->lega);
                         }
 
                         if (isset($this->infiltracija->zavetrovanost) && is_int($this->infiltracija->zavetrovanost)) {
                             // združljivosti za nazaj
                             $vrsteZavetrovanosti = VrstaIzpostavljenostiFasad::cases();
+                            if (!isset($vrsteZavetrovanosti[$this->infiltracija->zavetrovanost - 1])) {
+                                throw new \Exception(
+                                    sprintf('Zavetrovanost "%s" ne obstaja.', $this->infiltracija->zavetrovanost)
+                                );
+                            }
                             $this->infiltracija->zavetrovanost =
                                 $vrsteZavetrovanosti[$this->infiltracija->zavetrovanost - 1];
                         } else {
+                            if (empty($config->infiltracija->zavetrovanost)) {
+                                throw new \Exception('Ni vpisane zavetrovanosti za izračun vpliva vetra.');
+                            }
                             $this->infiltracija->zavetrovanost =
                                 gettype($config->infiltracija->zavetrovanost) == 'object' &&
                                 get_class($config->infiltracija->zavetrovanost) == VrstaIzpostavljenostiFasad::class ?
                                 $config->infiltracija->zavetrovanost :
-                                VrstaIzpostavljenostiFasad::from(
-                                    $config->infiltracija->zavetrovanost ?? 'izpostavljena'
-                                );
+                                VrstaIzpostavljenostiFasad::from($config->infiltracija->zavetrovanost);
                         }
                     }
                     break;

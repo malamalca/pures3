@@ -6,7 +6,7 @@
             {
                 "type" : "object",
                 "oneOf": [
-                    {"required": ["id", "naziv", "vrsta", "Uf", "Ug", "g"]},
+                    {"required": ["id", "naziv", "vrsta", "Uf", "Ug", "g", "Psi"]},
                     {"required": ["id", "naziv", "vrsta", "Uw"]}
                 ],
                 "properties" : {
@@ -16,7 +16,7 @@
                     "Uf": {"type": "number", "description": "Toplotna prehodnost okvirja U<sub>f</sub> [W/m²K]"},
                     "Ug": {"type": "number", "description": "Toplotna prehodnost stekla U<sub>g</sub> [W/m²K]"},
                     "g": {"type": "number", "description": "Faktor prehoda celotnega sončnega sevanja g [-]"},
-                    "Psi": {"type": "number", "description": "Linijski toplotni most medstekelnega distančnika ψ [W/mK]"},
+                    "Psi": {"type": "number", "description": "Linijski toplotni most medstekelnega distančnika ψ [W/mK]. Obvezen, kadar se U izračuna iz U<sub>f</sub> in U<sub>g</sub>."},
 
                     "sirinaOkvirja": {"type": "number", "description": "Širina okna [m]"},
                     "faktorSencil": {"type": "number", "description": "Faktor senčil [-]"},
