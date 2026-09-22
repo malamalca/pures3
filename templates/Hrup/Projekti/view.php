@@ -57,6 +57,16 @@
 ?>
 
 <h1>Podatki o projektu "<?= h($splosniPodatki->stavba->naziv) ?>"</h1>
+<?php if (!empty($odmevniHrup)) { ?>
+<p class="actions">
+    Odmevni hrup:
+    <?php foreach ($odmevniHrup as $prostor) { ?>
+        <?php if (isset($prostor->pred, $prostor->po)) { ?>
+    <a class="button" href="<?= App::url('/hrup/odmevniHrup/view/' . $projectId . '/' . $prostor->id) ?>"><?= h($prostor->id . ' - ' . $prostor->naziv) ?></a>
+        <?php } ?>
+    <?php } ?>
+</p>
+<?php } ?>
 <table>
     <tr>
         <td colspan="2">Naziv projekta</td>

@@ -33,6 +33,7 @@ class ProjektiController extends Controller
         App::set('prostori', App::loadProjectCalculation('Hrup', $projectId, 'zunanjiHrup'));
         App::set('udarniHrup', App::loadProjectCalculation('Hrup', $projectId, 'udarniHrup'));
         App::set('zracniHrup', App::loadProjectCalculation('Hrup', $projectId, 'zracniHrup'));
+        App::set('odmevniHrup', App::loadProjectCalculation('Hrup', $projectId, 'odmevniHrup'));
     }
 
     /**

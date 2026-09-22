@@ -328,8 +328,13 @@
         <td class="w-10"><?= h($line->id) ?></td>
         <td class="w-30"><?= h($line->naziv) ?></td>
         <td class="w-10 center" style="border-right: dashed 1px"><?= $line->enota ?></td>
-        <td class="w-10 center strong"><?= $this->numFormat($line->projektnaVrednost, 1) ?></td>
-        <td class="w-20 center strong"><?= $this->numFormat($line->izracunanaVrednost, 1) ?></td>
+        <td class="w-10 center strong"><?= $line->projektnaVrednost === null ? '—' : $this->numFormat($line->projektnaVrednost, 2) ?></td>
+        <td class="w-20 center strong">
+            <?= $line->izracunanaVrednost === null ? '—' : $this->numFormat($line->izracunanaVrednost, 2) ?>
+            <?php if (isset($line->skladnost)) { ?>
+            <br /><?= $line->skladnost->ustreza === null ? 'Ni določljivo' : ($line->skladnost->ustreza ? 'Ustreza' : 'Ne ustreza') ?>
+            <?php } ?>
+        </td>
         <td class="w-10 center" style="border-right: dashed 1px">&nbsp;</td>
         <td class="w-10 center">&nbsp;</td>
     </tr>

@@ -1,0 +1,587 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "mera": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "minimum": 0
+                },
+                {
+                    "type": "string",
+                    "minLength": 1
+                }
+            ]
+        },
+        "alfa": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "125",
+                        "250",
+                        "500",
+                        "1000",
+                        "2000",
+                        "4000"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "125": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "250": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "500": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "1000": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "2000": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "4000": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                        }
+                    }
+                }
+            ]
+        },
+        "spekter": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "minimum": 0
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "125",
+                        "250",
+                        "500",
+                        "1000",
+                        "2000",
+                        "4000"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "125": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "250": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "500": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "1000": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "2000": {
+                            "type": "number",
+                            "minimum": 0
+                        },
+                        "4000": {
+                            "type": "number",
+                            "minimum": 0
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "id",
+            "naziv",
+            "prostornina",
+            "vrsta",
+            "zasedenost",
+            "mejniElementi"
+        ],
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 1
+            },
+            "naziv": {
+                "type": "string",
+                "minLength": 1
+            },
+            "vir": {
+                "type": "string"
+            },
+            "prostornina": {
+                "$ref": "#/definitions/mera"
+            },
+            "vrsta": {
+                "enum": [
+                    "ucilnica",
+                    "glasbenaUcilnica",
+                    "vecnamenskiPouk",
+                    "vecnamenskiGovor",
+                    "vecnamenskiGlasba",
+                    "sportniProstor1",
+                    "sportniProstor2",
+                    "lastna"
+                ]
+            },
+            "nazivVrste": {
+                "type": "string",
+                "minLength": 1
+            },
+            "mejniOdmevniCas": {
+                "$ref": "#/definitions/spekter"
+            },
+            "zasedenost": {
+                "enum": [
+                    "prazna",
+                    "polna",
+                    "delna"
+                ]
+            },
+            "metoda": {
+                "enum": [
+                    "en12354",
+                    "sabine",
+                    "eyring",
+                    "samodejno",
+                    "en12354D2"
+                ]
+            },
+            "hitrostZvoka": {
+                "type": "number",
+                "minimum": 0,
+                "exclusiveMinimum": true
+            },
+            "absorpcijaZraka": {
+                "$ref": "#/definitions/spekter"
+            },
+            "mere": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "dolzina",
+                    "sirina",
+                    "visina"
+                ],
+                "properties": {
+                    "dolzina": {
+                        "$ref": "#/definitions/mera"
+                    },
+                    "sirina": {
+                        "$ref": "#/definitions/mera"
+                    },
+                    "visina": {
+                        "$ref": "#/definitions/mera"
+                    }
+                }
+            },
+            "mejniElementi": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "id",
+                        "naziv",
+                        "povrsina"
+                    ],
+                    "oneOf": [
+                        {
+                            "required": [
+                                "alfa"
+                            ],
+                            "not": {
+                                "required": [
+                                    "idAbsorpcije"
+                                ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "idAbsorpcije"
+                            ],
+                            "not": {
+                                "required": [
+                                    "alfa"
+                                ]
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "naziv": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "vir": {
+                            "type": "string"
+                        },
+                        "povrsina": {
+                            "$ref": "#/definitions/mera"
+                        },
+                        "stevilo": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "alfa": {
+                            "$ref": "#/definitions/alfa"
+                        },
+                        "idAbsorpcije": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "ploskev": {
+                            "enum": [
+                                "x0",
+                                "x1",
+                                "y0",
+                                "y1",
+                                "z0",
+                                "z1"
+                            ]
+                        },
+                        "sipanje": {
+                            "$ref": "#/definitions/alfa"
+                        }
+                    }
+                }
+            },
+            "povrsinskoPohistvo": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "id",
+                        "naziv",
+                        "povrsina"
+                    ],
+                    "oneOf": [
+                        {
+                            "required": [
+                                "alfa"
+                            ],
+                            "not": {
+                                "required": [
+                                    "idAbsorpcije"
+                                ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "idAbsorpcije"
+                            ],
+                            "not": {
+                                "required": [
+                                    "alfa"
+                                ]
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "naziv": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "vir": {
+                            "type": "string"
+                        },
+                        "povrsina": {
+                            "$ref": "#/definitions/mera"
+                        },
+                        "stevilo": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "alfa": {
+                            "$ref": "#/definitions/alfa"
+                        },
+                        "idAbsorpcije": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "prostornina": {
+                            "$ref": "#/definitions/mera"
+                        },
+                        "polozaj": {
+                            "enum": [
+                                "x",
+                                "y",
+                                "z",
+                                "sredina"
+                            ]
+                        },
+                        "vrsta": {
+                            "enum": [
+                                "pohistvo",
+                                "osebe"
+                            ]
+                        }
+                    }
+                }
+            },
+            "posamezniElementi": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "id",
+                        "naziv",
+                        "stevilo"
+                    ],
+                    "oneOf": [
+                        {
+                            "required": [
+                                "absorpcijskaPovrsina"
+                            ],
+                            "not": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "idAbsorpcije"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "ocenaIzProstornine"
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "idAbsorpcije"
+                            ],
+                            "not": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "absorpcijskaPovrsina"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "ocenaIzProstornine"
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "ocenaIzProstornine",
+                                "prostornina"
+                            ],
+                            "not": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "absorpcijskaPovrsina"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "idAbsorpcije"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "naziv": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "vir": {
+                            "type": "string"
+                        },
+                        "stevilo": {
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "absorpcijskaPovrsina": {
+                            "$ref": "#/definitions/spekter"
+                        },
+                        "idAbsorpcije": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "ocenaIzProstornine": {
+                            "enum": [
+                                true
+                            ]
+                        },
+                        "prostornina": {
+                            "$ref": "#/definitions/mera"
+                        },
+                        "vrsta": {
+                            "enum": [
+                                "pohistvo",
+                                "osebe"
+                            ]
+                        },
+                        "polozaj": {
+                            "enum": [
+                                "x",
+                                "y",
+                                "z",
+                                "sredina"
+                            ]
+                        }
+                    }
+                }
+            },
+            "absorberji": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "id",
+                        "naziv",
+                        "idElementa",
+                        "povrsina"
+                    ],
+                    "oneOf": [
+                        {
+                            "required": [
+                                "alfa"
+                            ],
+                            "not": {
+                                "required": [
+                                    "idAbsorpcije"
+                                ]
+                            }
+                        },
+                        {
+                            "required": [
+                                "idAbsorpcije"
+                            ],
+                            "not": {
+                                "required": [
+                                    "alfa"
+                                ]
+                            }
+                        }
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "naziv": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "vir": {
+                            "type": "string"
+                        },
+                        "idElementa": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "povrsina": {
+                            "$ref": "#/definitions/mera"
+                        },
+                        "alfa": {
+                            "$ref": "#/definitions/alfa"
+                        },
+                        "idAbsorpcije": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "sipanje": {
+                            "$ref": "#/definitions/alfa"
+                        }
+                    }
+                }
+            }
+        },
+        "allOf": [
+            {
+                "anyOf": [
+                    {
+                        "properties": {
+                            "vrsta": {
+                                "not": {
+                                    "enum": [
+                                        "lastna"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "required": [
+                            "nazivVrste",
+                            "mejniOdmevniCas"
+                        ]
+                    }
+                ]
+            },
+            {
+                "anyOf": [
+                    {
+                        "properties": {
+                            "metoda": {
+                                "not": {
+                                    "enum": [
+                                        "en12354D2"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "required": [
+                            "mere"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

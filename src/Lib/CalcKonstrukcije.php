@@ -112,7 +112,7 @@ class CalcKonstrukcije
         $protiZemljini = in_array($kons->TSG->tip ?? null, ['tla-teren', 'stena-teren'], true);
         if ($protiZemljini) {
             $temperaturaZemljine = $okolje->povprecnaLetnaTemp ??
-                (array_sum($okolje->zunanjaT) / count($okolje->zunanjaT));
+                array_sum($okolje->zunanjaT) / count($okolje->zunanjaT);
             $zunanjaT = array_fill(0, 12, $temperaturaZemljine);
             $zunanjaVlaga = array_fill(0, 12, 100);
         } else {

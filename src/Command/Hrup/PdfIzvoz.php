@@ -97,6 +97,15 @@ class PdfIzvoz extends Command
             }
         }
 
+        if ($view->get('odmevniHrup')) {
+            foreach ($view->get('odmevniHrup') as $prostor) {
+                if (isset($prostor->pred, $prostor->po)) {
+                    $view->set('prostor', $prostor);
+                    $pdf->newPage((string)$view->render('OdmevniHrup', 'view'));
+                }
+            }
+        }
+
         $pdfFolder = App::getProjectFolder('Hrup', $projectId, 'pdf');
         if (!is_dir($pdfFolder)) {
             mkdir($pdfFolder, 0777, true);
