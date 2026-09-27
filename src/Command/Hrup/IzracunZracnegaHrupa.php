@@ -32,9 +32,9 @@ class IzracunZracnegaHrupa extends Command
         if ($hrupIn === null) {
             return;
         }
-        //if (!$this->validateSchema(json: $hrupIn, schema: 'zracniHrup', area: 'Hrup')) {
-        //    return;
-        //}
+        if (!$this->validateSchema(json: $hrupIn, schema: 'zracniHrup', area: 'Hrup')) {
+            return;
+        }
 
         if ($hrupIn) {
             $hrupOut = [];

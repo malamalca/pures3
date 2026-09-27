@@ -83,6 +83,10 @@
                         "dolzinaSpoja"
                     ],
                     "properties": {
+                        "naziv": {
+                            "type": "string",
+                            "description": "Opisno ime stranskega elementa; ne vpliva na izračun."
+                        },
                         "id": {
                             "type": "string",
                             "minLength": 1
