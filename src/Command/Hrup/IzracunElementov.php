@@ -63,9 +63,9 @@ class IzracunElementov extends Command
 
         $maliElementiIn = App::loadProjectData('Hrup', $projectId, 'elementi' . DS . 'maliElementi');
         if (!empty($maliElementiIn)) {
-            //if (!$this->validateSchema(json: $maliElementiIn, schema: 'maliElementi', area: 'Hrup')) {
-            //    return;
-            //}
+            if (!$this->validateSchema(json: $maliElementiIn, schema: 'maliElementi', area: 'Hrup')) {
+                return;
+            }
             $maliElementiOut = [];
             foreach ($maliElementiIn as $maliElementConfig) {
                 $maliElement = new MaliElement($maliElementConfig);

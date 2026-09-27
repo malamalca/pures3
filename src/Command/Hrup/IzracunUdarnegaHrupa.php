@@ -29,9 +29,12 @@ class IzracunUdarnegaHrupa extends Command
 
         /** @var array $hrupIn */
         $hrupIn = App::loadProjectData('Hrup', $projectId, 'udarniHrup');
-        //if (!$this->validateSchema(json: $prostoriIn, schema: 'zunanjiHrup', area: 'Hrup')) {
-        //    return;
-        //}
+        if ($hrupIn === null) {
+            return;
+        }
+        if (!$this->validateSchema(json: $hrupIn, schema: 'udarniHrup', area: 'Hrup')) {
+            return;
+        }
 
         if ($hrupIn) {
             $hrupOut = [];

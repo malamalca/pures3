@@ -1,0 +1,64 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "mera": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "minimum": 0
+                },
+                {
+                    "type": "string",
+                    "minLength": 1
+                }
+            ]
+        }
+    },
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "id",
+            "naziv",
+            "model",
+            "idKonstrukcije",
+            "povrsinskaMasaStranskihElementov",
+            "prostorninaSprejemnegaProstora",
+            "minLnw"
+        ],
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 1
+            },
+            "naziv": {
+                "type": "string",
+                "minLength": 1
+            },
+            "model": {
+                "enum": [
+                    "poenostavljen"
+                ]
+            },
+            "idKonstrukcije": {
+                "type": "string",
+                "minLength": 1
+            },
+            "idDodatnegaSloja": {
+                "type": "string",
+                "minLength": 1
+            },
+            "povrsinskaMasaStranskihElementov": {
+                "$ref": "#/definitions/mera"
+            },
+            "prostorninaSprejemnegaProstora": {
+                "$ref": "#/definitions/mera"
+            },
+            "minLnw": {
+                "type": "number",
+                "minimum": 0
+            }
+        }
+    }
+}

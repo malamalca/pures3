@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "R": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "minimum": 0
+                },
+                {
+                    "type": "object",
+                    "minProperties": 1,
+                    "additionalProperties": {
+                        "type": "number",
+                        "minimum": 0
+                    }
+                }
+            ]
+        }
+    },
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "id",
+            "naziv"
+        ],
+        "anyOf": [
+            {
+                "required": [
+                    "R"
+                ]
+            },
+            {
+                "required": [
+                    "Rw"
+                ]
+            }
+        ],
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 1
+            },
+            "naziv": {
+                "type": "string",
+                "minLength": 1
+            },
+            "tip": {
+                "enum": [
+                    "vertikalna",
+                    "horizontalna"
+                ]
+            },
+            "R": {
+                "$ref": "#/definitions/R"
+            },
+            "Rw": {
+                "type": "number",
+                "minimum": 0
+            },
+            "C": {
+                "type": "number"
+            },
+            "Ctr": {
+                "type": "number"
+            }
+        }
+    }
+}

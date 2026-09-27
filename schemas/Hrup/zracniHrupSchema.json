@@ -1,0 +1,148 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "definitions": {
+        "mera": {
+            "oneOf": [
+                {
+                    "type": "number",
+                    "minimum": 0
+                },
+                {
+                    "type": "string",
+                    "minLength": 1
+                }
+            ]
+        }
+    },
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "id",
+            "naziv",
+            "model",
+            "locilniElement"
+        ],
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 1
+            },
+            "naziv": {
+                "type": "string",
+                "minLength": 1
+            },
+            "model": {
+                "enum": [
+                    "poenostavljen"
+                ]
+            },
+            "minRw": {
+                "type": "number",
+                "minimum": 0
+            },
+            "locilniElement": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "idKonstrukcije",
+                    "povrsina"
+                ],
+                "properties": {
+                    "idKonstrukcije": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "povrsina": {
+                        "$ref": "#/definitions/mera"
+                    },
+                    "idDodatnegaSloja": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "idDodatnegaSloja1": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "idDodatnegaSloja2": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            },
+            "stranskiElementi": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "idKonstrukcije",
+                        "povrsina",
+                        "vrstaSpoja",
+                        "dolzinaSpoja"
+                    ],
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "idKonstrukcije": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "povrsina": {
+                            "$ref": "#/definitions/mera"
+                        },
+                        "vrstaSpoja": {
+                            "enum": [
+                                "togiKrizni",
+                                "togiT",
+                                "krizniElasticni",
+                                "lahkaFasada",
+                                "dvojnaStenaSHomogenimElementom",
+                                "povezaniDvojniSteni",
+                                "kotni",
+                                "spremembaDebeline"
+                            ]
+                        },
+                        "dolzinaSpoja": {
+                            "$ref": "#/definitions/mera"
+                        },
+                        "idDodatnegaSloja": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "idDodatnegaSloja1": {
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "pozicijeElementov": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "locilni",
+                                "izvorni",
+                                "oddajni"
+                            ],
+                            "properties": {
+                                "locilni": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "izvorni": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "oddajni": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

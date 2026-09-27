@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+            "id",
+            "naziv",
+            "enota",
+            "projektnaVrednost"
+        ],
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 1
+            },
+            "naziv": {
+                "type": "string",
+                "minLength": 1
+            },
+            "enota": {
+                "type": "string",
+                "minLength": 1
+            },
+            "projektnaVrednost": {
+                "type": "number",
+                "minimum": 0
+            },
+            "izracunanaVrednost": {
+                "type": "number",
+                "minimum": 0
+            }
+        }
+    }
+}
