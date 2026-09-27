@@ -63,6 +63,11 @@ date_default_timezone_set('UTC');
  */
 ini_set('intl.default_locale', 'sl_SI');
 
+// On the command line the session files belong to the run (TMP), not
+// to the shared session directory of PHP.
+if (PHP_SAPI === 'cli') {
+    session_save_path(TMP);
+}
 session_start();
 
 /*

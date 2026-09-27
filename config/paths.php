@@ -29,7 +29,17 @@ define('CONFIG', ROOT . DS . 'config' . DS);
 /**
  * Path to the logs directory.
  */
-define('LOGS', ROOT . DS . 'logs' . DS);
+// A caller may give every run its own directories (PHPURES_LOGS,
+// PHPURES_TMP): absolute paths of existing directories.
+$runDir = function (string $name, string $default): string {
+    $dir = getenv($name);
+    if (is_string($dir) && $dir !== '' && is_dir($dir)) {
+        return rtrim($dir, '\\/') . DS;
+    }
+
+    return $default;
+};
+define('LOGS', $runDir('PHPURES_LOGS', ROOT . DS . 'logs' . DS));
 
 /**
  * File path to the webroot directory.
@@ -44,7 +54,7 @@ define('TEMPLATES', ROOT . DS . 'templates' . DS);
 /**
  * Path to the temporary files directory.
  */
-define('TMP', ROOT . DS . 'tmp' . DS);
+define('TMP', $runDir('PHPURES_TMP', ROOT . DS . 'tmp' . DS));
 
 /**
  * Path to the projects directory.
