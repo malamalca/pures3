@@ -8,6 +8,33 @@ use JsonSchema\Validator;
 class Command
 {
     /**
+     * Whether any command of this process failed (schema, input); the
+     * entry point exits with a non-zero code, so a caller never takes a
+     * skipped calculation for a success.
+     */
+    private static bool $failed = false;
+
+    /**
+     * Mark this process as failed.
+     *
+     * @return void
+     */
+    public static function markFailed(): void
+    {
+        self::$failed = true;
+    }
+
+    /**
+     * Exit code of the process: 0 on success, 1 after a failure.
+     *
+     * @return int
+     */
+    public static function exitCode(): int
+    {
+        return self::$failed ? 1 : 0;
+    }
+
+    /**
      * Run command
      *
      * @return void
@@ -85,6 +112,7 @@ class Command
         $schemaContents = (string)file_get_contents($schemaFile);
         $validator->validate($json, json_decode($schemaContents));
         if (!$validator->isValid()) {
+            self::markFailed();
             $this->out(sprintf('PREVERJANJE SHEME :: Datoteka "%s" vsebuje napake.', $schema), 'error');
             foreach ($validator->getErrors() as $error) {
                 $this->out(sprintf('[%s] %s', $error['property'], $error['message']), 'info');
