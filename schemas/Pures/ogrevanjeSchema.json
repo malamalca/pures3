@@ -511,6 +511,18 @@
                     "title": "Volumen hranilnika V [l]",
                     "description": "Privzeta vrednost je 0."
                 },
+                "dnevneIzgube": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Dnevne toplotne izgube hranilnika q<sub>w,s,l</sub> [kWh/24h]",
+                    "description": "Podatek proizvajalca pri ΔT = 45 K (stanje obratovalne pripravljenosti). Kadar ni podan, se izgube izračunajo po enačbi iz standarda. Ne velja za solarni hranilnik."
+                },
+                "stalneIzgube": {
+                    "type": "number",
+                    "minimum": 0,
+                    "title": "Stalne toplotne izgube hranilnika [W]",
+                    "description": "Podatek proizvajalca pri ΔT = 45 K; pretvori se v dnevne izgube (W · 24 / 1000). Ima prednost podatek \"dnevneIzgube\"."
+                },
                 "znotrajOvoja": {
                     "type": "boolean",
                     "title": "Hranilnik je znotraj ovoja stavbe (true/false)",

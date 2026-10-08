@@ -94,13 +94,15 @@ class RazvodTSV extends Razvod
 
         $steviloUrBrezCirkulacije = 24 - $steviloUrCrpalke;
 
-        $povprecniUCevi = ($this->horizontalniVod->toplotneIzgube($this, $cona) +
+        // povprečna toplotna prehodnost cevi [W/mK]: vsota U*L deljena z dejansko skupno dolžino cevi
+        // (toplotneIzgube() nastavi dolžino, če ni vnesena, na privzeto vrednost po dimenzijah cone)
+        $vsotaUL = $this->horizontalniVod->toplotneIzgube($this, $cona) +
             $this->dvizniVod->toplotneIzgube($this, $cona) +
-            $this->prikljucniVod->toplotneIzgube($this, $cona)) / (
-                $this->dolzinaCevi(VrstaRazvodnihCevi::DvizniVod, $cona) +
-                $this->dolzinaCevi(VrstaRazvodnihCevi::PrikljucniVod, $cona) +
-                $this->dolzinaCevi(VrstaRazvodnihCevi::HorizontalniRazvod, $cona)
-            );
+            $this->prikljucniVod->toplotneIzgube($this, $cona);
+        $skupnaDolzinaCevi = $this->horizontalniVod->dolzina +
+            $this->dvizniVod->dolzina +
+            $this->prikljucniVod->dolzina;
+        $povprecniUCevi = $skupnaDolzinaCevi > 0 ? $vsotaUL / $skupnaDolzinaCevi : 0;
 
         $temperaturaIzvenOvoja = 13;
         $temperaturaCevovodaBrezCirkulacije = 25 * pow($povprecniUCevi, -0.2);
@@ -168,7 +170,9 @@ class RazvodTSV extends Razvod
 
         if (!empty($this->crpalka)) {
             $fe_crpalke = $this->izracunFaktorjaRabeEnergijeCrpalke($cona, $okolje);
-            $this->crpalka->moc = $this->crpalka->moc ?? $this->izracunHidravlicneMoci($cona, $okolje);
+            // hidravlična moč razvoda (P_hydr); vnesena moč črpalke (moc) je električna moč P_pump
+            $hidravlicnaMoc = $this->izracunHidravlicneMoci($cona, $okolje);
+            $this->crpalka->moc = $this->crpalka->moc ?? $hidravlicnaMoc;
 
             // z – čas delovanja črpalke (v urah na dan) [h]
             // enačba (142)
@@ -193,7 +197,9 @@ class RazvodTSV extends Razvod
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////
                 // W_w,d,hydr - potrebna hidravlična energija
                 // enačba (141)
-                $potrebnaHidravlicnaEnergija = $this->crpalka->moc / 1000 *
+                // računa se s hidravlično močjo; fe_crpalke = P_pump / P_hydr že vsebuje električno moč črpalke,
+                // zato bi uporaba vnesene moči (moc) dala električno energijo sorazmerno z moc^2
+                $potrebnaHidravlicnaEnergija = $hidravlicnaMoc / 1000 *
                     $stDni * $steviloUrCrpalke;
 
                 // W_w,d,aux - Potrebna električna energija za razvodni podsistem

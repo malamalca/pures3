@@ -66,9 +66,25 @@
 </table>
 
 <table>
-<tr class="title"><th><h3>Prikaz temperature v konstrukciji</h3></th></tr>
 <?php
+    // mesec za prikaz: mesec z največjo kondenzacijo g_c, če kondenzacije ni, januar
+    $imenaMesecev = ['januar', 'februar', 'marec', 'april', 'maj', 'junij', 'julij', 'avgust', 'september',
+        'oktober', 'november', 'december'];
     $mesec = 0;
+    $maxGc = 0;
+    foreach ($kons->materiali as $material) {
+        foreach ($material->racunskiSloji as $sloj) {
+            foreach ((array)($sloj->gc ?? []) as $mesecId => $gc) {
+                if ($gc > $maxGc) {
+                    $maxGc = $gc;
+                    $mesec = (int)$mesecId;
+                }
+            }
+        }
+    }
+?>
+<tr class="title"><th><h3>Prikaz temperature v konstrukciji za <?= $imenaMesecev[$mesec] ?></h3></th></tr>
+<?php
 
     $temperatures = [];
     $categories = [];
@@ -105,10 +121,8 @@
 </table>
 
 <table>
-<tr class="title"><th><h3>Prikaz tlaka in kondenzacije</h3></th></tr>
+<tr class="title"><th><h3>Prikaz tlaka in kondenzacije za <?= $imenaMesecev[$mesec] ?></h3></th></tr>
 <?php
-    $mesec = 0;
-
     $layers = [];
     $nasicenTlak = [];
     $dejanskiTlak = [];
@@ -156,7 +170,7 @@
 <div>
     <table border="1">
         <thead>
-            <tr class="title"><th colspan="10"><h3>Temperature, tlak in kondenzat</h3></th></tr>
+            <tr class="title"><th colspan="10"><h3>Temperature, tlak in kondenzat za <?= $imenaMesecev[$mesec] ?></h3></th></tr>
             <tr>
                 <th></th>
                 <th class="right">d<br />[cm]</th>
@@ -232,7 +246,7 @@
             <td class="right"></td>
             <td class="right"><?= $okolicaT ?></td>
             <td class="right"><?= round(Calc::nasicenTlak($okolicaT) * $okolicaVlaga / 100, 2) ?></td>
-            <td class="right"><?= round(Calc::nasicenTlak($okolicaT), 0) ?></td>
+            <td class="right"><?= round(Calc::nasicenTlak($okolicaT), 2) ?></td>
         </tr>
     </table>
 </div>

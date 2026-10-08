@@ -75,7 +75,10 @@ class NeposrednoOgrevanHranilnik extends Hranilnik
         // proizvajalca ali enačba 123a ali 123b.
         // EN 15316-4-1:2017
         // qB,S is the daily stand-by thermal loss, in kWh;
-        if ($sistem->energent == TSSVrstaEnergenta::Elektrika) {
+        if (isset($this->dnevneIzgube)) {
+            // podatek proizvajalca (pri ΔT = 45 K)
+            $dnevneIzgube = $this->dnevneIzgube;
+        } elseif ($sistem->energent == TSSVrstaEnergenta::Elektrika) {
             $dnevneIzgube = 0.29 + 0.019 * pow($this->volumen, 0.8);
         } else {
             $dnevneIzgube = 2 + 0.033 * pow($this->volumen, 1.1);

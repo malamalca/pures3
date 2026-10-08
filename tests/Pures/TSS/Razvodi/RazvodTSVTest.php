@@ -317,4 +317,57 @@ final class RazvodTSVTest extends TestCase
         $this->assertEquals($expected, $prviRounded);
         $this->assertEquals($expected, $drugiRounded);
     }
+
+    public function testPotrebnaElektricnaEnergijaJeLinearnaZVnesenoMocjoCrpalke(): void
+    {
+        $cona = new \stdClass();
+        $cona->dolzina = 10;
+        $cona->sirina = 8;
+        $cona->steviloEtaz = 3;
+        $cona->etaznaVisina = 3;
+        $cona->notranjaTOgrevanje = 20;
+
+        $letnaEnergija = function (int $moc) use ($cona): float {
+            $config = '{"vrsta": "toplavoda", "crpalka": {"moc": ' . $moc . ', "casDelovanja": 2},
+                "ceviHorizontaliVodi": {}, "ceviDvizniVodi": {}, "ceviPrikljucniVodi": {}}';
+            $razvodTSV = new RazvodTSV($config);
+            $energija = $razvodTSV->potrebnaElektricnaEnergija(null, null, $cona, null, ['namen' => 'tsv']);
+
+            return array_sum($energija['tsv']);
+        };
+
+        // E = P_pump / 1000 * dnevi * ure * 1,19 (brez regulacije); sorazmerna z močjo, ne s kvadratom moči
+        $this->assertEqualsWithDelta(20 / 1000 * 365 * 2 * 1.19, $letnaEnergija(20), 0.01);
+        $this->assertEqualsWithDelta(2 * $letnaEnergija(20), $letnaEnergija(40), 0.01);
+    }
+
+    public function testToplotneIzgubeZVnesenimiDolzinamiCeviUporabiDejanskoPovprecnoU(): void
+    {
+        $cona = new \stdClass();
+        $cona->dolzina = 12;
+        $cona->sirina = 8;
+        $cona->steviloEtaz = 2;
+        $cona->etaznaVisina = 2.98;
+        $cona->notranjaTOgrevanje = 20;
+
+        $config = <<<EOT
+        {
+            "vrsta": "toplavoda",
+            "crpalka": {"moc": 10, "casDelovanja": 1},
+            "ceviHorizontaliVodi": {"izolacija": "izolirane", "Ucevi": 0.23, "dolzina": 39.5},
+            "ceviDvizniVodi": {"izolacija": "izolirane", "Ucevi": 0.23, "dolzina": 6.8},
+            "ceviPrikljucniVodi": {"izolacija": "izolirane", "Ucevi": 0.23, "dolzina": 9}
+        }
+        EOT;
+
+        $razvodTSV = new RazvodTSV($config);
+        $izgube = $razvodTSV->toplotneIzgube(null, null, $cona, null, ['namen' => 'tsv']);
+
+        // vse cevi so v ogrevani coni, povprečni U je enak vneseni vrednosti (ne glede na privzete dolžine)
+        $vsotaUL = 0.23 * (39.5 + 6.8 + 9);
+        $tBrezCirkulacije = 25 * pow(0.23, -0.2);
+        $pricakovano = $vsotaUL * 365 * (1 * (50 - 20) + 23 * ($tBrezCirkulacije - 20)) / 1000;
+
+        $this->assertEqualsWithDelta($pricakovano, array_sum($izgube['tsv']), 0.01);
+    }
 }

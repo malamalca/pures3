@@ -80,7 +80,10 @@ class PosrednoOgrevanHranilnik extends Hranilnik
 
         // q w,s,l - dnevne toplotne izgube hranilnika v stanju obratovalne pripravljenosti [kWh]. Podatek
         // proizvajalca ali enačba 123a ali 123b.
-        if ($this->volumen > 1000) {
+        if (isset($this->dnevneIzgube)) {
+            // podatek proizvajalca (pri ΔT = 45 K)
+            $dnevneIzgube = $this->dnevneIzgube;
+        } elseif ($this->volumen > 1000) {
             $dnevneIzgube = 0.39 * pow($this->volumen, 0.35) + 0.5;
         } else {
             $dnevneIzgube = 0.8 + 0.02 * pow($this->volumen, 0.77);
