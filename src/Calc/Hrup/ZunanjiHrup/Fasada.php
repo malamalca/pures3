@@ -191,9 +191,11 @@ class Fasada
                 if (!isset($sumTauArr[$fq])) {
                     $sumTauArr[$fq] = 0;
                 }
+                // delez elementa v skupni povrsini fasade je (S * stevilo) / Sf;
+                // "stevilo" je ze zajeto v tem delezu in se ne sme upostevati se enkrat
                 $sumTauArr[$fq] += $zunanjaKonstrukcija->povrsina *
                     $zunanjaKonstrukcija->stevilo / $this->povrsina *
-                    pow(10, -$R_c / 10) * $zunanjaKonstrukcija->stevilo;
+                    pow(10, -$R_c / 10);
             });
 
             //$Rw = $zunanjaKonstrukcija->Rw + ($this->vplivPrometa ? $zunanjaKonstrukcija->Ctr : $zunanjaKonstrukcija->C);
@@ -212,9 +214,11 @@ class Fasada
                 if (!isset($sumTauArr[$fq])) {
                     $sumTauArr[$fq] = 0;
                 }
+                // delez elementa v skupni povrsini fasade je (S * stevilo) / Sf;
+                // "stevilo" je ze zajeto v tem delezu in se ne sme upostevati se enkrat
                 $sumTauArr[$fq] += $oknaVrata->povrsina *
                     $oknaVrata->stevilo / $this->povrsina *
-                    pow(10, -$R_c / 10) * $oknaVrata->stevilo;
+                    pow(10, -$R_c / 10);
             });
 
             //$Rw = $oknaVrata->Rw + ($this->vplivPrometa ? $oknaVrata->Ctr : $oknaVrata->C);
