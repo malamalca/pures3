@@ -12,6 +12,7 @@
             "povrsina": 11.475,
             "povrsinskaMasa": 460,
             "Rw": 57,
+            "pomozniElementi": [],
             "konstrukcija": {
                 "id": "ZH.1",
                 "naziv": "Zvok v zraku - ločilna - beton 200mm",
