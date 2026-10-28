@@ -49,6 +49,18 @@ class ZunanjaKonstrukcija
         $this->C = Calc::C(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
         $this->Ctr = Calc::Ctr(R: $this->R, povrsinskaMasa: $this->konstrukcija->povrsinskaMasa);
 
+        // Pri konstrukciji z deklariranim Rw (en frekvenčni pas) se uporabita deklarirana C in Ctr iz knjižnice.
+        // Poenostavljena formula iz mase v Calc::C() in Calc::Ctr() velja za masivne konstrukcije
+        // in bi za lahke sestave (streha, lesena stena) podcenila Ctr.
+        if (count($this->R) == 1) {
+            if (!empty($this->konstrukcija->C)) {
+                $this->C = $this->konstrukcija->C;
+            }
+            if (!empty($this->konstrukcija->Ctr)) {
+                $this->Ctr = $this->konstrukcija->Ctr;
+            }
+        }
+
         if ($config) {
             $this->parseConfig($config);
         }

@@ -98,4 +98,43 @@ class ZunanjiHrupFasadaTest extends TestCase
 
         $this->assertEquals(28.0, round($hrup->Rw, 0));
     }
+
+    /**
+     * Lahka sestava z deklariranim Rw mora obdržati deklarirana C in Ctr iz knjižnice.
+     */
+    public function testLahkaKonstrukcijaObdrziDeklariranaCInCtr(): void
+    {
+        $konstrukcijeLib = json_decode(<<<EOT
+        [
+            {
+                "id": "streha",
+                "naziv": "Lahka streha",
+                "povrsinskaMasa": 65,
+                "Rw": 47,
+                "R": {"500":47},
+                "C": -1,
+                "Ctr": -7
+            }
+        ]
+        EOT);
+        $fasada = json_decode(<<<EOT
+        {
+            "vplivPrometa": true,
+            "deltaL_fasada": 0,
+            "konstrukcije": [
+                {"idKonstrukcije": "streha", "povrsina": 10}
+            ]
+        }
+        EOT);
+
+        $elementiLib = new \stdClass();
+        $elementiLib->konstrukcije = $konstrukcijeLib;
+        $elementiLib->oknaVrata = [];
+        $elementiLib->maliElementi = [];
+        $hrup = new Fasada($elementiLib, $fasada);
+
+        $this->assertEquals(-7.0, $hrup->konstrukcije[0]->Ctr);
+        $this->assertEquals(-1.0, $hrup->konstrukcije[0]->C);
+        $this->assertEquals(40.0, round($hrup->Rw, 0));
+    }
 }

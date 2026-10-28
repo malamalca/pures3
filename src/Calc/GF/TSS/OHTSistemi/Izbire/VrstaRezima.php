@@ -13,6 +13,7 @@ enum VrstaRezima: string
     case Rezim_35_30 = '35/30';
     case Rezim_40_30 = '40/30';
     case Rezim_55_45 = '55/45';
+    case Rezim_70_55 = '70/55';
 
     /**
      * θh,n,d – standardna (projektna) temperatura razvodnega podsistema. Vrednosti so podane v Tabeli 11
@@ -21,7 +22,8 @@ enum VrstaRezima: string
      */
     public function projektnaTemperatura()
     {
-        $temperature = [35, 35, 50];
+        // 70/55: srednja temperatura ogrevnega medija (70 + 55) / 2 = 62,5 °C, enako kot pri 55/45 (50 °C)
+        $temperature = [35, 35, 50, 62.5];
 
         return $temperature[$this->getOrdinal()];
     }
@@ -38,10 +40,11 @@ enum VrstaRezima: string
             $sistem instanceof ToplovodniOHTSistem ||
             $sistem->energent == TSSVrstaEnergenta::Elektrika
         ) {
-            // za ploskovno | toplovodno+elektrika
-            $srednjeTemperature = [32.5, 35, 50];
+            // za ploskovno | toplovodno+elektrika; 70/55: (70 + 55) / 2 = 62,5 °C
+            $srednjeTemperature = [32.5, 35, 50, 62.5];
         } else {
             // vse ostalo
+            $this->preveriPodporoRezima70_55('izven toplovodnih sistemov');
             $srednjeTemperature = [35, 50, 62.5];
         }
 
@@ -55,6 +58,7 @@ enum VrstaRezima: string
      */
     public function temperaturaPonora()
     {
+        $this->preveriPodporoRezima70_55('pri toplotnih črpalkah (tabela relativnih moči velja za temperature ponora 35, 40 in 55 °C)');
         $temperaturePonora = [35, 40, 55];
 
         return $temperaturePonora[$this->getOrdinal()];
@@ -67,6 +71,8 @@ enum VrstaRezima: string
      */
     public function faktorDeltaTempTC()
     {
+        $this->preveriPodporoRezima70_55('pri toplotnih črpalkah');
+
         return $this->getOrdinal() == 0 ? 1.02 : 1.051;
     }
 
@@ -78,7 +84,8 @@ enum VrstaRezima: string
      */
     public function temperaturnaRazlikaStandardnegaRezima($sistem)
     {
-        $deltaTHKLookup = [[5, 10], [10, 15], [10, 15]];
+        // 70/55: ΔθHK = 70 - 55 = 15 °C (toplovodni sistemi)
+        $deltaTHKLookup = [[5, 10], [10, 15], [10, 15], [15, null]];
 
         if (
             $sistem instanceof ToplovodniOHTSistem ||
@@ -86,9 +93,25 @@ enum VrstaRezima: string
         ) {
             $deltaT_HK = $deltaTHKLookup[$this->getOrdinal()][0];
         } else {
+            $this->preveriPodporoRezima70_55('izven toplovodnih sistemov');
             $deltaT_HK = $deltaTHKLookup[$this->getOrdinal()][1];
         }
 
         return $deltaT_HK;
+    }
+
+    /**
+     * Režim 70/55 je podprt samo pri toplovodnih sistemih z ogrevali (radiatorji, konvektorji). Pri drugih
+     * sistemih in pri toplotnih črpalkah ni tabeliranih vrednosti, zato izračun ustavimo z jasnim sporočilom.
+     *
+     * @param string $kje Opis okoliščin za sporočilo o napaki
+     * @return void
+     * @throws \Exception Če je režim 70/55 in okoliščine niso podprte
+     */
+    private function preveriPodporoRezima70_55(string $kje): void
+    {
+        if ($this == self::Rezim_70_55) {
+            throw new \Exception(sprintf('Temperaturni režim 70/55 ni podprt %s.', $kje));
+        }
     }
 }

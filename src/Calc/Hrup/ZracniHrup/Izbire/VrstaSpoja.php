@@ -71,7 +71,8 @@ enum VrstaSpoja: string
                 $ret['K14'] = $ret['K12'];
 
                 $ret['K23'] = $ret['K12'];
-                $ret['K24'] = 3 - 14.1 + 5.7 * pow($M, 2);
+                // SIST EN ISO 12354-1:2017, Priloga E.3.5, slika E.7: K24 = 3,0 + 14,1 M + 5,7 M^2
+                $ret['K24'] = 3.0 + 14.1 * $M + 5.7 * pow($M, 2);
 
                 $ret['K34'] = $ret['K12'];
                 break;

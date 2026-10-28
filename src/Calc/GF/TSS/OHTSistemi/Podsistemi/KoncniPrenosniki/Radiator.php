@@ -8,7 +8,9 @@ use App\Calc\GF\TSS\OHTSistemi\Podsistemi\KoncniPrenosniki\Izbire\VrstaNamestitv
 
 class Radiator extends KoncniPrenosnik
 {
-    public const DELTAT_REZIM = [0.4, 0.5, 0.7];
+    // Δθstr,1 po režimih (35/30, 40/30, 55/45, 70/55); 70/55: 0,7 K po FprEN 15316-2:2016, tabela B.2
+    // (nadtemperatura 42,5 K, dvocevno ogrevanje)
+    public const DELTAT_REZIM = [0.4, 0.5, 0.7, 0.7];
     public const DELTAT_NAMESTITEV = [1.3, 0.3, 1.7, 1.2];
 
     public float $deltaT_emb = 0.0;

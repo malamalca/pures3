@@ -107,9 +107,9 @@
             "properties": {
                 "id": {"type": "string", "title": "Id sklopa"},
                 "rezim": {
-                    "enum": ["35/30", "40/30", "55/45"],
+                    "enum": ["35/30", "40/30", "55/45", "70/55"],
                     "title": "Temperaturni režim [°C]",
-                    "description": "Obvezen podatek sklopa \"tsv\". Pri sklopu \"ogrevanje\" je neobvezen, pri sklopu \"hlajenje\" se ne upošteva."
+                    "description": "Obvezen podatek sklopa \"tsv\". Pri sklopu \"ogrevanje\" je neobvezen, pri sklopu \"hlajenje\" se ne upošteva. Režim 70/55 je podprt samo pri toplovodnih sistemih (brez toplotnih črpalk)."
                 },
                 "generatorji": {"allOf": [{"$ref": "#/definitions/seznamId"}], "title": "Šifre generatorjev"},
                 "razvodi": {"allOf": [{"$ref": "#/definitions/seznamId"}], "title": "Šifre razvodov"},
